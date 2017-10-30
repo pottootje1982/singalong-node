@@ -1,0 +1,17 @@
+{
+  "name": "singalong",
+  "version": "0.0.0",
+  "description": "Singalong",
+  "scripts": {
+    "start": "node server"
+  },
+  "author": {
+    "name": "wpot"
+  },
+  "devDependencies": {
+    "@types/node": "^6.0.87"
+  },
+  "engines": {
+    "node": "~6.10.x"
+  }
+}
