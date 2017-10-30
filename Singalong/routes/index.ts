@@ -12,14 +12,12 @@ router.get('/', (req: express.Request, res: express.Response) => {
         });
 });
 
-router.post('/', (req, res) => {
-    download.searchAzLyrics(req.body.artist, req.body.title,
-        content => {
-            res.render('index', {
-                title: 'Express',
-                lyrics: content,
-            });
-        });
+router.post('/', async (req, res) => {
+    var book = await download.searchLyrics(req.body.playlist);
+    res.render('index', {
+        title: 'Express',
+        lyrics: book,
+    });
 });
 
 export default router;

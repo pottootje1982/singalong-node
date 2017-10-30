@@ -1,13 +1,13 @@
-﻿import request = require('request');
+﻿import request = require('request-promise');
 import cheerio = require('cheerio');
+var validUrl = require('valid-url');
 
 // Download a file form a url.
-export function downloadUrl(url, onDownload) {
-    request(url, (err, response, body) => {
-        var $ = cheerio.load(body);
-        var result = $('.row>div>div:not([class])').text().trim();
-        onDownload(result);
-    });
+export async function downloadUrl(url) {
+    var res = await request(url);
+    var $ = cheerio.load(res);
+    var result = $('.row>div>div:not([class])').text().trim();
+    return result;
 };
 
 var google = require('googleapis');
@@ -26,14 +26,30 @@ export function search(artist, title, onResponse) {
         if (resp.items && resp.items.length > 0) {
             console.log('First result name is ' + resp.items[0].formattedUrl);
         }
-        downloadUrl(resp.items[0].formattedUrl, onResponse);
+        downloadUrl(resp.items[0].formattedUrl).then(onResponse);
     });
 }
 
-export function searchAzLyrics(artist, title, onResponse) {
-    request('https://search.azlyrics.com/search.php?q=' + artist + '+' + title, (_, __, res) => {
-        var $ = cheerio.load(res);
-        var firstHit = $('tbody>tr:nth-child(1)>td>a').attr('href');
-        downloadUrl(firstHit, onResponse);
-    });
+export async function searchAzLyrics(artist, title) {
+    var res = await request('https://search.azlyrics.com/search.php?q=' + artist + '+' + title);
+    var $ = cheerio.load(res);
+
+    var firstHit = '';
+    let i : number = 1;
+    while (!validUrl.isUri(firstHit)) {
+        firstHit = $('tbody>tr:nth-child(' + i++ + ')>td>a').attr('href');
+    }
+    return await downloadUrl(firstHit);
+}
+
+export async function searchLyrics(playlist) {
+    var tracks = playlist.trim().split('\n');
+    var book = '';
+    for (let track of tracks) {
+        var trackItems = track.split('-');
+        if (trackItems.length < 1) continue;
+        var lyrics = await searchAzLyrics(trackItems[0], trackItems.length === 2 ? trackItems[1] : '');
+        book += track + '\n\n' + lyrics + '\n\n';
+    }
+    return book;
 }

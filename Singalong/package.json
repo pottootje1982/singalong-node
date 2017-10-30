@@ -19,7 +19,9 @@
     "jquery-ui": "^1.12.1",
     "mocha": "^4.0.1",
     "pug": "^2.0.0-rc.3",
-    "request": "^2.83.0"
+    "request": "^2.83.0",
+    "request-promise": "^4.2.2",
+    "valid-url": "^1.0.9"
   },
   "devDependencies": {
     "@types/debug": "0.0.30",
