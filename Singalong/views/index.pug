@@ -1,0 +1,17 @@
+﻿extends layout
+
+block content
+  h1= title
+  p Welcome to #{title}
+  textarea(rows="40" cols="50")= lyrics
+  br
+  a(class='button' href='/text') Get Lyrics
+  br
+
+  form(method='POST' action='')
+    div.form-group
+      label(for='artist') Artist:
+      input.form-control(id='artist' type='text' name='artist' value='beatles')
+      label(for='title') Title:
+      input.form-control(id='title' type='text' name='title' value='yellow submarine')
+    button.btn.btn-primary(type='submit') Submit

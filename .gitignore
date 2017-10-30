@@ -1,1 +1,4 @@
-/.vs/Singalong/v15/.suo
+/.vs/SingaLong/v15
+/SingaLong/bin
+/SingaLong/obj/Debug
+/SingaLong/node_modules
