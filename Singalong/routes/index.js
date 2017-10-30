@@ -12,19 +12,7 @@ router.get('/', function (req, res) {
     });
 });
 router.post('/', function (req, res) {
-    //res.render('index', {
-    //    title: 'Express',
-    //    lyrics: req.body.artist + ' - ' + req.body.title,
-    //});
     download.searchAzLyrics(req.body.artist, req.body.title, function (content) {
-        res.render('index', {
-            title: 'Express',
-            lyrics: content,
-        });
-    });
-});
-router.get('/text', function (req, res) {
-    download.search("beatles", "yellow submarine", function (content) {
         res.render('index', {
             title: 'Express',
             lyrics: content,

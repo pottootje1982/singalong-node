@@ -1,7 +1,7 @@
-var assert = require("assert");
-var download = require('./scripts/download');
+﻿import assert = require('assert');
+import download = require('./download');
 
-describe("Downloading lyrics", function () {
+describe("Downloading lyrics", () => {
     this.timeoutTimer = "15000";
 
     /*
@@ -14,12 +14,12 @@ describe("Downloading lyrics", function () {
     });
     */
 
-    it("Search with AzLyrics", function (done) {
+    it("Search with AzLyrics", done => {
         download.searchAzLyrics("beatles", "yellow submarine",
             content => {
                 assert(content.indexOf('In the town where I was born') === 0);
                 done();
             });
     });
-
+    
 });
