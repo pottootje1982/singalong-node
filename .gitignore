@@ -1,6 +1,6 @@
 /.vs/SingaLong/v15
 /SingaLong/bin
-/SingaLong/obj/Debug
+/SingaLong/obj
 /SingaLong/node_modules
 /Singalong/scripts/download.test.js
 /Singalong/scripts/download.test.js.map
@@ -14,3 +14,5 @@
 /SingaLong/routes/user.js.map
 /SingaLong/scripts/download.js
 /SingaLong/scripts/download.js.map
+/SingaLong/scripts/google.js
+/SingaLong/scripts/google.js.map

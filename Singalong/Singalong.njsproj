@@ -5,6 +5,7 @@
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
     <Name>SingaLong</Name>
     <RootNamespace>ExpressApp3</RootNamespace>
+    <NameOfLastUsedPublishProfile>ftp</NameOfLastUsedPublishProfile>
   </PropertyGroup>
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
@@ -44,6 +45,10 @@
     </TypeScriptCompile>
     <TypeScriptCompile Include="routes\index.ts" />
     <TypeScriptCompile Include="routes\user.ts" />
+    <None Include="singalong - Web Deploy.pubxml" />
+    <None Include="singalong - FTP.pubxml" />
+    <None Include="file.pubxml" />
+    <None Include="ftp.pubxml" />
     <Content Include="test\mocha.opts" />
     <Content Include="tsconfig.json" />
     <Content Include="package.json" />
@@ -54,6 +59,9 @@
     <Content Include="views\error.pug" />
     <Content Include="Web.config" />
     <Content Include="Web.Debug.config" />
+    <TypeScriptCompile Include="scripts\google.ts">
+      <SubType>Code</SubType>
+    </TypeScriptCompile>
   </ItemGroup>
   <ItemGroup>
     <Folder Include="scripts\" />
