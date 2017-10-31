@@ -16,9 +16,10 @@ export async function searchAzLyrics(artist, title) {
 
     var firstHit = '';
     let i : number = 1;
-    while (!validUrl.isUri(firstHit)) {
+    while (!validUrl.isUri(firstHit) && firstHit !== undefined) {
         firstHit = $('tbody>tr:nth-child(' + i++ + ')>td>a').attr('href');
     }
+    if (!validUrl.isUri(firstHit)) return '';
     return await downloadUrl(firstHit);
 }
 
@@ -31,5 +32,5 @@ export async function searchLyrics(playlist) {
         var lyrics = await searchAzLyrics(trackItems[0], trackItems.length === 2 ? trackItems[1] : '');
         book += track + '\n\n' + lyrics + '\n\n';
     }
-    return book;
+    return book.trim();
 }

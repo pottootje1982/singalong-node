@@ -30,5 +30,17 @@ describe("Downloading lyrics", () => {
             "paul simon - graceland\n" +
             "beatles - yellow submarine\n");
         assert(book.indexOf('In the town where I was born') > 0);
+        assert(book.indexOf("The Mississippi Delta was shining") > 0);
+        assert(book.indexOf('In the town where I was born') > 0);
+    });
+
+    it("Search unexisting lyrics with AzLyrics", async () => {
+        var book = await download.searchAzLyrics("Kabouter spillebeen", "");
+        assert('' === book); 
+    });
+
+    it("Trim songbook", async () => {
+        var book = await download.searchLyrics("Kabouter spillebeen");
+        assert('Kabouter spillebeen' === book);
     });
 });
