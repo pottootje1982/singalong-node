@@ -62,6 +62,10 @@
     <TypeScriptCompile Include="scripts\google.ts">
       <SubType>Code</SubType>
     </TypeScriptCompile>
+    <TypeScriptCompile Include="scripts\spotify.test.ts">
+      <TestFramework>Mocha</TestFramework>
+    </TypeScriptCompile>
+    <TypeScriptCompile Include="scripts\spotify.ts" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="scripts\" />

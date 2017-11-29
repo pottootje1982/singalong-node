@@ -17,3 +17,6 @@
 /SingaLong/scripts/google.js
 /SingaLong/scripts/google.js.map
 /SingaLong/*.user
+/SingaLong/scripts/*.map
+/SingaLong/scripts/spotify.js
+/SingaLong/scripts/spotify.test.js

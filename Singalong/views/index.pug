@@ -5,13 +5,16 @@ block content
         div(style='margin-left:3%')
             label(for='playlist-form') Playlist:
             br
-            textarea(form='playlist-form' rows="30" cols="30" name='playlist')
-                |deep purple - child in time
-                |paul simon - graceland
-                |beatles - yellow submarine
+            textarea(form='playlist-form' rows="20" cols="38" name='playlist')= playlistIndex
             br
-            form(method='POST' action='' id='playlist-form')
+            form(method='POST' action='songbook' id='playlist-form')
                 button.w3-bar-item.w3-button(type='submit') Submit
+            br
+            select(multiple form='playlist-select' name='selectedPlaylist' size="15")
+              each playlist in playlists
+                option(value=playlist.id)= playlist.name
+            form(method='POST' action='playlist' id='playlist-select')
+                button.w3-bar-item.w3-button(type='submit') Select playlist
 
     div(style="margin-left:30%")
         h3(class='w3-border-bottom w3-border-light-grey w3-padding-16') SingaLong

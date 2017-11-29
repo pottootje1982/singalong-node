@@ -20,6 +20,7 @@
     "pug": "^2.0.0-rc.3",
     "request": "^2.83.0",
     "request-promise": "^4.2.2",
+    "spotify-web-api-node": "^2.5.0",
     "valid-url": "^1.0.9"
   },
   "devDependencies": {
@@ -30,7 +31,8 @@
     "@types/mocha": "^2.2.44",
     "@types/node": "^6.0.87",
     "@types/serve-static": "^1.7.32",
-    "mocha": "^4.0.1"
+    "mocha": "^4.0.1",
+    "spotify-web-api-node": "^2.5.0"
   },
   "engines": {
     "node": "~6.10.x"
