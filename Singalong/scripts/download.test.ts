@@ -13,7 +13,7 @@ describe("Downloading lyrics", () => {
             });
     });
     */
-
+ 
     it("Search Beatles with AzLyrics", async () => {
         var content = await download.searchAzLyrics("beatles", "yellow submarine");
         assert(content.indexOf('In the town where I was born') === 0);
@@ -24,11 +24,15 @@ describe("Downloading lyrics", () => {
         assert(content.indexOf('The Mississippi Delta was shining') > -1);
     });
     
+    it("Search Paul simon with Match", async () => {
+        var content = await download.searchMatch("paul simon", "graceland");
+        assert(content.indexOf('The Mississippi Delta was shining') > -1);
+    });
     
     it("Search multiple lyrics with AzLyrics", async () => {
-        var book = await download.searchLyrics("deep purple - child in time\n" +
+        var book = await download.createSongbook("deep purple - child in time\n" +
             "paul simon - graceland\n" +
-            "beatles - yellow submarine\n");
+            "beatles - yellow submarine\n", download.searchAzLyrics);
         assert(book.indexOf('In the town where I was born') > 0);
         assert(book.indexOf("The Mississippi Delta was shining") > 0);
         assert(book.indexOf('In the town where I was born') > 0);
@@ -40,7 +44,7 @@ describe("Downloading lyrics", () => {
     });
 
     it("Trim songbook", async () => {
-        var book = await download.searchLyrics("Kabouter spillebeen");
+        var book = await download.createSongbook("Kabouter spillebeen", download.searchAzLyrics);
         assert('Kabouter spillebeen' === book);
     });
 });

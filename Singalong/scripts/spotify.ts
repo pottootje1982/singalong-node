@@ -1,8 +1,6 @@
 ﻿var SpotifyWebApi = require('spotify-web-api-node');
-import assert = require('assert');
 
 var scopes = ['user-read-private', 'user-read-email'],
-    redirectUri = 'https://example.com/callback',
     clientId = '3a2c92864fe34fdfb674580a0901568e',
     state = 'some-state-of-my-choice';
 
@@ -10,17 +8,8 @@ var scopes = ['user-read-private', 'user-read-email'],
 var spotifyApi = new SpotifyWebApi({
     clientId: clientId,
     clientSecret: 'c09a0bdffa7d452ca4fbe14c53d32f94',
-    redirectUri: redirectUri
+    redirectUri: 'http://localhost:1337/authorized'
 });
-
-// The code that's returned as a query parameter to the redirect URI
-var code = 'AQCCLptXJXgfPbT7VtpEcyRTiSUY3a277P8ic8cGc4VStbOecYL5oWtCqOAda7_4OZYQ--e3kkpu8Ihnk6CUqCmX4ltLN0wiZZMHUoEkhGRH6_ZyBAxtg2oo55ZtPkRmClRFUR3fIb5X2lqTrZEAdWlW56ypev4rwl6edCK6ZcSC2Z_fARs37XvUO9YcSj6zAhk0wLSbVrPcX-RJcIQ-dpLqXuz-WDz-qVZ3Lj49lAt6lABdgBM';
-var token =
-    'BQA6jSix02WPbDnGycHVt07WkBVoRM-m61P5n452wfARfBajPM0w_mSvtxA9kwkRhbSRVDb7WnAlayUjkCQI5iheSNnYptZmgvdPinz8yfSjdj3UDoRCGS1DiawTLjHWv8HUT6sdjcJFiC-WWW7Z9mVC8bsPiH3N';
-var refreshToken =
-    'AQCbba8AdxFSNWbdFP-Cc7O5uh1nlhm2WHnVaGsrerkB2h5DZ5mi9yXnBlZDuE-1CWVXVBvzrL0XJBjNOSA13HsgXNCf-EUznWWSXCJTXH7FDbV-GM-h9dYE9cgyWgF9Nxw';
-spotifyApi.setAccessToken(token);
-//spotifyApi.setRefreshToken(refreshToken);
 
 export function getTextualPlaylist(userId, playlistId) {
     return spotifyApi.getPlaylistTracks(userId, playlistId, { 'offset': 1, 'limit': 100, 'fields': 'items' })
@@ -33,4 +22,20 @@ export function getTextualPlaylist(userId, playlistId) {
         });
 }
 
-export { spotifyApi, code };
+export function getAuthorizeUrl() {
+    return spotifyApi.createAuthorizeURL(scopes, state);
+}
+
+export function setToken(code) {
+    console.log("Code is: " + code);
+    return spotifyApi.authorizationCodeGrant(code)
+        .then(function (data) {
+            // Set the access token on the API object to use it in later calls
+            console.log("Token is: " + data.body['access_token']);
+            spotifyApi.setAccessToken(data.body['access_token']);
+        }, function (err) {
+            console.log('Something went wrong!', err);
+        });
+}
+
+export { spotifyApi };

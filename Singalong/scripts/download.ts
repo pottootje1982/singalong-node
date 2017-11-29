@@ -3,33 +3,71 @@ import cheerio = require('cheerio');
 var validUrl = require('valid-url');
 
 // Download a file form a url.
-export async function downloadUrl(url) {
+export async function downloadUrl(url, lyricsLocation) {
     var res = await request(url);
     var $ = cheerio.load(res);
-    var result = $('.row>div>div:not([class])').text().trim();
+    var result = $(lyricsLocation).text().trim();
     return result;
 };
 
-export async function searchAzLyrics(artist, title) {
-    var res = await request('https://search.azlyrics.com/search.php?q=' + artist + '+' + title);
+export async function searchLyrics(artist, title, searchQuery, hitFunc, lyricsLocation) {
+    var res = await request(searchQuery + artist.replace(' ', '+') + '+' + title.replace(' ', '+'));
     var $ = cheerio.load(res);
 
     var firstHit = '';
     let i : number = 1;
     while (!validUrl.isUri(firstHit) && firstHit !== undefined) {
-        firstHit = $('tbody>tr:nth-child(' + i++ + ')>td>a').attr('href');
+        firstHit = $(hitFunc(i)).attr('href');
+        if (firstHit.indexOf("http") === -1) {
+            firstHit = "https://www.musixmatch.com" + firstHit;
+        }
     }
     if (!validUrl.isUri(firstHit)) return '';
-    return await downloadUrl(firstHit);
+    return await downloadUrl(firstHit, lyricsLocation);
 }
 
-export async function searchLyrics(playlist) {
+export async function searchAzLyrics(artist, title) {
+    return await searchLyrics(artist, title,
+        'https://search.azlyrics.com/search.php?q=',
+        i => 'tbody>tr:nth-child(' + i++ + ')>td>a',
+        '.row>div>div:not([class])'
+    );
+}
+
+export async function searchGenius(artist, title) {
+    return await searchLyrics(artist, title,
+        'https://genius.com/search?q=',
+        i => 'tbody>tr:nth-child(' + i++ + ')>td>a',
+        '.row>div>div:not([class])'
+    );
+}
+
+export async function searchMetro(artist, title) {
+    return await searchLyrics(artist, title,
+        'http://www.metrolyrics.com//search.html?search=',
+        i => 'tbody>tr:nth-child(' + i++ + ')>td>a',
+        '.row>div>div:not([class])'
+    );
+}
+
+export async function searchMatch(artist, title) {
+    return await searchLyrics(artist, title,
+        'https://www.musixmatch.com/search/',
+        i => '.title',
+        '.mxm-lyrics'
+    );
+}
+
+const snooze = ms => new Promise(resolve => setTimeout(resolve, ms));
+
+export async function createSongbook(playlist, searchFunc) {
     var tracks = playlist.trim().split('\n');
     var book = '';
     for (let track of tracks) {
         var trackItems = track.split('-');
         if (trackItems.length < 1) continue;
-        var lyrics = await searchAzLyrics(trackItems[0], trackItems.length === 2 ? trackItems[1] : '');
+        var lyrics = await searchFunc(trackItems[0], trackItems.length === 2 ? trackItems[1] : '');
+        await snooze(100);
         book += track + '\n\n' + lyrics + '\n\n';
     }
     return book.trim();

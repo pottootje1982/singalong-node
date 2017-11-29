@@ -1,4 +1,4 @@
-﻿import download = require("./download");
+﻿import request = require('request-promise');
 var google = require('googleapis');
 var customsearch = google.customsearch('v1');
 
@@ -15,6 +15,6 @@ export function search(artist, title, onResponse) {
         if (resp.items && resp.items.length > 0) {
             console.log('First result name is ' + resp.items[0].formattedUrl);
         }
-        download.downloadUrl(resp.items[0].formattedUrl).then(onResponse);
+        request(resp.items[0].formattedUrl).then(onResponse);
     });
 }

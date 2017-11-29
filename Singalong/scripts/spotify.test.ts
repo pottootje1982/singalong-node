@@ -1,35 +1,9 @@
 ﻿import Spotify = require("./spotify");
 var spotifyApi = Spotify.spotifyApi;
-var code = Spotify.code;
+spotifyApi.setToken('');
 
 describe("Spotify API", () => {
     this.timeoutTimer = "25000";
-
-    /*
-    it("Get code", () => {
-        var authorizeURL = spotifyApi.createAuthorizeURL(scopes, state);
-         https://accounts.spotify.com:443/authorize?client_id=3a2c92864fe34fdfb674580a0901568e&response_type=code&redirect_uri=https://example.com/callback&scope=user-read-private%20user-read-email&state=some-state-of-my-choice
-        console.log(authorizeURL);
-    });
-    */
-
-    //*
-    it("Get token", done => {
-        spotifyApi.authorizationCodeGrant(code)
-            .then(function (data) {
-                console.log('The token expires in ' + data.body['expires_in']);
-                console.log('The access token is ' + data.body['access_token']);
-                console.log('The refresh token is ' + data.body['refresh_token']);
-
-                // Set the access token on the API object to use it in later calls
-                spotifyApi.setAccessToken(data.body['access_token']);
-                spotifyApi.setRefreshToken(data.body['refresh_token']);
-                done();
-            }, function (err) {
-                console.log('Something went wrong!', err);
-            });
-    });
-    //*/
 
     it("Get me", done => {
         spotifyApi.getMe()
