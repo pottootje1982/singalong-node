@@ -77,8 +77,10 @@ export async function createSongbook(playlist, searchFunc, sleepTime = 0) {
         let artist = trackItems[0];
         let title = trackItems.length === 2 ? trackItems[1] : '';
         var lyrics = await searchFunc(artist, title);
+        console.log('Found lyrics:\n' + lyrics + '\n\n');
         await snooze(sleepTime);
         book.push({artist: artist, title: title, lyrics: lyrics});
     }
+    console.log('Finished downloading lyrics');
     return book;
 }
