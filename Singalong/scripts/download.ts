@@ -18,7 +18,7 @@ export async function searchLyrics(artist, title, searchQuery, hitFunc, lyricsLo
     let i : number = 1;
     while (!validUrl.isUri(firstHit) && firstHit !== undefined) {
         firstHit = $(hitFunc(i)).attr('href');
-        if (firstHit.indexOf("http") === -1) {
+        if (firstHit !== undefined && firstHit.indexOf("http") === -1) {
             firstHit = "https://www.musixmatch.com" + firstHit;
         }
     }
