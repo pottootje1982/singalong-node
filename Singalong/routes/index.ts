@@ -61,8 +61,8 @@ router.post('/songbook', async (req, res) => {
     });
 });
 
-router.post('/playlist', async (req, res) => {
-    var selPlaylist = req.body.selectedPlaylist;
+router.get('/playlist', async (req, res) => {
+    var selPlaylist = req.query.id;
     Spotify.getTextualPlaylist(userId, selPlaylist).then(playlist => {
         playlistIndex = playlist;
         res.render('index',

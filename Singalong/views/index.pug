@@ -10,11 +10,9 @@ block content
             form(method='POST' action='songbook' id='playlist-form')
                 button.w3-bar-item.w3-button(type='submit') Submit
             br
-            select(multiple form='playlist-select' name='selectedPlaylist' size="15")
-              each playlist in playlists
-                option(value=playlist.id)= playlist.name
-            form(method='POST' action='playlist' id='playlist-select')
-                button.w3-bar-item.w3-button(type='submit') Select playlist
+            each playlist in playlists
+                a(href="/playlist?id=" + playlist.id)= playlist.name
+                br
 
     div(style="margin-left:30%")
         h3(class='w3-border-bottom w3-border-light-grey w3-padding-16') SingaLong
