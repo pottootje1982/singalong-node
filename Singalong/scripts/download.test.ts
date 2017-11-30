@@ -2,7 +2,7 @@
 import download = require('./download');
 
 describe("Downloading lyrics", () => {
-    this.timeout = "35000";
+    this.timeout = "50000";
 
     var searchFunc = download.searchMatch;
 
@@ -18,7 +18,25 @@ describe("Downloading lyrics", () => {
  
     it("Search Beatles", async () => {
         var content = await searchFunc("beatles", "yellow submarine");
-        assert(content.indexOf('In the town where I was born') === 0);
+        assert(content.indexOf('In the town where I was born') >= 0, content);
+    });
+
+    it("Search Beatles Genius", async () => {
+        var content = await download.searchGenius("beatles", "yellow submarine");
+        console.log(content);
+        assert(content.indexOf('In the town where I was born') >= 0, content);
+    });
+
+    it("Search Beatles Metro", async () => {
+        var content = await download.searchMetro("beatles", "yellow submarine");
+        console.log(content);
+        assert(content.indexOf('In the town where I was born') >= 0, content);
+    });
+
+    it("Search Beatles AZ", async () => {
+        var content = await download.searchAzLyrics("beatles", "yellow submarine");
+        console.log(content);
+        assert(content.indexOf('In the town where I was born') >= 0, content);
     });
 
     it("Search paul simon", async () => {
@@ -43,7 +61,7 @@ describe("Downloading lyrics", () => {
 
     it("Search unexisting lyrics", async () => {
         var lyrics = await searchFunc("bladieblablabla", "");
-        assert('' === lyrics);
+        assert(undefined === lyrics);
     });
 
     it("Trim songbook2", async () => {

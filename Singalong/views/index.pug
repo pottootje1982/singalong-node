@@ -3,6 +3,10 @@
 block content
     div(class="w3-sidebar w3-bar-block w3-white w3-card" style="width:25%")
         div(style='margin-left:3%')
+            label(for='playlist-form') Sleep time (ms):
+            br
+            input(form='playlist-form' type='text' name='sleepTime' value='3000')
+            br
             label(for='playlist-form') Playlist:
             br
             textarea(form='playlist-form' rows="20" cols="50" name='playlist')= playlistIndex
