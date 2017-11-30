@@ -26,6 +26,7 @@ describe("Downloading lyrics", () => {
     
     it("Search Paul simon with Match", async () => {
         var content = await download.searchMatch("paul simon", "graceland");
+        console.log(content);
         assert(content.indexOf('The Mississippi Delta was shining') > -1);
     });
     
@@ -45,6 +46,6 @@ describe("Downloading lyrics", () => {
 
     it("Trim songbook", async () => {
         var book = await download.createSongbook("Kabouter spillebeen", download.searchAzLyrics);
-        assert('Kabouter spillebeen' === book);
+        assert('Kabouter spillebeen' === book[0].artist);
     });
 });

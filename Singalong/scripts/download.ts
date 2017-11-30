@@ -54,7 +54,7 @@ export async function searchMatch(artist, title) {
     return await searchLyrics(artist, title,
         'https://www.musixmatch.com/search/',
         i => '.title',
-        '.mxm-lyrics'
+        '.mxm-lyrics>span'
     );
 }
 
@@ -62,13 +62,15 @@ const snooze = ms => new Promise(resolve => setTimeout(resolve, ms));
 
 export async function createSongbook(playlist, searchFunc) {
     var tracks = playlist.trim().split('\n');
-    var book = '';
+    var book = [];
     for (let track of tracks) {
         var trackItems = track.split('-');
         if (trackItems.length < 1) continue;
-        var lyrics = await searchFunc(trackItems[0], trackItems.length === 2 ? trackItems[1] : '');
+        let artist = trackItems[0];
+        let title = trackItems.length === 2 ? trackItems[1] : '';
+        var lyrics = await searchFunc(artist, title);
         await snooze(100);
-        book += track + '\n\n' + lyrics + '\n\n';
+        book.push({artist: artist, title: title, lyrics: lyrics});
     }
-    return book.trim();
+    return book;
 }

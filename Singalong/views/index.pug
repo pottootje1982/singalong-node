@@ -5,7 +5,7 @@ block content
         div(style='margin-left:3%')
             label(for='playlist-form') Playlist:
             br
-            textarea(form='playlist-form' rows="20" cols="38" name='playlist')= playlistIndex
+            textarea(form='playlist-form' rows="20" cols="50" name='playlist')= playlistIndex
             br
             form(method='POST' action='songbook' id='playlist-form')
                 button.w3-bar-item.w3-button(type='submit') Submit
@@ -17,5 +17,8 @@ block content
     div(style="margin-left:30%")
         h3(class='w3-border-bottom w3-border-light-grey w3-padding-16') SingaLong
         div(id="main" style="margin-left:30%")
-        textarea(rows="30" cols="100")= lyrics
+        each lyric in lyrics
+            h2(class='w3-border-bottom w3-border-light-grey w3-padding-16')= lyric.artist + ' - ' + lyric.title
+            br
+            div(class='lyrics')= lyric.lyrics
 
