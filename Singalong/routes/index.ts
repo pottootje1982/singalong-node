@@ -1,5 +1,9 @@
 ﻿/*
  * GET home page.
+
+- Rotate search engines
+- Give back partial results
+
  */
 import express = require('express');
 var download = require("../scripts/download");
