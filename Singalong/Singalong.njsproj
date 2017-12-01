@@ -81,6 +81,9 @@
       <SubType>Code</SubType>
       <TestFramework>Mocha</TestFramework>
     </TypeScriptCompile>
+    <TypeScriptCompile Include="scripts\lyrics_db.ts">
+      <SubType>Code</SubType>
+    </TypeScriptCompile>
     <TypeScriptCompile Include="scripts\spotify.test.ts">
       <TestFramework>Mocha</TestFramework>
     </TypeScriptCompile>

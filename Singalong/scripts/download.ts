@@ -1,4 +1,5 @@
-﻿import { LyricsSearchEngine } from "./LyricsEngines/LyricsSearchEngine";
+﻿var lyrics_db = require('./lyrics_db');
+import { LyricsSearchEngine } from "./LyricsEngines/LyricsSearchEngine";
 import { AzLyricsEngine } from "./LyricsEngines/AzLyricsEngine";
 //import { MetroLyricsEngine } from "./LyricsEngines/MetroLyricsEngine";
 import { GeniusEngine } from "./LyricsEngines/GeniusEngine";
@@ -22,10 +23,11 @@ export async function createSongbook(playlist, sleepTime = 0) {
         if (trackItems.length < 1) continue;
         let artist = trackItems[0].trim();
         let title = trackItems.length === 2 ? trackItems[1].trim() : '';
-        let lyrics: string = null;
+        var cached = await lyrics_db.query(artist, title);
+        let lyrics: string = cached == null ? null : cached.Lyrics;
         let searchEngineName: string = null;
         let keys = Object.keys(engines);
-        for (let i = 1; i <= keys.length; i++) {
+        for (let i = 1; i <= keys.length && lyrics == null; i++) {
             let index = (i + engineIndex) % keys.length;
             let key = keys[index];
             var searchEngine = engines[key];
@@ -41,10 +43,12 @@ export async function createSongbook(playlist, sleepTime = 0) {
                 console.log("Waiting " + sleepTime + " ms");
                 await snooze(sleepTime);
             }
-            if (lyrics != null) break;
         }
         console.log('\n');
-        book.push({ artist: artist, title: title, lyrics: lyrics, searchEngine: searchEngineName });
+        book.push({ artist: artist, title: title, lyrics: lyrics, searchEngine: cached != null ? cached.Site : searchEngineName});
+        if (lyrics != null && searchEngineName != null) {
+            lyrics_db.insert(artist, title, searchEngineName, lyrics);
+        }
     }
     console.log('Finished downloading lyrics');
     return book;

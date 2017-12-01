@@ -60,6 +60,7 @@ describe("Downloading lyrics", () => {
         assert(book[1].lyrics.indexOf("It's been a hard day's night") >= 0, "It's been a hard day's night wasn't found");
         assert.equal('Beatles', book[1].artist);
         assert.equal("Hard Day's night", book[1].title);
+        assert.equal("Genius", book[1].searchEngine);
         assert(book[2].lyrics.indexOf("Imagine there's no heaven") >= 0, "Imagine there's no heaven wasn't found");
         assert.equal('John Lennon', book[2].artist);
         assert.equal("Imagine", book[2].title);
@@ -71,11 +72,11 @@ describe("Downloading lyrics", () => {
         assert(book[4].lyrics.indexOf("The Mississippi Delta was shining") >= 0, "Graceland wasn't found");
         assert.equal('paul simon', book[4].artist);
         assert.equal("graceland", book[4].title);
-        assert.equal("MusixMatch", book[4].searchEngine);
+        assert.equal("Genius", book[4].searchEngine);
         assert(book[5].lyrics.indexOf('In the town where I was born') >= 0, "Yellow submarine wasn't found");
         assert.equal('beatles', book[5].artist);
         assert.equal("yellow submarine", book[5].title);
-        assert.equal("Genius", book[5].searchEngine);
+        assert.equal("MusixMatch", book[5].searchEngine);
     });
 
     it("Search unexisting lyrics", async () => {
