@@ -17,7 +17,7 @@ export let engines: { [engineKey: string]: LyricsSearchEngine; } = {
 export async function createSongbook(playlist, sleepTime = 0) {
     var tracks = playlist.trim().split('\n');
     var book = [];
-    let engineIndex = 0;
+    let engineIndex = -1;
     for (let track of tracks) {
         var trackItems = track.split('-');
         if (trackItems.length < 1) continue;

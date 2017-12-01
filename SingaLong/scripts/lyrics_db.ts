@@ -22,6 +22,7 @@ export function query(artist, title) {
 
 export function insert(artist, title, siteName, lyrics) {
     return new Promise((resolve, reject) => {
+        lyrics = lyrics.replace(/"/g, '\\"');
         let query = "INSERT INTO lyrics (Artist,Title,Site,Lyrics) " +
             'VALUES("' + artist + '", "' + title + '", "' + siteName + '", "' + lyrics + '")';
         connection.query(query,
