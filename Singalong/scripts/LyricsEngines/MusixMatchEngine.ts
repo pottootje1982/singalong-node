@@ -6,6 +6,6 @@ export class MusixMatchEngine extends LyricsSearchEngine {
     }
 
     constructor() {
-        super('https://www.musixmatch.com', 'https://www.musixmatch.com/search/', '.mxm-lyrics>span');
+        super('MusixMatch', 'https://www.musixmatch.com', 'https://www.musixmatch.com/search/', '.mxm-lyrics>span,p');
     }
 }

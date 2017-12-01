@@ -6,8 +6,10 @@ export abstract class LyricsSearchEngine {
     private lyricsLocation: string;
     private searchQuery: string;
     private domain: string;
+    private name: string;
 
-    constructor(domain: string, searchQuery: string, lyricsLocation: string) {
+    constructor(name: string, domain: string, searchQuery: string, lyricsLocation: string) {
+        this.name = name;
         this.domain = domain;
         this.lyricsLocation = lyricsLocation;
         this.searchQuery = searchQuery;
@@ -33,6 +35,10 @@ export abstract class LyricsSearchEngine {
         return this.domain;
     }
 
+    public getName(): string {
+        return this.name;
+    }
+
     public async searchLyrics(artist: string, title: string): Promise<string> {
         var res = await this.searchSite(this.searchQuery, artist, title);
         var $ = cheerio.load(res);
@@ -45,7 +51,7 @@ export abstract class LyricsSearchEngine {
                 firstHit = this.domain + firstHit;
             }
         }
-        if (!validUrl.isUri(firstHit)) return undefined;
+        if (!validUrl.isUri(firstHit)) return null;
         return await this.downloadUrl(firstHit);
     }
 

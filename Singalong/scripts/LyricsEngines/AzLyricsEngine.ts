@@ -6,6 +6,6 @@ export class AzLyricsEngine extends LyricsSearchEngine {
     }
 
     constructor() {
-        super('https://www.azlyrics.com', 'https://search.azlyrics.com/search.php?q=', '.row>div>div:not([class])');
+        super('AzLyrics', 'https://www.azlyrics.com', 'https://search.azlyrics.com/search.php?q=', '.row>div>div:not([class])');
     }
 }
