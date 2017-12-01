@@ -20,3 +20,5 @@
 /SingaLong/scripts/*.map
 /SingaLong/scripts/spotify.js
 /SingaLong/scripts/spotify.test.js
+/SingaLong/scripts/LyricsEngines/*.map
+/SingaLong/scripts/LyricsEngines/*.js

@@ -56,7 +56,7 @@ function errorHandler(res, err) {
 }
 
 router.post('/songbook', async (req, res) => {
-    var book = await download.createSongbook(req.body.playlist, Download.searchMatch, parseInt(req.body.sleepTime));
+    var book = await download.createSongbook(req.body.playlist, Download.engines["MusixMatch"], parseInt(req.body.sleepTime));
     res.render('index', {
         title: 'Express',
         lyrics: book,
