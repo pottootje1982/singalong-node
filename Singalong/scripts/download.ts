@@ -1,4 +1,5 @@
 ﻿var lyrics_db = require('./lyrics_db');
+import { Track } from "./Track";
 import { LyricsSearchEngine } from "./LyricsEngines/LyricsSearchEngine";
 import { AzLyricsEngine } from "./LyricsEngines/AzLyricsEngine";
 //import { MetroLyricsEngine } from "./LyricsEngines/MetroLyricsEngine";
@@ -14,7 +15,17 @@ export let engines: { [engineKey: string]: LyricsSearchEngine; } = {
     'MusixMatch': new MusixMatchEngine(),
 };
 
-export async function createSongbook(playlist, sleepTime = 0) {
+export async function getLyricsFromDatabase(playlist: Track[]) {
+    var lyricsFromDatabase = [];
+    for (let track of playlist) {
+        var cached = await lyrics_db.query(track.artist, track.title);
+        if (cached == null) continue;
+        lyricsFromDatabase.push(new Track(track.artist, track.title, cached.Site, cached.Lyrics));
+    }
+    return lyricsFromDatabase;
+}
+
+export async function createSongbook(playlist : string, sleepTime : number = 0) : Promise<Track[]> {
     var tracks = playlist.trim().split('\n');
     var book = [];
     let engineIndex = -1;
@@ -33,11 +44,11 @@ export async function createSongbook(playlist, sleepTime = 0) {
             var searchEngine = engines[key];
             lyrics = await engines[key].searchLyrics(artist, title);
             if (lyrics != null) {
-                searchEngineName = searchEngine.getName();
+                searchEngineName = searchEngine.name;
                 console.log('Found lyrics:\n' + lyrics.substr(0, 100) + '\nwith: ' + searchEngineName + '\n');
                 engineIndex = index;
             } else {
-                console.log('Did not find ' + track + ' with: ' + searchEngine.getName() + '\n');
+                console.log('Did not find ' + track + ' with: ' + searchEngine.name + '\n');
             }
             if (track !== tracks[tracks.length - 1] && index === 0) {
                 console.log("Waiting " + sleepTime + " ms");
@@ -45,7 +56,7 @@ export async function createSongbook(playlist, sleepTime = 0) {
             }
         }
         console.log('\n');
-        book.push({ artist: artist, title: title, lyrics: lyrics, searchEngine: cached != null ? cached.Site : searchEngineName});
+        book.push(new Track(artist, title, cached != null ? cached.Site : searchEngineName, lyrics));
         if (lyrics != null && searchEngineName != null) {
             lyrics_db.insert(artist, title, searchEngineName, lyrics);
         }

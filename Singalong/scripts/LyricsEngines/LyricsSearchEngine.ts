@@ -6,7 +6,7 @@ export abstract class LyricsSearchEngine {
     private lyricsLocation: string;
     private searchQuery: string;
     private domain: string;
-    private name: string;
+    name: string;
 
     constructor(name: string, domain: string, searchQuery: string, lyricsLocation: string) {
         this.name = name;
@@ -33,10 +33,6 @@ export abstract class LyricsSearchEngine {
 
     protected getDomain(): string {
         return this.domain;
-    }
-
-    public getName(): string {
-        return this.name;
     }
 
     public async searchLyrics(artist: string, title: string): Promise<string> {

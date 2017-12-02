@@ -7,28 +7,26 @@ describe("Lyrics DB", () => {
     var engine = download.engines["MusixMatch"];
 
     it("Get Beatles lyrics", done => {
-        lyrics_db.query('The Beatles', 'Yellow Submarine').then(lyrics => {
-            assert(lyrics.indexOf('In the town where I was born') >= 0);
+        lyrics_db.query('The Beatles', 'Yellow Submarine').then(track => {
+            assert(track.Lyrics.indexOf('In the town where I was born') >= 0);
             done();
         });
     });
 
     it("Get unexisting lyrics", done => {
-        lyrics_db.query('Freddy Kruger', 'Nightmare on Elm Street').then(lyrics => {
-            assert.equal(lyrics, null);
+        lyrics_db.query('Freddy Kruger', 'Nightmare on Elm Street').then(track => {
+            assert.equal(track, null);
             done();
         });
     });
 
     it("Store John Lennon lyrics",
-        async function done() {
+        async function (done) {
             let artist = 'John Lennon';
             let title = 'Imagine';
             var lyrics = await engine.searchLyrics(artist, title);
-            lyrics_db.insert(artist, title, engine.getName(), lyrics).then(results => {
-            }, error => {
-                assert.equal(error, "ER_DUP_ENTRY: Duplicate entry 'John Lennon-Imagine' for key 'PRIMARY'");
-                done();
-            });
+            var res, error = await lyrics_db.insert(artist, title, engine.name, lyrics);
+            assert.equal(error, "ER_DUP_ENTRY: Duplicate entry 'John Lennon-Imagine' for key 'PRIMARY'");
+            done();
         });
 });

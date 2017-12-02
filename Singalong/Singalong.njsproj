@@ -57,6 +57,9 @@
     <Content Include="views\index.pug" />
     <Content Include="views\layout.pug" />
     <Content Include="views\error.pug" />
+    <Content Include="views\songbook.pug">
+      <SubType>Code</SubType>
+    </Content>
     <Content Include="Web.config" />
     <Content Include="Web.Debug.config" />
     <TypeScriptCompile Include="scripts\LyricsEngines\AzLyricsEngine.ts">
@@ -88,6 +91,9 @@
       <TestFramework>Mocha</TestFramework>
     </TypeScriptCompile>
     <TypeScriptCompile Include="scripts\spotify.ts" />
+    <TypeScriptCompile Include="scripts\track.ts">
+      <SubType>Code</SubType>
+    </TypeScriptCompile>
   </ItemGroup>
   <ItemGroup>
     <Folder Include="scripts\" />

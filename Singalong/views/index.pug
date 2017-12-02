@@ -1,7 +1,7 @@
 ﻿extends layout
 
 block content
-    div(class="w3-sidebar w3-bar-block w3-white w3-card" style="width:25%")
+    div.w3-sidebar.w3-bar-block.w3-white.w3-card(style="width:45%")
         div(style='margin-left:3%')
             label(for='playlist-form') Sleep time (ms):
             br
@@ -9,20 +9,29 @@ block content
             br
             label(for='playlist-form') Playlist:
             br
-            textarea(form='playlist-form' rows="20" cols="50" name='playlist')= playlistIndex
+            textarea(form='playlist-form' rows="20" cols="50" name='playlist')= textualPlaylist
             br
-            form(method='POST' action='songbook' id='playlist-form')
-                button.w3-bar-item.w3-button(type='submit') Submit
+            form(method='POST' action='songbook' id='playlist-form' target='_blank')
+                button.w3-bar-item.w3-button(type='submit' target='_blank') Create Songbook
             br
             each playlist in playlists
                 a(href="/playlist?id=" + playlist.id)= playlist.name
                 br
 
-    div(style="margin-left:30%")
-        h3(class='w3-border-bottom w3-border-light-grey w3-padding-16') SingaLong
-        div(id="main" style="margin-left:30%")
-        each lyric in lyrics
-            h2(class='w3-border-bottom w3-border-light-grey w3-padding-16')= lyric.artist + ' - ' + lyric.title
-            br
-            div(class='lyrics')= lyric.lyrics
+    div(style="margin-left:50%")
+        if (selectedTrack != null)
+            div(style='width: 100%; overflow: hidden;')
+                textarea(id='lyrics_display' rows="20" cols="50" style="width: 400px; float: left;")= selectedTrack.lyrics
+                div(style="margin-left: 420px;")
+                    each engine in engines
+                        a(href='/lyrics?artist=' + selectedTrack.artist  + '&title=' + selectedTrack.title + '&site=' + engine.name)= 'Download lyrics with ' + engine.name
+                        br
+                    br
+                    br
+                    form(method='POST' action='lyrics' id='submit-lyrics-form')
+                        button.w3-bar-item.w3-button(type='submit') Store lyrics to database
+                    button.w3-bar-item.w3-button(onclick="$.ajax({url: '/lyrics', type: 'DELETE'});") Delete lyrics from database
 
+        each track in cachedTracks
+            a(href='/lyrics?artist=' + encodeURIComponent(track.artist)  + '&title=' + encodeURIComponent(track.title))= track.artist + ' - ' + track.title
+            br

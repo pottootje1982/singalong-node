@@ -11,13 +11,23 @@ var spotifyApi = new SpotifyWebApi({
     redirectUri: 'http://localhost:1337/authorized'
 });
 
-export function getTextualPlaylist(userId: any, playlistId: any);
-export function getTextualPlaylist(userId, playlistId) {
+export function getTextualPlaylist(userId: string, playlistId: string) {
     return spotifyApi.getPlaylistTracks(userId, playlistId, { 'offset': 1, 'limit': 100, 'fields': 'items' })
         .then(data => {
             var playlist = '';
             for (let item of data.body.items) {
                 playlist += item.track.artists[0].name + " - " + item.track.name + '\n';
+            }
+            return playlist;
+        });
+}
+
+export function getPlaylist(userId: string, playlistId: string) {
+    return spotifyApi.getPlaylistTracks(userId, playlistId, { 'offset': 1, 'limit': 100, 'fields': 'items' })
+        .then(data => {
+            var playlist = [];
+            for (let item of data.body.items) {
+                playlist.push({ artist: item.track.artists[0].name, title: item.track.name});
             }
             return playlist;
         });
