@@ -13,6 +13,7 @@ connection.connect();
 
 export function query(artist, title) {
     return new Promise((resolve, reject) => {
+        if (artist === '' || artist == null || title === '' || title == null) resolve(null);
         let query = 'SELECT * FROM lyrics WHERE Artist LIKE ' + p(artist) + ' AND Title LIKE ' + p(title);
         console.log('Executing query: ' + query);
         connection.query(query,
@@ -21,6 +22,12 @@ export function query(artist, title) {
                 else resolve(results.length === 0 ? null : results[0]);
             });
     });
+}
+
+export async function queryTrack(track: Track) {
+    var result = await query(track.artist, track.title);
+    if (result == null && track.canClean()) result = await query(track.cleanArtist(), track.cleanTitle());
+    return result;
 }
 
 export function insert(artist, title, siteName, lyrics) {
@@ -41,7 +48,7 @@ function formatLyrics(lyrics: string) {
 }
 
 function p(value: string) {
-    return value == null ? "NULL" : '"' + value.trim() + '"';
+    return value == null ? "NULL" : '"' + value.replace("&", "\&").trim() + '"';
 }
 
 export function update(track: Track) {

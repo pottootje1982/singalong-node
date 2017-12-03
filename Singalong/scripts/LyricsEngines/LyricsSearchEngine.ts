@@ -6,13 +6,15 @@ export abstract class LyricsSearchEngine {
     private lyricsLocation: string;
     private searchQuery: string;
     private domain: string;
+    private linkAttribute: string;
     name: string;
 
-    constructor(name: string, domain: string, searchQuery: string, lyricsLocation: string) {
+    constructor(name: string, domain: string, searchQuery: string, lyricsLocation: string, linkAttribute?: string) {
         this.name = name;
         this.domain = domain;
         this.lyricsLocation = lyricsLocation;
         this.searchQuery = searchQuery;
+        this.linkAttribute = linkAttribute == null ? 'href' : linkAttribute;
     }
 
     // Download a file form a url.
@@ -24,7 +26,7 @@ export abstract class LyricsSearchEngine {
     };
 
     protected async searchSite(searchQuery: string, artist: string, title: string) {
-        return request(searchQuery + artist.replace(' ', '+') + '+' + title.replace(' ', '+'));
+        return request(searchQuery + encodeURIComponent(artist) + '+' + encodeURIComponent(title));
     }
 
     protected getSearchQuery(): string {
@@ -42,7 +44,7 @@ export abstract class LyricsSearchEngine {
         var firstHit = '';
         let i: number = 1;
         while (!validUrl.isUri(firstHit) && firstHit !== undefined) {
-            firstHit = $(this.getHit(i)).attr('href');
+            firstHit = $(this.getHit(i)).attr(this.linkAttribute);
             if (firstHit !== undefined && firstHit.indexOf("http") === -1) {
                 firstHit = this.domain + firstHit;
             }

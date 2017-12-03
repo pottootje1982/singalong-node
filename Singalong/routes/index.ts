@@ -3,7 +3,7 @@
 
 - Give back partial results
 - test: download Cesare Valletti - Dein Angesicht with musixmatch, should return null
-
+- Escape [] and () in Karaoke Universe - Matrimony (Karaoke Version) [In the Style of Gilbert O'sullivan]
  */
 import express = require('express');
 var lyrics_db = require('../scripts/lyrics_db');
@@ -13,9 +13,6 @@ import Spotify = require("../scripts/spotify");
 var spotifyApi = Spotify.spotifyApi;
 import Download = require("../scripts/download");
 import {Track} from '../scripts/Track';
-var textualPlaylist = "deep purple - child in time\n" +
-    "paul simon - graceland\n" +
-    "beatles - yellow submarine";
 var state = {
     textualPlaylist: '',
     playlists: [],
@@ -42,7 +39,7 @@ router.get('/authorized', async (req: express.Request, res: express.Response) =>
 router.get('/playlist', async (req, res) => {
     var selPlaylist = req.query.id;
     state.textualPlaylist = await Spotify.getTextualPlaylist(userId, selPlaylist);
-    var playlist = await Spotify.getPlaylist(userId, selPlaylist);
+    var playlist = download.textualPlaylistToTextualPlaylist(state.textualPlaylist);
     state.cachedTracks = await download.getLyricsFromDatabase(playlist);
     res.render('index', state);
 });
@@ -53,7 +50,7 @@ router.get('/lyrics', async (req, res) => {
     var site = req.query.site;
     state.selectedTrack = new Track(artist, title, site);
     if (site == null) {
-        let track = await lyrics_db.query(artist, title);
+        let track = await lyrics_db.queryTrack(state.selectedTrack);
         state.selectedTrack.lyrics = track == null ? null : track.Lyrics;
     } else {
         state.selectedTrack.lyrics = await download.engines[site].searchLyrics(artist, title);
@@ -63,6 +60,7 @@ router.get('/lyrics', async (req, res) => {
 });
 
 router.post('/lyrics', async (req, res) => {
+    state.selectedTrack.lyrics = req.body.lyrics;
     lyrics_db.update(state.selectedTrack);
     res.render('index', state);
 });
@@ -75,7 +73,7 @@ router.delete('/lyrics', async (req, res) => {
 
 router.post('/songbook', async (req, res) => {
     state.textualPlaylist = req.body.playlist;
-    var book = await download.createSongbook(textualPlaylist, Download.engines["MusixMatch"], parseInt(req.body.sleepTime));
+    var book = await download.createSongbook(state.textualPlaylist, Download.engines["MusixMatch"], parseInt(req.body.sleepTime));
     res.render('songbook', {
         book: book,
     });

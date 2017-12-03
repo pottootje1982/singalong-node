@@ -1,4 +1,5 @@
 ﻿import SpotifyWebApi = require('spotify-web-api-node');
+import { Track } from '../scripts/Track';
 
 var scopes = ['user-read-private', 'user-read-email'],
     clientId = '3a2c92864fe34fdfb674580a0901568e',
@@ -11,23 +12,21 @@ var spotifyApi = new SpotifyWebApi({
     redirectUri: 'http://localhost:1337/authorized'
 });
 
-export function getTextualPlaylist(userId: string, playlistId: string) {
-    return spotifyApi.getPlaylistTracks(userId, playlistId, { 'offset': 1, 'limit': 100, 'fields': 'items' })
-        .then(data => {
-            var playlist = '';
-            for (let item of data.body.items) {
-                playlist += item.track.artists[0].name + " - " + item.track.name + '\n';
-            }
-            return playlist;
-        });
+export async function getTextualPlaylist(userId: string, playlistId: string) {
+    var playlist = await getPlaylist(userId, playlistId);
+    var textualPlaylist = '';
+    for (let track of playlist) {
+        textualPlaylist += track.toString() + '\n';
+    }
+    return textualPlaylist;
 }
 
-export function getPlaylist(userId: string, playlistId: string) {
+export function getPlaylist(userId: string, playlistId: string) : Track[] {
     return spotifyApi.getPlaylistTracks(userId, playlistId, { 'offset': 1, 'limit': 100, 'fields': 'items' })
         .then(data => {
             var playlist = [];
             for (let item of data.body.items) {
-                playlist.push({ artist: item.track.artists[0].name, title: item.track.name});
+                playlist.push(new Track(item.track.artists[0].name, item.track.name));
             }
             return playlist;
         });

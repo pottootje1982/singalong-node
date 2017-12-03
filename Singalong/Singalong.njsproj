@@ -80,6 +80,9 @@
     <TypeScriptCompile Include="scripts\LyricsEngines\MusixMatchEngine.ts">
       <SubType>Code</SubType>
     </TypeScriptCompile>
+    <TypeScriptCompile Include="scripts\LyricsEngines\SongtekstenEngine.ts">
+      <SubType>Code</SubType>
+    </TypeScriptCompile>
     <TypeScriptCompile Include="scripts\lyrics_db.test.ts">
       <SubType>Code</SubType>
       <TestFramework>Mocha</TestFramework>
@@ -91,6 +94,10 @@
       <TestFramework>Mocha</TestFramework>
     </TypeScriptCompile>
     <TypeScriptCompile Include="scripts\spotify.ts" />
+    <TypeScriptCompile Include="scripts\track.test.ts">
+      <SubType>Code</SubType>
+      <TestFramework>Mocha</TestFramework>
+    </TypeScriptCompile>
     <TypeScriptCompile Include="scripts\track.ts">
       <SubType>Code</SubType>
     </TypeScriptCompile>

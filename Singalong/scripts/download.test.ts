@@ -41,6 +41,11 @@ describe("Downloading lyrics", () => {
         assert(content.indexOf('The Mississippi Delta was shining') > -1);
     });
     
+    it("Search Cash, Nash & Young", async () => {
+        var content = await download.engines["Genius"].searchLyrics('Crosby Stills & Nash', 'Helplessly Hoping');
+        assert(content.indexOf('Helplessly hoping her harlequin hovers') > -1);
+    });
+    
     it("Search Paul simon", async () => {
         var content = await engine.searchLyrics("paul simon", "graceland");
         console.log(content);
@@ -85,12 +90,12 @@ describe("Downloading lyrics", () => {
         assert.equal(lyrics, null);
     });
 
-    it("Search unexisting lyrics", async () => {
+    it("Search unexisting lyrics Genius", async () => {
         var lyrics = await download.engines["Genius"].searchLyrics("bladieblablabla", "");
         assert.equal(lyrics, null);
     });
 
-    it("Search unexisting lyrics", async () => {
+    it("Search unexisting lyrics Metro", async () => {
         var lyrics = await new MetroLyricsEngine().searchLyrics("bladieblablabla", "");
         assert.equal(lyrics, null);
     });
@@ -102,17 +107,22 @@ describe("Downloading lyrics", () => {
 
     it("Get lyrics from database", async () => {
         let playlist = [
+            new Track('1793 George Harrison', 'Give me Love'),
             new Track("Beatles", "Yellow Submarine"),
             new Track("John Lennon", "Imagine"),
             new Track("bladieblablabla", "")
         ];
         playlist = await download.getLyricsFromDatabase(playlist);
-        assert.equal(playlist.length, 2);
-        assert(playlist[0].lyrics.indexOf('In the town where I was born') >= 0, "Yellow submarine wasn't found");
-        assert.equal("MusixMatch", playlist[0].site);
+        assert.equal(playlist.length, 3);
+        assert(playlist[0].lyrics.indexOf("Give me love") >= 0, "Give me love wasn't found");
+        assert.equal("Genius", playlist[0].site);
 
-        assert(playlist[1].lyrics.indexOf("Imagine there's no heaven") >= 0, "Imagine there's no heaven wasn't found");
+        assert(playlist[1].lyrics.indexOf('In the town where I was born') >= 0, "Yellow submarine wasn't found");
         assert.equal("MusixMatch", playlist[1].site);
+
+        assert(playlist[2].lyrics.indexOf("Imagine there's no heaven") >= 0, "Imagine there's no heaven wasn't found");
+        assert.equal("MusixMatch", playlist[2].site);
+
     });
 
 });
