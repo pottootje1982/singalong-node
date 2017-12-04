@@ -8,6 +8,14 @@ describe("Lyrics DB", () => {
          function () {
              var track = new Track('', 'George Harrisson - Give me Love');
              assert.equal(track.toString(), 'George Harrisson - Give me Love');
+        });
+
+    it("Track without artist",
+         function () {
+             var track = Track.parse('Es ist ein Ros entsprungen');
+             assert.equal(track.artist ,'');
+             assert.equal(track.title,'Es ist ein Ros entsprungen');
+             assert.equal(track.toString(), 'Es ist ein Ros entsprungen');
          });
 
     it("Get name of valide track",
@@ -19,7 +27,7 @@ describe("Lyrics DB", () => {
     it("Get name of album track",
         function () {
             var track = Track.parse('The Drifters - Under The Boardwalk - Single/LP Version');
-            assert.equal(track.toString(), 'The Drifters - Under The Boardwalk - Single/LP Version');
+            assert.equal(track.toString(), 'The Drifters - Under The Boardwalk');
         });
 
     it("Clean title",

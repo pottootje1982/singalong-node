@@ -15,8 +15,9 @@ import {Track} from '../scripts/Track';
 var state = {
     textualPlaylist: '',
     playlists: [],
-    cachedTracks: [],
+    playlist: [],
     selectedTrack: null,
+    selPlaylistId: null,
     engines: download.engines
 }
 var userId;
@@ -40,11 +41,16 @@ router.get('/authorized', async (req: express.Request, res: express.Response) =>
     res.redirect('/playlist?id=' + firstPlaylist);
 });
 
+router.get('/playlist-without-artist', async (req: express.Request, res: express.Response) => {
+    state.textualPlaylist = await Spotify.getTitlePlaylist(userId, state.selPlaylistId);
+    res.render('index', state);
+});
+
 router.get('/playlist', async (req, res) => {
-    var selPlaylist = req.query.id;
-    state.textualPlaylist = await Spotify.getTextualPlaylist(userId, selPlaylist);
+    state.selPlaylistId = req.query.id;
+    state.textualPlaylist = await Spotify.getTextualPlaylist(userId, state.selPlaylistId);
     var playlist = download.textualPlaylistToTextualPlaylist(state.textualPlaylist);
-    state.cachedTracks = await download.getLyricsFromDatabase(playlist);
+    state.playlist = playlist;
     res.render('index', state);
 });
 
@@ -55,7 +61,7 @@ router.get('/lyrics', async (req, res) => {
     state.selectedTrack = new Track(artist, title, site);
     if (site == null) {
         let track = await lyrics_db.queryTrack(state.selectedTrack);
-        state.selectedTrack.lyrics = track == null ? null : track.Lyrics;
+        state.selectedTrack.lyrics = track == null ? null : track.lyrics;
     } else {
         state.selectedTrack.lyrics = await download.engines[site].searchLyrics(artist, title);
         state.selectedTrack.site = site;

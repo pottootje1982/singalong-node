@@ -8,15 +8,29 @@ describe("Lyrics DB", () => {
     var engine = download.engines["MusixMatch"];
 
     it("Get Beatles lyrics", done => {
-        lyrics_db.query('The Beatles', 'Yellow Submarine').then(track => {
-            assert(track.Lyrics.indexOf('In the town where I was born') >= 0);
+        lyrics_db.query('The Beatles', 'Yellow Submarine').then(tracks => {
+            assert(tracks[0].lyrics.indexOf('In the town where I was born') >= 0);
+            done();
+        });
+    });
+
+    it("Get Beatles lyrics", done => {
+        lyrics_db.query(null, 'Yellow Submarine').then(tracks => {
+            assert(tracks[0].lyrics.indexOf('In the town where I was born') >= 0);
+            done();
+        });
+    });
+
+    it("Get lyrics for title track", done => {
+        lyrics_db.queryTrack(new Track('', 'Es ist ein Ros entsprungen')).then(track => {
+            assert(track.lyrics.indexOf("Es ist ein Ros' entsprungen") >= 0);
             done();
         });
     });
 
     it("Get unexisting lyrics", done => {
-        lyrics_db.query('Freddy Kruger', 'Nightmare on Elm Street').then(track => {
-            assert.equal(track, null);
+        lyrics_db.query('Freddy Kruger', 'Nightmare on Elm Street').then(tracks => {
+            assert.equal(tracks, null);
             done();
         });
     });

@@ -79,7 +79,7 @@ export abstract class LyricsSearchEngine {
 
     protected getQueryAttribute(hit) {
         let href = hit.attr('href');
-        let url = this.getQueryVariable(href, 'q');
+        let url = href == null ? null : this.getQueryVariable(href, 'q');
         return url;
     }
 

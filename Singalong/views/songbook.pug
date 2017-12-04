@@ -3,7 +3,7 @@
 block content
     div(style='margin-left:3%')
         each track in book
-            h2(class='w3-border-bottom w3-border-light-grey w3-padding-16')= track.artist + ' - ' + track.title
+            h2(class='w3-border-bottom w3-border-light-grey w3-padding-16')= track.toString()
             br
             div(class='lyrics')= track.lyrics
 

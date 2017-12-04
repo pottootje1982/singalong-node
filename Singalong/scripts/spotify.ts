@@ -16,6 +16,15 @@ export async function getTextualPlaylist(userId: string, playlistId: string) {
     return textualPlaylist;
 }
 
+export async function getTitlePlaylist(userId: string, playlistId: string) {
+    var playlist = await getPlaylist(userId, playlistId);
+    var textualPlaylist = '';
+    for (let track of playlist) {
+        textualPlaylist += track.title + '\n';
+    }
+    return textualPlaylist;
+}
+
 export function getPlaylist(userId: string, playlistId: string) : Track[] {
     return spotifyApi.getPlaylistTracks(userId, playlistId, { offset: 0, 'limit': 100, 'fields': 'items' })
         .then(data => {

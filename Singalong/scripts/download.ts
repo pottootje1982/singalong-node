@@ -53,7 +53,7 @@ export async function createSongbook(playlist : string, sleepTime : number = 0) 
     for (let track of tracks) {
         if (track == null) continue;
         var cached = await lyrics_db.queryTrack(track);
-        let lyrics: string = cached == null ? null : cached.Lyrics;
+        let lyrics: string = cached == null ? null : cached.lyrics;
         let searchEngineName: string = null;
         let keys = Object.keys(engines);
         for (let i = 1; i <= keys.length && lyrics == null; i++) {
