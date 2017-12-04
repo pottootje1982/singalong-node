@@ -28,7 +28,7 @@
     lyrics: string;
 
     private cleanString(str: string) {
-        var regex = /\d+(.*)/i;
+        var regex = /\d*([^\(\)\[\]]*)/i;
         var result = str.match(regex);
         return result != null && result.length > 1 ? result[1].trim() : str;
     }

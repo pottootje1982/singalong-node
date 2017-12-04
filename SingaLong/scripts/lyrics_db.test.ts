@@ -1,6 +1,7 @@
 ﻿var lyrics_db = require('./lyrics_db');
 var assert = require('assert');
 import download = require('./download');
+import {Track} from './Track';
 
 describe("Lyrics DB", () => {
     this.timeoutTimer = "25000";
@@ -22,10 +23,9 @@ describe("Lyrics DB", () => {
 
     it("Store John Lennon lyrics",
         async function (done) {
-            let artist = 'John Lennon';
-            let title = 'Imagine';
-            var lyrics = await engine.searchLyrics(artist, title);
-            var res, error = await lyrics_db.insert(artist, title, engine.name, lyrics);
+            let track = new Track('John Lennon', 'Imagine');
+            var lyrics = await engine.searchLyrics(track.artist, track.title);
+            var res, error = await lyrics_db.insert(track, engine.name, lyrics);
             assert.equal(error, "ER_DUP_ENTRY: Duplicate entry 'John Lennon-Imagine' for key 'PRIMARY'");
             done();
         });

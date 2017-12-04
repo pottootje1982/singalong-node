@@ -2,7 +2,8 @@
 import { Track } from './Track';
 
 var connection = mysql.createConnection({
-    host: '192.168.178.65',
+    //host: '192.168.178.65',
+    host: '87.195.169.201',
     port: 3307,
     user: 'pottootje1982',
     password: 'Icf5uEiPRtjXD7GK',
@@ -30,10 +31,10 @@ export async function queryTrack(track: Track) {
     return result;
 }
 
-export function insert(artist, title, siteName, lyrics) {
+export function insert(track: Track, lyrics: string) {
     return new Promise((resolve, reject) => {
         let query = "INSERT INTO lyrics (Artist,Title,Site,Lyrics) " +
-            'VALUES("' + artist + '", "' + title + '", "' + siteName + '", ' + formatLyrics(lyrics) + ')';
+            'VALUES("' + track.artist + '", "' + track.title + '", "' + track.site + '", ' + formatLyrics(lyrics) + ')';
         console.log('Executing query: ' + query);
         connection.query(query,
             (error, results, fields) => {
@@ -51,7 +52,7 @@ function p(value: string) {
     return value == null ? "NULL" : '"' + value.replace("&", "\&").trim() + '"';
 }
 
-export function update(track: Track) {
+function updateInternal(track: Track) {
     return new Promise((resolve, reject) => {
         let query = "UPDATE lyrics " +
             'SET Site=' + p(track.site) + ', Lyrics=' + formatLyrics(track.lyrics) + ' ' +
@@ -63,6 +64,12 @@ export function update(track: Track) {
                 else resolve(results);
             });
     });
+}
+
+export async function update(track: Track) {
+    var result = await queryTrack(track);
+    if (result == null) insert(track, track.lyrics);
+    else updateInternal(track);
 }
 
 export function remove(track: Track) {

@@ -22,6 +22,13 @@ describe("Lyrics DB", () => {
             assert.equal(track.toString(), 'The Drifters - Under The Boardwalk - Single/LP Version');
         });
 
+    it("Clean title",
+        function () {
+            var track = Track.parse('Bonnie Raitt - Angel From Montgomery (Remastered)');
+            assert.equal(track.cleanArtist(), 'Bonnie Raitt');
+            assert.equal(track.cleanTitle(), 'Angel From Montgomery');
+        });
+
     it("Is track dirty?",
         function () {
             var track = new Track('1793 George Harrison', 'Give me Love');
