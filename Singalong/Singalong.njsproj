@@ -5,7 +5,7 @@
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
     <Name>SingaLong</Name>
     <RootNamespace>ExpressApp3</RootNamespace>
-    <NameOfLastUsedPublishProfile>file</NameOfLastUsedPublishProfile>
+    <NameOfLastUsedPublishProfile>ftp_remote</NameOfLastUsedPublishProfile>
   </PropertyGroup>
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
@@ -49,6 +49,7 @@
     <None Include="singalong - FTP.pubxml" />
     <None Include="file.pubxml" />
     <None Include="ftp.pubxml" />
+    <None Include="ftp_remote.pubxml" />
     <Content Include="test\mocha.opts" />
     <Content Include="tsconfig.json" />
     <Content Include="package.json" />

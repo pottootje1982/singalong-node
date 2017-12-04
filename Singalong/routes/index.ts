@@ -3,13 +3,14 @@
 
 - Give back partial results
 - Hot Chocolate - I'll Put You Together Again contains garbage
+- first track of playlist isn't displayed???
  */
 import express = require('express');
 var lyrics_db = require('../scripts/lyrics_db');
 var download = require("../scripts/download");
 const router = express.Router();
 import Spotify = require("../scripts/spotify");
-var spotifyApi = Spotify.spotifyApi;
+var spotifyApi;
 import {Track} from '../scripts/Track';
 var state = {
     textualPlaylist: '',
@@ -21,7 +22,12 @@ var state = {
 var userId;
 
 router.get('/', (req: express.Request, res: express.Response) => {
+    spotifyApi = Spotify.getApi(req.headers.host);
     res.redirect(Spotify.getAuthorizeUrl());
+});
+
+router.get('/nospotify', async (req: express.Request, res: express.Response) => {
+    res.render('index', state);
 });
 
 router.get('/authorized', async (req: express.Request, res: express.Response) => {

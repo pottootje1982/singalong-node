@@ -1,5 +1,5 @@
 ﻿import Spotify = require("./spotify");
-var spotifyApi = Spotify.spotifyApi;
+var spotifyApi = Spotify.getApi('localhost:1337');
 spotifyApi.setAccessToken('BQACP_6f1Gh_kkV_gBe3Teg_dBbf-OCmJl7YfYYWeE-AQ7rxd_ODCWJJooRog5OrjJPHQJOujUP1g0EDSQlVaWb1FsKOkha3RnNUQuwvwOoZtKqTmUa0fgN28OTRRuOcbSazOvzfP68DA21evZLd_Pjbb_HQra1O');
 
 describe("Spotify API", () => {

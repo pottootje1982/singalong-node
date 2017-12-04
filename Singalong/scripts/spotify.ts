@@ -5,12 +5,7 @@ var scopes = ['user-read-private', 'user-read-email'],
     clientId = '3a2c92864fe34fdfb674580a0901568e',
     state = 'some-state-of-my-choice';
 
-// credentials are optional
-var spotifyApi = new SpotifyWebApi({
-    clientId: clientId,
-    clientSecret: 'c09a0bdffa7d452ca4fbe14c53d32f94',
-    redirectUri: 'http://localhost:1337/authorized'
-});
+var spotifyApi;
 
 export async function getTextualPlaylist(userId: string, playlistId: string) {
     var playlist = await getPlaylist(userId, playlistId);
@@ -22,7 +17,7 @@ export async function getTextualPlaylist(userId: string, playlistId: string) {
 }
 
 export function getPlaylist(userId: string, playlistId: string) : Track[] {
-    return spotifyApi.getPlaylistTracks(userId, playlistId, { 'offset': 1, 'limit': 100, 'fields': 'items' })
+    return spotifyApi.getPlaylistTracks(userId, playlistId, { offset: 0, 'limit': 100, 'fields': 'items' })
         .then(data => {
             var playlist = [];
             for (let item of data.body.items) {
@@ -33,7 +28,10 @@ export function getPlaylist(userId: string, playlistId: string) : Track[] {
 }
 
 export function getAuthorizeUrl() {
-    return spotifyApi.createAuthorizeURL(scopes, state);
+    // credentials are optional
+    let authorizeUrl = spotifyApi.createAuthorizeURL(scopes, state);
+    console.log('Autorize url: ' + authorizeUrl);
+    return authorizeUrl;
 }
 
 export function setToken(code: any);
@@ -49,4 +47,13 @@ export function setToken(code) {
         });
 }
 
-export { spotifyApi };
+export function getApi(host: string) {
+    if (spotifyApi == null) {
+        spotifyApi = new SpotifyWebApi({
+            clientId: clientId,
+            clientSecret: 'c09a0bdffa7d452ca4fbe14c53d32f94',
+            redirectUri: 'http://' + host + '/authorized'
+        });
+    }
+    return spotifyApi;
+}
