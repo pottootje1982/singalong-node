@@ -2,8 +2,7 @@
  * GET home page.
 
 - Give back partial results
-- test: download Cesare Valletti - Dein Angesicht with musixmatch, should return null
-- Escape [] and () in Karaoke Universe - Matrimony (Karaoke Version) [In the Style of Gilbert O'sullivan]
+- Hot Chocolate - I'll Put You Together Again contains garbage
  */
 import express = require('express');
 var lyrics_db = require('../scripts/lyrics_db');
@@ -11,7 +10,6 @@ var download = require("../scripts/download");
 const router = express.Router();
 import Spotify = require("../scripts/spotify");
 var spotifyApi = Spotify.spotifyApi;
-import Download = require("../scripts/download");
 import {Track} from '../scripts/Track';
 var state = {
     textualPlaylist: '',
@@ -73,7 +71,7 @@ router.delete('/lyrics', async (req, res) => {
 
 router.post('/songbook', async (req, res) => {
     state.textualPlaylist = req.body.playlist;
-    var book = await download.createSongbook(state.textualPlaylist, Download.engines["MusixMatch"], parseInt(req.body.sleepTime));
+    var book = await download.createSongbook(state.textualPlaylist, parseInt(req.body.sleepTime));
     res.render('songbook', {
         book: book,
     });

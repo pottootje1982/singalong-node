@@ -5,7 +5,7 @@
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
     <Name>SingaLong</Name>
     <RootNamespace>ExpressApp3</RootNamespace>
-    <NameOfLastUsedPublishProfile>ftp</NameOfLastUsedPublishProfile>
+    <NameOfLastUsedPublishProfile>file</NameOfLastUsedPublishProfile>
   </PropertyGroup>
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
@@ -65,6 +65,9 @@
     <TypeScriptCompile Include="scripts\LyricsEngines\AzLyricsEngine.ts">
       <SubType>Code</SubType>
     </TypeScriptCompile>
+    <TypeScriptCompile Include="scripts\LyricsEngines\FindReplace.ts">
+      <SubType>Code</SubType>
+    </TypeScriptCompile>
     <TypeScriptCompile Include="scripts\LyricsEngines\GeniusEngine.ts">
       <SubType>Code</SubType>
     </TypeScriptCompile>
@@ -80,6 +83,7 @@
     <TypeScriptCompile Include="scripts\LyricsEngines\MusixMatchEngine.ts">
       <SubType>Code</SubType>
     </TypeScriptCompile>
+    <TypeScriptCompile Include="scripts\LyricsEngines\LyricsFreakEngine.ts" />
     <TypeScriptCompile Include="scripts\LyricsEngines\SongtekstenEngine.ts">
       <SubType>Code</SubType>
     </TypeScriptCompile>

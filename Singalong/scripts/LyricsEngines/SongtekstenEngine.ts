@@ -6,6 +6,10 @@ export class SongtekstenEngine extends LyricsSearchEngine {
     }
 
     constructor() {
-        super('Songteksten', 'https://www.songteksten.nl', 'https://www.google.nl/search?q=songteksten.nl+', 'p:first', 'data-href');
+        super('Songteksten', 'https://www.songteksten.nl', 'https://www.google.nl/search?q=songteksten.nl+', 'p:first');
+    }
+
+    protected getAttribute(hit) {
+        return super.getQueryAttribute(hit);
     }
 }

@@ -5,24 +5,32 @@ import { AzLyricsEngine } from "./LyricsEngines/AzLyricsEngine";
 //import { MetroLyricsEngine } from "./LyricsEngines/MetroLyricsEngine";
 import { GeniusEngine } from "./LyricsEngines/GeniusEngine";
 import { MusixMatchEngine } from "./LyricsEngines/MusixMatchEngine";
-import { SongtekstenEngine } from "./LyricsEngines/SongtekstenEngine";
+//import { SongtekstenEngine } from "./LyricsEngines/SongtekstenEngine";
+import { LyricsFreakEngine } from "./LyricsEngines/LyricsFreakEngine";
 
 const snooze = ms => new Promise(resolve => setTimeout(resolve, ms));
 
 export let engines: { [engineKey: string]: LyricsSearchEngine; } = {
     'AzLyrics': new AzLyricsEngine(),
+    // Unreliable results, not nicely formatted
     //'MetroLyrics': new MetroLyricsEngine(),
     'Genius': new GeniusEngine(),
     'MusixMatch': new MusixMatchEngine(),
-    'Songteksten': new SongtekstenEngine()
+    // Says 'do not have rights to display lyrics'. However pasting the same URL in a browser does work
+    //'Songteksten': new SongtekstenEngine(),
+    'LyricsFreak': new LyricsFreakEngine()
 };
 
 export async function getLyricsFromDatabase(playlist: Track[]) {
     var lyricsFromDatabase = [];
     for (let track of playlist) {
         var cached = await lyrics_db.queryTrack(track);
-        if (cached == null) continue;
-        lyricsFromDatabase.push(new Track(track.artist, track.title, cached.Site, cached.Lyrics));
+        let trackResult = new Track(track.artist, track.title);
+        if (cached != null) {
+            trackResult.site = cached.Site;
+            trackResult.lyrics = cached.Lyrics;
+        }
+        lyricsFromDatabase.push(trackResult);
     }
     return lyricsFromDatabase;
 }
@@ -40,6 +48,7 @@ export function textualPlaylistToTextualPlaylist(textualPlaylist : string) {
 export async function createSongbook(playlist : string, sleepTime : number = 0) : Promise<Track[]> {
     var tracks = textualPlaylistToTextualPlaylist(playlist);
     var book = [];
+    var tracksNotFound = [];
     let engineIndex = -1;
     for (let track of tracks) {
         if (track == null) continue;
@@ -64,7 +73,7 @@ export async function createSongbook(playlist : string, sleepTime : number = 0) 
                 console.log(error);
             }
             if (track !== tracks[tracks.length - 1] && index === 0) {
-                console.log("Waiting " + sleepTime + " ms");
+                console.log("Waiting " + sleepTime.toString() + " ms");
                 await snooze(sleepTime);
             }
         }
@@ -73,9 +82,12 @@ export async function createSongbook(playlist : string, sleepTime : number = 0) 
         track.lyrics = lyrics;
         book.push(track);
         if (lyrics != null && searchEngineName != null) {
-            lyrics_db.insert(track.artist, track.title, searchEngineName, lyrics);
+            lyrics_db.insert(track, lyrics);
+        } else if (lyrics == null) {
+            tracksNotFound.push(track);
         }
     }
     console.log('Finished downloading lyrics');
+    console.log('Tracks not found: ' + tracksNotFound.toString());
     return book;
 }

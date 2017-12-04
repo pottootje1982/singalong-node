@@ -8,16 +8,22 @@ describe("Downloading lyrics", () => {
 
     var engine = download.engines["MusixMatch"];
 
-    it("Search Beatles", async () => {
-        var content = await engine.searchLyrics("beatles", "yellow submarine");
-        assert(content.indexOf('In the town where I was born') >= 0, content);
+    it("Search Euson - Leon", async () => {
+        var content = await engine.searchLyrics("Euson", "Leon");
+        assert.equal(content, null);
+    });
+
+    it("Search David McWilliams", async () => {
+        var content = await engine.searchLyrics("David McWilliams", "Can I Get There By Candlelight");
+        assert(content.indexOf('This is the way to the rolling drums') >= 0, content);
+        assert(content.indexOf('Made with love & passion in Italy') === -1);
     });
 
     it("Search Frank Zappa", async () => {
         var content = await engine.searchLyrics("Frank Zappa", "Dancin fool");
         assert(content.indexOf("Don't know much about dancin'") >= 0, content);
     });
-
+    
     it("Search Beatles Genius", async () => {
         var content = await download.engines["Genius"].searchLyrics("beatles", "yellow submarine");
         console.log(content);
@@ -29,29 +35,29 @@ describe("Downloading lyrics", () => {
         console.log(content);
         assert(content.indexOf('In the town where I was born') >= 0, content);
     });
-
+    
     it("Search Beatles AZ", async () => {
         var content = await download.engines["AzLyrics"].searchLyrics("beatles", "yellow submarine");
         console.log(content);
         assert(content.indexOf('In the town where I was born') >= 0, content);
     });
-
+    
     it("Search paul simon", async () => {
         var content = await engine.searchLyrics("paul simon", "graceland");
         assert(content.indexOf('The Mississippi Delta was shining') > -1);
     });
     
-    it("Search Cash, Nash & Young", async () => {
-        var content = await download.engines["Genius"].searchLyrics('Crosby Stills & Nash', 'Helplessly Hoping');
-        assert(content.indexOf('Helplessly hoping her harlequin hovers') > -1);
+    it("Search with LyricsFreak", async () => {
+         var content = await download.engines["LyricsFreak"].searchLyrics('Bonnie Raitt', 'Angel from Montgomery');
+         assert(content.indexOf('I am an old woman\n') > -1);
     });
     
-    it("Search Paul simon", async () => {
+   it("Search Paul simon", async () => {
         var content = await engine.searchLyrics("paul simon", "graceland");
         console.log(content);
         assert(content.indexOf('The Mississippi Delta was shining') > -1);
     });
-    
+
     it("Search multiple lyrics", async function() {
         this.timeout(10000);
         var book = await download.createSongbook("bladieblablabla\n" +
@@ -98,11 +104,6 @@ describe("Downloading lyrics", () => {
     it("Search unexisting lyrics Metro", async () => {
         var lyrics = await new MetroLyricsEngine().searchLyrics("bladieblablabla", "");
         assert.equal(lyrics, null);
-    });
-
-    it("Trim songbook", async () => {
-        var book = await download.createSongbook("Kabouter spillebeen");
-        assert('Kabouter spillebeen' === book[0].artist);
     });
 
     it("Get lyrics from database", async () => {
