@@ -76,6 +76,10 @@
     <TypeScriptCompile Include="scripts\google.ts">
       <SubType>Code</SubType>
     </TypeScriptCompile>
+    <TypeScriptCompile Include="scripts\LyricsEngines\LyricsSearchEngine.test.ts">
+      <SubType>Code</SubType>
+      <TestFramework>Mocha</TestFramework>
+    </TypeScriptCompile>
     <TypeScriptCompile Include="scripts\LyricsEngines\LyricsSearchEngine.ts">
       <SubType>Code</SubType>
     </TypeScriptCompile>

@@ -7,6 +7,7 @@
 - Add search playlist function
 - NTH: Implement Levenshtein in SQL
 - min sleeptime / max sleeptime
+- unable to delete lyrics when stored with title only
 
  */
 import express = require('express');
@@ -75,7 +76,7 @@ router.get('/lyrics', async (req, res) => {
 
 router.post('/lyrics', async (req, res) => {
     state.selectedTrack.lyrics = req.body.lyrics;
-    lyrics_db.update(state.selectedTrack);
+    lyrics_db.update(state.selectedTrack, req.body.lyrics);
     res.render('index', state);
 });
 

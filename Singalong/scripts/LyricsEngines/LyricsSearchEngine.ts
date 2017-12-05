@@ -2,6 +2,21 @@
 import cheerio = require('cheerio');
 var validUrl = require('valid-url');
 
+
+export function getQueryVariable(query, variable): string {
+    query = query.match(/^[^\?]+\?(.*)/i);
+    if (query.length <= 1) return null;
+    query = query[1];
+    var vars = query.split('&');
+    for (var i = 0; i < vars.length; i++) {
+        var pair = vars[i].split('=');
+        if (decodeURIComponent(pair[0]) === variable) {
+            return decodeURIComponent(pair[1]);
+        }
+    }
+    return null;
+}
+
 export abstract class LyricsSearchEngine {
     private lyricsLocation: string;
     private searchQuery: string;
@@ -41,29 +56,15 @@ export abstract class LyricsSearchEngine {
         return this.domain;
     }
 
-    protected getQueryVariable(query, variable): string {
-        query = query.match(/^[^\?]+\?(.*)/i);
-        if (query.length <= 1) return null;
-        query = query[1];
-        var vars = query.split('&');
-        for (var i = 0; i < vars.length; i++) {
-            var pair = vars[i].split('=');
-            if (decodeURIComponent(pair[0]) === variable) {
-                return decodeURIComponent(pair[1]);
-            }
-        }
-        return null;
-    }
-
     public async searchLyrics(artist: string, title: string): Promise<string> {
         var res = await this.searchSite(this.searchQuery, artist, title);
         var $ = cheerio.load(res);
 
         var firstHit = '';
         let i: number = 1;
-        while (!validUrl.isUri(firstHit) && firstHit !== undefined) {
+        while (!validUrl.isUri(firstHit) && firstHit != undefined) {
             firstHit = this.getAttribute($(this.getHit(i)));
-            if (firstHit !== undefined && firstHit.indexOf("http") === -1) {
+            if (firstHit != null && firstHit.indexOf("http") === -1) {
                 firstHit = this.domain + firstHit;
             }
         }
@@ -79,7 +80,7 @@ export abstract class LyricsSearchEngine {
 
     protected getQueryAttribute(hit) {
         let href = hit.attr('href');
-        let url = href == null ? null : this.getQueryVariable(href, 'q');
+        let url = href == null ? null : getQueryVariable(href, 'q');
         return url;
     }
 

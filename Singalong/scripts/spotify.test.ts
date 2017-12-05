@@ -1,30 +1,31 @@
 ﻿import Spotify = require("./spotify");
 var spotifyApi = Spotify.getApi('localhost:1337');
-spotifyApi.setAccessToken('BQACP_6f1Gh_kkV_gBe3Teg_dBbf-OCmJl7YfYYWeE-AQ7rxd_ODCWJJooRog5OrjJPHQJOujUP1g0EDSQlVaWb1FsKOkha3RnNUQuwvwOoZtKqTmUa0fgN28OTRRuOcbSazOvzfP68DA21evZLd_Pjbb_HQra1O');
+var assert = require('assert');
 
-describe("Spotify API", () => {
-    this.timeoutTimer = "25000";
+var code =
+    'AQD_FGHa3YKf1PKva5_360xmaeXaLgdPpVuHa6M0HKs0Ucccxb7tZFCBxKWOy_AbH1KPn28VmSsc2gcvODiyFNDFKpVd6emngMEmBSq46JoVAxgMz7EeM7m1QhmrdEVz15pJHGufCfX6W5L-4X9jvGDABww-hQG66cwr01Afa4RzGNSkL-tqS6x_tjVQbq1g_a7IHYLkcr1iLsjVjtI44XSeFwv7eWZtwxtjZi3XmrEH_Op36QXIyb86';
+var token =
+    'BQCzfTulxd46cHvFDae3Qpwbv7TNdJSb3skgTk5FcdBe7pHZWCIm5OvNWwXuVdU7yvVWAMFJMkNVfOfbie_DBBKoY1HfNEotgMVx2mB41tx-sNwcxCeBivZOzTdaFUDVA9ygTjr4u6UUezRa8uN6OHqFX48vge07';
+spotifyApi.setAccessToken(token);
 
-    it("Get me", done => {
-        spotifyApi.getMe()
-            .then(data => {
-                console.log('Some information about the authenticated user', data.body);
-                done();
-            }, err => {
-                console.log('Something went wrong!', err);
-            });
+describe("Spotify API", async() => {
+    it("Get me", async() => {
+        var data = await spotifyApi.getMe();
+        console.log('Some information about the authenticated user', data.body);
     });
     
-    it("Get playlists", done => {
-        spotifyApi.getUserPlaylists()
-            .then(data => {
-                console.log('Retrieved playlists', data.body);
-                done();
-            }, err => {
-                console.log('Something went wrong!', err);
-            });
+    it("Get playlists", async() => {
+        var data = await spotifyApi.getUserPlaylists();
+        console.log('Retrieved playlists', data.body);
     });
 
+    it("Get full playlist", async function() {
+        this.timeout(25000);
+        var user = await spotifyApi.getMe();
+        var tracks = await Spotify.getFullPlaylist(user.body.id, '6jaK2iM45Myomj4GJqCi4v'); // Top 2000
+        console.log(tracks);
+        assert(tracks.length > 100);
+    });
 
     it("Search artist", done => {
         spotifyApi.getArtist('2hazSY4Ef3aB9ATXW7F5w3')

@@ -70,10 +70,10 @@ function p(value: string) {
     return value == null ? "NULL" : '"' + value.replace("&", "\&").trim() + '"';
 }
 
-function updateInternal(track: Track) {
+function updateInternal(track: Track, lyrics: string) {
     return new Promise((resolve, reject) => {
         let query = "UPDATE lyrics " +
-            'SET Site=' + p(track.site) + ', Lyrics=' + formatLyrics(track.lyrics) + ' ' +
+            'SET Site=' + p(track.site) + ', Lyrics=' + formatLyrics(lyrics) + ' ' +
             'WHERE Artist=' + p(track.artist) + ' AND Title=' + p(track.title);
         console.log('Executing query: ' + query);
         connection.query(query,
@@ -84,10 +84,10 @@ function updateInternal(track: Track) {
     });
 }
 
-export async function update(track: Track) {
+export async function update(track: Track, lyrics: string) {
     var result = await queryTrack(track);
-    if (result == null) insert(track, track.lyrics);
-    else updateInternal(track);
+    if (result == null) insert(track, lyrics);
+    else updateInternal(result, lyrics);
 }
 
 export function remove(track: Track) {

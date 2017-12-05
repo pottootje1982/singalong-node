@@ -21,6 +21,13 @@ describe("Lyrics DB", () => {
         });
     });
 
+    it("Get Double lyrics", async(done) => {
+        var track = await lyrics_db.queryTrack(new Track('Nils Landgren', 'Christmas Song'));
+        assert(track.lyrics.indexOf('Chestnuts roasting on an open fire') >= 0);
+        done();
+    });
+
+
     it("Get lyrics for title track", done => {
         lyrics_db.queryTrack(new Track('', 'Es ist ein Ros entsprungen')).then(track => {
             assert(track.lyrics.indexOf("Es ist ein Ros' entsprungen") >= 0);

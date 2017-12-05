@@ -4,7 +4,7 @@ import { Track } from "./track";
 import { MetroLyricsEngine } from "./LyricsEngines/MetroLyricsEngine";
 
 describe("Downloading lyrics", () => {
-    this.timeout = "100000";
+//    this.timeout = "100000";
 
     var engine = download.engines["MusixMatch"];
 
@@ -66,7 +66,7 @@ describe("Downloading lyrics", () => {
             "Ray Charles - Georgia\n" +
             "paul simon - graceland\n" +
             "beatles - yellow submarine\n", 3000);
-        assert.equal('bladieblablabla', book[0].artist);
+        assert.equal('bladieblablabla', book[0].title);
         assert.equal(null, book[0].site);
         assert.equal(null, book[0].lyrics);
         assert(book[1].lyrics.indexOf("It's been a hard day's night") >= 0, "It's been a hard day's night wasn't found");

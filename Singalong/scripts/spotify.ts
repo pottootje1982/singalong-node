@@ -1,14 +1,16 @@
 ﻿import SpotifyWebApi = require('spotify-web-api-node');
 import { Track } from '../scripts/Track';
+import * as LyricsEngines from "./LyricsEngines/LyricsSearchEngine";
 
 var scopes = ['user-read-private', 'user-read-email'],
     clientId = '3a2c92864fe34fdfb674580a0901568e',
     state = 'some-state-of-my-choice';
 
 var spotifyApi;
+const playlistLimit = 100;
 
 export async function getTextualPlaylist(userId: string, playlistId: string) {
-    var playlist = await getPlaylist(userId, playlistId);
+    var playlist = await getFullPlaylist(userId, playlistId);
     var textualPlaylist = '';
     for (let track of playlist) {
         textualPlaylist += track.toString() + '\n';
@@ -17,7 +19,7 @@ export async function getTextualPlaylist(userId: string, playlistId: string) {
 }
 
 export async function getTitlePlaylist(userId: string, playlistId: string) {
-    var playlist = await getPlaylist(userId, playlistId);
+    var playlist = await getFullPlaylist(userId, playlistId);
     var textualPlaylist = '';
     for (let track of playlist) {
         textualPlaylist += track.title + '\n';
@@ -25,18 +27,28 @@ export async function getTitlePlaylist(userId: string, playlistId: string) {
     return textualPlaylist;
 }
 
-export function getPlaylist(userId: string, playlistId: string) : Track[] {
-    return spotifyApi.getPlaylistTracks(userId, playlistId, { offset: 0, 'limit': 100, 'fields': 'items' })
-        .then(data => {
-            var playlist = [];
-            for (let item of data.body.items) {
-                let artist = item.track.artists[0].name;
-                let title = item.track.name;
-                if (artist === '' && title === '') continue;
-                playlist.push(new Track(artist, title));
-            }
-            return playlist;
-        });
+export async function getFullPlaylist(userId: string, playlistId: string): Promise<Track[]> {
+    var count = 0;
+    var playlist = [];
+    var data = await spotifyApi.getPlaylist(userId, playlistId);
+    count += addToPlaylist(data.body.tracks.items, playlist);
+    var total = data.body.tracks.total;
+    while (total > count || data.body.items === 0) {
+        data = await spotifyApi.getPlaylistTracks(userId,
+            playlistId, { offset: playlist.length, 'limit': playlistLimit, 'fields': 'items' });
+        count += addToPlaylist(data.body.items, playlist);
+    }
+    return playlist;
+}
+
+function addToPlaylist(items, playlist: Track[]): number {
+    for (let item of items) {
+        let artist = item.track.artists[0].name;
+        let title = item.track.name;
+        if (artist === '' && title === '') continue;
+        playlist.push(new Track(artist, title));
+    }
+    return items.length;
 }
 
 export function getAuthorizeUrl() {
@@ -46,7 +58,6 @@ export function getAuthorizeUrl() {
     return authorizeUrl;
 }
 
-export function setToken(code: any);
 export function setToken(code) {
     console.log("Code is: " + code);
     return spotifyApi.authorizationCodeGrant(code)

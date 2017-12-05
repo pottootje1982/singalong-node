@@ -58,6 +58,12 @@ export async function createSongbook(playlist : string, sleepTime : number = 0) 
         let keys = Object.keys(engines);
         for (let i = 1; i <= keys.length && lyrics == null; i++) {
             let index = (i + engineIndex) % keys.length;
+
+            if (track !== tracks[0] && index === 0) {
+                console.log("Waiting " + sleepTime.toString() + " ms");
+                await snooze(sleepTime);
+            }
+
             let key = keys[index];
             var searchEngine = engines[key];
             try {
@@ -72,13 +78,9 @@ export async function createSongbook(playlist : string, sleepTime : number = 0) 
             } catch (error) {
                 console.log(error);
             }
-            if (track !== tracks[tracks.length - 1] && index === 0) {
-                console.log("Waiting " + sleepTime.toString() + " ms");
-                await snooze(sleepTime);
-            }
         }
         console.log('\n');
-        track.site = cached != null ? cached.Site : searchEngineName;
+        track.site = cached != null ? cached.site : searchEngineName;
         track.lyrics = lyrics;
         book.push(track);
         if (lyrics != null && searchEngineName != null) {
