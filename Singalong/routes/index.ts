@@ -5,6 +5,8 @@
 - Hot Chocolate - I'll Put You Together Again contains garbage
 - Get full playlist
 - Add search playlist function
+- NTH: Implement Levenshtein in SQL
+- min sleeptime / max sleeptime
 
  */
 import express = require('express');

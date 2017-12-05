@@ -3,7 +3,7 @@
 block content
     a(href="authorize" style="float:right;margin-right:20px") Login to Spotify
     div.w3-sidebar.w3-bar-block.w3-white.w3-card(style="width:45%")
-        div(style='margin-left:3%')
+        div(style='margin-left:3%;width:100%')
             label(for='playlist-form') Sleep time (ms):
             br
             input(form='playlist-form' type='text' name='sleepTime' value='3000')
@@ -12,8 +12,8 @@ block content
             br
 
             div(style='width: 100%; overflow: hidden;')
-                textarea(form='playlist-form' rows="20" cols="50" name='playlist' style="width: 400px; float: left;")= textualPlaylist
-                div(style="margin-left: 420px;margin-right: 20px;width:250px")
+                textarea(form='playlist-form' rows="20" cols="50" name='playlist' style="width: 70%; float: left;")= textualPlaylist
+                div(style="margin-left:71%;margin-right:10px;width:25%")
                     form(method='POST' action='songbook' id='playlist-form' target='_blank')
                         button.w3-button.w3-black.w3-block(type='submit' target='_blank') Create Songbook
                     br
@@ -24,21 +24,22 @@ block content
                 a.w3-hover-text-green(href="/playlist?id=" + playlist.id)= playlist.name
                 br
 
-    div(style="margin-left:50%")
+    div(style="margin-left:47%")
         if (selectedTrack != null)
             h2(class='w3-border-bottom w3-border-light-grey w3-padding-16')= selectedTrack.artist + ' - ' + selectedTrack.title
             div(style='width: 100%; overflow: hidden;')
-                textarea(id='lyrics_display' form="submit-lyrics-form" name="lyrics" rows="20" cols="50" style="width: 400px; float: left;")= selectedTrack.lyrics
-                div(style="margin-left: 420px;margin-right:20px;width:250px")
+                textarea(id='lyrics_display' form="submit-lyrics-form" name="lyrics" rows="20" cols="50" style="width:68%; float: left;")= selectedTrack.lyrics
+                div(style="margin-left:70%;width:28%")
+                    h5 Download lyrics with:
                     each engine in engines
-                        a.w3-hover-text-green(href='/lyrics?artist=' + encodeURIComponent(selectedTrack.artist)  + '&title=' + encodeURIComponent(selectedTrack.title) + '&site=' + engine.name)= 'Download lyrics with ' + engine.name
+                        a.w3-hover-text-green(href='/lyrics?artist=' + encodeURIComponent(selectedTrack.artist)  + '&title=' + encodeURIComponent(selectedTrack.title) + '&site=' + engine.name)= engine.name
                         br
                     br
                     br
                     form(method='POST' action='lyrics' id='submit-lyrics-form')
-                        button.w3-button.w3-black.w3-block(type='submit') Store lyrics to database
+                        button.w3-button.w3-black.w3-block(type='submit') Store lyrics
                     br
-                    button.w3-button.w3-black.w3-block(onclick="$.ajax({url: '/lyrics', type: 'DELETE'});") Delete lyrics from database
+                    button.w3-button.w3-black.w3-block(onclick="$.ajax({url: '/lyrics', type: 'DELETE'});") Delete lyrics
 
         each track in playlist
             a.w3-hover-text-green(href='/lyrics?artist=' + encodeURIComponent(track.artist)  + '&title=' + encodeURIComponent(track.title))= track.artist + ' - ' + track.title
