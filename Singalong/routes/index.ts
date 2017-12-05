@@ -22,12 +22,12 @@ var state = {
 }
 var userId;
 
-router.get('/', (req: express.Request, res: express.Response) => {
+router.get('/authorize', (req: express.Request, res: express.Response) => {
     spotifyApi = Spotify.getApi(req.headers.host);
     res.redirect(Spotify.getAuthorizeUrl());
 });
 
-router.get('/nospotify', async (req: express.Request, res: express.Response) => {
+router.get('/', async (req: express.Request, res: express.Response) => {
     res.render('index', state);
 });
 
