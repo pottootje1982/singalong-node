@@ -66,6 +66,11 @@ router.get('/playlist-without-artist', async (req: express.Request, res: express
     res.render('index', state);
 });
 
+router.get('/find-in-database', async (req: express.Request, res: express.Response) => {
+    state.playlist = await download.getLyricsFromDatabase(state.playlist);
+    res.render('index', state);
+});
+
 router.get('/playlist', async (req, res) => {
     state.selPlaylistId = req.query.id;
     state.playlistUserId = req.query.userId;

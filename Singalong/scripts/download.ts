@@ -31,8 +31,8 @@ export async function getLyricsFromDatabase(playlist: Track[]) {
         var cached = await lyrics_db.queryTrack(track);
         let trackResult = new Track(track.artist, track.title);
         if (cached != null) {
-            trackResult.site = cached.Site;
-            trackResult.lyrics = cached.Lyrics;
+            trackResult.site = cached.site;
+            trackResult.lyrics = cached.lyrics;
         }
         lyricsFromDatabase.push(trackResult);
     }

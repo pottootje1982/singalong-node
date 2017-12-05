@@ -19,6 +19,9 @@ block content
                     br
                     form(method='GET' action='/playlist-without-artist')
                         button.w3-button.w3-black.w3-block(type='submit') Remove Artist
+                    br
+                    form(method='GET' action='/find-in-database')
+                        button.w3-button.w3-black.w3-block(type='submit') Find in database
             br
             form(method='POST' action='search-playlists' id='search-playlists')
                 label Search playlists:
@@ -47,5 +50,9 @@ block content
                     button.w3-button.w3-black.w3-block(onclick="$.ajax({url: '/lyrics', type: 'DELETE'});") Delete lyrics
 
         each track in playlist
-            a.w3-hover-text-green(href='/lyrics?artist=' + encodeURIComponent(track.artist)  + '&title=' + encodeURIComponent(track.title))= track.artist + ' - ' + track.title
+            if (track.lyrics == null)
+                a.w3-hover-text-green(href='/lyrics?artist=' + encodeURIComponent(track.artist)  + '&title=' + encodeURIComponent(track.title) style="color:rgb(255,0,0)")= track.artist + ' - ' + track.title
+            else
+                a.w3-hover-text-green(href='/lyrics?artist=' + encodeURIComponent(track.artist)  + '&title=' + encodeURIComponent(track.title))= track.artist + ' - ' + track.title
+
             br
