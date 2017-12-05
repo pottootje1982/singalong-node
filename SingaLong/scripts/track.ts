@@ -21,6 +21,7 @@
         if (trackItems.length < 1) return null;
         let artist = trackItems.length === 1? '' : trackItems[0].trim();
         let title = trackItems.length === 1 ? trackItems[0] : trackItems[1];
+        if (artist === '' && title === '') return null;
         return new Track(artist, title);
     }
 

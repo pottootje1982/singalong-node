@@ -30,7 +30,10 @@ export function getPlaylist(userId: string, playlistId: string) : Track[] {
         .then(data => {
             var playlist = [];
             for (let item of data.body.items) {
-                playlist.push(new Track(item.track.artists[0].name, item.track.name));
+                let artist = item.track.artists[0].name;
+                let title = item.track.name;
+                if (artist === '' && title === '') continue;
+                playlist.push(new Track(artist, title));
             }
             return playlist;
         });

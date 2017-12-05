@@ -37,6 +37,12 @@ describe("Lyrics DB", () => {
             assert.equal(track.cleanTitle(), 'Angel From Montgomery');
         });
 
+    it("Empty track",
+        function () {
+            var track = Track.parse('');
+            assert.equal(track, null);
+        });
+
     it("Is track dirty?",
         function () {
             var track = new Track('1793 George Harrison', 'Give me Love');

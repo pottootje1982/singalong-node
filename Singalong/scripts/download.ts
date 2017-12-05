@@ -35,7 +35,7 @@ export async function getLyricsFromDatabase(playlist: Track[]) {
     return lyricsFromDatabase;
 }
 
-export function textualPlaylistToTextualPlaylist(textualPlaylist : string) {
+export function textualPlaylistToPlaylist(textualPlaylist : string) {
     var textualTracks = textualPlaylist.trim().split('\n');
     var tracks = [];
     for (let trackString of textualTracks) {
@@ -46,7 +46,7 @@ export function textualPlaylistToTextualPlaylist(textualPlaylist : string) {
 }
 
 export async function createSongbook(playlist : string, sleepTime : number = 0) : Promise<Track[]> {
-    var tracks = textualPlaylistToTextualPlaylist(playlist);
+    var tracks = textualPlaylistToPlaylist(playlist);
     var book = [];
     var tracksNotFound = [];
     let engineIndex = -1;

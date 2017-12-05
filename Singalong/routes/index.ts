@@ -1,9 +1,11 @@
 ﻿/*
  * GET home page.
 
-- Give back partial results
+- Give back partial results when creating songbook
 - Hot Chocolate - I'll Put You Together Again contains garbage
-- first track of playlist isn't displayed???
+- Get full playlist
+- Add search playlist function
+
  */
 import express = require('express');
 var lyrics_db = require('../scripts/lyrics_db');
@@ -49,7 +51,7 @@ router.get('/playlist-without-artist', async (req: express.Request, res: express
 router.get('/playlist', async (req, res) => {
     state.selPlaylistId = req.query.id;
     state.textualPlaylist = await Spotify.getTextualPlaylist(userId, state.selPlaylistId);
-    var playlist = download.textualPlaylistToTextualPlaylist(state.textualPlaylist);
+    var playlist = download.textualPlaylistToPlaylist(state.textualPlaylist);
     state.playlist = playlist;
     res.render('index', state);
 });
