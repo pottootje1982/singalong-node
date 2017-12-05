@@ -1,14 +1,14 @@
 ﻿extends layout
 
 block content
+    h1.w3-border-bottom.w3-border-light-grey(style="text-align: center;") Singalong
     a(href="authorize" style="float:right;margin-right:20px") Login to Spotify
     div.w3-sidebar.w3-bar-block.w3-white.w3-card(style="width:45%")
         div(style='margin-left:3%;width:100%')
-            label(for='playlist-form') Sleep time (ms):
-            br
+            label Sleep time (ms):
             input(form='playlist-form' type='text' name='sleepTime' value='3000')
             br
-            label(for='playlist-form') Playlist:
+            label Playlist:
             br
 
             div(style='width: 100%; overflow: hidden;')
@@ -20,11 +20,16 @@ block content
                     form(method='GET' action='/playlist-without-artist')
                         button.w3-button.w3-black.w3-block(type='submit') Remove Artist
             br
+            form(method='POST' action='search-playlists' id='search-playlists')
+                label Search playlists:
+                input(form='search-playlists' type='text' name='playlistQuery' style='margin-left:10px')
+                button.w3-button.w3-black.w3-section(type='submit' style='margin-left:10px') Search
             each playlist in playlists
-                a.w3-hover-text-green(href="/playlist?id=" + playlist.id)= playlist.name
+                a.w3-hover-text-green(href="/playlist?userId=" + playlist.owner.id + "&id=" + playlist.id)= playlist.name
                 br
 
     div(style="margin-left:47%")
+        br
         if (selectedTrack != null)
             h2(class='w3-border-bottom w3-border-light-grey w3-padding-16')= selectedTrack.artist + ' - ' + selectedTrack.title
             div(style='width: 100%; overflow: hidden;')

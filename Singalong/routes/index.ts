@@ -3,11 +3,9 @@
 
 - Give back partial results when creating songbook
 - Hot Chocolate - I'll Put You Together Again contains garbage
-- Get full playlist
-- Add search playlist function
 - NTH: Implement Levenshtein in SQL
-- min sleeptime / max sleeptime
 - unable to delete lyrics when stored with title only
+- Cancel search
 
  */
 import express = require('express');
@@ -23,6 +21,7 @@ var state = {
     playlist: [],
     selectedTrack: null,
     selPlaylistId: null,
+    playlistUserId: null,
     engines: download.engines
 }
 var userId;
@@ -43,17 +42,34 @@ router.get('/authorized', async (req: express.Request, res: express.Response) =>
     data = await spotifyApi.getUserPlaylists(userId, { limit: 50 });
     state.playlists = data.body.items;
     let firstPlaylist = state.playlists[0].id;
-    res.redirect('/playlist?id=' + firstPlaylist);
+    displayPlaylist(res, userId, firstPlaylist);
+});
+
+function displayPlaylist(res: express.Response, userId: string, playlistId: string) {
+    res.redirect('/playlist?userId=' + userId + '&id=' + playlistId);
+}
+
+router.post('/search-playlists', async (req: express.Request, res: express.Response) => {
+    var data = await spotifyApi.searchPlaylists(req.body.playlistQuery);
+    state.playlists = data.body.playlists.items;
+    if (state.playlists.length > 0) {
+        let firstPlaylist = state.playlists[0];
+        var playlistUserId = firstPlaylist.owner.id;
+        displayPlaylist(res, playlistUserId, firstPlaylist.id);
+    }
+    else 
+        res.render('index', state);
 });
 
 router.get('/playlist-without-artist', async (req: express.Request, res: express.Response) => {
-    state.textualPlaylist = await Spotify.getTitlePlaylist(userId, state.selPlaylistId);
+    state.textualPlaylist = await Spotify.getTitlePlaylist(state.playlistUserId, state.selPlaylistId);
     res.render('index', state);
 });
 
 router.get('/playlist', async (req, res) => {
     state.selPlaylistId = req.query.id;
-    state.textualPlaylist = await Spotify.getTextualPlaylist(userId, state.selPlaylistId);
+    state.playlistUserId = req.query.userId;
+    state.textualPlaylist = await Spotify.getTextualPlaylist(state.playlistUserId, state.selPlaylistId);
     var playlist = download.textualPlaylistToPlaylist(state.textualPlaylist);
     state.playlist = playlist;
     res.render('index', state);

@@ -8,7 +8,11 @@ import { MusixMatchEngine } from "./LyricsEngines/MusixMatchEngine";
 //import { SongtekstenEngine } from "./LyricsEngines/SongtekstenEngine";
 import { LyricsFreakEngine } from "./LyricsEngines/LyricsFreakEngine";
 
-const snooze = ms => new Promise(resolve => setTimeout(resolve, ms));
+const snooze = (ms : number, deviation : number = 0, offset : number = 0) => {
+    ms = (1 - offset) * ms + Math.random() * ms * deviation;
+    console.log("Waiting " + ms.toString() + " ms");
+    return new Promise(resolve => setTimeout(resolve, ms));
+};
 
 export let engines: { [engineKey: string]: LyricsSearchEngine; } = {
     'AzLyrics': new AzLyricsEngine(),
@@ -60,8 +64,7 @@ export async function createSongbook(playlist : string, sleepTime : number = 0) 
             let index = (i + engineIndex) % keys.length;
 
             if (track !== tracks[0] && index === 0) {
-                console.log("Waiting " + sleepTime.toString() + " ms");
-                await snooze(sleepTime);
+                await snooze(sleepTime, 0.5, 0.2);
             }
 
             let key = keys[index];
