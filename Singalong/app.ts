@@ -4,6 +4,7 @@ import path = require('path');
 
 import routes from './routes/index';
 import users from './routes/user';
+import contextMapper = require('./scripts/ContextMapper');
 var bodyParser = require('body-parser');
 
 var app = express();
@@ -16,6 +17,13 @@ app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'pug');
 
 app.use(express.static(path.join(__dirname, 'public')));
+
+app.use(function (req, res, next) {
+    var context = contextMapper.getOrAdd(req.connection.remoteAddress);
+    res.locals.context = context;
+    next();
+});
+
 
 app.use('/', routes);
 app.use('/users', users);

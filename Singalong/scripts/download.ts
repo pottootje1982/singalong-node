@@ -44,7 +44,8 @@ export function textualPlaylistToPlaylist(textualPlaylist : string) {
     var tracks = [];
     for (let trackString of textualTracks) {
         var track = Track.parse(trackString);
-        tracks.push(track);
+        if (track != null)
+            tracks.push(track);
     }
     return tracks;
 }

@@ -15,16 +15,6 @@ const router = express.Router();
 import Spotify = require("../scripts/spotify");
 var spotifyApi;
 import {Track} from '../scripts/Track';
-var state = {
-    textualPlaylist: '',
-    playlists: [],
-    playlist: [],
-    selectedTrack: null,
-    selPlaylistId: null,
-    playlistUserId: null,
-    engines: download.engines
-}
-var userId;
 
 router.get('/authorize', (req: express.Request, res: express.Response) => {
     spotifyApi = Spotify.getApi(req.headers.host);
@@ -32,87 +22,102 @@ router.get('/authorize', (req: express.Request, res: express.Response) => {
 });
 
 router.get('/', async (req: express.Request, res: express.Response) => {
-    res.render('index', state);
+    var ctx = context(res);
+    res.render('index', ctx);
 });
 
 router.get('/authorized', async (req: express.Request, res: express.Response) => {
+    var ctx = context(res);
     await Spotify.setToken(req.query.code);
     var data = await spotifyApi.getMe();
-    userId = data.body.id;
-    data = await spotifyApi.getUserPlaylists(userId, { limit: 50 });
-    state.playlists = data.body.items;
-    let firstPlaylist = state.playlists[0].id;
-    displayPlaylist(res, userId, firstPlaylist);
+    ctx.userId = data.body.id;
+    data = await spotifyApi.getUserPlaylists(ctx.userId, { limit: 50 });
+    ctx.playlists = data.body.items;
+    let firstPlaylist = ctx.playlists[0].id;
+    displayPlaylist(res, ctx.userId, firstPlaylist);
 });
 
 function displayPlaylist(res: express.Response, userId: string, playlistId: string) {
-    res.redirect('/playlist?userId=' + userId + '&id=' + playlistId);
+    var ctx = context(res);
+    res.redirect('/playlist?ctx.userId=' + ctx.userId + '&id=' + playlistId);
 }
 
 router.post('/search-playlists', async (req: express.Request, res: express.Response) => {
+    var ctx = context(res);
     var data = await spotifyApi.searchPlaylists(req.body.playlistQuery);
-    state.playlists = data.body.playlists.items;
-    if (state.playlists.length > 0) {
-        let firstPlaylist = state.playlists[0];
+    ctx.playlists = data.body.playlists.items;
+    if (ctx.playlists.length > 0) {
+        let firstPlaylist = ctx.playlists[0];
         var playlistUserId = firstPlaylist.owner.id;
         displayPlaylist(res, playlistUserId, firstPlaylist.id);
     }
     else 
-        res.render('index', state);
+        res.render('index', ctx);
 });
 
 router.get('/playlist-without-artist', async (req: express.Request, res: express.Response) => {
-    state.textualPlaylist = await Spotify.getTitlePlaylist(state.playlistUserId, state.selPlaylistId);
-    res.render('index', state);
+    var ctx = context(res);
+    ctx.textualPlaylist = await Spotify.getTitlePlaylist(ctx.playlistUserId, ctx.selPlaylistId);
+    res.render('index', ctx);
 });
 
 router.get('/find-in-database', async (req: express.Request, res: express.Response) => {
-    state.playlist = await download.getLyricsFromDatabase(state.playlist);
-    res.render('index', state);
+    var ctx = context(res);
+    ctx.playlist = await download.getLyricsFromDatabase(ctx.playlist);
+    res.render('index', ctx);
 });
 
 router.get('/playlist', async (req, res) => {
-    state.selPlaylistId = req.query.id;
-    state.playlistUserId = req.query.userId;
-    state.textualPlaylist = await Spotify.getTextualPlaylist(state.playlistUserId, state.selPlaylistId);
-    var playlist = download.textualPlaylistToPlaylist(state.textualPlaylist);
-    state.playlist = playlist;
-    res.render('index', state);
+    var ctx = context(res);
+    ctx.selPlaylistId = req.query.id;
+    ctx.playlistUserId = req.query.ctx.userId;
+    ctx.textualPlaylist = await Spotify.getTextualPlaylist(ctx.playlistUserId, ctx.selPlaylistId);
+    var playlist = download.textualPlaylistToPlaylist(ctx.textualPlaylist);
+    ctx.playlist = playlist;
+    res.render('index', ctx);
 });
 
 router.get('/lyrics', async (req, res) => {
+    var ctx = context(res);
     var artist = req.query.artist;
     var title = req.query.title;
     var site = req.query.site;
-    state.selectedTrack = new Track(artist, title, site);
+    ctx.selectedTrack = new Track(artist, title, site);
     if (site == null) {
-        let track = await lyrics_db.queryTrack(state.selectedTrack);
-        state.selectedTrack.lyrics = track == null ? null : track.lyrics;
+        let track = await lyrics_db.queryTrack(ctx.selectedTrack);
+        ctx.selectedTrack.lyrics = track == null ? null : track.lyrics;
     } else {
-        state.selectedTrack.lyrics = await download.engines[site].searchLyrics(artist, title);
-        state.selectedTrack.site = site;
+        ctx.selectedTrack.lyrics = await download.engines[site].searchLyrics(artist, title);
+        ctx.selectedTrack.site = site;
     }
-    res.render('index', state);
+    res.render('index', ctx);
 });
 
 router.post('/lyrics', async (req, res) => {
-    state.selectedTrack.lyrics = req.body.lyrics;
-    lyrics_db.update(state.selectedTrack, req.body.lyrics);
-    res.render('index', state);
+    var ctx = context(res);
+    ctx.selectedTrack.lyrics = req.body.lyrics;
+    lyrics_db.update(ctx.selectedTrack, req.body.lyrics);
+    res.render('index', ctx);
 });
 
 router.delete('/lyrics', async (req, res) => {
-    lyrics_db.remove(state.selectedTrack);
-    res.render('index', state);
+    var ctx = context(res);
+    lyrics_db.remove(ctx.selectedTrack);
+    res.render('index', ctx);
 });
 
 
 router.post('/songbook', async (req, res) => {
-    state.textualPlaylist = req.body.playlist;
-    var book = await download.createSongbook(state.textualPlaylist, parseInt(req.body.sleepTime));
+    var ctx = context(res);
+    ctx.textualPlaylist = req.body.playlist;
+    var book = await download.createSongbook(ctx.textualPlaylist, parseInt(req.body.sleepTime));
     res.render('songbook', {
         book: book,
     });
 });
+
+function context(res) {
+    return res.locals.context;
+}
 
 export default router;

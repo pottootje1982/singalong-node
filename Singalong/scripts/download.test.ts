@@ -123,7 +123,23 @@ describe("Downloading lyrics", () => {
 
         assert(playlist[2].lyrics.indexOf("Imagine there's no heaven") >= 0, "Imagine there's no heaven wasn't found");
         assert.equal("MusixMatch", playlist[2].site);
-
     });
+
+    it("Empty Textual playlist to tracks",
+        () => {
+            var tracks = download.textualPlaylistToPlaylist('');
+            assert.equal(tracks.length, 0);
+        });
+
+    it("Textual playlist to tracks",
+        () => {
+            var tracks = download.textualPlaylistToPlaylist('1793 George Harrison - Give me Love\n' +
+                "Beatles -Yellow Submarine");
+            assert.equal(tracks.length, 2);
+            assert.equal('1793 George Harrison', tracks[0].artist);
+            assert.equal("Give me Love", tracks[0].title);
+            assert.equal('Beatles', tracks[1].artist);
+            assert.equal("Yellow Submarine", tracks[1].title);
+        });
 
 });

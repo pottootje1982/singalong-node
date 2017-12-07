@@ -37,6 +37,9 @@
   </PropertyGroup>
   <ItemGroup>
     <TypeScriptCompile Include="app.ts" />
+    <TypeScriptCompile Include="scripts\contextMapper.ts">
+      <SubType>Code</SubType>
+    </TypeScriptCompile>
     <TypeScriptCompile Include="scripts\download.test.ts">
       <SubType>Code</SubType>
       <TestFramework>Mocha</TestFramework>
