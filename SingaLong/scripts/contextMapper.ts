@@ -5,8 +5,8 @@ import download = require('./download');
 export class Context {
     userId: string;
     textualPlaylist: string;
-    playlists: string[];
-    playlist: Track[];
+    playlists: string[] = [];
+    playlist: Track[] = [];
     selectedTrack: string;
     selPlaylistId: string;
     playlistUserId: string;

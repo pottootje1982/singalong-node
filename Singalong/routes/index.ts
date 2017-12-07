@@ -22,6 +22,7 @@ router.get('/authorize', (req: express.Request, res: express.Response) => {
 });
 
 router.get('/', async (req: express.Request, res: express.Response) => {
+    spotifyApi = Spotify.getApi(req.headers.host);
     var ctx = context(res);
     res.render('index', ctx);
 });
