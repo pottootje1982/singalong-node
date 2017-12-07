@@ -64,7 +64,7 @@ export async function createSongbook(playlist : string, sleepTime : number = 0) 
         for (let i = 1; i <= keys.length && lyrics == null; i++) {
             let index = (i + engineIndex) % keys.length;
 
-            if (track !== tracks[0] && index === 0) {
+            if (engineIndex >= 0 && index === 0) {
                 await snooze(sleepTime, 0.5, 0.2);
             }
 
