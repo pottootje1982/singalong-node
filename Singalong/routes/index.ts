@@ -70,7 +70,7 @@ router.get('/find-in-database', async (req: express.Request, res: express.Respon
 router.get('/playlist', async (req, res) => {
     var ctx = context(res);
     ctx.selPlaylistId = req.query.id;
-    ctx.playlistUserId = req.query.ctx.userId;
+    ctx.playlistUserId = req.query.userId;
     ctx.textualPlaylist = await Spotify.getTextualPlaylist(ctx.playlistUserId, ctx.selPlaylistId);
     var playlist = download.textualPlaylistToPlaylist(ctx.textualPlaylist);
     ctx.playlist = playlist;

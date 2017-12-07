@@ -3,6 +3,7 @@ import { LyricsSearchEngine } from "./LyricsEngines/LyricsSearchEngine";
 import download = require('./download');
 
 export class Context {
+    userId: string;
     textualPlaylist: string;
     playlists: string[];
     playlist: Track[];
