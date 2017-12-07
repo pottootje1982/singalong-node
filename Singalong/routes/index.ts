@@ -67,6 +67,13 @@ router.get('/find-in-database', async (req: express.Request, res: express.Respon
     res.render('index', ctx);
 });
 
+router.get('/remove', async (req: express.Request, res: express.Response) => {
+    var ctx = context(res);
+    ctx.playlist = await download.getLyricsFromDatabase(ctx.playlist);
+    ctx.textualPlaylist = await Spotify.getDownloadedLyrics(ctx.playlist, req.query.downloaded);
+    res.render('index', ctx);
+});
+
 router.get('/playlist', async (req, res) => {
     var ctx = context(res);
     ctx.selPlaylistId = req.query.id;

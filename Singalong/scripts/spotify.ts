@@ -1,6 +1,5 @@
 ﻿import SpotifyWebApi = require('spotify-web-api-node');
 import { Track } from '../scripts/Track';
-import * as LyricsEngines from "./LyricsEngines/LyricsSearchEngine";
 
 var scopes = ['user-read-private', 'user-read-email'],
     clientId = '3a2c92864fe34fdfb674580a0901568e',
@@ -9,8 +8,7 @@ var scopes = ['user-read-private', 'user-read-email'],
 var spotifyApi;
 const playlistLimit = 100;
 
-export async function getTextualPlaylist(userId: string, playlistId: string) {
-    var playlist = await getFullPlaylist(userId, playlistId);
+function playlistToText(playlist: Track[]) {
     var textualPlaylist = '';
     for (let track of playlist) {
         textualPlaylist += track.toString() + '\n';
@@ -18,13 +16,19 @@ export async function getTextualPlaylist(userId: string, playlistId: string) {
     return textualPlaylist;
 }
 
+export async function getTextualPlaylist(userId: string, playlistId: string) {
+    var playlist = await getFullPlaylist(userId, playlistId);
+    return playlistToText(playlist);
+}
+
+export function getDownloadedLyrics(playlist: Track[], downloaded: boolean = false) {
+    var filtered = playlist.filter(track => downloaded ? track.lyrics == null : track.lyrics != null);
+    return playlistToText(filtered);
+}
+
 export async function getTitlePlaylist(userId: string, playlistId: string) {
     var playlist = await getFullPlaylist(userId, playlistId);
-    var textualPlaylist = '';
-    for (let track of playlist) {
-        textualPlaylist += track.title + '\n';
-    }
-    return textualPlaylist;
+    return playlistToText(playlist);
 }
 
 export async function getFullPlaylist(userId: string, playlistId: string): Promise<Track[]> {
