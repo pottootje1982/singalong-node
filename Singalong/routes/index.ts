@@ -69,9 +69,12 @@ router.get('/find-in-database', async (req: express.Request, res: express.Respon
 
 router.get('/remove', async (req: express.Request, res: express.Response) => {
     var ctx = context(res);
-    ctx.playlist = await download.getLyricsFromDatabase(ctx.playlist);
-    ctx.textualPlaylist = await Spotify.getDownloadedLyrics(ctx.playlist, req.query.downloaded);
-    res.render('index', ctx);
+
+    download.getLyricsFromDatabase(ctx.playlist).then(async(playlist) => {
+        ctx.playlist = playlist;
+        ctx.textualPlaylist = await Spotify.getDownloadedLyrics(ctx.playlist, req.query.downloaded);
+        res.render('index', ctx);
+    });
 });
 
 router.get('/playlist', async (req, res) => {
