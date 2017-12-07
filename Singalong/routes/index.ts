@@ -39,7 +39,7 @@ router.get('/authorized', async (req: express.Request, res: express.Response) =>
 
 function displayPlaylist(res: express.Response, userId: string, playlistId: string) {
     var ctx = context(res);
-    res.redirect('/playlist?ctx.userId=' + ctx.userId + '&id=' + playlistId);
+    res.redirect('/playlist?userId=' + ctx.userId + '&id=' + playlistId);
 }
 
 router.post('/search-playlists', async (req: express.Request, res: express.Response) => {
