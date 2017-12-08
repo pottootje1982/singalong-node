@@ -78,6 +78,12 @@ router.get('/remove', async (req: express.Request, res: express.Response) => {
     });
 });
 
+router.get('/hide-selected-track', async (req: express.Request, res: express.Response) => {
+    var ctx = context(res);
+    ctx.selectedTrack = null;
+    res.render('index', ctx);
+});
+
 router.get('/playlist', async (req, res) => {
     var ctx = context(res);
     ctx.selPlaylistId = req.query.id;

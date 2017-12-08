@@ -11,10 +11,10 @@ by editing this MSBuild file. In order to learn more about this please visit htt
   </PropertyGroup>
   <ItemGroup>
     <File Include="app.js">
-      <publishTime>12/07/2017 21:32:43</publishTime>
+      <publishTime>12/07/2017 22:04:00</publishTime>
     </File>
     <File Include="app.js.map">
-      <publishTime>12/07/2017 21:32:43</publishTime>
+      <publishTime>12/07/2017 22:04:00</publishTime>
     </File>
     <File Include="bin/Microsoft.NodejsTools.WebRole.dll">
       <publishTime>10/27/2017 22:12:06</publishTime>
@@ -15026,13 +15026,13 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>10/31/2017 16:28:22</publishTime>
     </File>
     <File Include="package.json">
-      <publishTime>12/01/2017 21:24:06</publishTime>
+      <publishTime>01/12/2017 21:24:06</publishTime>
     </File>
     <File Include="public/download.test.js">
-      <publishTime>12/07/2017 21:32:43</publishTime>
+      <publishTime>12/07/2017 22:04:00</publishTime>
     </File>
     <File Include="public/download.test.js.map">
-      <publishTime>12/07/2017 21:32:43</publishTime>
+      <publishTime>12/07/2017 22:04:00</publishTime>
     </File>
     <File Include="public/stylesheets/main.css">
       <publishTime>10/27/2017 22:12:06</publishTime>
@@ -15041,130 +15041,130 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>10/28/2017 22:00:50</publishTime>
     </File>
     <File Include="routes/index.js">
-      <publishTime>12/07/2017 21:32:43</publishTime>
+      <publishTime>12/07/2017 22:04:00</publishTime>
     </File>
     <File Include="routes/index.js.map">
-      <publishTime>12/07/2017 21:32:43</publishTime>
+      <publishTime>12/07/2017 22:04:00</publishTime>
     </File>
     <File Include="routes/user.js">
-      <publishTime>12/07/2017 21:32:43</publishTime>
+      <publishTime>12/07/2017 22:04:00</publishTime>
     </File>
     <File Include="routes/user.js.map">
-      <publishTime>12/07/2017 21:32:43</publishTime>
+      <publishTime>12/07/2017 22:04:00</publishTime>
     </File>
     <File Include="scripts/ContextMapper.js">
-      <publishTime>12/07/2017 21:32:43</publishTime>
+      <publishTime>12/07/2017 22:04:00</publishTime>
     </File>
     <File Include="scripts/ContextMapper.js.map">
-      <publishTime>12/07/2017 21:32:43</publishTime>
+      <publishTime>12/07/2017 22:04:00</publishTime>
     </File>
     <File Include="scripts/download.js">
-      <publishTime>12/07/2017 21:32:43</publishTime>
+      <publishTime>12/07/2017 22:04:00</publishTime>
     </File>
     <File Include="scripts/download.js.map">
-      <publishTime>12/07/2017 21:32:43</publishTime>
+      <publishTime>12/07/2017 22:04:00</publishTime>
     </File>
     <File Include="scripts/download.test.js">
-      <publishTime>12/07/2017 21:32:43</publishTime>
+      <publishTime>12/07/2017 22:04:00</publishTime>
     </File>
     <File Include="scripts/download.test.js.map">
-      <publishTime>12/07/2017 21:32:43</publishTime>
+      <publishTime>12/07/2017 22:04:00</publishTime>
     </File>
     <File Include="scripts/google.js">
-      <publishTime>12/07/2017 21:32:43</publishTime>
+      <publishTime>12/07/2017 22:04:00</publishTime>
     </File>
     <File Include="scripts/google.js.map">
-      <publishTime>12/07/2017 21:32:43</publishTime>
+      <publishTime>12/07/2017 22:04:00</publishTime>
     </File>
     <File Include="scripts/LyricsEngines/AzLyricsEngine.js">
-      <publishTime>12/07/2017 21:32:43</publishTime>
+      <publishTime>12/07/2017 22:04:00</publishTime>
     </File>
     <File Include="scripts/LyricsEngines/AzLyricsEngine.js.map">
-      <publishTime>12/07/2017 21:32:43</publishTime>
+      <publishTime>12/07/2017 22:04:00</publishTime>
     </File>
     <File Include="scripts/LyricsEngines/FindReplace.js">
-      <publishTime>12/07/2017 21:32:43</publishTime>
+      <publishTime>12/07/2017 22:04:00</publishTime>
     </File>
     <File Include="scripts/LyricsEngines/FindReplace.js.map">
-      <publishTime>12/07/2017 21:32:43</publishTime>
+      <publishTime>12/07/2017 22:04:00</publishTime>
     </File>
     <File Include="scripts/LyricsEngines/GeniusEngine.js">
-      <publishTime>12/07/2017 21:32:43</publishTime>
+      <publishTime>12/07/2017 22:04:00</publishTime>
     </File>
     <File Include="scripts/LyricsEngines/GeniusEngine.js.map">
-      <publishTime>12/07/2017 21:32:43</publishTime>
+      <publishTime>12/07/2017 22:04:00</publishTime>
     </File>
     <File Include="scripts/LyricsEngines/LyricsFreakEngine.js">
-      <publishTime>12/07/2017 21:32:43</publishTime>
+      <publishTime>12/07/2017 22:04:00</publishTime>
     </File>
     <File Include="scripts/LyricsEngines/LyricsFreakEngine.js.map">
-      <publishTime>12/07/2017 21:32:43</publishTime>
+      <publishTime>12/07/2017 22:04:00</publishTime>
     </File>
     <File Include="scripts/LyricsEngines/LyricsSearchEngine.js">
-      <publishTime>12/07/2017 21:32:43</publishTime>
+      <publishTime>12/07/2017 22:04:00</publishTime>
     </File>
     <File Include="scripts/LyricsEngines/LyricsSearchEngine.js.map">
-      <publishTime>12/07/2017 21:32:43</publishTime>
+      <publishTime>12/07/2017 22:04:00</publishTime>
     </File>
     <File Include="scripts/LyricsEngines/LyricsSearchEngine.test.js">
-      <publishTime>12/07/2017 21:32:43</publishTime>
+      <publishTime>12/07/2017 22:04:00</publishTime>
     </File>
     <File Include="scripts/LyricsEngines/LyricsSearchEngine.test.js.map">
-      <publishTime>12/07/2017 21:32:43</publishTime>
+      <publishTime>12/07/2017 22:04:00</publishTime>
     </File>
     <File Include="scripts/LyricsEngines/MetroLyricsEngine.js">
-      <publishTime>12/07/2017 21:32:43</publishTime>
+      <publishTime>12/07/2017 22:04:00</publishTime>
     </File>
     <File Include="scripts/LyricsEngines/MetroLyricsEngine.js.map">
-      <publishTime>12/07/2017 21:32:43</publishTime>
+      <publishTime>12/07/2017 22:04:00</publishTime>
     </File>
     <File Include="scripts/LyricsEngines/MusixMatchEngine.js">
-      <publishTime>12/07/2017 21:32:43</publishTime>
+      <publishTime>12/07/2017 22:04:00</publishTime>
     </File>
     <File Include="scripts/LyricsEngines/MusixMatchEngine.js.map">
-      <publishTime>12/07/2017 21:32:43</publishTime>
+      <publishTime>12/07/2017 22:04:00</publishTime>
     </File>
     <File Include="scripts/LyricsEngines/SongtekstenEngine.js">
-      <publishTime>12/07/2017 21:32:43</publishTime>
+      <publishTime>12/07/2017 22:04:00</publishTime>
     </File>
     <File Include="scripts/LyricsEngines/SongtekstenEngine.js.map">
-      <publishTime>12/07/2017 21:32:43</publishTime>
+      <publishTime>12/07/2017 22:04:00</publishTime>
     </File>
     <File Include="scripts/lyrics_db.js">
-      <publishTime>12/07/2017 21:32:43</publishTime>
+      <publishTime>12/07/2017 22:04:00</publishTime>
     </File>
     <File Include="scripts/lyrics_db.js.map">
-      <publishTime>12/07/2017 21:32:43</publishTime>
+      <publishTime>12/07/2017 22:04:00</publishTime>
     </File>
     <File Include="scripts/lyrics_db.test.js">
-      <publishTime>12/07/2017 21:32:43</publishTime>
+      <publishTime>12/07/2017 22:04:00</publishTime>
     </File>
     <File Include="scripts/lyrics_db.test.js.map">
-      <publishTime>12/07/2017 21:32:43</publishTime>
+      <publishTime>12/07/2017 22:04:00</publishTime>
     </File>
     <File Include="scripts/spotify.js">
-      <publishTime>12/07/2017 21:32:42</publishTime>
+      <publishTime>12/07/2017 22:04:00</publishTime>
     </File>
     <File Include="scripts/spotify.js.map">
-      <publishTime>12/07/2017 21:32:42</publishTime>
+      <publishTime>12/07/2017 22:04:00</publishTime>
     </File>
     <File Include="scripts/spotify.test.js">
-      <publishTime>12/07/2017 21:32:43</publishTime>
+      <publishTime>12/07/2017 22:04:00</publishTime>
     </File>
     <File Include="scripts/spotify.test.js.map">
-      <publishTime>12/07/2017 21:32:43</publishTime>
+      <publishTime>12/07/2017 22:04:00</publishTime>
     </File>
     <File Include="scripts/Track.js">
-      <publishTime>12/07/2017 21:32:42</publishTime>
+      <publishTime>12/07/2017 22:04:00</publishTime>
     </File>
     <File Include="scripts/Track.js.map">
-      <publishTime>12/07/2017 21:32:42</publishTime>
+      <publishTime>12/07/2017 22:04:00</publishTime>
     </File>
     <File Include="scripts/track.test.js">
-      <publishTime>12/07/2017 21:32:43</publishTime>
+      <publishTime>12/07/2017 22:04:00</publishTime>
     </File>
     <File Include="scripts/track.test.js.map">
-      <publishTime>12/07/2017 21:32:43</publishTime>
+      <publishTime>12/07/2017 22:04:00</publishTime>
     </File>
     <File Include="test/mocha.opts">
       <publishTime>10/28/2017 17:39:01</publishTime>
@@ -15176,13 +15176,13 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>10/27/2017 22:12:06</publishTime>
     </File>
     <File Include="views/index.pug">
-      <publishTime>07/12/2017 20:55:06</publishTime>
+      <publishTime>12/07/2017 22:03:35</publishTime>
     </File>
     <File Include="views/layout.pug">
-      <publishTime>06/12/2017 19:13:27</publishTime>
+      <publishTime>12/06/2017 19:13:27</publishTime>
     </File>
     <File Include="views/songbook.pug">
-      <publishTime>12/04/2017 21:18:48</publishTime>
+      <publishTime>04/12/2017 21:18:48</publishTime>
     </File>
     <File Include="Web.config">
       <publishTime>10/28/2017 22:00:50</publishTime>

@@ -42,6 +42,7 @@ block content
         br
         if (selectedTrack != null)
             h2(class='w3-border-bottom w3-border-light-grey w3-padding-16')= selectedTrack.artist + ' - ' + selectedTrack.title
+            a(href='hide-selected-track' style='float:right') ^^ Hide lyrics ^^
             div(style='width: 100%; overflow: hidden;')
                 textarea(id='lyrics_display' form="submit-lyrics-form" name="lyrics" rows="20" cols="50" style="width:68%; float: left;")= selectedTrack.lyrics
                 div(style="margin-left:70%;width:28%")
@@ -50,11 +51,17 @@ block content
                         a.w3-hover-text-green(href='/lyrics?artist=' + encodeURIComponent(selectedTrack.artist)  + '&title=' + encodeURIComponent(selectedTrack.title) + '&site=' + engine.name)= engine.name
                         br
                     br
-                    br
+                    br  
                     form(method='POST' action='lyrics' id='submit-lyrics-form')
                         button.w3-button.w3-black.w3-block(type='submit') Store lyrics
                     br
                     button.w3-button.w3-black.w3-block(onclick="$.ajax({url: '/lyrics', type: 'DELETE'});") Delete lyrics
+                    br
+                    form(method='GET' action='http://www.google.com/search' id='search-google' target='_blank')
+                        input(type='hidden' name='q' value=selectedTrack.toString() + '+lyrics')
+                        button.w3-button.w3-black.w3-block(type='submit') Search on Google
+
+        iframe(src="https://open.spotify.com/embed?uri=spotify:user:" + userId + ":playlist:" + selPlaylistId width="300" height="680" frameborder="0" allowtransparency="true" style="float:right")
 
         each track in playlist
             if (track.lyrics == null)
