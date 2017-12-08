@@ -69,6 +69,16 @@ export function setToken(code) {
             // Set the access token on the API object to use it in later calls
             console.log("Token is: " + data.body['access_token']);
             spotifyApi.setAccessToken(data.body['access_token']);
+            spotifyApi.setRefreshToken(data.body['refresh_token']);
+            var expireInterval = data.body['expires_in'];
+            console.log('Refreshed token. It now expires in ' + expireInterval + ' seconds!');
+
+            setInterval(function () {
+                clearInterval(this);
+                // Refresh token
+                spotifyApi.refreshAccessToken();
+            }, expireInterval * 1000);
+
         }, err => {
             console.log('Something went wrong!', err);
         });

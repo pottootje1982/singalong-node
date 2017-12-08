@@ -61,7 +61,7 @@ block content
                         input(type='hidden' name='q' value=selectedTrack.toString() + '+lyrics')
                         button.w3-button.w3-black.w3-block(type='submit') Search on Google
 
-        iframe(src="https://open.spotify.com/embed?uri=spotify:user:" + userId + ":playlist:" + selPlaylistId width="300" height="680" frameborder="0" allowtransparency="true" style="float:right")
+        iframe(src="https://open.spotify.com/embed?uri=spotify:user:" + playlistUserId + ":playlist:" + selPlaylistId width="300" height="680" frameborder="0" allowtransparency="true" style="float:right")
 
         each track in playlist
             if (track.lyrics == null)

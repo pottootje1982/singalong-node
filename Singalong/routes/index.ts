@@ -5,7 +5,6 @@
 - Hot Chocolate - I'll Put You Together Again contains garbage
 - NTH: Implement Levenshtein in SQL
 - unable to delete lyrics when stored with title only
-- Cancel search
 
  */
 import express = require('express');
