@@ -1,6 +1,7 @@
 ﻿import debug = require('debug');
 import express = require('express');
 import path = require('path');
+import bootstrap = require('bootstrap');
 
 import routes from './routes/index';
 import users from './routes/user';

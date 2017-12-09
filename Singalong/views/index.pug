@@ -1,74 +1,82 @@
 ﻿extends layout
 
 block content
-    h1.w3-border-bottom.w3-border-light-grey(style="text-align: center;") Singalong
-    a(href="authorize" style="float:right;margin-right:20px") Login to Spotify
-    div(style="margin-left:10px;width:100%")
+    div.page-header(style='width:100%')
+        h1(style="text-align: center") 
+            a(href='/') Singalong
+            small
+                a(href="authorize" style="float:right;margin-right:20px") Login to Spotify
+    div(style="margin-left:10px")
         if (error != null)
-            p(style="color:rgb(255,0,0)")= error
-        div(style='width:45%;float:left')
-            label Sleep time (ms):
-            input(form='playlist-form' type='text' name='sleepTime' value='3000')
-            br
-            label Playlist:
-            br
-
-            div(style='width: 100%')
-                textarea(form='playlist-form' rows="20" cols="50" name='playlist' style="width: 70%; float: left;")= textualPlaylist
-                div(style="margin-left:71%;margin-right:10px;width:180px")
-                    form(method='POST' action='songbook' id='playlist-form' target='_blank')
-                        button.w3-button.w3-black.w3-block(type='submit' target='_blank') Create Songbook
-                    br
-                    form(method='GET' action='/playlist-without-artist')
-                        button.w3-button.w3-black.w3-block(type='submit') Remove Artist
-                    br
-                    form(method='GET' action='/find-in-database')
-                        button.w3-button.w3-black.w3-block(type='submit') Find in database
-                    br
-                    form(method='GET' action='/remove')
-                        input(type='hidden' name='downloaded' value='true')
-                        button.w3-button.w3-black.w3-block(type='submit') Remove found
-                    br
-                    form(method='GET' action='/remove')
-                        button.w3-button.w3-black.w3-block(type='submit') Remove not found
-            div(style='float:left;width:100%')
-                form(method='POST' action='search-playlists' id='search-playlists')
-                    label Search playlists:
-                    input(form='search-playlists' type='text' name='playlistQuery' style='margin-left:10px')
-                    button.w3-button.w3-black.w3-section(type='submit' style='margin-left:10px') Search
-                each playlist in playlists
-                    a.w3-hover-text-green(href="/playlist?userId=" + playlist.owner.id + "&id=" + playlist.id)= playlist.name
-                    br
-
-        div(style="float:right;width:45%")
-            br
-            if (selectedTrack != null)
-                h2(class='w3-border-bottom w3-border-light-grey w3-padding-16')= selectedTrack.artist + ' - ' + selectedTrack.title
-                a(href='hide-selected-track' style='float:right') ^^ Hide lyrics ^^
-                div(style='width: 100%; overflow: hidden;')
-                    textarea(id='lyrics_display' form="submit-lyrics-form" name="lyrics" rows="20" cols="50" style="width:68%; float: left;")= selectedTrack.lyrics
-                    div(style="margin-left:70%;width:28%")
-                        h5 Download lyrics with:
-                        each engine in engines
-                            a.w3-hover-text-green(href='/lyrics?artist=' + encodeURIComponent(selectedTrack.artist)  + '&title=' + encodeURIComponent(selectedTrack.title) + '&site=' + engine.name)= engine.name
-                            br
+            div.alert.alert-danger
+                p(style="color:rgb(255,0,0)")= error
+        div(style='max-width:610px;float:left')
+            div.panel.panel-info(style='width:100%; height:500px')
+                div.panel-heading
+                    h3.panel-title Playlist to download
+                div.panel-body(style='padding-left:10px')
+                    textarea.form-control(form='playlist-form' rows="20" cols="50" name='playlist' style="width:420px; float: left;")= textualPlaylist
+                    div(style="margin-left:430px;margin-right:10px;width:180px")
+                        input.form-control(form='playlist-form' type='text' name='sleepTime' value='3000' data-toggle="tooltip" title="Sleep time (ms)" style="width:150px")
                         br
-                        br  
-                        form(method='POST' action='lyrics' id='submit-lyrics-form')
-                            button.w3-button.w3-black.w3-block(type='submit') Store lyrics
+                        form(method='POST' action='songbook' id='playlist-form' target='_blank')
+                            button.btn.btn-primary(type='submit' target='_blank' style='width:150px') Create Songbook
                         br
-                        button.w3-button.w3-black.w3-block(onclick="$.ajax({url: '/lyrics', type: 'DELETE'});") Delete lyrics
+                        form(method='GET' action='/playlist-without-artist')
+                            button.btn.btn-primary(type='submit' style='width:150px') Remove Artist
                         br
-                        form(method='GET' action='http://www.google.com/search' id='search-google' target='_blank')
-                            input(type='hidden' name='q' value=selectedTrack.toString() + '+lyrics')
-                            button.w3-button.w3-black.w3-block(type='submit') Search on Google
+                        form(method='GET' action='/find-in-database')
+                            button.btn.btn-primary(type='submit' style='width:150px') Find in database
+                        br
+                        form(method='GET' action='/remove')
+                            input(type='hidden' name='downloaded' value='true')
+                            button.btn.btn-primary(type='submit' style='width:150px') Remove found
+                        br
+                        form(method='GET' action='/remove')
+                            button.btn.btn-primary(type='submit' style='width:150px') Remove not found
+            div.panel.panel-info(style='float:left;width:100%')
+                div.panel-heading
+                    h3.panel-title Playlist to download
+                div.panel-body(style='padding-left:10px')
+                    form(method='POST' action='search-playlists' id='search-playlists')
+                        input.form-control(form='search-playlists' type='text' name='playlistQuery' placeholder='Search Spotify playlists')
+                    br
+                    each playlist in playlists
+                        a.w3-hover-text-green(href="/playlist?userId=" + playlist.owner.id + "&id=" + playlist.id)= playlist.name
+                        br
 
-            iframe(src="https://open.spotify.com/embed?uri=spotify:user:" + playlistUserId + ":playlist:" + selPlaylistId width="300" height="680" frameborder="0" allowtransparency="true" style="float:right")
-
-            each track in playlist
-                if (track.lyrics == null)
-                    a.w3-hover-text-green(href='/lyrics?artist=' + encodeURIComponent(track.artist)  + '&title=' + encodeURIComponent(track.title) style="color:rgb(255,0,0)")= track
-                else
-                    a.w3-hover-text-green(href='/lyrics?artist=' + encodeURIComponent(track.artist)  + '&title=' + encodeURIComponent(track.title))= track
-
+        div.panel.panel-info(style='margin-left:620px;height:800px')
+            div.panel-heading
+                h3.panel-title Lyrics 
+            div.panel-body(style='padding-left:10px')
                 br
+                if (selectedTrack != null)
+                    h2(class='w3-border-bottom w3-border-light-grey w3-padding-16')= selectedTrack.artist + ' - ' + selectedTrack.title
+                    a(href='hide-selected-track' style='float:right') ^^ Hide lyrics ^^
+                    div(style='width: 100%; overflow: hidden;')
+                        textarea(id='lyrics_display' form="submit-lyrics-form" name="lyrics" rows="20" cols="50" style="width:68%; float: left;")= selectedTrack.lyrics
+                        div(style="margin-left:70%;width:28%")
+                            h5 Download lyrics with:
+                            each engine in engines
+                                a.w3-hover-text-green(href='/lyrics?artist=' + encodeURIComponent(selectedTrack.artist)  + '&title=' + encodeURIComponent(selectedTrack.title) + '&site=' + engine.name)= engine.name
+                                br
+                            br
+                            br  
+                            form(method='POST' action='lyrics' id='submit-lyrics-form')
+                                button.btn.btn-primary(type='submit') Store lyrics
+                            br
+                            button.btn.btn-primary(onclick="$.ajax({url: '/lyrics', type: 'DELETE'});") Delete lyrics
+                            br
+                            form(method='GET' action='http://www.google.com/search' id='search-google' target='_blank')
+                                input(type='hidden' name='q' value=selectedTrack.toString() + '+lyrics')
+                                button.btn.btn-primary(type='submit') Search on Google
+
+                iframe(src="https://open.spotify.com/embed?uri=spotify:user:" + playlistUserId + ":playlist:" + selPlaylistId width="300" height="680" frameborder="0" allowtransparency="true" style="float:right;margin-right:10px")
+
+                each track, index in playlist
+                    if (track.lyrics == null)
+                        a.text-danger(href='/lyrics?artist=' + encodeURIComponent(track.artist)  + '&title=' + encodeURIComponent(track.title) style="color:rgb(255,0,0)")= index+1 + '. ' + track
+                    else
+                        a.text-success(href='/lyrics?artist=' + encodeURIComponent(track.artist)  + '&title=' + encodeURIComponent(track.title))= index+1 + '. ' + track
+
+                    br
