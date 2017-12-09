@@ -20,6 +20,8 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.use(function (req, res, next) {
     var context = contextMapper.getOrAdd(req.connection.remoteAddress);
+    context.error = null;
+    context.res = res;
     res.locals.context = context;
     next();
 });

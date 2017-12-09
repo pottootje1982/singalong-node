@@ -1,6 +1,7 @@
 ﻿import {Track} from "./track";
 import { LyricsSearchEngine } from "./LyricsEngines/LyricsSearchEngine";
 import download = require('./download');
+import express = require('express');
 
 export class Context {
     userId: string;
@@ -11,9 +12,16 @@ export class Context {
     selPlaylistId: string;
     playlistUserId: string;
     engines: { [engineKey: string]: LyricsSearchEngine; };
+    error: string = null;
+    res: express.Response;
 
     constructor() {
         this.engines = download.engines;
+    }
+
+    showError(message: string, error: string) {
+        this.error = message + ": " + error;
+        this.res.render('index', this);
     }
 }
 

@@ -33,13 +33,13 @@ router.get('/authorized', async (req: express.Request, res: express.Response) =>
     ctx.userId = data.body.id;
     data = await spotifyApi.getUserPlaylists(ctx.userId, { limit: 50 });
     ctx.playlists = data.body.items;
-    let firstPlaylist = ctx.playlists[0].id;
-    displayPlaylist(res, ctx.userId, firstPlaylist);
+    let firstPlaylist = ctx.playlists[0];
+    let playlistId = firstPlaylist.id;
+    displayPlaylist(res, firstPlaylist.owner.id, playlistId);
 });
 
 function displayPlaylist(res: express.Response, userId: string, playlistId: string) {
-    var ctx = context(res);
-    res.redirect('/playlist?userId=' + ctx.userId + '&id=' + playlistId);
+    res.redirect('/playlist?userId=' + userId + '&id=' + playlistId);
 }
 
 router.post('/search-playlists', async (req: express.Request, res: express.Response) => {
@@ -67,6 +67,8 @@ router.get('/find-in-database', async (req: express.Request, res: express.Respon
     res.render('index', ctx);
 });
 
+// Removes either tracks that were downloaded before,
+// or tracks that are not downloaded yet
 router.get('/remove', async (req: express.Request, res: express.Response) => {
     var ctx = context(res);
 
@@ -74,7 +76,7 @@ router.get('/remove', async (req: express.Request, res: express.Response) => {
         ctx.playlist = playlist;
         ctx.textualPlaylist = await Spotify.getDownloadedLyrics(ctx.playlist, req.query.downloaded);
         res.render('index', ctx);
-    });
+    }, err=>ctx.showError('Error retrieving lyrics from database', err));
 });
 
 router.get('/hide-selected-track', async (req: express.Request, res: express.Response) => {
@@ -87,10 +89,12 @@ router.get('/playlist', async (req, res) => {
     var ctx = context(res);
     ctx.selPlaylistId = req.query.id;
     ctx.playlistUserId = req.query.userId;
-    ctx.textualPlaylist = await Spotify.getTextualPlaylist(ctx.playlistUserId, ctx.selPlaylistId);
-    var playlist = download.textualPlaylistToPlaylist(ctx.textualPlaylist);
-    ctx.playlist = playlist;
-    res.render('index', ctx);
+    Spotify.getTextualPlaylist(ctx.playlistUserId, ctx.selPlaylistId).then(textualPlaylist => {
+        ctx.textualPlaylist = textualPlaylist;
+        var playlist = download.textualPlaylistToPlaylist(ctx.textualPlaylist);
+        ctx.playlist = playlist;
+        res.render('index', ctx);
+    }, err => ctx.showError('Error retrieving playlist ' + ctx.selPlaylistId + ' from database for user ' + ctx.playlistUserId, err));
 });
 
 router.get('/lyrics', async (req, res) => {

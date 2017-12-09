@@ -3,17 +3,19 @@
 block content
     h1.w3-border-bottom.w3-border-light-grey(style="text-align: center;") Singalong
     a(href="authorize" style="float:right;margin-right:20px") Login to Spotify
-    div.w3-sidebar.w3-bar-block.w3-white.w3-card(style="width:45%")
-        div(style='margin-left:3%;width:100%')
+    div(style="margin-left:10px;width:100%")
+        if (error != null)
+            p(style="color:rgb(255,0,0)")= error
+        div(style='width:45%;float:left')
             label Sleep time (ms):
             input(form='playlist-form' type='text' name='sleepTime' value='3000')
             br
             label Playlist:
             br
 
-            div(style='width: 100%; overflow: hidden;')
+            div(style='width: 100%')
                 textarea(form='playlist-form' rows="20" cols="50" name='playlist' style="width: 70%; float: left;")= textualPlaylist
-                div(style="margin-left:71%;margin-right:10px;width:25%")
+                div(style="margin-left:71%;margin-right:10px;width:180px")
                     form(method='POST' action='songbook' id='playlist-form' target='_blank')
                         button.w3-button.w3-black.w3-block(type='submit' target='_blank') Create Songbook
                     br
@@ -29,44 +31,44 @@ block content
                     br
                     form(method='GET' action='/remove')
                         button.w3-button.w3-black.w3-block(type='submit') Remove not found
-            br
-            form(method='POST' action='search-playlists' id='search-playlists')
-                label Search playlists:
-                input(form='search-playlists' type='text' name='playlistQuery' style='margin-left:10px')
-                button.w3-button.w3-black.w3-section(type='submit' style='margin-left:10px') Search
-            each playlist in playlists
-                a.w3-hover-text-green(href="/playlist?userId=" + playlist.owner.id + "&id=" + playlist.id)= playlist.name
-                br
+            div(style='float:left;width:100%')
+                form(method='POST' action='search-playlists' id='search-playlists')
+                    label Search playlists:
+                    input(form='search-playlists' type='text' name='playlistQuery' style='margin-left:10px')
+                    button.w3-button.w3-black.w3-section(type='submit' style='margin-left:10px') Search
+                each playlist in playlists
+                    a.w3-hover-text-green(href="/playlist?userId=" + playlist.owner.id + "&id=" + playlist.id)= playlist.name
+                    br
 
-    div(style="margin-left:47%")
-        br
-        if (selectedTrack != null)
-            h2(class='w3-border-bottom w3-border-light-grey w3-padding-16')= selectedTrack.artist + ' - ' + selectedTrack.title
-            a(href='hide-selected-track' style='float:right') ^^ Hide lyrics ^^
-            div(style='width: 100%; overflow: hidden;')
-                textarea(id='lyrics_display' form="submit-lyrics-form" name="lyrics" rows="20" cols="50" style="width:68%; float: left;")= selectedTrack.lyrics
-                div(style="margin-left:70%;width:28%")
-                    h5 Download lyrics with:
-                    each engine in engines
-                        a.w3-hover-text-green(href='/lyrics?artist=' + encodeURIComponent(selectedTrack.artist)  + '&title=' + encodeURIComponent(selectedTrack.title) + '&site=' + engine.name)= engine.name
+        div(style="float:right;width:45%")
+            br
+            if (selectedTrack != null)
+                h2(class='w3-border-bottom w3-border-light-grey w3-padding-16')= selectedTrack.artist + ' - ' + selectedTrack.title
+                a(href='hide-selected-track' style='float:right') ^^ Hide lyrics ^^
+                div(style='width: 100%; overflow: hidden;')
+                    textarea(id='lyrics_display' form="submit-lyrics-form" name="lyrics" rows="20" cols="50" style="width:68%; float: left;")= selectedTrack.lyrics
+                    div(style="margin-left:70%;width:28%")
+                        h5 Download lyrics with:
+                        each engine in engines
+                            a.w3-hover-text-green(href='/lyrics?artist=' + encodeURIComponent(selectedTrack.artist)  + '&title=' + encodeURIComponent(selectedTrack.title) + '&site=' + engine.name)= engine.name
+                            br
                         br
-                    br
-                    br  
-                    form(method='POST' action='lyrics' id='submit-lyrics-form')
-                        button.w3-button.w3-black.w3-block(type='submit') Store lyrics
-                    br
-                    button.w3-button.w3-black.w3-block(onclick="$.ajax({url: '/lyrics', type: 'DELETE'});") Delete lyrics
-                    br
-                    form(method='GET' action='http://www.google.com/search' id='search-google' target='_blank')
-                        input(type='hidden' name='q' value=selectedTrack.toString() + '+lyrics')
-                        button.w3-button.w3-black.w3-block(type='submit') Search on Google
+                        br  
+                        form(method='POST' action='lyrics' id='submit-lyrics-form')
+                            button.w3-button.w3-black.w3-block(type='submit') Store lyrics
+                        br
+                        button.w3-button.w3-black.w3-block(onclick="$.ajax({url: '/lyrics', type: 'DELETE'});") Delete lyrics
+                        br
+                        form(method='GET' action='http://www.google.com/search' id='search-google' target='_blank')
+                            input(type='hidden' name='q' value=selectedTrack.toString() + '+lyrics')
+                            button.w3-button.w3-black.w3-block(type='submit') Search on Google
 
-        iframe(src="https://open.spotify.com/embed?uri=spotify:user:" + playlistUserId + ":playlist:" + selPlaylistId width="300" height="680" frameborder="0" allowtransparency="true" style="float:right")
+            iframe(src="https://open.spotify.com/embed?uri=spotify:user:" + playlistUserId + ":playlist:" + selPlaylistId width="300" height="680" frameborder="0" allowtransparency="true" style="float:right")
 
-        each track in playlist
-            if (track.lyrics == null)
-                a.w3-hover-text-green(href='/lyrics?artist=' + encodeURIComponent(track.artist)  + '&title=' + encodeURIComponent(track.title) style="color:rgb(255,0,0)")= track
-            else
-                a.w3-hover-text-green(href='/lyrics?artist=' + encodeURIComponent(track.artist)  + '&title=' + encodeURIComponent(track.title))= track
+            each track in playlist
+                if (track.lyrics == null)
+                    a.w3-hover-text-green(href='/lyrics?artist=' + encodeURIComponent(track.artist)  + '&title=' + encodeURIComponent(track.title) style="color:rgb(255,0,0)")= track
+                else
+                    a.w3-hover-text-green(href='/lyrics?artist=' + encodeURIComponent(track.artist)  + '&title=' + encodeURIComponent(track.title))= track
 
-            br
+                br

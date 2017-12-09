@@ -39,7 +39,8 @@ export async function getFullPlaylist(userId: string, playlistId: string): Promi
     var total = data.body.tracks.total;
     while (total > count || data.body.items === 0) {
         data = await spotifyApi.getPlaylistTracks(userId,
-            playlistId, { offset: playlist.length, 'limit': playlistLimit, 'fields': 'items' });
+            playlistId,
+            { offset: playlist.length, 'limit': playlistLimit, 'fields': 'items' });
         count += addToPlaylist(data.body.items, playlist);
     }
     return playlist;
@@ -74,6 +75,7 @@ export function setToken(code) {
             console.log('Refreshed token. It now expires in ' + expireInterval + ' seconds!');
 
             setInterval(function () {
+                console.log('Refreshed token. It now expires in ' + expireInterval + ' seconds!');
                 clearInterval(this);
                 // Refresh token
                 spotifyApi.refreshAccessToken();
