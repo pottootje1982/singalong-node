@@ -71,7 +71,7 @@ block content
                                 input(type='hidden' name='q' value=selectedTrack.toString() + '+lyrics')
                                 button.btn.btn-primary(type='submit') Search on Google
 
-                iframe(src="https://open.spotify.com/embed?uri=spotify:user:" + playlistUserId + ":playlist:" + selPlaylistId width="300" height="680" frameborder="0" allowtransparency="true" style="float:right;margin-right:10px")
+                iframe(style="margin-right:10px;margin-bottom:10px;position:fixed;bottom:0;right:0" src="https://open.spotify.com/embed?uri=spotify:user:" + playlistUserId + ":playlist:" + selPlaylistId width="300" height="380" frameborder="0" allowtransparency="true")
 
                 each track, index in playlist
                     if (track.lyrics == null)
