@@ -1,11 +1,9 @@
 ﻿extends layout
 
 block content
-    div.page-header(style='width:100%')
-        h1(style="text-align: center") 
-            a(href='/') Singalong
-            small
-                a(href="authorize" style="float:right;margin-right:20px") Login to Spotify
+    nav.navbar.navbar-expand-lg.navbar-dark.bg-primary
+      h1(style="text-align: center") SingaLong
+      a.nav-link(href='authorize' style='color:white;position:absolute;top:0;right:0;margin-right:10px;margin-top:10px') Login to Spotify
     div(style="margin-left:10px")
         if (error != null)
             div.alert.alert-danger
@@ -45,7 +43,7 @@ block content
                         a.w3-hover-text-green(href="/playlist?userId=" + playlist.owner.id + "&id=" + playlist.id)= playlist.name
                         br
 
-        div.panel.panel-info(style='margin-left:620px;height:800px')
+        div.panel.panel-info(style='margin-left:620px;min-height:800px')
             div.panel-heading
                 h3.panel-title Lyrics 
             div.panel-body(style='padding-left:10px')
@@ -66,9 +64,9 @@ block content
                                 button.btn.btn-primary(type='submit') Store lyrics
                             br
                             button.btn.btn-primary(onclick="$.ajax({url: '/lyrics', type: 'DELETE'});") Delete lyrics
-                            br
                             form(method='GET' action='http://www.google.com/search' id='search-google' target='_blank')
                                 input(type='hidden' name='q' value=selectedTrack.toString() + '+lyrics')
+                                br
                                 button.btn.btn-primary(type='submit') Search on Google
 
                 iframe(style="margin-right:10px;margin-bottom:10px;position:fixed;bottom:0;right:0" src="https://open.spotify.com/embed?uri=spotify:user:" + playlistUserId + ":playlist:" + selPlaylistId width="300" height="380" frameborder="0" allowtransparency="true")

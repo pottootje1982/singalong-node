@@ -31,16 +31,13 @@ router.get('/authorized', async (req: express.Request, res: express.Response) =>
     await Spotify.setToken(req.query.code);
     var data = await spotifyApi.getMe();
     ctx.userId = data.body.id;
-    data = await spotifyApi.getUserPlaylists(ctx.userId, { limit: 50 });
-    ctx.playlists = data.body.items;
-    let firstPlaylist = ctx.playlists[0];
-    let playlistId = firstPlaylist.id;
-    displayPlaylist(res, firstPlaylist.owner.id, playlistId);
+    await spotifyApi.getUserPlaylists(ctx.userId, { limit: 50 }).then(data => {
+        ctx.playlists = data.body.items;
+        let firstPlaylist = ctx.playlists[0];
+        let playlistId = firstPlaylist.id;
+        showPlaylist(ctx, res, firstPlaylist.owner.id, playlistId);
+    });
 });
-
-function displayPlaylist(res: express.Response, userId: string, playlistId: string) {
-    res.redirect('/playlist?userId=' + userId + '&id=' + playlistId);
-}
 
 router.post('/search-playlists', async (req: express.Request, res: express.Response) => {
     var ctx = context(res);
@@ -49,7 +46,7 @@ router.post('/search-playlists', async (req: express.Request, res: express.Respo
     if (ctx.playlists.length > 0) {
         let firstPlaylist = ctx.playlists[0];
         var playlistUserId = firstPlaylist.owner.id;
-        displayPlaylist(res, playlistUserId, firstPlaylist.id);
+        showPlaylist(ctx, res, playlistUserId, firstPlaylist.id);
     }
     else 
         res.render('index', ctx);
@@ -85,16 +82,20 @@ router.get('/hide-selected-track', async (req: express.Request, res: express.Res
     res.render('index', ctx);
 });
 
-router.get('/playlist', async (req, res) => {
-    var ctx = context(res);
-    ctx.selPlaylistId = req.query.id;
-    ctx.playlistUserId = req.query.userId;
+function showPlaylist(ctx, res: express.Response, playlistUserId : string, selPlaylistId : string) {
+    ctx.selPlaylistId = selPlaylistId;
+    ctx.playlistUserId = playlistUserId;
     Spotify.getTextualPlaylist(ctx.playlistUserId, ctx.selPlaylistId).then(textualPlaylist => {
         ctx.textualPlaylist = textualPlaylist;
         var playlist = download.textualPlaylistToPlaylist(ctx.textualPlaylist);
         ctx.playlist = playlist;
         res.render('index', ctx);
     }, err => ctx.showError('Error retrieving playlist ' + ctx.selPlaylistId + ' from database for user ' + ctx.playlistUserId, err));
+}
+
+router.get('/playlist', async (req, res) => {
+    var ctx = context(res);
+    showPlaylist(ctx, res, req.query.userId, req.query.id);
 });
 
 router.get('/lyrics', async (req, res) => {

@@ -12,12 +12,23 @@ var connection = mysql.createConnection({
 
 connection.connect();
 
+// Default wait time out is 28800 seconds (8 hours), that's why we ping each hour the DB connection to avoid connection reset
+setInterval(() => {
+    console.log();
+    connection.query("SELECT 1", (err, rows) => {
+        console.log('Executed Database heartbeat');
+        if (err) {
+            console.log("QUERY ERROR: " + err);
+        }
+    });
+}, 1000 * 3600);
+
 export function query(artist, title) : Promise<Track[]> {
     return new Promise((resolve, reject) => {
         if (title === '' || title == null) resolve(null);
         var artistPart = artist != null ? 'Artist = ' + p(artist) + ' AND ' : '';
         let query = 'SELECT * FROM lyrics WHERE ' + artistPart + 'Title = ' + p(title);
-        console.log('Executing query: ' + query);
+        //console.log('Executing query: ' + query);
         connection.query(query,
             (error, results, fields) => {
                 if (error) reject(Error(error));
@@ -53,7 +64,7 @@ export function insert(track: Track, lyrics: string) {
     return new Promise((resolve, reject) => {
         let query = "INSERT INTO lyrics (Artist,Title,Site,Lyrics) " +
             'VALUES("' + track.artist + '", "' + track.title + '", "' + track.site + '", ' + formatLyrics(lyrics) + ')';
-        console.log('Executing query: ' + query);
+        //console.log('Executing query: ' + query);
         connection.query(query,
             (error, results, fields) => {
                 if (error) reject(Error(error));
@@ -75,7 +86,7 @@ function updateInternal(track: Track, lyrics: string) {
         let query = "UPDATE lyrics " +
             'SET Site=' + p(track.site) + ', Lyrics=' + formatLyrics(lyrics) + ' ' +
             'WHERE Artist=' + p(track.artist) + ' AND Title=' + p(track.title);
-        console.log('Executing query: ' + query);
+        //console.log('Executing query: ' + query);
         connection.query(query,
             (error, results, fields) => {
                 if (error) reject(Error(error));
