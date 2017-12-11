@@ -6,6 +6,9 @@
 - NTH: Implement Levenshtein in SQL
 - unable to delete lyrics when stored with title only
 
+
+- log can be viewed with: sudo cat /var/log/upstart/singalong.log
+- startup script: /etc/init/singalong.conf
  */
 import express = require('express');
 var lyrics_db = require('../scripts/lyrics_db');

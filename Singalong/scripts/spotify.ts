@@ -78,7 +78,9 @@ export function setToken(code) {
                 console.log('Refreshed token. It now expires in ' + expireInterval + ' seconds!');
                 clearInterval(this);
                 // Refresh token
-                spotifyApi.refreshAccessToken();
+                spotifyApi.refreshAccessToken().then(data => {
+                    this.spotifyApi.setAccessToken(data.body['access_token']);
+                });
             }, expireInterval * 1000);
 
         }, err => {
