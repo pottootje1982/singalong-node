@@ -62,12 +62,19 @@
     <Content Include="package.json" />
     <Content Include="public\stylesheets\main.css" />
     <Content Include="README.md" />
-    <Content Include="views\index.pug" />
-    <Content Include="views\layout.pug" />
-    <Content Include="views\error.pug" />
-    <Content Include="views\songbook.pug">
+    <Compile Include="views\index.pug">
+      <Publish>True</Publish>
+    </Compile>
+    <Compile Include="views\layout.pug">
+      <Publish>True</Publish>
+    </Compile>
+    <Compile Include="views\error.pug">
+      <Publish>True</Publish>
+    </Compile>
+    <Compile Include="views\songbook.pug">
       <SubType>Code</SubType>
-    </Content>
+      <Publish>True</Publish>
+    </Compile>
     <Content Include="Web.config" />
     <Content Include="Web.Debug.config" />
     <TypeScriptCompile Include="scripts\LyricsEngines\AzLyricsEngine.ts">

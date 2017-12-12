@@ -144,6 +144,12 @@ router.get('/download-track', async (req, res) => {
     res.send({ track: track });
 });
 
+router.get('/toggle-player', async (req, res) => {
+    var ctx = context(res);
+    ctx.showSpotifyPlayer = !ctx.showSpotifyPlayer;
+    res.render('index', ctx);
+});
+
 router.post('/songbook', async (req, res) => {
     var ctx = context(res);
     ctx.textualPlaylist = req.body.playlist;

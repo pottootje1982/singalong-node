@@ -77,8 +77,10 @@ block content
                                 br
                                 button.btn.btn-primary(type='submit') Search on Google
 
-                button(src='spotify.png' onclick='minimizeSpotifyPlayer()' style='width:25px;height:25px;background: url(spotify.png);background-size: 100%;position:fixed;bottom:0;right:0;border: none')
-                iframe(id='spotifyPlayer' style="margin-right:25px;margin-bottom:0px;position:fixed;bottom:0;right:0" src="https://open.spotify.com/embed?uri=spotify:user:" + playlistUserId + ":playlist:" + selPlaylistId width="300" height="380" frameborder="0" allowtransparency="true")
+                form(method='GET' action='/toggle-player')
+                    button(src='spotify.png' type='submit' onclick='minimizeSpotifyPlayer()' style='width:25px;height:25px;background: url(spotify.png);background-size: 100%;position:fixed;bottom:0;right:0;border: none')
+                - var visibility = showSpotifyPlayer ? 'visible' : 'hidden';
+                iframe(id='spotifyPlayer' style="margin-right:25px;margin-bottom:0px;position:fixed;bottom:0;right:0;visibility:" + visibility src="https://open.spotify.com/embed?uri=spotify:user:" + playlistUserId + ":playlist:" + selPlaylistId width="300" height="380" frameborder="0" allowtransparency="true")
 
                 div(style='height:800px;overflow:auto')
                     each track, index in playlist

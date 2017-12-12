@@ -14,6 +14,7 @@ export class Context {
     playlistUserId: string;
     engines: { [engineKey: string]: LyricsSearchEngine; };
     error: string = null;
+    showSpotifyPlayer = true;
     res: express.Response;
 
     constructor() {

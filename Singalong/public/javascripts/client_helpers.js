@@ -32,11 +32,3 @@ function downloadPlaylistRecursive(playlist, sleepTime, index) {
         }
     });
 }
-
-var isSpotifyMinimized;
-
-function minimizeSpotifyPlayer() {
-    $('#spotifyPlayer').css('visibility', isSpotifyMinimized ? 'visible' : 'hidden');
-    isSpotifyMinimized = !isSpotifyMinimized;
-}
-
