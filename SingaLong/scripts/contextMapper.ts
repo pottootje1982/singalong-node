@@ -8,6 +8,7 @@ export class Context {
     textualPlaylist: string;
     playlists: string[] = [];
     playlist: Track[] = [];
+    searchedDb: false;
     selectedTrack: string;
     selPlaylistId: string;
     playlistUserId: string;

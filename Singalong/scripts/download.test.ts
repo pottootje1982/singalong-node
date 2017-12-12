@@ -106,6 +106,12 @@ describe("Downloading lyrics", () => {
         assert.equal(lyrics, null);
     });
 
+    it('Download track',
+        async() => {
+            var track = await download.downloadTrack(new Track('Beatles', "Yellow Submarine"));
+            assert(track.lyrics.indexOf('') >= 0);
+        });
+
     it("Get lyrics from database", async () => {
         let playlist = [
             new Track('1793 George Harrison', 'Give me Love'),

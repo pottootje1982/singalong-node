@@ -1,11 +1,10 @@
 ﻿/*
  * GET home page.
 
-- Give back partial results when creating songbook
 - Hot Chocolate - I'll Put You Together Again contains garbage
 - NTH: Implement Levenshtein in SQL
 - unable to delete lyrics when stored with title only
-
+- probably one big query for all lyrics is quicker
 
 - log can be viewed with: sudo cat /var/log/upstart/singalong.log
 - startup script: /etc/init/singalong.conf
@@ -63,7 +62,9 @@ router.get('/playlist-without-artist', async (req: express.Request, res: express
 
 router.get('/find-in-database', async (req: express.Request, res: express.Response) => {
     var ctx = context(res);
-    ctx.playlist = await download.getLyricsFromDatabase(ctx.playlist);
+    if (!ctx.searchedDb)
+        ctx.playlist = await download.getLyricsFromDatabase(ctx.playlist);
+    ctx.searchedDb = true;
     res.render('index', ctx);
 });
 
@@ -72,11 +73,18 @@ router.get('/find-in-database', async (req: express.Request, res: express.Respon
 router.get('/remove', async (req: express.Request, res: express.Response) => {
     var ctx = context(res);
 
-    download.getLyricsFromDatabase(ctx.playlist).then(async(playlist) => {
-        ctx.playlist = playlist;
-        ctx.textualPlaylist = await Spotify.getDownloadedLyrics(ctx.playlist, req.query.downloaded);
+    if (ctx.searchedDb) {
+        download.getLyricsFromDatabase(ctx.playlist).then(async (playlist) => {
+                ctx.playlist = playlist;
+                ctx.textualPlaylist = await Spotify.getDownloadedLyrics(ctx.playlist, req.query.downloaded);
+                ctx.searchedDb = true;
+                res.render('index', ctx);
+            },
+            err => ctx.showError('Error retrieving lyrics from database', err));
+    } else {
+        ctx.textualPlaylist = Spotify.getDownloadedLyrics(ctx.playlist, req.query.downloaded);
         res.render('index', ctx);
-    }, err=>ctx.showError('Error retrieving lyrics from database', err));
+    }
 });
 
 router.get('/hide-selected-track', async (req: express.Request, res: express.Response) => {
@@ -98,6 +106,7 @@ function showPlaylist(ctx, res: express.Response, playlistUserId : string, selPl
 
 router.get('/playlist', async (req, res) => {
     var ctx = context(res);
+    ctx.searchedDb = false;
     showPlaylist(ctx, res, req.query.userId, req.query.id);
 });
 
@@ -130,6 +139,10 @@ router.delete('/lyrics', async (req, res) => {
     res.render('index', ctx);
 });
 
+router.get('/download-track', async (req, res) => {
+    var track = await download.downloadTrack(req.query.track, parseInt(req.query.sleepTime));
+    res.send({ track: track });
+});
 
 router.post('/songbook', async (req, res) => {
     var ctx = context(res);
@@ -137,6 +150,14 @@ router.post('/songbook', async (req, res) => {
     var book = await download.createSongbook(ctx.textualPlaylist, parseInt(req.body.sleepTime));
     res.render('songbook', {
         book: book,
+    });
+});
+
+router.get('/songbook-downloaded', async (req, res) => {
+    var ctx = context(res);
+    var playlist = await download.getLyricsFromDatabase(ctx.playlist, false);
+    res.render('songbook', {
+        book: playlist,
     });
 });
 

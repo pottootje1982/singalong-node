@@ -8,7 +8,7 @@ var scopes = ['user-read-private', 'user-read-email'],
 var spotifyApi;
 const playlistLimit = 100;
 
-function playlistToText(playlist: Track[]) {
+export function playlistToText(playlist: Track[]) {
     var textualPlaylist = '';
     for (let track of playlist) {
         textualPlaylist += track.toString() + '\n';

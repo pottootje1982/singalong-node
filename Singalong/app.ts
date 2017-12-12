@@ -6,6 +6,7 @@ import routes from './routes/index';
 import users from './routes/user';
 import contextMapper = require('./scripts/ContextMapper');
 var bodyParser = require('body-parser');
+//require('bootstrap');
 
 var app = express();
 
