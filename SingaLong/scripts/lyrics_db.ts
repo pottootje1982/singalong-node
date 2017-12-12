@@ -19,14 +19,11 @@ function createConnection() {
 createConnection();
 
 // Default wait time out is 28800 seconds (8 hours), that's why we ping each hour the DB connection to avoid connection reset
-// test for ECONNRESET
+
 setInterval(() => {
-    console.log();
-    connection.query("SELECT 1", (err, rows) => {
+    executeQuery("SELECT 1", results => {
         console.log('Executed Database heartbeat');
-        if (err) {
-            console.log("QUERY ERROR: " + err);
-        }
+        return results;
     });
 }, 1000 * 3600);
 
