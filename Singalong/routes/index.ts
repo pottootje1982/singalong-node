@@ -153,9 +153,10 @@ router.get('/toggle-player', async (req, res) => {
 router.post('/songbook', async (req, res) => {
     var ctx = context(res);
     ctx.textualPlaylist = req.body.playlist;
-    var book = await download.createSongbook(ctx.textualPlaylist, parseInt(req.body.sleepTime));
+    var playlist = download.textualPlaylistToPlaylist(ctx.textualPlaylist);
+    playlist = await download.getLyricsFromDatabase(playlist, false);
     res.render('songbook', {
-        book: book,
+        book: playlist,
     });
 });
 
