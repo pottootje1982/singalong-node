@@ -33,7 +33,7 @@ function executeQuery(query : string, processResults = null) {
         connection.query(query,
             (error, results, fields) => {
                 if (error) {
-                    if (error.indexOf('ECONNRESET')) { // Reestablish connection in case of connection reset
+                    if (error.code === 'ECONNRESET') { // Reestablish connection in case of connection reset
                         console.log("Re-establishing connection");
                         createConnection();
                     }
