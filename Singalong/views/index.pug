@@ -28,16 +28,17 @@ block content
                             button.btn.btn-primary(type='submit' style='width:160px') Find in database
                         br
                         form(method='GET' action='/remove')
-                            input(type='hidden' name='downloaded' value='true')
-                            button.btn.btn-primary(type='submit' style='width:160px') Remove found
-                        br
-                        form(method='GET' action='/remove')
-                            button.btn.btn-primary(type='submit' style='width:160px') Remove not found
+                            input(type='hidden' name='downloaded' value='false')
+                            button.btn.btn-primary(type='submit' style='width:160px') Not yet downloaded
                         br
                         button.btn.btn-primary(id='downloadButton' style='width:160px' onclick='downloadPlaylist(' + JSON.stringify(playlist) + ', 0)') Download
                         form(method='GET' action='/songbook-downloaded' target='_blank' )
                             br
                             button.btn.btn-primary(type='submit' style='width:160px' data-toggle="tooltip" title="Create Songbook from downloaded lyrics only" target='_blank' ) Created DB Songbook 
+                        form(method='GET' action='/toggle-player')
+                            br
+                            div(style='margin:auto;width:30px')
+                                button(src='spotify.png' type='submit' onclick='minimizeSpotifyPlayer()' style='width:30px;height:30px;background: url(spotify.png);background-size: 100%;border: none')
 
 
             div.panel.panel-info(style='float:left;width:100%')
@@ -77,8 +78,6 @@ block content
                                 br
                                 button.btn.btn-primary(type='submit') Search on Google
 
-                form(method='GET' action='/toggle-player')
-                    button(src='spotify.png' type='submit' onclick='minimizeSpotifyPlayer()' style='width:25px;height:25px;background: url(spotify.png);background-size: 100%;position:fixed;bottom:0;right:0;border: none')
                 - var visibility = showSpotifyPlayer ? 'visible' : 'hidden';
                 iframe(id='spotifyPlayer' style="margin-right:25px;margin-bottom:0px;position:fixed;bottom:0;right:0;visibility:" + visibility src="https://open.spotify.com/embed?uri=spotify:user:" + playlistUserId + ":playlist:" + selPlaylistId width="300" height="380" frameborder="0" allowtransparency="true")
 

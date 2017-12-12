@@ -73,14 +73,14 @@ router.get('/find-in-database', async (req: express.Request, res: express.Respon
 router.get('/remove', async (req: express.Request, res: express.Response) => {
     var ctx = context(res);
 
-    if (ctx.searchedDb) {
+    if (!ctx.searchedDb) {
         download.getLyricsFromDatabase(ctx.playlist).then(async (playlist) => {
-                ctx.playlist = playlist;
-                ctx.textualPlaylist = await Spotify.getDownloadedLyrics(ctx.playlist, req.query.downloaded);
-                ctx.searchedDb = true;
-                res.render('index', ctx);
-            },
-            err => ctx.showError('Error retrieving lyrics from database', err));
+            ctx.playlist = playlist;
+            ctx.textualPlaylist = await Spotify.getDownloadedLyrics(ctx.playlist, req.query.downloaded);
+            ctx.searchedDb = true;
+            res.render('index', ctx);
+        },
+        err => ctx.showError('Error retrieving lyrics from database', err));
     } else {
         ctx.textualPlaylist = Spotify.getDownloadedLyrics(ctx.playlist, req.query.downloaded);
         res.render('index', ctx);
