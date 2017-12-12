@@ -85,7 +85,7 @@ function formatLyrics(lyrics: string) {
 }
 
 function p(value: string) {
-    return value == null ? "NULL" : '"' + value.replace("&", "\&").replace('"', '\"').trim() + '"';
+    return value == null ? "NULL" : '"' + value.replace(/&/g, "\&").replace(/"/g, '\\"').trim() + '"';
 }
 
 function updateInternal(track: Track, lyrics: string) {
