@@ -45,4 +45,8 @@
     canClean() : boolean {
         return this.cleanArtist() !== this.artist || this.cleanTitle() !== this.title;
     }
+
+    static copy(track) {
+        return new Track(track.artist, track.title, track.site, track.lyrics);
+    }
 }

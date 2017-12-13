@@ -14,7 +14,7 @@ block content
                 div.panel-heading
                     h3.panel-title Playlist to download
                 div.panel-body(style='padding-left:10px')
-                    textarea.form-control(form='playlist-form' rows="20" cols="50" name='playlist' style="width:420px; float: left;")= textualPlaylist
+                    textarea.form-control(id='playlistText' form='playlist-form' rows="20" cols="50" name='playlist' style="width:420px; float: left;")= textualPlaylist
                     div(style="margin-left:430px;margin-right:10px;width:180px")
                         input.form-control(form='playlist-form' id='sleepTimeInput' type='text' name='sleepTime' value='3000' data-toggle="tooltip" title="Sleep time (ms)" style="width:150px")
                         br
@@ -25,7 +25,7 @@ block content
                             input(type='hidden' name='downloaded' value='false')
                             button.btn.btn-primary(type='submit' style='width:160px') Not yet downloaded
                         br
-                        button.btn.btn-primary(id='downloadButton' style='width:160px' onclick='downloadPlaylist(' + JSON.stringify(playlist) + ', 0)') Download
+                        button.btn.btn-primary(id='downloadButton' style='width:160px' onclick='downloadPlaylist()') Download
                         form(method='POST' action='songbook' id='playlist-form' target='_blank')
                             br
                             button.btn.btn-primary(type='submit' target='_blank' style='width:160px') Create Songbook
@@ -64,19 +64,15 @@ block content
                             br
                             br  
                             form(method='POST' action='lyrics' id='submit-lyrics-form')
-                                button.btn.btn-primary(type='submit') Store lyrics
+                                button.btn.btn-primary(type='submit' style='width:160px') Store lyrics
                             br
-                            button.btn.btn-primary(onclick="$.ajax({url: '/lyrics', type: 'DELETE'});") Delete lyrics
+                            button.btn.btn-primary(onclick="$.ajax({url: '/lyrics', type: 'DELETE'});" style='width:160px') Delete lyrics
                             form(method='GET' action='http://www.google.com/search' id='search-google' target='_blank')
                                 input(type='hidden' name='q' value=selectedTrack.toString() + '+lyrics')
                                 br
-                                button.btn.btn-primary(type='submit') Search on Google
+                                button.btn.btn-primary(type='submit' style='width:160px') Search on Google
 
                 - var visibility = showSpotifyPlayer ? 'visible' : 'hidden';
                 iframe(id='spotifyPlayer' style="margin-right:25px;margin-bottom:0px;position:fixed;bottom:0;right:0;visibility:" + visibility src="https://open.spotify.com/embed?uri=spotify:user:" + playlistUserId + ":playlist:" + selPlaylistId width="300" height="380" frameborder="0" allowtransparency="true")
 
-                div(style='height:1100px;overflow:auto')
-                    each track, index in playlist
-                        - var style = !searchedDb ? '' : (track.lyrics == null ? 'color:red' : 'color:green');
-                        a(id=index href='/lyrics?artist=' + encodeURIComponent(track.artist)  + '&title=' + encodeURIComponent(track.title) style=style)= index+1 + '. ' + track
-                        br
+                include playlist.pug

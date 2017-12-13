@@ -9,6 +9,7 @@
 - log can be viewed with: sudo cat /var/log/upstart/singalong.log
 - startup script: /etc/init/singalong.conf
  */
+var pug = require('pug');
 import express = require('express');
 var lyrics_db = require('../scripts/lyrics_db');
 var download = require("../scripts/download");
@@ -139,8 +140,16 @@ router.delete('/lyrics', async (req, res) => {
     res.render('index', ctx);
 });
 
+router.post('/textual-playlist-to-playlist', async (req, res) => {
+    var ctx = context(res);
+    ctx.textualPlaylist = req.body.playlist;
+    ctx.playlist = download.textualPlaylistToPlaylist(ctx.textualPlaylist);
+    let playlistHtml = pug.renderFile('views/playlist.pug', ctx);
+    res.send({ playlist: ctx.playlist, playlistHtml: playlistHtml });
+});
+
 router.get('/download-track', async (req, res) => {
-    var track = await download.downloadTrack(req.query.track, parseInt(req.query.sleepTime));
+    var track = await download.downloadTrack(Track.copy(req.query.track), parseInt(req.query.sleepTime));
     res.send({ track: track });
 });
 

@@ -1,0 +1,5 @@
+﻿div(style='height:1100px;overflow:auto' id='playlist')
+    each track, index in playlist
+        - var style = !searchedDb ? '' : (track.lyrics == null ? 'color:red' : 'color:green');
+        a(id=index href='/lyrics?artist=' + encodeURIComponent(track.artist)  + '&title=' + encodeURIComponent(track.title) style=style)= index+1 + '. ' + track
+        br

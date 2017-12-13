@@ -75,6 +75,7 @@
       <SubType>Code</SubType>
       <Publish>True</Publish>
     </Compile>
+    <Content Include="views\playlist.pug" />
     <Content Include="Web.config" />
     <Content Include="Web.Debug.config" />
     <TypeScriptCompile Include="scripts\LyricsEngines\AzLyricsEngine.ts">

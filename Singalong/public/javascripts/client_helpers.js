@@ -1,13 +1,21 @@
 ﻿var downloading = false;
 
-function downloadPlaylist(playlist) {
+function downloadPlaylist() {
     if (downloading) {
         downloading = false;
     } else {
-        downloading = true;
-        $('#downloadButton').text('Cancel');
-        var sleepTime = parseInt($('#sleepTimeInput').val());
-        downloadPlaylistRecursive(playlist, sleepTime, 0);
+        $.ajax({
+            url: '/textual-playlist-to-playlist', type: 'POST',
+            data: { playlist: $('#playlistText').val() },
+            success: function(res) {
+                $('#playlist').html(res.playlistHtml);
+
+                downloading = true;
+                $('#downloadButton').text('Cancel');
+                var sleepTime = parseInt($('#sleepTimeInput').val());
+                downloadPlaylistRecursive(res.playlist, sleepTime, 0);
+            }
+        });
     }
 }
 
@@ -17,6 +25,9 @@ function downloadPlaylistRecursive(playlist, sleepTime, index) {
         $('#downloadButton').text('Download');
         return;
     }
+
+    $("#" + index).css({ 'color': 'orange' });
+
     $.ajax({
         url: '/download-track', type: 'GET',
         data: { track: playlist[0], sleepTime: sleepTime },
