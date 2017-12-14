@@ -14,7 +14,8 @@ function downloadPlaylist() {
                 $('#downloadButton').text('Cancel');
                 var sleepTime = parseInt($('#sleepTimeInput').val());
                 downloadPlaylistRecursive(res.playlist, sleepTime, 0);
-            }
+            },
+            error: function (xhr) { alert("An error occured: " + xhr.status + " " + xhr.statusText);}
         });
     }
 }
@@ -40,6 +41,7 @@ function downloadPlaylistRecursive(playlist, sleepTime, index) {
                 $("#" + index).css({ 'color': 'red' });
             }
             downloadPlaylistRecursive(playlist.slice(1), sleepTime, index + 1);
-        }
+        },
+        error: function (xhr) { alert("An error occured: " + xhr.status + " " + xhr.statusText); }
     });
 }

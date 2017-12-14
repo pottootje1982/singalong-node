@@ -145,12 +145,12 @@ router.post('/textual-playlist-to-playlist', async (req, res) => {
     ctx.textualPlaylist = req.body.playlist;
     ctx.playlist = download.textualPlaylistToPlaylist(ctx.textualPlaylist);
     let playlistHtml = pug.renderFile('views/playlist.pug', ctx);
-    res.send({ playlist: ctx.playlist, playlistHtml: playlistHtml });
+    res.json({ playlist: ctx.playlist, playlistHtml: playlistHtml, status: 200 });
 });
 
 router.get('/download-track', async (req, res) => {
     var track = await download.downloadTrack(Track.copy(req.query.track), parseInt(req.query.sleepTime));
-    res.send({ track: track });
+    res.json({ track: track, status: 200 });
 });
 
 router.get('/toggle-player', async (req, res) => {
