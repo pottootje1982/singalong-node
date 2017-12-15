@@ -1,7 +1,7 @@
 ﻿import SpotifyWebApi = require('spotify-web-api-node');
 import { Track } from '../scripts/Track';
 
-var scopes = ['user-read-private', 'user-read-email'],
+var scopes = ['user-read-private', 'user-read-email', 'user-read-currently-playing', 'user-read-playback-state'],
     clientId = '3a2c92864fe34fdfb674580a0901568e',
     state = 'some-state-of-my-choice';
 
@@ -48,10 +48,9 @@ export async function getFullPlaylist(userId: string, playlistId: string): Promi
 
 function addToPlaylist(items, playlist: Track[]): number {
     for (let item of items) {
-        let artist = item.track.artists[0].name;
-        let title = item.track.name;
-        if (artist === '' && title === '') continue;
-        playlist.push(new Track(artist, title));
+        var track = Track.fromSpotify(item.track);
+        if (track == null) continue;
+        playlist.push(track);
     }
     return items.length;
 }

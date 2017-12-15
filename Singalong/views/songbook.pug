@@ -1,6 +1,7 @@
 ﻿extends layout
 
 block content
+    script(src="/javascripts/songbook.js")
     div(style='margin-left:3%;width:100%')
         each track in book
             h2(class='w3-border-bottom w3-border-light-grey w3-padding-16')= track.toString()

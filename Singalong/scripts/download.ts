@@ -31,13 +31,12 @@ export async function getLyricsFromDatabase(playlist: Track[], pushAllTracks : b
     var lyricsFromDatabase = [];
     for (let track of playlist) {
         var cached = await lyrics_db.queryTrack(track);
-        let trackResult = new Track(track.artist, track.title);
         if (cached != null) {
-            trackResult.site = cached.site;
-            trackResult.lyrics = cached.lyrics;
+            track.site = cached.site;
+            track.lyrics = cached.lyrics;
         }
         if (pushAllTracks || cached != null)
-            lyricsFromDatabase.push(trackResult);
+            lyricsFromDatabase.push(track);
     }
     return lyricsFromDatabase;
 }

@@ -140,17 +140,17 @@ router.delete('/lyrics', async (req, res) => {
     res.render('index', ctx);
 });
 
-router.post('/textual-playlist-to-playlist', async (req, res) => {
+router.get('/textual-playlist-to-playlist', async (req, res) => {
     var ctx = context(res);
-    ctx.textualPlaylist = req.body.playlist;
+    ctx.textualPlaylist = req.query.playlist;
     ctx.playlist = download.textualPlaylistToPlaylist(ctx.textualPlaylist);
     let playlistHtml = pug.renderFile('views/playlist.pug', ctx);
-    res.json({ playlist: ctx.playlist, playlistHtml: playlistHtml, status: 200 });
+    res.json({ playlist: ctx.playlist, playlistHtml: playlistHtml });
 });
 
 router.get('/download-track', async (req, res) => {
     var track = await download.downloadTrack(Track.copy(req.query.track), parseInt(req.query.sleepTime));
-    res.json({ track: track, status: 200 });
+    res.json({ track: track });
 });
 
 router.get('/toggle-player', async (req, res) => {
@@ -175,6 +175,12 @@ router.get('/songbook-downloaded', async (req, res) => {
     res.render('songbook', {
         book: playlist,
     });
+});
+
+router.get('/current-track', async (req, res) => {
+    var currentTrack = await spotifyApi.getMyCurrentPlayingTrack();
+    let fromSpotify = Track.fromSpotify(currentTrack.body.item);
+    res.json({trackName: fromSpotify.toString()});
 });
 
 function context(res) {

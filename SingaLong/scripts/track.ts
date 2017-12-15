@@ -1,32 +1,36 @@
 ﻿export class Track {
     artist: string;
     title: string;
+    site: string;
+    lyrics: string;
+    fullTrackTitle: string;
 
-    constructor(artist: string, title: string, site?: string, lyrics?: string) {
+    constructor(artist: string, title: string, site?: string, lyrics?: string, fullTrackTitle?: string) {
         this.artist = artist.trim();
         this.title = title.trim();
         this.site = site;
         this.lyrics = lyrics;
+        this.fullTrackTitle = fullTrackTitle;
     }
 
     public toString(): string {
+        if (this.fullTrackTitle != null) return this.fullTrackTitle;
         if (this.artist == null || this.artist === '')
             return this.title;
         return this.artist + ' - ' + this.title;
     }
 
-    public static parse(track: string): Track {
-        var trackItems = track.split('-', 2);
+    public static parse(trackStr: string): Track {
+        var trackItems = trackStr.split('-', 2);
         trackItems = trackItems.map(track => track.trim());
         if (trackItems.length < 1) return null;
         let artist = trackItems.length === 1? '' : trackItems[0].trim();
         let title = trackItems.length === 1 ? trackItems[0] : trackItems[1];
         if (artist === '' && title === '') return null;
-        return new Track(artist, title);
+        let track = new Track(artist, title);
+        track.fullTrackTitle = trackStr;
+        return track;
     }
-
-    site: string;
-    lyrics: string;
 
     private cleanString(str: string) {
         var regex = /\d*([^\(\)\[\]]*)/i;
@@ -47,6 +51,13 @@
     }
 
     static copy(track) {
-        return new Track(track.artist, track.title, track.site, track.lyrics);
+        return new Track(track.artist, track.title, track.site, track.lyrics, track.fullTrackTitle);
+    }
+
+    static fromSpotify(track) : Track {
+        let artist = track.artists[0].name;
+        let title = track.name;
+        if (artist === '' && title === '') return null;
+        return new Track(artist, title);
     }
 }

@@ -5,7 +5,7 @@
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
     <Name>SingaLong</Name>
     <RootNamespace>ExpressApp3</RootNamespace>
-    <NameOfLastUsedPublishProfile>ftp</NameOfLastUsedPublishProfile>
+    <NameOfLastUsedPublishProfile>ftp_remote</NameOfLastUsedPublishProfile>
     <LaunchUrl>authorize</LaunchUrl>
   </PropertyGroup>
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
@@ -62,6 +62,9 @@
     <Content Include="package.json" />
     <Content Include="public\stylesheets\main.css" />
     <Content Include="README.md" />
+    <Compile Include="public\javascripts\songbook.js">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="views\index.pug">
       <Publish>True</Publish>
     </Compile>
