@@ -144,8 +144,11 @@ router.get('/textual-playlist-to-playlist', async (req, res) => {
     var ctx = context(res);
     ctx.textualPlaylist = req.query.playlist;
     ctx.playlist = download.textualPlaylistToPlaylist(ctx.textualPlaylist);
-    let playlistHtml = pug.renderFile('views/playlist.pug', ctx);
-    res.json({ playlist: ctx.playlist, playlistHtml: playlistHtml });
+    res.render('playlist',
+        ctx,
+        (err, playlistHtml) => {
+            res.json({ playlist: ctx.playlist, playlistHtml: playlistHtml });
+        });
 });
 
 router.get('/download-track', async (req, res) => {

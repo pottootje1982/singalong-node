@@ -8,7 +8,7 @@ function downloadPlaylist() {
             url: '/textual-playlist-to-playlist', type: 'GET',
             data: { playlist: $('#playlistText').val() },
             dataType: "json",
-            success: function(res) {
+            success: function (res) {
                 $('#playlist').html(res.playlistHtml);
 
                 downloading = true;

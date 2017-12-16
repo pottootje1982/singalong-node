@@ -28,7 +28,11 @@ export function getDownloadedLyrics(playlist: Track[], downloaded: boolean = fal
 
 export async function getTitlePlaylist(userId: string, playlistId: string) {
     var playlist = await getFullPlaylist(userId, playlistId);
-    return playlistToText(playlist);
+    var textualPlaylist = '';
+    for (let track of playlist) {
+        textualPlaylist += track.title + '\n';
+    }
+    return textualPlaylist;
 }
 
 export async function getFullPlaylist(userId: string, playlistId: string): Promise<Track[]> {

@@ -30,17 +30,20 @@ setInterval(() => {
 function executeQuery(query : string, processResults = null) {
     return new Promise((resolve, reject) => {
         //console.log('Executing query: ' + query);
-        connection.query(query,
-            (error, results, fields) => {
-                if (error) {
-                    if (error.code === 'ECONNRESET') { // Reestablish connection in case of connection reset
-                        console.log("Re-establishing connection");
-                        createConnection();
-                    }
-                    reject(Error(error));
-                }
-                else resolve(processResults != null ? processResults(results) : results);
-            });
+        try {
+            connection.query(query,
+                (error, results, fields) => {
+                    if (error) {
+                        if (error.code === 'ECONNRESET') { // Reestablish connection in case of connection reset
+                            console.log("Re-establishing connection");
+                            createConnection();
+                        }
+                        reject(Error(error));
+                    } else resolve(processResults != null ? processResults(results) : results);
+                });
+        } catch (error) {
+            console.log("Failed executing query " + query, error);
+        }
     });
 }
 
