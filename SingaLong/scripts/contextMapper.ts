@@ -5,7 +5,7 @@ import express = require('express');
 
 export class Context {
     userId: string;
-    textualPlaylist: string;
+    textualPlaylist: string = 'yellow submarine\nanother day';
     playlists: string[] = [];
     playlist: Track[] = [];
     searchedDb: false;

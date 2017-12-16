@@ -9,7 +9,6 @@
 - log can be viewed with: sudo cat /var/log/upstart/singalong.log
 - startup script: /etc/init/singalong.conf
  */
-var pug = require('pug');
 import express = require('express');
 var lyrics_db = require('../scripts/lyrics_db');
 var download = require("../scripts/download");
@@ -34,7 +33,7 @@ router.get('/authorized', async (req: express.Request, res: express.Response) =>
     await Spotify.setToken(req.query.code);
     var data = await spotifyApi.getMe();
     ctx.userId = data.body.id;
-    await spotifyApi.getUserPlaylists(ctx.userId, { limit: 50 }).then(data => {
+    await spotifyApi.getUserPlaylists(null, { limit: 100 }).then(data => {
         ctx.playlists = data.body.items;
         let firstPlaylist = ctx.playlists[0];
         let playlistId = firstPlaylist.id;
@@ -124,7 +123,9 @@ router.get('/lyrics', async (req, res) => {
         ctx.selectedTrack.lyrics = await download.engines[site].searchLyrics(artist, title);
         ctx.selectedTrack.site = site;
     }
-    res.render('index', ctx);
+    res.render('track', {selectedTrack:ctx.selectedTrack, engines: ctx.engines}, (err, html) => {
+        res.json(html);
+    });
 });
 
 router.post('/lyrics', async (req, res) => {

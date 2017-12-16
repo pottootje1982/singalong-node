@@ -5,9 +5,8 @@ function downloadPlaylist() {
         downloading = false;
     } else {
         $.ajax({
-            url: '/textual-playlist-to-playlist', type: 'GET',
+            url: '/textual-playlist-to-playlist',
             data: { playlist: $('#playlistText').val() },
-            dataType: "json",
             success: function (res) {
                 $('#playlist').html(res.playlistHtml);
 
@@ -31,9 +30,8 @@ function downloadPlaylistRecursive(playlist, sleepTime, index) {
     $("#" + index).css({ 'color': 'orange' });
 
     $.ajax({
-        url: '/download-track', type: 'GET',
+        url: '/download-track',
         data: { track: playlist[0], sleepTime: sleepTime },
-        contentType: "application/json", dataType: "json",
         success: function (result) {
             var track = result.track;
             console.log('Downloaded ', track, track.lyrics != null, "#" + index);
@@ -45,5 +43,15 @@ function downloadPlaylistRecursive(playlist, sleepTime, index) {
             downloadPlaylistRecursive(playlist.slice(1), sleepTime, index + 1);
         },
         error: function (xhr, exception) { alert("An error occured: " + xhr.status + " " + xhr.statusText + '\n' + exception); }
+    });
+}
+
+function getLyrics(artist, title) {
+    $.ajax({
+        url: '/lyrics',
+        data: {artist: artist, title:title},
+        success: function(html) {
+            $('#track-section').html(html);
+        }
     });
 }
