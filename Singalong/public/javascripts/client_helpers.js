@@ -1,12 +1,12 @@
 ﻿var downloading = false;
 
-function downloadPlaylist() {
+function downloadPlaylist(fullPlaylist) {
     if (downloading) {
         downloading = false;
     } else {
         $.ajax({
-            url: '/textual-playlist-to-playlist',
-            data: { playlist: $('#playlistText').val() },
+            url: '/playlist-to-download',
+            data: { playlist: fullPlaylist ? null : $('#playlistText').val(), fullPlaylist: fullPlaylist },
             success: function (res) {
                 $('#playlist').html(res.playlistHtml);
 

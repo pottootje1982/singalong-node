@@ -1,5 +1,22 @@
 ﻿div(style='height:1100px;overflow:auto' id='playlist')
+    div(style="float:right;width:160px")
+        input.form-control(form='playlist-form' id='sleepTimeInput' type='text' name='sleepTime' value='3000' data-toggle="tooltip" title="Sleep time (ms)" style="width:150px")
+        br
+        button.btn.btn-primary(id='downloadButton' style='width:160px' onclick='downloadPlaylist(true)') Download
+        form(method='POST' action='songbook' id='playlist-form' target='_blank')
+            br
+            button.btn.btn-primary(type='submit' target='_blank' style='width:160px') Create Songbook
+        form(method='GET' action='/toggle-player')
+            br
+            div(style='margin:auto;width:30px')
+            button(src='spotify.png' type='submit' onclick='minimizeSpotifyPlayer()' style='width:30px;height:30px;background: url(spotify.png);background-size: 100%;border: none')
+
     each track, index in playlist
         - var style = !searchedDb ? '' : (track.lyrics == null ? 'color:red' : 'color:green');
+        form(method='POST' action='play-track' id='play-track')
+            input(type='hidden' name='userId' value=playlistUserId)
+            input(type='hidden' name='playlistId' value=selPlaylistId)
+            input(type='hidden' name='trackId' value=track.id)
+            button(src='play.png' type='submit' style='width:15px;height:15px;background: url(play.png);background-size: 100%;border: none')
         a(id=index href='#' onclick='getLyrics("' + track.artist + '", "' + track.title + '")' style=style+';max-height:10')= index+1 + '. ' + track
         br

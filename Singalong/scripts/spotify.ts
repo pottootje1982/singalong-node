@@ -1,7 +1,7 @@
 ﻿import SpotifyWebApi = require('spotify-web-api-node');
 import { Track } from '../scripts/Track';
 
-var scopes = ['user-read-private', 'user-read-email', 'user-read-currently-playing', 'user-read-playback-state', 'playlist-read-private'],
+var scopes = ['user-read-private', 'user-read-email', 'user-read-currently-playing', 'user-read-playback-state', 'playlist-read-private', 'user-modify-playback-state'],
     clientId = '3a2c92864fe34fdfb674580a0901568e',
     state = 'some-state-of-my-choice';
 

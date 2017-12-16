@@ -84,17 +84,20 @@ router.get('/hide-selected-track', async (req: express.Request, res: express.Res
     res.render('index', ctx);
 });
 
-function showPlaylist(ctx, res: express.Response, playlistUserId : string, selPlaylistId : string) {
+async function showPlaylist(ctx, res: express.Response, playlistUserId : string, selPlaylistId : string) {
     ctx.selPlaylistId = selPlaylistId;
     ctx.playlistUserId = playlistUserId;
-    Spotify.getTextualPlaylist(ctx.playlistUserId, ctx.selPlaylistId).then(textualPlaylist => {
-        ctx.textualPlaylist = textualPlaylist;
-        var playlist = download.textualPlaylistToPlaylist(ctx.textualPlaylist);
-        ctx.playlist = playlist;
+    try {
+        ctx.playlist = await Spotify.getFullPlaylist(playlistUserId, selPlaylistId);
+        ctx.textualPlaylist = await Spotify.playlistToText(ctx.playlist);
         res.render('playlist', ctx, (err, playlistHtml) => {
-            res.json({textualPlaylist: textualPlaylist, playlistHtml: playlistHtml});
+            res.json({ textualPlaylist: ctx.textualPlaylist, playlistHtml: playlistHtml });
         });
-    }, err => ctx.showError('Error retrieving playlist ' + ctx.selPlaylistId + ' from database for user ' + ctx.playlistUserId, err));
+    }
+    catch (err)
+    {
+        ctx.showError('Error retrieving playlist ' + ctx.selPlaylistId + ' from database for user ' + ctx.playlistUserId, err);
+    }
 }
 
 router.get('/playlist', async (req, res) => {
@@ -134,10 +137,12 @@ router.delete('/lyrics', async (req, res) => {
     res.render('index', ctx);
 });
 
-router.get('/textual-playlist-to-playlist', async (req, res) => {
+router.get('/playlist-to-download', async (req, res) => {
     var ctx = context(res);
-    ctx.textualPlaylist = req.query.playlist;
-    ctx.playlist = download.textualPlaylistToPlaylist(ctx.textualPlaylist);
+    if (!req.query.fullPlaylist) {
+        ctx.textualPlaylist = req.query.playlist;
+        ctx.playlist = download.textualPlaylistToPlaylist(ctx.textualPlaylist);
+    }
     res.render('playlist',
         ctx,
         (err, playlistHtml) => {
@@ -178,6 +183,15 @@ router.get('/current-track', async (req, res) => {
     var currentTrack = await spotifyApi.getMyCurrentPlayingTrack();
     let fromSpotify = Track.fromSpotify(currentTrack.body.item);
     res.json({trackName: fromSpotify.toString()});
+});
+
+router.post('/play-track', async (req, res) => {
+    var ctx = context(res);
+    await spotifyApi.play({
+        context_uri: 'spotify:user:' + req.body.userId + ':playlist:' + req.body.playlistId,
+        offset: {uri: 'spotify:track:' + req.body.trackId } 
+    });
+    res.render('index', ctx);
 });
 
 function context(res) {

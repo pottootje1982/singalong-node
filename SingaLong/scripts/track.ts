@@ -1,16 +1,18 @@
 ﻿export class Track {
+    id: string;
     artist: string;
     title: string;
     site: string;
     lyrics: string;
     fullTrackTitle: string;
 
-    constructor(artist: string, title: string, site?: string, lyrics?: string, fullTrackTitle?: string) {
+    constructor(artist: string, title: string, site?: string, lyrics?: string, fullTrackTitle?: string, id?: string, ) {
         this.artist = artist.trim();
         this.title = title.trim();
         this.site = site;
         this.lyrics = lyrics;
         this.fullTrackTitle = fullTrackTitle;
+        this.id = id;
     }
 
     public toString(): string {
@@ -27,7 +29,7 @@
         let artist = trackItems.length === 1? '' : trackItems[0].trim();
         let title = trackItems.length === 1 ? trackItems[0] : trackItems[1];
         if (artist === '' && title === '') return null;
-        let track = new Track(artist, title);
+        let track = new Track(null, artist, title);
         track.fullTrackTitle = trackStr;
         return track;
     }
@@ -51,13 +53,15 @@
     }
 
     static copy(track) {
-        return new Track(track.artist, track.title, track.site, track.lyrics, track.fullTrackTitle);
+        return new Track(track.artist, track.title, track.site, track.lyrics, track.fullTrackTitle, track.id);
     }
 
     static fromSpotify(track) : Track {
         let artist = track.artists[0].name;
         let title = track.name;
         if (artist === '' && title === '') return null;
-        return new Track(artist, title);
+        let result = new Track(artist, title);
+        result.id = track.id;
+        return result;
     }
 }

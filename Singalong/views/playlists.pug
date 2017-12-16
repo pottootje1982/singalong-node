@@ -1,12 +1,12 @@
 ﻿div.panel.panel-info.card(id='playlists-section' style='float:left;width:100%')
     div.panel-heading.card-header(role="tab" id="headingTwo")
         h3.panel-title 
-            a(data-toggle="collapse" href="#collapseTwo" aria-expanded="true" aria-controls="collapseTwo") Spotify Playlists
+            a.collapsed(data-toggle="collapse" href="#collapseTwo" aria-expanded="true" aria-controls="collapseTwo") Spotify Playlists
     div.panel-body.collapse.show(id="collapseTwo" role="tabpanel" aria-labelledby="headingTwo" data-parent="#accordion")
         div.card-body
             form(method='POST' action='search-playlists' id='search-playlists')
                 input.form-control(form='search-playlists' type='text' name='playlistQuery' placeholder='Search Spotify playlists')
             br
             each playlist in playlists
-                a.w3-hover-text-green(id='playlist-link' onclick='showPlaylist("' + playlist.owner.id + '", "' + playlist.id + '")')= playlist.name
+                a(id='playlist-link' onclick='showPlaylist("' + playlist.owner.id + '", "' + playlist.id + '")')= playlist.name
                 br

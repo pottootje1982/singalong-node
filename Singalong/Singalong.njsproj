@@ -54,6 +54,9 @@
     <None Include="file.pubxml" />
     <None Include="ftp.pubxml" />
     <None Include="ftp_remote.pubxml" />
+    <Content Include="public\play.png">
+      <Publish>True</Publish>
+    </Content>
     <Content Include="public\spotify.png">
       <Publish>True</Publish>
     </Content>
