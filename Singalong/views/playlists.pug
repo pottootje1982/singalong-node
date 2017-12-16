@@ -8,5 +8,5 @@
                 input.form-control(form='search-playlists' type='text' name='playlistQuery' placeholder='Search Spotify playlists')
             br
             each playlist in playlists
-                a(id='playlist-link' onclick='showPlaylist("' + playlist.owner.id + '", "' + playlist.id + '")')= playlist.name
+                a(id='playlist-link' href='#' onclick='showPlaylist("' + playlist.owner.id + '", "' + playlist.id + '")')= playlist.name
                 br

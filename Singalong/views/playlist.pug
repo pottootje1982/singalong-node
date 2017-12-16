@@ -17,6 +17,6 @@
             input(type='hidden' name='userId' value=playlistUserId)
             input(type='hidden' name='playlistId' value=selPlaylistId)
             input(type='hidden' name='trackId' value=track.id)
-            button(src='play.png' type='submit' style='width:15px;height:15px;background: url(play.png);background-size: 100%;border: none')
+            button(src='play.png' type='submit' style='float:left;width:15px;height:15px;background: url(play.png);background-size: 100%;border: none;margin-right:5px')
         a(id=index href='#' onclick='getLyrics("' + track.artist + '", "' + track.title + '")' style=style+';max-height:10')= index+1 + '. ' + track
         br
