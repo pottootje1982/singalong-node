@@ -55,3 +55,22 @@ function getLyrics(artist, title) {
         }
     });
 }
+
+function showPlaylist(userId, playlistId) {
+    $.ajax({
+        url: '/playlist',
+        data: { userId: userId, id: playlistId },
+        success: function (res) {
+            $('#playlistText').val(res.textualPlaylist);
+            $('#playlist').html(res.playlistHtml);
+        }
+    });
+}
+
+$(document).ready(function () {
+    $("#collapseTwo").collapse();
+    var playlistLinks = $('#playlist-link:first');
+    if (playlistLinks != null) {
+        playlistLinks.trigger('click');
+    }
+});

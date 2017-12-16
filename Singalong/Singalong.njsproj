@@ -6,8 +6,7 @@
     <Name>SingaLong</Name>
     <RootNamespace>ExpressApp3</RootNamespace>
     <NameOfLastUsedPublishProfile>ftp</NameOfLastUsedPublishProfile>
-    <LaunchUrl>
-    </LaunchUrl>
+    <LaunchUrl>authorize</LaunchUrl>
   </PropertyGroup>
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
@@ -81,6 +80,10 @@
     </Compile>
     <Content Include="views\playlist.pug">
       <Publish>True</Publish>
+    </Content>
+    <Content Include="views\playlists.pug" />
+    <Content Include="views\textual_playlist.pug">
+      <SubType>Code</SubType>
     </Content>
     <Content Include="views\track.pug">
       <Publish>True</Publish>

@@ -1,0 +1,25 @@
+﻿div.panel.panel-info.card
+    div.panel-heading.card-header(role="tab" id="headingOne")
+        h3.panel-title
+            a.collapsed(data-toggle="collapse" href="#collapseOne" aria-expanded="false" aria-controls="collapseOne") Freeform playlist
+    div.panel-body.collapse(id="collapseOne" role="tabpanel" aria-labelledby="headingOne" data-parent="#accordion")
+        div.card-body
+            textarea.form-control(id='playlistText' form='playlist-form' rows="20" cols="50" name='playlist' style="width:420px; float: left;")= textualPlaylist
+            div(style="margin-left:430px;margin-right:10px;width:180px")
+                input.form-control(form='playlist-form' id='sleepTimeInput' type='text' name='sleepTime' value='3000' data-toggle="tooltip" title="Sleep time (ms)" style="width:150px")
+                br
+                form(method='GET' action='/playlist-without-artist')
+                    button.btn.btn-primary(type='submit' style='width:160px') Remove Artist
+                br
+                form(method='GET' action='/remove')
+                    input(type='hidden' name='downloaded' value='false')
+                    button.btn.btn-primary(type='submit' style='width:160px') Not yet downloaded
+                br
+                button.btn.btn-primary(id='downloadButton' style='width:160px' onclick='downloadPlaylist()') Download
+                form(method='POST' action='songbook' id='playlist-form' target='_blank')
+                    br
+                    button.btn.btn-primary(type='submit' target='_blank' style='width:160px') Create Songbook
+                form(method='GET' action='/toggle-player')
+                    br
+                    div(style='margin:auto;width:30px')
+                    button(src='spotify.png' type='submit' onclick='minimizeSpotifyPlayer()' style='width:30px;height:30px;background: url(spotify.png);background-size: 100%;border: none')

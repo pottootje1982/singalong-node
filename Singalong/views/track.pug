@@ -1,0 +1,21 @@
+﻿div(id='track-section')
+    if (selectedTrack != null)
+        h2(class='w3-border-bottom w3-border-light-grey w3-padding-16')= selectedTrack
+        a(href='hide-selected-track' style='float:right') ^^ Hide lyrics ^^
+        div(style='width: 100%; overflow: hidden;')
+            textarea(id='lyrics_display' form="submit-lyrics-form" name="lyrics" rows="20" cols="50" style="width:68%; float: left;")= selectedTrack.lyrics
+            div(style="margin-left:70%;width:28%")
+                h5 Download lyrics with:
+                each engine in engines
+                    a.w3-hover-text-green(href='/lyrics?artist=' + encodeURIComponent(selectedTrack.artist)  + '&title=' + encodeURIComponent(selectedTrack.title) + '&site=' + engine.name)= engine.name
+                    br
+                br
+                br  
+                form(method='POST' action='lyrics' id='submit-lyrics-form')
+                    button.btn.btn-primary(type='submit' style='width:160px') Store lyrics
+                br
+                button.btn.btn-primary(onclick="$.ajax({url: '/lyrics', type: 'DELETE'});" style='width:160px') Delete lyrics
+                form(method='GET' action='http://www.google.com/search' id='search-google' target='_blank')
+                    input(type='hidden' name='q' value=selectedTrack.toString() + '+lyrics')
+                    br
+                    button.btn.btn-primary(type='submit' style='width:160px') Search on Google

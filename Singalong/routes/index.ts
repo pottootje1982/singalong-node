@@ -33,25 +33,16 @@ router.get('/authorized', async (req: express.Request, res: express.Response) =>
     await Spotify.setToken(req.query.code);
     var data = await spotifyApi.getMe();
     ctx.userId = data.body.id;
-    await spotifyApi.getUserPlaylists(null, { limit: 100 }).then(data => {
-        ctx.playlists = data.body.items;
-        let firstPlaylist = ctx.playlists[0];
-        let playlistId = firstPlaylist.id;
-        showPlaylist(ctx, res, firstPlaylist.owner.id, playlistId);
-    });
+    data = await spotifyApi.getUserPlaylists(null, { limit: 50 });
+    ctx.playlists = data.body.items;
+    res.render('index', ctx);
 });
 
 router.post('/search-playlists', async (req: express.Request, res: express.Response) => {
     var ctx = context(res);
     var data = await spotifyApi.searchPlaylists(req.body.playlistQuery);
     ctx.playlists = data.body.playlists.items;
-    if (ctx.playlists.length > 0) {
-        let firstPlaylist = ctx.playlists[0];
-        var playlistUserId = firstPlaylist.owner.id;
-        showPlaylist(ctx, res, playlistUserId, firstPlaylist.id);
-    }
-    else 
-        res.render('index', ctx);
+    res.render('index', ctx);
 });
 
 router.get('/playlist-without-artist', async (req: express.Request, res: express.Response) => {
@@ -100,7 +91,9 @@ function showPlaylist(ctx, res: express.Response, playlistUserId : string, selPl
         ctx.textualPlaylist = textualPlaylist;
         var playlist = download.textualPlaylistToPlaylist(ctx.textualPlaylist);
         ctx.playlist = playlist;
-        res.render('index', ctx);
+        res.render('playlist', ctx, (err, playlistHtml) => {
+            res.json({textualPlaylist: textualPlaylist, playlistHtml: playlistHtml});
+        });
     }, err => ctx.showError('Error retrieving playlist ' + ctx.selPlaylistId + ' from database for user ' + ctx.playlistUserId, err));
 }
 
