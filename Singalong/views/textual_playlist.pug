@@ -6,16 +6,10 @@
         div.card-body
             textarea.form-control(id='playlistText' form='playlist-form' rows="20" cols="50" name='playlist' style="width:420px; float: left;")= textualPlaylist
             div(style="margin-left:430px;margin-right:10px;width:180px")
-                input.form-control(form='playlist-form' id='sleepTimeInput' type='text' name='sleepTime' value='3000' data-toggle="tooltip" title="Sleep time (ms)" style="width:150px")
-                br
-                form(method='GET' action='/playlist-without-artist')
-                    button.btn.btn-primary(type='submit' style='width:160px') Remove Artist
-                br
-                form(method='GET' action='/remove')
-                    input(type='hidden' name='downloaded' value='false')
-                    button.btn.btn-primary(type='submit' style='width:160px') Not yet downloaded
-                br
-                button.btn.btn-primary(id='downloadButton' style='width:160px' onclick='downloadPlaylist()') Download
+                - var buttonStyle =  'width:150px;margin-bottom:5px'
+                input.form-control(form='playlist-form' id='sleepTimeInput' type='text' name='sleepTime' value='3000' data-toggle="tooltip" title="Sleep time (ms)" style=buttonStyle)
+                button.btn.btn-primary(onclick='removeArtist()' style=buttonStyle) Remove Artist
+                button.btn.btn-primary(onclick='filterOnDownloadStatus()' style=buttonStyle) Not yet downloaded
+                button.btn.btn-primary(id='downloadButton' style=buttonStyle onclick='downloadPlaylist()') Download
                 form(method='POST' action='songbook' id='playlist-form' target='_blank')
-                    br
-                    button.btn.btn-primary(type='submit' target='_blank' style='width:160px') Create Songbook
+                    button.btn.btn-primary(type='submit' target='_blank' style=buttonStyle) Create Songbook

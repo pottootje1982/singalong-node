@@ -29,7 +29,7 @@
         let artist = trackItems.length === 1? '' : trackItems[0].trim();
         let title = trackItems.length === 1 ? trackItems[0] : trackItems[1];
         if (artist === '' && title === '') return null;
-        let track = new Track(null, artist, title);
+        let track = new Track(artist, title);
         track.fullTrackTitle = trackStr;
         return track;
     }
