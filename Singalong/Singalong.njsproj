@@ -60,6 +60,9 @@
     <Content Include="public\spotify.png">
       <Publish>True</Publish>
     </Content>
+    <Content Include="scripts\TestData\imagine.txt">
+      <SubType>Code</SubType>
+    </Content>
     <Content Include="test\mocha.opts" />
     <Content Include="tsconfig.json" />
     <Content Include="package.json" />
@@ -144,6 +147,7 @@
   <ItemGroup>
     <Folder Include="scripts\" />
     <Folder Include="scripts\LyricsEngines\" />
+    <Folder Include="scripts\TestData\" />
     <Folder Include="test\" />
     <Folder Include="public\" />
     <Folder Include="public\images\" />

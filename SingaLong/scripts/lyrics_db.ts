@@ -27,9 +27,8 @@ setInterval(() => {
     });
 }, 1000 * 3600);
 
-function executeQuery(query : string, processResults = null) {
+function executeQuery(query : string, processResults = null) : Promise<any[]> {
     return new Promise((resolve, reject) => {
-        //console.log('Executing query: ' + query);
         try {
             connection.query(query,
                 (error, results, fields) => {
@@ -75,6 +74,26 @@ export async function queryTrack(track: Track) {
         console.log(error);
         return null;
     }
+}
+
+export async function queryPlaylist(playlist: Track[]) {
+    var titles = playlist.map(track => p(track.title));
+    var wherePart = 'Title = ' + titles.join(' OR Title = ');
+    var query = 'SELECT * FROM lyrics WHERE ' + wherePart;
+    let queryResults: any[] = await executeQuery(query);
+    var results: Track[] = [];
+    for (let track of playlist) {
+        var matches = queryResults.filter(match => match.Title.toUpperCase() === track.title.toUpperCase());
+        if (matches.length === 0) continue;
+        var exactMatch = matches[0];
+        if (matches.length > 1) {
+            exactMatch = matches.find(match => match.Title.toUpperCase() === track.title.toUpperCase() &&
+                match.Artist.toUpperCase() === track.artist.toUpperCase()) || exactMatch;
+        }
+        track.lyrics = exactMatch.Lyrics;
+        results.push(track);
+    }
+    return results;
 }
 
 export function insert(track: Track, lyrics: string) {
