@@ -16,7 +16,6 @@ const router = express.Router();
 import Spotify = require("../scripts/spotify");
 var spotifyApi;
 import {Track} from '../scripts/Track';
-import { Context } from '../scripts/contextMapper';
 import playlist_cache = require('./playlist_cache');
 
 router.get('/authorize', (req: express.Request, res: express.Response) => {
@@ -25,28 +24,24 @@ router.get('/authorize', (req: express.Request, res: express.Response) => {
 });
 
 router.get('/', async (req: express.Request, res: express.Response) => {
-    var emptyContext = new Context();
     spotifyApi = Spotify.getApi(req.headers.host);
-    res.render('index', emptyContext);
+    res.render('index', {});
 });
 
 router.get('/authorized', async (req: express.Request, res: express.Response) => {
-    var emptyContext = new Context();
     await Spotify.setToken(req.query.code);
     var data = await spotifyApi.getUserPlaylists(null, { limit: 50 });
-    emptyContext.playlists = data.body.items;
-    res.render('index', emptyContext);
+    res.render('index', { playlists: data.body.items});
 });
 
 router.post('/search-playlists', async (req: express.Request, res: express.Response) => {
-    var emptyContext = new Context();
     var data = await spotifyApi.searchPlaylists(req.body.playlistQuery);
-    emptyContext.playlists = data.body.playlists.items;
-    res.render('index', emptyContext);
+    res.render('index', { playlists: data.body.playlists.items });
 });
 
 router.get('/playlist-without-artist', async (req: express.Request, res: express.Response) => {
-    var textualPlaylist = await Spotify.getTitlePlaylist(req.query.userId, req.query.playlistId);
+    var playlist = download.textualPlaylistToPlaylist(req.query.playlist);
+    var textualPlaylist = await download.getTitlePlaylist(playlist);
     res.json(textualPlaylist);
 });
 

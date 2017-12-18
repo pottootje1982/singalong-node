@@ -27,7 +27,9 @@ describe("Lyrics DB", () => {
     it("Get name of album track",
         function () {
             var track = Track.parse('The Drifters - Under The Boardwalk - Single/LP Version');
-            assert.equal(track.toString(), 'The Drifters - Under The Boardwalk');
+            assert.equal(track.artist, 'The Drifters');
+            assert.equal(track.title, 'Under The Boardwalk - Single/LP Version');
+            assert.equal(track.toString(), 'The Drifters - Under The Boardwalk - Single/LP Version');
         });
 
     it("Clean title",

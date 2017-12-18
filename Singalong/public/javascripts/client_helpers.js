@@ -67,9 +67,11 @@ function getSelectedPlaylist() {
 }
 
 function removeArtist() {
+    var data = getSelectedPlaylist();
+    data.playlist = $('#playlistText').val();
     $.ajax({
         url: '/playlist-without-artist',
-        data: getSelectedPlaylist(),
+        data: data,
         success: function(textualPlaylist) {
             $('#playlistText').val(textualPlaylist);
         }, error: showError
@@ -77,12 +79,13 @@ function removeArtist() {
 }
 
 function getLyrics(artist, title, site) {
-    $('#track-section').show();
     $.ajax({
         url: '/lyrics',
         data: {artist: artist, title:title, site:site},
         success: function(html) {
             $('#track-section').replaceWith(html);
+            if ($('#collapseThree').attr('aria-expanded') !== "true")
+                $('#collapseThree').collapse('show');
         }, error: showError
     });
 }
@@ -156,10 +159,6 @@ function toggleVisibility(controlId) {
 
 function toggleSpotifyPlayer() {
     toggleVisibility('#spotify-player');
-}
-
-function toggleLyrics() {
-    toggleVisibility('#track-section');
 }
 
 function playTrack() {

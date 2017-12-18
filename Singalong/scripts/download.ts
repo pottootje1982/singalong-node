@@ -41,6 +41,14 @@ export async function getLyricsFromDatabase(playlist: Track[], pushAllTracks : b
     return lyricsFromDatabase;
 }
 
+export async function getTitlePlaylist(playlist: Track[]) {
+    var textualPlaylist = '';
+    for (let track of playlist) {
+        textualPlaylist += track.title + '\n';
+    }
+    return textualPlaylist;
+}
+
 export function textualPlaylistToPlaylist(textualPlaylist : string) {
     var textualTracks = textualPlaylist.trim().split('\n');
     var tracks = [];

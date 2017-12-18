@@ -23,11 +23,11 @@
     }
 
     public static parse(trackStr: string): Track {
-        var trackItems = trackStr.split('-', 2);
-        trackItems = trackItems.map(track => track.trim());
+        var trackItems = trackStr.split('-');
         if (trackItems.length < 1) return null;
-        let artist = trackItems.length === 1? '' : trackItems[0].trim();
-        let title = trackItems.length === 1 ? trackItems[0] : trackItems[1];
+        let artist = trackItems.length === 1 ? '' : trackItems[0].trim();
+        if (trackItems.length > 1) trackItems.splice(0, 1);
+        let title = trackItems.join('-').trim();
         if (artist === '' && title === '') return null;
         let track = new Track(artist, title);
         track.fullTrackTitle = trackStr;

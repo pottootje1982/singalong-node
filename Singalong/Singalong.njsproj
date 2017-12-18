@@ -40,9 +40,6 @@
     <TypeScriptCompile Include="routes\playlist_cache.ts">
       <SubType>Code</SubType>
     </TypeScriptCompile>
-    <TypeScriptCompile Include="scripts\contextMapper.ts">
-      <SubType>Code</SubType>
-    </TypeScriptCompile>
     <TypeScriptCompile Include="scripts\download.test.ts">
       <SubType>Code</SubType>
       <TestFramework>Mocha</TestFramework>

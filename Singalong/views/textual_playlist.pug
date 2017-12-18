@@ -2,9 +2,9 @@
     div.panel-heading.card-header(role="tab" id="headingOne")
         h3.panel-title(style="width:610px")
             a.collapsed(data-toggle="collapse" href="#collapseOne" aria-expanded="false" aria-controls="collapseOne") Freeform playlist
-    div.panel-body.collapse(id="collapseOne" role="tabpanel" aria-labelledby="headingOne" data-parent="#accordion")
+    div.panel-body.collapse(id="collapseOne" role="tabpanel" aria-labelledby="headingOne")
         div.card-body
-            textarea.form-control(id='playlistText' form='playlist-form' rows="20" cols="50" name='playlist' style="width:420px; float: left;")= textualPlaylist
+            textarea.form-control(id='playlistText' form='playlist-form' rows="20" cols="50" name='playlist' style="width:420px; float: left;")= textualPlaylist || 'yellow submarine\nanother day'
             div(style="margin-left:430px;margin-right:10px;width:180px")
                 - var buttonStyle =  'width:150px;margin-bottom:5px'
                 input.form-control(form='playlist-form' id='sleepTimeInput' type='text' name='sleepTime' value='3000' data-toggle="tooltip" title="Sleep time (ms)" style=buttonStyle)

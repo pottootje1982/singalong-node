@@ -8,18 +8,20 @@ block content
     div(style="margin-left:10px")
         div.alert.alert-danger(id='alert-section' style='display:none')
             p(style="color:rgb(255,0,0)" id='alert-message')
-        div(id='accordion' role='tablist' style='max-width:610px;float:left')
+        div(role='tablist' style='width:40%;float:left')
             include textual_playlist.pug
             include playlists.pug
 
-        div.panel.panel-info(style='margin-left:620px;min-height:1200px')
-            div.panel-heading
-                h3.panel-title Lyrics 
-            div.panel-body(style='padding-left:10px')
-                br
-                include track.pug
+        div(role='tablist' style='padding-left:10px;float:right;width:60%')
+            div.panel.panel-info.card
+                div.panel-heading.card-header(role="tab" id="headingThree")
+                    h3.panel-title
+                        a.collapsed(data-toggle="collapse" href="#collapseThree" aria-expanded="false" aria-controls="collapseThree")= selectedTrack || 'Lyrics'
+                div.panel-body.collapse(id="collapseThree" role="tabpanel" aria-labelledby="headingThree")
+                    include track.pug
 
-                - var visibility = showSpotifyPlayer ? 'visible' : 'hidden';
-                iframe(id='spotify-player' style="margin-right:25px;margin-bottom:0px;position:fixed;bottom:0;right:0;visibility:" + visibility src="https://open.spotify.com/embed?uri=spotify:user:" + userId + ":playlist:" + playlistId width="300" height="380" frameborder="0" allowtransparency="true")
+            include playlist.pug
 
-                include playlist.pug
+    - var visibility = showSpotifyPlayer ? 'visible' : 'hidden';
+    iframe(id='spotify-player' style="margin-right:25px;margin-bottom:0px;position:fixed;bottom:0;right:0;visibility:" + visibility src="https://open.spotify.com/embed?uri=spotify:user:" + userId + ":playlist:" + playlistId width="300" height="380" frameborder="0" allowtransparency="true")
+

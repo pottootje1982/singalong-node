@@ -1,22 +1,18 @@
-﻿div(id='track-section')
+﻿div.card-body(id='track-section')
     if (selectedTrack != null)
-        h2(class='w3-border-bottom w3-border-light-grey w3-padding-16')= selectedTrack
-        div(style='width: 100%; overflow: hidden;')
-            textarea(id='lyrics-display' form="submit-lyrics-form" name="lyrics" rows="20" cols="50" style="width:68%; float: left;" 
-                data-artist=selectedTrack.artist data-title=selectedTrack.title)= selectedTrack.lyrics
-            div(style="float:right")
-                button.btn.btn-primary(onclick='toggleLyrics()' style='width:160px') ^^ Hide lyrics ^^
+        textarea(id='lyrics-display' form="submit-lyrics-form" name="lyrics" rows="20" cols="50" style="width:68%; float: left;" 
+            data-artist=selectedTrack.artist data-title=selectedTrack.title)= selectedTrack == null ? '' : selectedTrack.lyrics
+        div(style="float:right")
+            h5 Download lyrics with:
+            each engine in engines || download.engines
+                a.w3-hover-text-green(href='#' onclick='getLyrics("' + selectedTrack.artist + '", "' + selectedTrack.title + '", "' + engine.name + '")')= engine.name
                 br
-                h5 Download lyrics with:
-                each engine in engines
-                    a.w3-hover-text-green(href='#' onclick='getLyrics("' + selectedTrack.artist + '", "' + selectedTrack.title + '", "' + engine.name + '")')= engine.name
-                    br
+            br
+            button.btn.btn-primary(type='submit' onclick='storeLyrics()' style='width:160px') Store lyrics
+            br
+            br
+            button.btn.btn-primary(onclick="removeLyrics()" style='width:160px') Delete lyrics
+            form(method='GET' action='http://www.google.com/search' id='search-google' target='_blank')
+                input(type='hidden' name='q' value=selectedTrack.toString() + '+lyrics')
                 br
-                button.btn.btn-primary(type='submit' onclick='storeLyrics()' style='width:160px') Store lyrics
-                br
-                br
-                button.btn.btn-primary(onclick="removeLyrics()" style='width:160px') Delete lyrics
-                form(method='GET' action='http://www.google.com/search' id='search-google' target='_blank')
-                    input(type='hidden' name='q' value=selectedTrack.toString() + '+lyrics')
-                    br
-                    button.btn.btn-primary(type='submit' style='width:160px') Search on Google
+                button.btn.btn-primary(type='submit' style='width:160px') Search on Google
