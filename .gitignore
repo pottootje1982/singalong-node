@@ -24,3 +24,5 @@
 /SingaLong/scripts/LyricsEngines/*.js
 /SingaLong/scripts/*.js
 /SingaLong/ftp.pubxml.user
+/SingaLong/routes/*.js
+/SingaLong/routes/*.map

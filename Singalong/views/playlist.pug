@@ -1,18 +1,18 @@
-﻿div(style='height:1100px;overflow:auto' id='playlist' data-playlist=selPlaylistId data-user-id=playlistUserId)
+﻿div(style='height:1100px;overflow:auto' id='playlist' data-playlist=playlistId data-user-id=userId)
     div(style="float:right;width:160px")
         - var buttonStyle =  'width:150px;margin-bottom:5px'
         input.form-control(form='playlist-form' id='sleepTimeInput' type='text' name='sleepTime' value='3000' data-toggle="tooltip" title="Sleep time (ms)" style=buttonStyle)
-        button.btn.btn-primary(id='downloadButton' style=buttonStyle onclick='downloadPlaylist(true)') Download
+        button.btn.btn-primary.download-button(style=buttonStyle onclick='downloadPlaylist(true)') Download
         form(method='POST' action='songbook' id='playlist-form' target='_blank')
-            input(type='hidden' id='userId' name='userId' value=playlistUserId)
-            input(type='hidden' id='playlistId' name='playlistId' value=selPlaylistId)
+            input(type='hidden' id='userId' name='userId' value=userId)
+            input(type='hidden' id='playlistId' name='playlistId' value=playlistId)
             button.btn.btn-primary(type='submit' target='_blank' style=buttonStyle) Create Songbook
         br
         button(src='spotify.png' type='submit' onclick='toggleSpotifyPlayer()' style='width:30px;height:30px;background: url(spotify.png);background-size: 100%;border: none')
 
     each track, index in playlist
-        input(type='hidden' id='userId' name='userId' value=playlistUserId)
-        input(type='hidden' id='playlistId' name='playlistId' value=selPlaylistId)
+        input(type='hidden' id='userId' name='userId' value=userId)
+        input(type='hidden' id='playlistId' name='playlistId' value=playlistId)
         input(type='hidden' id='trackId' name='trackId' value=track.id)
         button(src='play.png' onclick='playTrack()' style='float:left;width:15px;height:15px;background: url(play.png);background-size: 100%;border: none;margin-right:5px')
         - var style = !searchedDb ? '' : (track.lyrics == null ? 'color:red' : 'color:green');

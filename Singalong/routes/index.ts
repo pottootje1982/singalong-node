@@ -16,7 +16,8 @@ const router = express.Router();
 import Spotify = require("../scripts/spotify");
 var spotifyApi;
 import {Track} from '../scripts/Track';
-import {Context} from '../scripts/contextMapper';
+import { Context } from '../scripts/contextMapper';
+import playlist_cache = require('./playlist_cache');
 
 router.get('/authorize', (req: express.Request, res: express.Response) => {
     spotifyApi = Spotify.getApi(req.headers.host);
@@ -49,35 +50,40 @@ router.get('/playlist-without-artist', async (req: express.Request, res: express
     res.json(textualPlaylist);
 });
 
-// Removes either tracks that were downloaded before,
-// or tracks that are not downloaded yet
-router.get('/filter-on-download-status', async (req: express.Request, res: express.Response) => {
-    showPlaylist(res, req.query.userId, req.query.playlistId, true);
+router.get('/find-in-database', async (req: express.Request, res: express.Response) => {
+    var ctx: any = { userId: req.query.userId, playlistId: req.query.playlistId };
+    var cachedEntry = playlist_cache.get(req.query.userId, req.query.playlistId);
+    ctx.playlist = await lyrics_db.queryPlaylist(cachedEntry.playlist, req.query.notDownloaded);
+    ctx.textualPlaylist = await Spotify.playlistToText(ctx.playlist);
+    ctx.searchedDb = true;
+    res.render('playlist', ctx, (err, playlistHtml) => {
+        ctx.playlist = null;
+        ctx.playlistHtml = playlistHtml;
+        res.json(ctx);
+    });
 });
 
-async function showPlaylist(res: express.Response, playlistUserId: string, selPlaylistId: string, getLyrics: boolean = false) {
-    var ctx: any = { selPlaylistId: selPlaylistId, playlistUserId: playlistUserId};
+async function showPlaylist(res: express.Response, userId: string, playlistId: string) {
+    var ctx: any = { userId: userId, playlistId: playlistId };
     try {
-        ctx.playlist = await Spotify.getFullPlaylist(playlistUserId, selPlaylistId);
-        if (getLyrics) {
-            ctx.playlist = await download.getLyricsFromDatabase(ctx.playlist, false);
-            ctx.textualPlaylist = await Spotify.getDownloadedLyrics(ctx.playlist);
-            ctx.searchedDb = true;
-        } else {
-            ctx.textualPlaylist = await Spotify.playlistToText(ctx.playlist);
-        }
+        ctx.playlist = await Spotify.getFullPlaylist(userId, playlistId);
+        ctx.textualPlaylist = await Spotify.playlistToText(ctx.playlist);
+        playlist_cache.store(userId, playlistId, ctx.playlist);
         res.render('playlist', ctx, (err, playlistHtml) => {
-            res.json({ textualPlaylist: ctx.textualPlaylist, playlistHtml: playlistHtml });
+            ctx.playlistHtml = playlistHtml;
+            ctx.playlist = null;
+            res.json(ctx);
         });
     }
     catch (err)
     {
-        showError(res, 'Error retrieving playlist ' + ctx.selPlaylistId + ' from database for user ' + ctx.playlistUserId, err);
+        showError(res, 'Error retrieving playlist ' + ctx.playlistId + ' from database for user ' + ctx.userId, err);
     }
 }
 
 router.get('/playlist', async (req, res) => {
-    showPlaylist(res, req.query.userId, req.query.id);
+    playlist_cache.remove(req.query.oldUserId, req.query.oldPlaylistId);
+    showPlaylist(res, req.query.userId, req.query.playlistId);
 });
 
 router.get('/lyrics', async (req, res) => {
@@ -98,23 +104,25 @@ router.get('/lyrics', async (req, res) => {
 });
 
 router.post('/lyrics', async (req, res) => {
-    lyrics_db.update(new Track(req.body.track, req.body.title), req.body.lyrics);
-    res.json();
+    lyrics_db.update(new Track(req.body.artist, req.body.title), req.body.lyrics);
+    res.json({});
 });
 
 router.delete('/lyrics', async (req, res) => {
-    lyrics_db.remove(new Track(req.body.track, req.body.title));
-    res.json();
+    lyrics_db.remove(new Track(req.body.artist, req.body.title));
+    showPlaylist(res, req.body.userId, req.body.playlistId);
 });
 
 router.get('/playlist-to-download', async (req, res) => {
-    var ctx: any = {};
-    var textualPlaylist: string = req.query.playlist;
-    ctx.playlist = download.textualPlaylistToPlaylist(textualPlaylist);
+    var ctx: any = { userId: req.query.userId, playlistId: req.query.playlistId };
+    ctx.textualPlaylist = req.query.playlist;
+    ctx.playlist = download.textualPlaylistToPlaylist(ctx.textualPlaylist);
     res.render('playlist',
         ctx,
         (err, playlistHtml) => {
-            res.json({ playlistHtml: playlistHtml, textualPlaylist: textualPlaylist });
+            ctx.playlist = null;
+            ctx.playlistHtml = playlistHtml;
+            res.json(ctx);
         });
 });
 
@@ -148,7 +156,7 @@ router.post('/play-track', async (req, res) => {
 
 function showError(res, message, error) {
     error = message + ": " + error;
-    res.status(500).json({ message: message, error: error});
+    res.status(500).json({ error: error});
 };
 
 export default router;

@@ -10,6 +10,6 @@
                 input.form-control(form='playlist-form' id='sleepTimeInput' type='text' name='sleepTime' value='3000' data-toggle="tooltip" title="Sleep time (ms)" style=buttonStyle)
                 button.btn.btn-primary(onclick='removeArtist()' style=buttonStyle) Remove Artist
                 button.btn.btn-primary(onclick='filterOnDownloadStatus()' style=buttonStyle) Not yet downloaded
-                button.btn.btn-primary(id='downloadButton' style=buttonStyle onclick='downloadPlaylist()') Download
+                button.btn.btn-primary.download-button(style=buttonStyle onclick='downloadPlaylist()') Download
                 form(method='POST' action='songbook' id='playlist-form' target='_blank')
                     button.btn.btn-primary(type='submit' target='_blank' style=buttonStyle) Create Songbook

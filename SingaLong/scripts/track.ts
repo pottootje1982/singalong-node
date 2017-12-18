@@ -64,4 +64,8 @@
         result.id = track.id;
         return result;
     }
+
+    static toTracks(playlist: any[]) {
+        return playlist.map(track => Track.copy(track));
+    }
 }

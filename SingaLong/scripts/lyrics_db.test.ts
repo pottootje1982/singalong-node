@@ -39,10 +39,21 @@ describe("Lyrics DB", () => {
         assert.equal(tracks, null);
     });
 
-    it("Query unexisting playlist", async () => {
-        var playlist = await lyrics_db.queryPlaylist([new Track("Freddy Kruger", "Nightmare on Elm Street")]
-        );
-        assert.equal(0, playlist.length);
+    it("Query unexisting playlist pushAllTracks", async () => {
+        var playlist = await lyrics_db.queryPlaylist([new Track("Freddy Kruger", "Nightmare on Elm Street")]);
+        assert.equal(1, playlist.length);
+        assert.equal(playlist[0].artist, 'Freddy Kruger');
+        assert.equal(playlist[0].title, 'Nightmare on Elm Street');
+        assert.equal(playlist[0].lyrics, null);
+    });
+
+    it("Query playlist notDownloaded", async () => {
+        var playlist = await lyrics_db.queryPlaylist([new Track("Freddy Kruger", "Nightmare on Elm Street"),
+            new Track("John Lennon", "Imagine")], true);
+        assert.equal(1, playlist.length);
+        assert.equal(playlist[0].artist, 'Freddy Kruger');
+        assert.equal(playlist[0].title, 'Nightmare on Elm Street');
+        assert.equal(playlist[0].lyrics, null);
     });
 
     it("Query playlist", async() => {

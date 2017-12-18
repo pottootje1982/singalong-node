@@ -37,6 +37,9 @@
   </PropertyGroup>
   <ItemGroup>
     <TypeScriptCompile Include="app.ts" />
+    <TypeScriptCompile Include="routes\playlist_cache.ts">
+      <SubType>Code</SubType>
+    </TypeScriptCompile>
     <TypeScriptCompile Include="scripts\contextMapper.ts">
       <SubType>Code</SubType>
     </TypeScriptCompile>

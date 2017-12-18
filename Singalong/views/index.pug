@@ -6,9 +6,8 @@ block content
       h1(style="text-align: center") SingaLong
       a.nav-link(href='authorize' style='color:white;position:absolute;top:0;right:0;margin-right:10px;margin-top:10px') Login to Spotify
     div(style="margin-left:10px")
-        if (error != null)
-            div.alert.alert-danger
-                p(style="color:rgb(255,0,0)")= error
+        div.alert.alert-danger(id='alert-section' style='display:none')
+            p(style="color:rgb(255,0,0)" id='alert-message')
         div(id='accordion' role='tablist' style='max-width:610px;float:left')
             include textual_playlist.pug
             include playlists.pug
@@ -21,6 +20,6 @@ block content
                 include track.pug
 
                 - var visibility = showSpotifyPlayer ? 'visible' : 'hidden';
-                iframe(id='spotify-player' style="margin-right:25px;margin-bottom:0px;position:fixed;bottom:0;right:0;visibility:" + visibility src="https://open.spotify.com/embed?uri=spotify:user:" + playlistUserId + ":playlist:" + selPlaylistId width="300" height="380" frameborder="0" allowtransparency="true")
+                iframe(id='spotify-player' style="margin-right:25px;margin-bottom:0px;position:fixed;bottom:0;right:0;visibility:" + visibility src="https://open.spotify.com/embed?uri=spotify:user:" + userId + ":playlist:" + playlistId width="300" height="380" frameborder="0" allowtransparency="true")
 
                 include playlist.pug

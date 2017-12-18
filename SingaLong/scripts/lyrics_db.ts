@@ -59,7 +59,7 @@ export function query(artist, title): Promise<Track[]> {
         });
 }
 
-export async function queryTrack(track: Track) {
+export async function queryTrack(track: Track): Promise<Track> {
     try {
         var tracks = await query(null, track.title);
         if (tracks == null && track.canClean()) tracks = await query(track.cleanArtist(), track.cleanTitle());
@@ -76,7 +76,7 @@ export async function queryTrack(track: Track) {
     }
 }
 
-export async function queryPlaylist(playlist: Track[]) {
+export async function queryPlaylist(playlist: Track[], notDownloaded: boolean) {
     var titles = playlist.map(track => p(track.title));
     var wherePart = 'Title = ' + titles.join(' OR Title = ');
     var query = 'SELECT * FROM lyrics WHERE ' + wherePart;
@@ -84,7 +84,11 @@ export async function queryPlaylist(playlist: Track[]) {
     var results: Track[] = [];
     for (let track of playlist) {
         var matches = queryResults.filter(match => match.Title.toUpperCase() === track.title.toUpperCase());
-        if (matches.length === 0) continue;
+        if (matches.length === 0) {
+            results.push(track);
+            continue;
+        }
+        if (notDownloaded) continue;
         var exactMatch = matches[0];
         if (matches.length > 1) {
             exactMatch = matches.find(match => match.Title.toUpperCase() === track.title.toUpperCase() &&
@@ -123,8 +127,11 @@ export async function update(track: Track, lyrics: string) {
     else updateInternal(result, lyrics);
 }
 
-export function remove(track: Track) {
-    let query = "DELETE FROM lyrics " +
-        'WHERE Artist=' + p(track.artist) + ' AND Title=' + p(track.title);
-    return executeQuery(query);
+export async function remove(track: Track) {
+    var foundTrack = await queryTrack(track);
+    if (foundTrack) {
+        let query = "DELETE FROM lyrics " +
+            'WHERE Artist=' + p(foundTrack.artist) + ' AND Title=' + p(foundTrack.title);
+        return executeQuery(query);
+    }
 }

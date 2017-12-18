@@ -3,8 +3,8 @@
         h2(class='w3-border-bottom w3-border-light-grey w3-padding-16')= selectedTrack
         div(style='width: 100%; overflow: hidden;')
             textarea(id='lyrics-display' form="submit-lyrics-form" name="lyrics" rows="20" cols="50" style="width:68%; float: left;" 
-                data-track=selectedTrack.artist data-title=selectedTrack.title)= selectedTrack.lyrics
-            div(style="margin-left:70%;width:28%")
+                data-artist=selectedTrack.artist data-title=selectedTrack.title)= selectedTrack.lyrics
+            div(style="float:right")
                 button.btn.btn-primary(onclick='toggleLyrics()' style='width:160px') ^^ Hide lyrics ^^
                 br
                 h5 Download lyrics with:

@@ -2,7 +2,7 @@
 
 function startDownloadingPlaylist() {
     downloading = true;
-    $('#downloadButton').text('Cancel');
+    $('.download-button').text('Cancel');
     var sleepTime = parseInt($('#sleepTimeInput').val());
     downloadPlaylistRecursive($(".track"), sleepTime, 0);
 }
@@ -13,15 +13,17 @@ function downloadPlaylist(fullPlaylist) {
     } else {
         if (fullPlaylist) startDownloadingPlaylist();
         else
+            var data = getSelectedPlaylist();
+            data.playlist = $('#playlistText').val();
             $.ajax({
                 url: '/playlist-to-download',
-                data: { playlist: $('#playlistText').val() },
+                data: data,
                 success: function (res) {
-                    $('#playlist').parent().html(res.playlistHtml);
+                    $('#playlist').replaceWith(res.playlistHtml);
                     $('#playlistText').val(res.textualPlaylist);
                     startDownloadingPlaylist();
                 },
-                error: function (xhr, exception) { alert("An error occured when getting playlist: " + xhr.status + " " + xhr.statusText + '\n' + exception);}
+                error: showError
             });
     }
 }
@@ -31,14 +33,18 @@ function getTrack(trackElement) {
     return { artist: trackElement.attr('data-artist'), title: trackElement.attr('data-title') };
 }
 
+function colorTrack(index, color) {
+    $("#" + index).css({ 'color': color });
+}
+
 function downloadPlaylistRecursive(playlist, sleepTime, index) {
     if (playlist.length === 0 || !downloading) {
         downloading = false;
-        $('#downloadButton').text('Download');
+        $('.download-button').text('Download');
         return;
     }
 
-    $("#" + index).css({ 'color': 'orange' });
+    colorTrack(index ,'orange');
 
     $.ajax({
         url: '/download-track',
@@ -47,13 +53,12 @@ function downloadPlaylistRecursive(playlist, sleepTime, index) {
             var track = result.track;
             console.log('Downloaded ', track, track.lyrics != null, "#" + index);
             if (track.lyrics != null) {
-                $("#" + index).css({ 'color': 'green' });
+                colorTrack(index, 'green');
             } else {
-                $("#" + index).css({ 'color': 'red' });
+                colorTrack(index, 'red');
             }
             downloadPlaylistRecursive(playlist.slice(1), sleepTime, index + 1);
-        },
-        error: function (xhr, exception) { alert("An error occured: " + xhr.status + " " + xhr.statusText + '\n' + exception); }
+        }, error: showError
     });
 }
 
@@ -67,7 +72,7 @@ function removeArtist() {
         data: getSelectedPlaylist(),
         success: function(textualPlaylist) {
             $('#playlistText').val(textualPlaylist);
-        }
+        }, error: showError
 });
 }
 
@@ -77,39 +82,47 @@ function getLyrics(artist, title, site) {
         url: '/lyrics',
         data: {artist: artist, title:title, site:site},
         success: function(html) {
-            $('#track-section').parent().html(html);
-        }
+            $('#track-section').replaceWith(html);
+        }, error: showError
     });
 }
 
 function refreshPlaylist(res) {
-    $('#playlistText').val(res.textualPlaylist);
-    $('#playlist').parent().html(res.playlistHtml);
+    if (res.textualPlaylist)
+        $('#playlistText').val(res.textualPlaylist);
+    if (res.playlistHtml)
+        $('#playlist').replaceWith(res.playlistHtml);
+    $.ajax({
+        url: '/find-in-database',
+        data: { userId: res.userId, playlistId: res.playlistId, notDownloaded: res.notDownloaded},
+        success: function(res) {
+            $('#playlist').replaceWith(res.playlistHtml);
+            if (res.textualPlaylist)
+                $('#playlistText').val(res.textualPlaylist);
+        }, error: showError
+    });
 }
 
 function showPlaylist(userId, playlistId) {
+    var currentPlaylist = getSelectedPlaylist();
     $.ajax({
         url: '/playlist',
-        data: { userId: userId, id: playlistId },
-        success: refreshPlaylist
+        data: { userId: userId, playlistId: playlistId, oldUserId: currentPlaylist.userId, oldPlaylistId: currentPlaylist.playlistId },
+        success: refreshPlaylist,
+        error: showError
     });
 }
 
 function filterOnDownloadStatus() {
-    var data = getSelectedPlaylist();
-    data.downloaded = false;
-    $.ajax({
-        url: '/filter-on-download-status',
-        data: data,
-        success: refreshPlaylist
-    });
+    var currentPlaylist = getSelectedPlaylist();
+    currentPlaylist.notDownloaded = true;
+    refreshPlaylist(currentPlaylist);
 }
 
 function getSelectedTrack(lyrics) {
-    var result = {
-        track: $('#lyrics-display').attr('data-track'),
-        title: $('#lyrics-display').attr('data-title')
-    };
+    var result = getSelectedPlaylist();
+    result.artist = $('#lyrics-display').attr('data-artist');
+    result.title = $('#lyrics-display').attr('data-title');
     if (lyrics != null)
         result.lyrics = lyrics;
     return result;
@@ -118,15 +131,20 @@ function getSelectedTrack(lyrics) {
 function storeLyrics() {
     $.ajax({
         url: 'lyrics', type: 'POST',
-        data: getSelectedTrack($('#lyrics-display').val())
+        data: getSelectedTrack($('#lyrics-display').val()), error: showError
     });
 }
 
 function removeLyrics() {
+    var selTrack = getSelectedTrack();
     $.ajax({
         url: 'lyrics',
         type: 'DELETE',
-        data: getSelectedTrack()
+        data: selTrack,
+        success: res => {
+            $('#lyrics-display').val('');
+            refreshPlaylist(res);
+        }, error: showError
     });
 }
 
@@ -150,8 +168,16 @@ function playTrack() {
         data: { userId: $('#userId').val(),
             playlistId: $('#playlistId').val(),
             trackId: $('#trackId').val()
-        }
+        }, error: showError
     });
+}
+
+function showError(res) {
+    $('#alert-message').text(res.responseJSON.error);
+    $('#alert-section').css('display', 'block');
+    window.setTimeout(() => {
+        $('#alert-section').css('display', 'none');
+    }, 10000);
 }
 
 $(document).ready(function () {
