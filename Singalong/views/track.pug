@@ -1,6 +1,6 @@
 ﻿div.card-body(id='track-section')
     if (selectedTrack != null)
-        textarea(id='lyrics-display' form="submit-lyrics-form" name="lyrics" rows="20" cols="50" style="width:68%; float: left;" 
+        textarea.form-control(id='lyrics-display' form="submit-lyrics-form" name="lyrics" rows="20" cols="50" style="width:68%; float: left;" 
             data-artist=selectedTrack.artist data-title=selectedTrack.title)= selectedTrack == null ? '' : selectedTrack.lyrics
         div(style="float:right")
             h5 Download lyrics with:

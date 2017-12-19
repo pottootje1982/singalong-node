@@ -1,7 +1,7 @@
 ﻿div.panel.panel-info.card(id='playlist' data-playlist=playlistId data-user-id=userId)
     div.panel-heading.card-header(role="tab" id="headingFour")
-        h3.panel-title 
-            a.collapsed(data-toggle="collapse" href="#collapseFour" aria-expanded="true" aria-controls="collapseFour") Playlist
+        h3.panel-title
+            a.collapsed(id='playlist-title' data-toggle="collapse" href="#collapseFour" aria-expanded="true" aria-controls="collapseFour") Playlist
     div.panel-body.collapse.show.in(id="collapseFour" role="tabpanel" aria-labelledby="headingFour" )
         div.card-body
             div(style="float:right;width:160px")
@@ -15,7 +15,8 @@
                 br
                 button(src='spotify.png' type='submit' onclick='toggleSpotifyPlayer()' style='width:30px;height:30px;background: url(spotify.png);background-size: 100%;border: none')
 
-            each track, index in playlist || []
+            - var items = playlist != null ? playlist.items : []
+            each track, index in items
                 input(type='hidden' id='userId' name='userId' value=userId)
                 input(type='hidden' id='playlistId' name='playlistId' value=playlistId)
                 input(type='hidden' id='trackId' name='trackId' value=track.id)

@@ -47,9 +47,9 @@ router.get('/playlist-without-artist', async (req: express.Request, res: express
 
 router.get('/find-in-database', async (req: express.Request, res: express.Response) => {
     var ctx: any = { userId: req.query.userId, playlistId: req.query.playlistId };
-    var cachedEntry = playlist_cache.get(req.query.userId, req.query.playlistId);
-    ctx.playlist = await lyrics_db.queryPlaylist(cachedEntry.playlist, req.query.notDownloaded);
-    ctx.textualPlaylist = await Spotify.playlistToText(ctx.playlist);
+    ctx.playlist = playlist_cache.get(req.query.userId, req.query.playlistId);
+    ctx.playlist.items = await lyrics_db.queryPlaylist(ctx.playlist.items, req.query.notDownloaded);
+    ctx.textualPlaylist = await Spotify.playlistToText(ctx.playlist.items);
     ctx.searchedDb = true;
     res.render('playlist', ctx, (err, playlistHtml) => {
         ctx.playlist = null;
@@ -62,7 +62,7 @@ async function showPlaylist(res: express.Response, userId: string, playlistId: s
     var ctx: any = { userId: userId, playlistId: playlistId };
     try {
         ctx.playlist = await Spotify.getFullPlaylist(userId, playlistId);
-        ctx.textualPlaylist = await Spotify.playlistToText(ctx.playlist);
+        ctx.textualPlaylist = await Spotify.playlistToText(ctx.playlist.items);
         playlist_cache.store(userId, playlistId, ctx.playlist);
         res.render('playlist', ctx, (err, playlistHtml) => {
             ctx.playlistHtml = playlistHtml;
@@ -128,7 +128,7 @@ router.get('/download-track', async (req, res) => {
 
 router.post('/songbook', async (req, res) => {
     var textualPlaylist = req.body.playlist;
-    var playlist = textualPlaylist != null ? download.textualPlaylistToPlaylist(textualPlaylist) : await Spotify.getFullPlaylist(req.body.userId, req.body.playlistId);
+    var playlist = textualPlaylist != null ? download.textualPlaylistToPlaylist(textualPlaylist) : (await Spotify.getFullPlaylist(req.body.userId, req.body.playlistId)).items;
     playlist = await download.getLyricsFromDatabase(playlist, false);
     res.render('songbook', {
         book: playlist,

@@ -22,9 +22,9 @@ describe("Spotify API", async() => {
     it("Get full playlist", async function() {
         this.timeout(25000);
         var user = await spotifyApi.getMe();
-        var tracks = await Spotify.getFullPlaylist(user.body.id, '6jaK2iM45Myomj4GJqCi4v'); // Top 2000
-        console.log(tracks);
-        assert(tracks.length > 100);
+        var playlist = await Spotify.getFullPlaylist(user.body.id, '6jaK2iM45Myomj4GJqCi4v'); // Top 2000
+        console.log(playlist.items);
+        assert(playlist.items.length > 100);
     });
 
     it("Search artist", done => {

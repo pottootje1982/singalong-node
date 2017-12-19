@@ -90,19 +90,21 @@ function getLyrics(artist, title, site) {
     });
 }
 
-function refreshPlaylist(res) {
+function refreshPlaylistControls(res) {
     if (res.textualPlaylist)
         $('#playlistText').val(res.textualPlaylist);
     if (res.playlistHtml)
         $('#playlist').replaceWith(res.playlistHtml);
+    var name = $("a[data-user-id=" + res.userId + "][data-playlist-id='" + res.playlistId + "']").text();
+    $('#playlist-title').text(name);
+}
+
+function refreshPlaylist(res) {
+    refreshPlaylistControls(res);
     $.ajax({
         url: '/find-in-database',
         data: { userId: res.userId, playlistId: res.playlistId, notDownloaded: res.notDownloaded},
-        success: function(res) {
-            $('#playlist').replaceWith(res.playlistHtml);
-            if (res.textualPlaylist)
-                $('#playlistText').val(res.textualPlaylist);
-        }, error: showError
+        success: refreshPlaylistControls, error: showError
     });
 }
 

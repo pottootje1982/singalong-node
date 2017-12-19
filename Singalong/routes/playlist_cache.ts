@@ -1,11 +1,12 @@
 ﻿import {Track} from "../scripts/track";
+import { Playlist } from '../scripts/Playlist';
 
 export class PlaylistCache {
     playlistId : string;
     userId: string;
-    playlist: Track[];
+    playlist: Playlist;
 
-    constructor(userId: string, playlistId: string, playlist: Track[]) {
+    constructor(userId: string, playlistId: string, playlist: Playlist) {
         this.userId = userId;
         this.playlistId = playlistId;
         this.playlist = playlist;
@@ -14,13 +15,14 @@ export class PlaylistCache {
 
 var playlists: PlaylistCache[] = [];
 
-export function store(userId: string, playlistId: string, playlist: Track[]) {
+export function store(userId: string, playlistId: string, playlist: Playlist) {
     this.remove(userId, playlistId);
     playlists.push(new PlaylistCache(userId, playlistId, playlist));
 }
 
-export function get(userId: string, playlistId: string) {
-    return playlists.find(playlist => playlist.userId === userId && playlist.playlistId === playlistId);
+export function get(userId: string, playlistId: string): Playlist {
+    let entry = playlists.find(playlist => playlist.userId === userId && playlist.playlistId === playlistId);
+    return entry != null ? entry.playlist : null;
 }
 
 export function remove(userId: string, playlistId: string) {

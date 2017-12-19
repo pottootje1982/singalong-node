@@ -1,5 +1,6 @@
 ﻿import SpotifyWebApi = require('spotify-web-api-node');
-import { Track } from '../scripts/Track';
+import { Track } from './Track';
+import { Playlist } from './Playlist';
 
 var scopes = ['user-read-private', 'user-read-email', 'user-read-currently-playing', 'user-read-playback-state', 'playlist-read-private', 'user-modify-playback-state'],
     clientId = '3a2c92864fe34fdfb674580a0901568e',
@@ -18,7 +19,7 @@ export function playlistToText(playlist: Track[]) {
 
 export async function getTextualPlaylist(userId: string, playlistId: string) {
     var playlist = await getFullPlaylist(userId, playlistId);
-    return playlistToText(playlist);
+    return playlistToText(playlist.items);
 }
 
 export function getDownloadedLyrics(playlist: Track[], downloaded: boolean = false) {
@@ -26,7 +27,7 @@ export function getDownloadedLyrics(playlist: Track[], downloaded: boolean = fal
     return playlistToText(filtered);
 }
 
-export async function getFullPlaylist(userId: string, playlistId: string): Promise<Track[]> {
+export async function getFullPlaylist(userId: string, playlistId: string): Promise<Playlist> {
     var count = 0;
     var playlist = [];
     var data = await spotifyApi.getPlaylist(userId, playlistId);
@@ -38,7 +39,7 @@ export async function getFullPlaylist(userId: string, playlistId: string): Promi
             { offset: playlist.length, 'limit': playlistLimit, 'fields': 'items' });
         count += addToPlaylist(data.body.items, playlist);
     }
-    return playlist;
+    return new Playlist(data.body.name, playlist);
 }
 
 function addToPlaylist(items, playlist: Track[]): number {
@@ -78,7 +79,7 @@ export function setToken(code) {
             }, expireInterval * 1000);
 
         }, err => {
-            console.log('Something went wrong!', err);
+            console.log('Spotify: something went wrong setting token!', err);
         });
 }
 

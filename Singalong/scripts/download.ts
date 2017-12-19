@@ -7,6 +7,7 @@ import { GeniusEngine } from "./LyricsEngines/GeniusEngine";
 import { MusixMatchEngine } from "./LyricsEngines/MusixMatchEngine";
 //import { SongtekstenEngine } from "./LyricsEngines/SongtekstenEngine";
 import { LyricsFreakEngine } from "./LyricsEngines/LyricsFreakEngine";
+import { Playlist } from './Playlist';
 
 let engineIndex = -1;
 
