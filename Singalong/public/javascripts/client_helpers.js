@@ -63,7 +63,11 @@ function downloadPlaylistRecursive(playlist, sleepTime, index) {
 }
 
 function getSelectedPlaylist() {
-    return { userId: $('#playlist').attr('data-user-id'), playlistId: $('#playlist').attr('data-playlist') };
+    return {
+        userId: $('#playlist').attr('data-user-id'),
+        playlistId: $('#playlist').attr('data-playlist'),
+        albumId: $('#playlist').attr('data-album-id')
+    };
 }
 
 function removeArtist() {
@@ -91,19 +95,21 @@ function getLyrics(artist, title, site) {
 }
 
 function refreshPlaylistControls(res) {
+    var playlist = res.playlist;
     if (res.textualPlaylist)
         $('#playlistText').val(res.textualPlaylist);
     if (res.playlistHtml)
         $('#playlist').replaceWith(res.playlistHtml);
-    var name = $("a[data-user-id=" + res.userId + "][data-playlist-id='" + res.playlistId + "']").text();
+    var name = $("a[data-user-id=" + playlist.userId + "][data-playlist-id='" + playlist.playlistId + "']").text();
     $('#playlist-title').text(name);
 }
 
 function refreshPlaylist(res) {
+    var playlist = res.playlist;
     refreshPlaylistControls(res);
     $.ajax({
         url: '/find-in-database',
-        data: { userId: res.userId, playlistId: res.playlistId, notDownloaded: res.notDownloaded},
+        data: { userId: playlist.userId, playlistId: playlist.playlistId, albumId: playlist.albumId, notDownloaded: res.notDownloaded},
         success: refreshPlaylistControls, error: showError
     });
 }
@@ -112,7 +118,20 @@ function showPlaylist(userId, playlistId) {
     var currentPlaylist = getSelectedPlaylist();
     $.ajax({
         url: '/playlist',
-        data: { userId: userId, playlistId: playlistId, oldUserId: currentPlaylist.userId, oldPlaylistId: currentPlaylist.playlistId },
+        data: {
+            userId: userId, playlistId: playlistId,
+            oldUserId: currentPlaylist.userId, oldPlaylistId: currentPlaylist.playlistId, oldAlbumId: currentPlaylist.albumId
+        },
+        success: refreshPlaylist,
+        error: showError
+    });
+}
+
+function showCurrentlyPlaying() {
+    var currentPlaylist = getSelectedPlaylist();
+    $.ajax({
+        url: '/currently-playing',
+        data: currentPlaylist,
         success: refreshPlaylist,
         error: showError
     });

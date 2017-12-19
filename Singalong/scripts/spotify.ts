@@ -39,12 +39,19 @@ export async function getFullPlaylist(userId: string, playlistId: string): Promi
             { offset: playlist.length, 'limit': playlistLimit, 'fields': 'items' });
         count += addToPlaylist(data.body.items, playlist);
     }
-    return new Playlist(data.body.name, playlist);
+    return new Playlist(userId, playlistId, null, data.body.name, playlist);
+}
+
+async function getAlbum(albumId: string): Promise<Playlist> {
+    var playlist = [];
+    var data = await spotifyApi.getAlbum(albumId);
+    addToPlaylist(data.body.tracks.items, playlist);
+    return new Playlist(null, null, albumId, data.body.name, playlist);
 }
 
 function addToPlaylist(items, playlist: Track[]): number {
     for (let item of items) {
-        var track = Track.fromSpotify(item.track);
+        var track = Track.fromSpotify(item.track || item);
         if (track == null) continue;
         playlist.push(track);
     }
@@ -92,4 +99,20 @@ export function getApi(host: string) {
         });
     }
     return spotifyApi;
+}
+
+export async function getCurrentlyPlaying() {
+    var currentTrack = await spotifyApi.getMyCurrentPlayingTrack();
+    var context = currentTrack.body.context;
+    if (context.type === 'album') {
+        var tokens = context.uri.split(':');
+        var albumId = tokens[2];
+        return await getAlbum(albumId);
+    }
+    else if (context.type === 'playlist') {
+        var tokens = context.uri.split(':');
+        let userId = tokens[2];
+        let playlistId = tokens[4];
+        return await getFullPlaylist(userId, playlistId);
+    }
 }

@@ -31,7 +31,7 @@ router.get('/', async (req: express.Request, res: express.Response) => {
 router.get('/authorized', async (req: express.Request, res: express.Response) => {
     await Spotify.setToken(req.query.code);
     var data = await spotifyApi.getUserPlaylists(null, { limit: 50 });
-    res.render('index', { playlists: data.body.items});
+    res.render('index', { playlists: data.body.items });
 });
 
 router.post('/search-playlists', async (req: express.Request, res: express.Response) => {
@@ -46,27 +46,31 @@ router.get('/playlist-without-artist', async (req: express.Request, res: express
 });
 
 router.get('/find-in-database', async (req: express.Request, res: express.Response) => {
-    var ctx: any = { userId: req.query.userId, playlistId: req.query.playlistId };
-    ctx.playlist = playlist_cache.get(req.query.userId, req.query.playlistId);
+    var ctx: any = req.query;
+    ctx.playlist = playlist_cache.get(ctx.userId, ctx.playlistId || ctx.albumId);
     ctx.playlist.items = await lyrics_db.queryPlaylist(ctx.playlist.items, req.query.notDownloaded);
     ctx.textualPlaylist = await Spotify.playlistToText(ctx.playlist.items);
     ctx.searchedDb = true;
     res.render('playlist', ctx, (err, playlistHtml) => {
-        ctx.playlist = null;
+        ctx.playlist = ctx.playlist.getContext();
         ctx.playlistHtml = playlistHtml;
         res.json(ctx);
     });
 });
 
-async function showPlaylist(res: express.Response, userId: string, playlistId: string) {
+async function showPlaylist(res: express.Response, userId?: string, playlistId?: string) {
     var ctx: any = { userId: userId, playlistId: playlistId };
     try {
-        ctx.playlist = await Spotify.getFullPlaylist(userId, playlistId);
+        if (userId && playlistId)
+            ctx.playlist = await Spotify.getFullPlaylist(userId, playlistId);
+        else
+            ctx.playlist = await Spotify.getCurrentlyPlaying();
+
         ctx.textualPlaylist = await Spotify.playlistToText(ctx.playlist.items);
-        playlist_cache.store(userId, playlistId, ctx.playlist);
+        playlist_cache.store(ctx.playlist);
         res.render('playlist', ctx, (err, playlistHtml) => {
             ctx.playlistHtml = playlistHtml;
-            ctx.playlist = null;
+            ctx.playlist = ctx.playlist.getContext();
             res.json(ctx);
         });
     }
@@ -76,9 +80,19 @@ async function showPlaylist(res: express.Response, userId: string, playlistId: s
     }
 }
 
+function removePlaylist(req) {
+    let oldPlaylistId = req.query.oldPlaylistId || req.query.oldAlbumId;
+    playlist_cache.remove(req.query.oldUserId, oldPlaylistId);
+}
+
 router.get('/playlist', async (req, res) => {
-    playlist_cache.remove(req.query.oldUserId, req.query.oldPlaylistId);
+    removePlaylist(req);
     showPlaylist(res, req.query.userId, req.query.playlistId);
+});
+
+router.get('/currently-playing', async (req, res) => {
+    removePlaylist(req);
+    showPlaylist(res);
 });
 
 router.get('/lyrics', async (req, res) => {
@@ -109,7 +123,7 @@ router.delete('/lyrics', async (req, res) => {
 });
 
 router.get('/playlist-to-download', async (req, res) => {
-    var ctx: any = { userId: req.query.userId, playlistId: req.query.playlistId };
+    var ctx: any = req.query;
     ctx.textualPlaylist = req.query.playlist;
     ctx.playlist = download.textualPlaylistToPlaylist(ctx.textualPlaylist);
     res.render('playlist',

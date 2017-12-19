@@ -7,6 +7,10 @@
             form(method='POST' action='search-playlists' id='search-playlists')
                 input.form-control(form='search-playlists' type='text' name='playlistQuery' placeholder='Search Spotify playlists')
             br
+
+            a(id='playlist-link' href='#' onclick='showCurrentlyPlaying()' style='color:DarkViolet') Currently Playing
+            br
+
             each playlist in playlists || []
                 a(id='playlist-link' href='#' onclick='showPlaylist("' + playlist.owner.id + '", "' + playlist.id + '")'
                     data-user-id=playlist.owner.id data-playlist-id=playlist.id)= playlist.name

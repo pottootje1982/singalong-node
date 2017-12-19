@@ -6,22 +6,23 @@ export class PlaylistCache {
     userId: string;
     playlist: Playlist;
 
-    constructor(userId: string, playlistId: string, playlist: Playlist) {
-        this.userId = userId;
-        this.playlistId = playlistId;
+    constructor(playlist: Playlist) {
         this.playlist = playlist;
+        this.userId = playlist.userId;
+        this.playlistId = playlist.getId();
     }
 }
 
 var playlists: PlaylistCache[] = [];
 
-export function store(userId: string, playlistId: string, playlist: Playlist) {
-    this.remove(userId, playlistId);
-    playlists.push(new PlaylistCache(userId, playlistId, playlist));
+export function store(playlist: Playlist) {
+    this.remove(playlist.userId, playlist.getId());
+    playlists.push(new PlaylistCache(playlist));
 }
 
 export function get(userId: string, playlistId: string): Playlist {
-    let entry = playlists.find(playlist => playlist.userId === userId && playlist.playlistId === playlistId);
+    userId = userId === '' ? null : userId;
+    let entry = playlists.find(entry => entry.userId === userId && entry.playlistId === playlistId);
     return entry != null ? entry.playlist : null;
 }
 
