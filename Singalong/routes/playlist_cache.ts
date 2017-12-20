@@ -20,14 +20,18 @@ export function store(playlist: Playlist) {
     playlists.push(new PlaylistCache(playlist));
 }
 
-export function get(userId: string, playlistId: string): Playlist {
+function findEntry(userId: string, playlistId: string): PlaylistCache {
     userId = userId === '' ? null : userId;
-    let entry = playlists.find(entry => entry.userId === userId && entry.playlistId === playlistId);
+    return playlists.find(entry => entry.userId === userId && entry.playlistId === playlistId);
+}
+
+export function get(userId: string, playlistId: string): Playlist {
+    let entry = findEntry(userId, playlistId);
     return entry != null ? entry.playlist : null;
 }
 
 export function remove(userId: string, playlistId: string) {
-    var playlist = this.get(userId, playlistId);
+    var playlist = findEntry(userId, playlistId);
     var index = playlists.indexOf(playlist);
     if (index > -1)
         playlists.splice(index, 1);

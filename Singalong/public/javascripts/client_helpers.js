@@ -63,11 +63,11 @@ function downloadPlaylistRecursive(playlist, sleepTime, index) {
 }
 
 function getSelectedPlaylist() {
-    return {
+    return {context: {
         userId: $('#playlist').attr('data-user-id'),
         playlistId: $('#playlist').attr('data-playlist'),
         albumId: $('#playlist').attr('data-album-id')
-    };
+    }};
 }
 
 function modifyTextualPlaylist(url) {
@@ -106,41 +106,41 @@ function getLyrics(artist, title, site) {
 }
 
 function refreshPlaylistControls(res) {
-    var playlist = res.playlist;
-    if (res.textualPlaylist)
+    var context = res.context;
+    if (res.updateTextualPlaylist)
         $('#playlistText').val(res.textualPlaylist);
     if (res.playlistHtml)
         $('#playlist').replaceWith(res.playlistHtml);
     var name;
-    if (playlist.playlistId && playlist.userId)
-        name = $("a[data-user-id=" + playlist.userId + "][data-playlist-id='" + playlist.playlistId + "']").text();
+    if (context.playlistId && context.userId)
+        name = $("a[data-user-id=" + context.userId + "][data-playlist-id='" + context.playlistId + "']").text();
     else
         name = $('#currently-playing-link').text();
     $('#playlistText').prop('data-no-artist', false);
     $('#playlist-title').text(name);
     $('#remove-artist-button').prop('disabled', false);
     $('#minimize-title-button').prop('disabled', false);
+    res.textualPlaylist = null;
+    res.playlistHtml = null;
 }
 
 function refreshPlaylist(res) {
-    var playlist = res.playlist;
     refreshPlaylistControls(res);
     $.ajax({
         url: '/find-in-database',
-        data: { userId: playlist.userId, playlistId: playlist.playlistId, albumId: playlist.albumId, notDownloaded: res.notDownloaded},
+        data: res,
         success: refreshPlaylistControls, error: showError
     });
 }
 
 function showPlaylist(userId, playlistId) {
-    var currentPlaylist = getSelectedPlaylist();
+    var data = getSelectedPlaylist();
+    data.oldContext = data.context;
+    data.context = { userId: userId, playlistId: playlistId }
+    data.notDownloaded = false;
     $.ajax({
         url: '/playlist',
-        data: {
-            userId: userId, playlistId: playlistId,
-            oldUserId: currentPlaylist.userId, oldPlaylistId: currentPlaylist.playlistId, oldAlbumId: currentPlaylist.albumId,
-            notDownloaded: false
-        },
+        data: data,
         success: refreshPlaylist,
         error: showError
     });
@@ -148,6 +148,7 @@ function showPlaylist(userId, playlistId) {
 
 function showCurrentlyPlaying() {
     var currentPlaylist = getSelectedPlaylist();
+    currentPlaylist.oldContext = currentPlaylist.context;
     $.ajax({
         url: '/currently-playing',
         data: currentPlaylist,
@@ -157,8 +158,9 @@ function showCurrentlyPlaying() {
 }
 
 function filterOnDownloadStatus() {
-    var currentPlaylist = getSelectedPlaylist();
-    refreshPlaylist({ playlist: currentPlaylist, notDownloaded: true });
+    var data = getSelectedPlaylist();
+    data.notDownloaded = true;
+    refreshPlaylist(data);
 }
 
 function getSelectedTrack(lyrics) {
@@ -211,7 +213,7 @@ function playTrack() {
 }
 
 function showError(res) {
-    $('#alert-message').text(res.responseJSON.error);
+    $('#alert-message').text(res && res.responseJSON ? res.responseJSON.error : res.error);
     $('#alert-section').css('display', 'block');
     window.setTimeout(() => {
         $('#alert-section').css('display', 'none');
