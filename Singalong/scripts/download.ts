@@ -42,25 +42,6 @@ export async function getLyricsFromDatabase(playlist: Track[], pushAllTracks : b
     return lyricsFromDatabase;
 }
 
-export async function getTitlePlaylist(playlist: Track[]) {
-    var textualPlaylist = '';
-    for (let track of playlist) {
-        textualPlaylist += track.title + '\n';
-    }
-    return textualPlaylist;
-}
-
-export function textualPlaylistToPlaylist(textualPlaylist : string) {
-    var textualTracks = textualPlaylist.trim().split('\n');
-    var tracks = [];
-    for (let trackString of textualTracks) {
-        var track = Track.parse(trackString);
-        if (track != null)
-            tracks.push(track);
-    }
-    return tracks;
-}
-
 export async function downloadTrack(track : Track, sleepTime : number = 3000) {
     if (track == null) return null;
     var cached = await lyrics_db.queryTrack(track);
@@ -99,11 +80,11 @@ export async function downloadTrack(track : Track, sleepTime : number = 3000) {
     return track;
 }
 
-export async function createSongbook(playlist : string, sleepTime : number = 0) : Promise<Track[]> {
-    var tracks = textualPlaylistToPlaylist(playlist);
+export async function createSongbook(textualPlaylist : string, sleepTime : number = 0) : Promise<Track[]> {
+    var playlist = Playlist.textualPlaylistToPlaylist(textualPlaylist);
     var book = [];
     var tracksNotFound = [];
-    for (let track of tracks) {
+    for (let track of playlist.items) {
         track = await downloadTrack(track, sleepTime);
         book.push(track);
         if (track.lyrics == null) {

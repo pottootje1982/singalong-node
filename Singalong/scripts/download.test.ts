@@ -24,7 +24,8 @@ describe("Downloading lyrics", () => {
         assert(content.indexOf("Don't know much about dancin'") >= 0, content);
     });
     
-    it("Search Beatles Genius", async () => {
+    it("Search Beatles Genius", async function() {
+        this.timeout(5000);
         var content = await download.engines["Genius"].searchLyrics("beatles", "yellow submarine");
         console.log(content);
         assert(content.indexOf('In the town where I was born') >= 0, content);
@@ -114,12 +115,12 @@ describe("Downloading lyrics", () => {
 
     it("Get lyrics from database", async () => {
         let playlist = [
-            new Track('1793 George Harrison', 'Give me Love'),
+            new Track('1793 George Harrison', 'Give Me Love (Give Me Peace On Earth)'),
             new Track("Beatles", "Yellow Submarine"),
             new Track("John Lennon", "Imagine"),
             new Track("bladieblablabla", "")
         ];
-        playlist = await download.getLyricsFromDatabase(playlist);
+        playlist = await download.getLyricsFromDatabase(playlist, false);
         assert.equal(playlist.length, 3);
         assert(playlist[0].lyrics.indexOf("Give me love") >= 0, "Give me love wasn't found");
         assert.equal("Genius", playlist[0].site);
@@ -130,22 +131,4 @@ describe("Downloading lyrics", () => {
         assert(playlist[2].lyrics.indexOf("Imagine there's no heaven") >= 0, "Imagine there's no heaven wasn't found");
         assert.equal("MusixMatch", playlist[2].site);
     });
-
-    it("Empty Textual playlist to tracks",
-        () => {
-            var tracks = download.textualPlaylistToPlaylist('');
-            assert.equal(tracks.length, 0);
-        });
-
-    it("Textual playlist to tracks",
-        () => {
-            var tracks = download.textualPlaylistToPlaylist('1793 George Harrison - Give me Love\n' +
-                "Beatles -Yellow Submarine");
-            assert.equal(tracks.length, 2);
-            assert.equal('1793 George Harrison', tracks[0].artist);
-            assert.equal("Give me Love", tracks[0].title);
-            assert.equal('Beatles', tracks[1].artist);
-            assert.equal("Yellow Submarine", tracks[1].title);
-        });
-
 });

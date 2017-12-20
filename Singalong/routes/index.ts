@@ -14,6 +14,7 @@ var lyrics_db = require('../scripts/lyrics_db');
 var download = require("../scripts/download");
 const router = express.Router();
 import Spotify = require("../scripts/spotify");
+import {Playlist} from "../scripts/Playlist";
 var spotifyApi;
 import {Track} from '../scripts/Track';
 import playlist_cache = require('./playlist_cache');
@@ -40,8 +41,14 @@ router.post('/search-playlists', async (req: express.Request, res: express.Respo
 });
 
 router.get('/playlist-without-artist', async (req: express.Request, res: express.Response) => {
-    var playlist = download.textualPlaylistToPlaylist(req.query.playlist);
-    var textualPlaylist = await download.getTitlePlaylist(playlist);
+    var playlist = Playlist.textualPlaylistToPlaylist(req.query.playlist);
+    var textualPlaylist = await playlist.getTitlePlaylist();
+    res.json(textualPlaylist);
+});
+
+router.get('/minimize-title', async (req: express.Request, res: express.Response) => {
+    var playlist = Playlist.textualPlaylistToPlaylist(req.query.playlist, req.query.noArtist === 'true');
+    var textualPlaylist = await playlist.getMinimalTitlePlaylist();
     res.json(textualPlaylist);
 });
 
@@ -125,13 +132,16 @@ router.delete('/lyrics', async (req, res) => {
 router.get('/playlist-to-download', async (req, res) => {
     var ctx: any = req.query;
     ctx.textualPlaylist = req.query.playlist;
-    ctx.playlist = download.textualPlaylistToPlaylist(ctx.textualPlaylist);
+    ctx.playlist = Playlist.textualPlaylistToPlaylist(ctx.textualPlaylist);
     res.render('playlist',
         ctx,
         (err, playlistHtml) => {
             ctx.playlist = null;
             ctx.playlistHtml = playlistHtml;
-            res.json(ctx);
+            if (err)
+                showError(res, 'Error rendering playlist', err);
+            else
+                res.json(ctx);
         });
 });
 
@@ -142,7 +152,7 @@ router.get('/download-track', async (req, res) => {
 
 router.post('/songbook', async (req, res) => {
     var textualPlaylist = req.body.playlist;
-    var playlist = textualPlaylist != null ? download.textualPlaylistToPlaylist(textualPlaylist) : (await Spotify.getFullPlaylist(req.body.userId, req.body.playlistId)).items;
+    var playlist = textualPlaylist != null ? Playlist.textualPlaylistToPlaylist(textualPlaylist) : (await Spotify.getFullPlaylist(req.body.userId, req.body.playlistId)).items;
     playlist = await download.getLyricsFromDatabase(playlist, false);
     res.render('songbook', {
         book: playlist,

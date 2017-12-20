@@ -13,7 +13,7 @@ describe("Lyrics DB", () => {
     it("Track without artist",
          function () {
              var track = Track.parse('Es ist ein Ros entsprungen');
-             assert.equal(track.artist ,'');
+             assert.equal(track.artist, '');
              assert.equal(track.title,'Es ist ein Ros entsprungen');
              assert.equal(track.toString(), 'Es ist ein Ros entsprungen');
          });
@@ -30,6 +30,20 @@ describe("Lyrics DB", () => {
             assert.equal(track.artist, 'The Drifters');
             assert.equal(track.title, 'Under The Boardwalk - Single/LP Version');
             assert.equal(track.toString(), 'The Drifters - Under The Boardwalk - Single/LP Version');
+        });
+
+    it("Get minimal track",
+        function () {
+            var track = Track.parse('The Drifters - Under The Boardwalk - Single/LP Version');
+            assert.equal(track.getMinimalTitle(), 'Under The Boardwalk');
+            assert.equal(track.toString(true), 'The Drifters - Under The Boardwalk');
+        });
+
+    it("Get minimal track title only",
+        function () {
+            var track = new Track(null, 'Under The Boardwalk - Single/LP Version');
+            assert.equal(track.getMinimalTitle(), 'Under The Boardwalk');
+            assert.equal(track.toString(true), 'Under The Boardwalk');
         });
 
     it("Clean title",

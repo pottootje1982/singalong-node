@@ -8,7 +8,7 @@
                 input.form-control(form='search-playlists' type='text' name='playlistQuery' placeholder='Search Spotify playlists')
             br
 
-            a(id='playlist-link' href='#' onclick='showCurrentlyPlaying()' style='color:DarkViolet') Currently Playing
+            a(id='currently-playing-link' href='#' onclick='showCurrentlyPlaying()' style='color:DarkViolet') Currently Playing
             br
 
             each playlist in playlists || []

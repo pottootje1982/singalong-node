@@ -8,7 +8,8 @@
             div(style="margin-left:430px;margin-right:10px;width:180px")
                 - var buttonStyle =  'width:150px;margin-bottom:5px'
                 input.form-control(form='playlist-form' id='sleepTimeInput' type='text' name='sleepTime' value='3000' data-toggle="tooltip" title="Sleep time (ms)" style=buttonStyle)
-                button.btn.btn-primary(onclick='removeArtist()' style=buttonStyle) Remove Artist
+                button.btn.btn-primary(id='remove-artist-button' onclick='removeArtist()' style=buttonStyle) Remove Artist
+                button.btn.btn-primary(id='minimize-title-button' onclick='minimizeTitle()' style=buttonStyle) Minimize Title
                 button.btn.btn-primary(onclick='filterOnDownloadStatus()' style=buttonStyle) Not yet downloaded
                 button.btn.btn-primary.download-button(style=buttonStyle onclick='downloadPlaylist()') Download
                 form(method='POST' action='songbook' id='playlist-form' target='_blank')

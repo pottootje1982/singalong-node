@@ -7,7 +7,7 @@
     fullTrackTitle: string;
 
     constructor(artist: string, title: string, site?: string, lyrics?: string, fullTrackTitle?: string, id?: string, ) {
-        this.artist = artist.trim();
+        this.artist = artist ? artist.trim() : '';
         this.title = title.trim();
         this.site = site;
         this.lyrics = lyrics;
@@ -15,19 +15,20 @@
         this.id = id;
     }
 
-    public toString(): string {
-        if (this.fullTrackTitle != null) return this.fullTrackTitle;
+    public toString(minimal:boolean = false): string {
+        if (this.fullTrackTitle != null && !minimal) return this.fullTrackTitle;
+        let title = (minimal ? this.getMinimalTitle() : this.title);
         if (this.artist == null || this.artist === '')
-            return this.title;
-        return this.artist + ' - ' + this.title;
+            return title;
+        return this.artist + ' - ' + title;
     }
 
     public static parse(trackStr: string): Track {
-        var trackItems = trackStr.split('-');
+        var trackItems = trackStr.split(' - ');
         if (trackItems.length < 1) return null;
         let artist = trackItems.length === 1 ? '' : trackItems[0].trim();
         if (trackItems.length > 1) trackItems.splice(0, 1);
-        let title = trackItems.join('-').trim();
+        let title = trackItems.join(' - ').trim();
         if (artist === '' && title === '') return null;
         let track = new Track(artist, title);
         track.fullTrackTitle = trackStr;
@@ -67,5 +68,9 @@
 
     static toTracks(playlist: any[]) {
         return playlist.map(track => Track.copy(track));
+    }
+
+    getMinimalTitle() {
+        return this.title.split(' - ', 1)[0].trim();
     }
 }

@@ -27,7 +27,7 @@ setInterval(() => {
     });
 }, 1000 * 3600);
 
-function executeQuery(query : string, processResults = null) : Promise<any[]> {
+export function executeQuery(query : string, processResults = null) : Promise<any[]> {
     return new Promise((resolve, reject) => {
         try {
             connection.query(query,
@@ -48,8 +48,8 @@ function executeQuery(query : string, processResults = null) : Promise<any[]> {
 
 export function query(artist, title): Promise<Track[]> {
     if (title === '' || title == null) return null;
-    var artistPart = artist != null ? 'Artist = ' + p(artist) + ' AND ' : '';
-    let query = 'SELECT * FROM lyrics WHERE ' + artistPart + 'Title = ' + p(title);
+    var artistPart = artist != null ? 'Artist' + p(artist) + ' AND ' : '';
+    let query = 'SELECT * FROM lyrics WHERE ' + artistPart + 'Title' + p(title);
     return executeQuery(query,
         results => {
             var tracks = [];
@@ -61,7 +61,7 @@ export function query(artist, title): Promise<Track[]> {
 
 export async function queryTrack(track: Track): Promise<Track> {
     try {
-        var tracks = await query(null, track.title);
+        var tracks = await query(null, track.getMinimalTitle());
         if (tracks == null && track.canClean()) tracks = await query(track.cleanArtist(), track.cleanTitle());
         if (tracks == null) return null;
         if (tracks.length === 1) return tracks[0];
@@ -77,13 +77,13 @@ export async function queryTrack(track: Track): Promise<Track> {
 }
 
 export async function queryPlaylist(playlist: Track[], notDownloaded: boolean) {
-    var titles = playlist.map(track => p(track.title));
-    var wherePart = 'Title = ' + titles.join(' OR Title = ');
+    var titles = playlist.map(track => p(track.getMinimalTitle()));
+    var wherePart = 'Title' + titles.join(' OR Title');
     var query = 'SELECT * FROM lyrics WHERE ' + wherePart;
     let queryResults: any[] = await executeQuery(query);
     var results: Track[] = [];
     for (let track of playlist) {
-        var matches = queryResults.filter(match => match.Title.toUpperCase() === track.title.toUpperCase());
+        var matches = queryResults.filter(match => match.Title.toUpperCase().startsWith(track.getMinimalTitle().toUpperCase()));
         if (matches.length === 0) {
             results.push(track);
             continue;
@@ -102,22 +102,24 @@ export async function queryPlaylist(playlist: Track[], notDownloaded: boolean) {
 
 export function insert(track: Track, lyrics: string) {
     let query = "INSERT INTO lyrics (Artist,Title,Site,Lyrics) " +
-        'VALUES("' + track.artist + '", "' + track.title + '", "' + track.site + '", ' + formatLyrics(lyrics) + ')';
+        'VALUES("' + track.artist + '", "' + track.title + '", "' + track.site + '", ' + clean(lyrics) + ')';
     return executeQuery(query);
 }
 
-function formatLyrics(lyrics: string) {
-    return p(lyrics == null ? null : lyrics.replace(/"/g, '\\"'));
+function clean(lyrics: string) {
+    return p(lyrics == null ? null : lyrics, true);
 }
 
-function p(value: string) {
-    return value == null ? "NULL" : '"' + value.replace(/&/g, "\&").replace(/"/g, '\\"').trim() + '"';
+function p(value: string, lyrics: boolean = false) {
+    value = value.replace(/&/g, "\&").replace(/"/g, '\\"').trim();
+    value = lyrics ? '"' + value + '"' : ' LIKE "%' + value + '%"';
+    return value == null ? "NULL" : value;
 }
 
 function updateInternal(track: Track, lyrics: string) {
     let query = "UPDATE lyrics " +
-        'SET Site=' + p(track.site) + ', Lyrics=' + formatLyrics(lyrics) + ' ' +
-        'WHERE Artist=' + p(track.artist) + ' AND Title=' + p(track.title);
+        'SET Site=' + clean(track.site) + ', Lyrics=' + clean(lyrics) + ' ' +
+        'WHERE Artist' + p(track.artist) + ' AND Title' + p(track.title);
     return executeQuery(query);
 }
 
@@ -130,8 +132,7 @@ export async function update(track: Track, lyrics: string) {
 export async function remove(track: Track) {
     var foundTrack = await queryTrack(track);
     if (foundTrack) {
-        let query = "DELETE FROM lyrics " +
-            'WHERE Artist=' + p(foundTrack.artist) + ' AND Title=' + p(foundTrack.title);
+        let query = "DELETE FROM lyrics " + 'WHERE Artist' + p(foundTrack.artist) + ' AND Title' + p(foundTrack.title);
         return executeQuery(query);
     }
 }

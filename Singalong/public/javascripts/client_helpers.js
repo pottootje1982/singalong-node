@@ -70,16 +70,27 @@ function getSelectedPlaylist() {
     };
 }
 
-function removeArtist() {
+function modifyTextualPlaylist(url) {
     var data = getSelectedPlaylist();
     data.playlist = $('#playlistText').val();
     $.ajax({
-        url: '/playlist-without-artist',
+        url: url,
         data: data,
-        success: function(textualPlaylist) {
+        success: function (textualPlaylist) {
             $('#playlistText').val(textualPlaylist);
         }, error: showError
-});
+    });
+}
+
+function removeArtist() {
+    modifyTextualPlaylist('/playlist-without-artist');
+    $('#playlistText').prop('data-no-artist', true);
+    $('#remove-artist-button').prop('disabled', true);
+}
+
+function minimizeTitle() {
+    modifyTextualPlaylist('/minimize-title?noArtist=' + $('#playlistText').prop('data-no-artist'));
+    $('#minimize-title-button').prop('disabled', true);
 }
 
 function getLyrics(artist, title, site) {
@@ -100,8 +111,15 @@ function refreshPlaylistControls(res) {
         $('#playlistText').val(res.textualPlaylist);
     if (res.playlistHtml)
         $('#playlist').replaceWith(res.playlistHtml);
-    var name = $("a[data-user-id=" + playlist.userId + "][data-playlist-id='" + playlist.playlistId + "']").text();
+    var name;
+    if (playlist.playlistId && playlist.userId)
+        name = $("a[data-user-id=" + playlist.userId + "][data-playlist-id='" + playlist.playlistId + "']").text();
+    else
+        name = $('#currently-playing-link').text();
+    $('#playlistText').prop('data-no-artist', false);
     $('#playlist-title').text(name);
+    $('#remove-artist-button').prop('disabled', false);
+    $('#minimize-title-button').prop('disabled', false);
 }
 
 function refreshPlaylist(res) {
@@ -120,7 +138,8 @@ function showPlaylist(userId, playlistId) {
         url: '/playlist',
         data: {
             userId: userId, playlistId: playlistId,
-            oldUserId: currentPlaylist.userId, oldPlaylistId: currentPlaylist.playlistId, oldAlbumId: currentPlaylist.albumId
+            oldUserId: currentPlaylist.userId, oldPlaylistId: currentPlaylist.playlistId, oldAlbumId: currentPlaylist.albumId,
+            notDownloaded: false
         },
         success: refreshPlaylist,
         error: showError
@@ -139,8 +158,7 @@ function showCurrentlyPlaying() {
 
 function filterOnDownloadStatus() {
     var currentPlaylist = getSelectedPlaylist();
-    currentPlaylist.notDownloaded = true;
-    refreshPlaylist(currentPlaylist);
+    refreshPlaylist({ playlist: currentPlaylist, notDownloaded: true });
 }
 
 function getSelectedTrack(lyrics) {
