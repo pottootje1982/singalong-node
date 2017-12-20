@@ -46,6 +46,13 @@ describe("Lyrics DB", () => {
             assert.equal(track.toString(true), 'Under The Boardwalk');
         });
 
+    it("Get minimal track title of track with parenthese",
+        function () {
+            var track = Track.parse('Bee Gees - Massachusetts (2008 Remastered LP Version)');
+            assert.equal(track.getMinimalTitle(), 'Massachusetts');
+            assert.equal(track.toString(true), 'Bee Gees - Massachusetts');
+        });
+
     it("Clean title",
         function () {
             var track = Track.parse('Bonnie Raitt - Angel From Montgomery (Remastered)');
@@ -59,11 +66,13 @@ describe("Lyrics DB", () => {
             assert.equal(track, null);
         });
 
+    // Decided to not clean numbers from artist/title, since the clean function also affects titles
+    // It is quite common to start a title with a number
     it("Is track dirty?",
         function () {
             var track = new Track('1793 George Harrison', 'Give me Love');
-            assert.equal(true, track.canClean());
-            assert.equal('George Harrison', track.cleanArtist());
+            assert.equal(false, track.canClean());
+            assert.equal('1793 George Harrison', track.cleanArtist());
             assert.equal('Give me Love', track.cleanTitle());
         });
 

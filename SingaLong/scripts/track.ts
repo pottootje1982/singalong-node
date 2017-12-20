@@ -36,7 +36,7 @@
     }
 
     private cleanString(str: string) {
-        var regex = /\d*([^\(\)\[\]]*)/i;
+        var regex = /([^\(\)\[\]]*)/i;
         var result = str.match(regex);
         return result != null && result.length > 1 ? result[1].trim() : str;
     }
@@ -71,6 +71,6 @@
     }
 
     getMinimalTitle() {
-        return this.title.split(' - ', 1)[0].trim();
+        return this.cleanString(this.title.split(' - ', 1)[0]);
     }
 }
