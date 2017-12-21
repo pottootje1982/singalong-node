@@ -158,10 +158,12 @@ router.get('/download-track', async (req, res) => {
 
 router.post('/songbook', async (req, res) => {
     var textualPlaylist = req.body.playlist;
-    var playlist = textualPlaylist != null ? Playlist.textualPlaylistToPlaylist(textualPlaylist) : (await Spotify.getFullPlaylist(req.body.userId, req.body.playlistId)).items;
+    let userId = req.body.userId;
+    let playlistId = req.body.playlistId;
+    var playlist = textualPlaylist != null ? Playlist.textualPlaylistToPlaylist(textualPlaylist) : (await Spotify.getFullPlaylist(userId, playlistId)).items;
     playlist = await download.getLyricsFromDatabase(playlist, false);
     res.render('songbook', {
-        book: playlist,
+        book: playlist, userId: userId, playlistId:playlistId
     });
 });
 
@@ -171,10 +173,10 @@ router.get('/current-track', async (req, res) => {
     res.json({trackName: fromSpotify.toString()});
 });
 
-router.post('/play-track', async (req, res) => {
+router.get('/play-track', async (req, res) => {
     await spotifyApi.play({
-        context_uri: 'spotify:user:' + req.body.userId + ':playlist:' + req.body.playlistId,
-        offset: {uri: 'spotify:track:' + req.body.trackId } 
+        context_uri: 'spotify:user:' + req.query.context.userId + ':playlist:' + req.query.context.playlistId,
+        offset: {uri: 'spotify:track:' + req.query.trackId } 
     });
     res.json();
 });

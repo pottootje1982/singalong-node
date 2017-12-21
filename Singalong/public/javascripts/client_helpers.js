@@ -203,12 +203,26 @@ function toggleSpotifyPlayer() {
 }
 
 function playTrack(trackId) {
+    var data = getSelectedPlaylist();
+    data.trackId = trackId;
     $.ajax({
-        url: '/play-track', type: 'POST',
-        data: { userId: $('#userId').val(),
-            playlistId: $('#playlistId').val(),
-            trackId: trackId
-        }, error: showError
+        url: '/play-track', type: 'GET',
+        data: data, error: showError
+    });
+}
+
+function createSongbook(textualPlaylist) {
+    var data = getSelectedPlaylist();
+    if (textualPlaylist)
+        data.playlist = $('#playlistText').val();
+    $.ajax({
+        url: '/songbook', type: 'GET',
+        data: data,
+        success: function(html) {
+            var wnd = window.open("", "_blank");
+            wnd.document.write(html);
+        },
+        error: showError
     });
 }
 

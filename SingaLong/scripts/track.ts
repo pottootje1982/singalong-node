@@ -58,7 +58,7 @@
     }
 
     static fromSpotify(track) : Track {
-        let artist = track.artists[0].name;
+        let artist = track.artists ? track.artists[0].name : '';
         let title = track.name;
         if (artist === '' && title === '') return null;
         let result = new Track(artist, title);
