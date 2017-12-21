@@ -7,24 +7,20 @@ function startDownloadingPlaylist() {
     downloadPlaylistRecursive($(".track"), sleepTime, 0);
 }
 
+function updateTextualPlaylist(res) {
+    $('#playlist').replaceWith(res.playlistHtml);
+    $('#playlistText').val(res.textualPlaylist);
+    startDownloadingPlaylist();
+}
+
 function downloadPlaylist(fullPlaylist) {
     if (downloading) {
         downloading = false;
     } else {
         if (fullPlaylist) startDownloadingPlaylist();
         else
-            var data = getSelectedPlaylist();
-            data.playlist = $('#playlistText').val();
-            $.ajax({
-                url: '/playlist-to-download',
-                data: data,
-                success: function (res) {
-                    $('#playlist').replaceWith(res.playlistHtml);
-                    $('#playlistText').val(res.textualPlaylist);
-                    startDownloadingPlaylist();
-                },
-                error: showError
-            });
+            var data = {playlist: $('#playlistText').val()};
+            ajax('/playlist-to-download', data, updateTextualPlaylist);
     }
 }
 
@@ -37,49 +33,34 @@ function colorTrack(index, color) {
     $("#" + index).css({ 'color': color });
 }
 
+function updateDownloadStatus(playlist, sleepTime, index) {
+    return function(result) {
+        var track = result.track;
+        console.log('Downloaded ', track, track.lyrics != null, "#" + index);
+        if (track.lyrics != null) {
+            colorTrack(index, 'green');
+        } else {
+            colorTrack(index, 'red');
+        }
+        downloadPlaylistRecursive(playlist.slice(1), sleepTime, index + 1);
+    }
+}
+
 function downloadPlaylistRecursive(playlist, sleepTime, index) {
     if (playlist.length === 0 || !downloading) {
         downloading = false;
         $('.download-button').text('Download');
         return;
     }
-
     colorTrack(index ,'orange');
-
-    $.ajax({
-        url: '/download-track',
-        data: { track: getTrack(playlist[0]), sleepTime: sleepTime },
-        success: function (result) {
-            var track = result.track;
-            console.log('Downloaded ', track, track.lyrics != null, "#" + index);
-            if (track.lyrics != null) {
-                colorTrack(index, 'green');
-            } else {
-                colorTrack(index, 'red');
-            }
-            downloadPlaylistRecursive(playlist.slice(1), sleepTime, index + 1);
-        }, error: showError
-    });
-}
-
-function getSelectedPlaylist() {
-    return {context: {
-        userId: $('#playlist').attr('data-user-id'),
-        playlistId: $('#playlist').attr('data-playlist'),
-        albumId: $('#playlist').attr('data-album-id')
-    }};
+    ajax('/download-track', { track: getTrack(playlist[0]), sleepTime: sleepTime }, updateDownloadStatus(playlist, sleepTime, index));
 }
 
 function modifyTextualPlaylist(url) {
-    var data = getSelectedPlaylist();
-    data.playlist = $('#playlistText').val();
-    $.ajax({
-        url: url,
-        data: data,
-        success: function (textualPlaylist) {
+    var data = { playlist: $('#playlistText').val() };
+    ajax(url, data, function (textualPlaylist) {
             $('#playlistText').val(textualPlaylist);
-        }, error: showError
-    });
+        });
 }
 
 function removeArtist() {
@@ -93,16 +74,14 @@ function minimizeTitle() {
     $('#minimize-title-button').prop('disabled', true);
 }
 
+function updateLyrics(html) {
+    $('#track-section').replaceWith(html);
+    if ($('#collapseThree').attr('aria-expanded') !== "true")
+        $('#collapseThree').collapse('show');
+}
+
 function getLyrics(artist, title, site) {
-    $.ajax({
-        url: '/lyrics',
-        data: {artist: artist, title:title, site:site},
-        success: function(html) {
-            $('#track-section').replaceWith(html);
-            if ($('#collapseThree').attr('aria-expanded') !== "true")
-                $('#collapseThree').collapse('show');
-        }, error: showError
-    });
+    ajax('/lyrics', {artist: artist, title:title, site:site}, updateLyrics);
 }
 
 function refreshPlaylistControls(res) {
@@ -120,76 +99,43 @@ function refreshPlaylistControls(res) {
     $('#playlist-title').text(name);
     $('#remove-artist-button').prop('disabled', false);
     $('#minimize-title-button').prop('disabled', false);
-    res.textualPlaylist = null;
+    // Don't sent these values back to find-in-database
     res.playlistHtml = null;
+    res.textualPlaylist = null;
 }
 
 function refreshPlaylist(res) {
     refreshPlaylistControls(res);
-    $.ajax({
-        url: '/find-in-database',
-        data: res,
-        success: refreshPlaylistControls, error: showError
-    });
+    ajax('/find-in-database', res, refreshPlaylistControls);
 }
 
 function showPlaylist(userId, playlistId) {
-    var data = getSelectedPlaylist();
-    data.oldContext = data.context;
-    data.context = { userId: userId, playlistId: playlistId }
-    data.notDownloaded = false;
-    $.ajax({
-        url: '/playlist',
-        data: data,
-        success: refreshPlaylist,
-        error: showError
-    });
+    var data = {
+        notDownloaded: false,
+        newContext: { userId: userId, playlistId: playlistId }
+    }
+    ajax('/playlist', data, refreshPlaylist);
 }
 
 function showCurrentlyPlaying() {
-    var currentPlaylist = getSelectedPlaylist();
-    currentPlaylist.oldContext = currentPlaylist.context;
-    $.ajax({
-        url: '/currently-playing',
-        data: currentPlaylist,
-        success: refreshPlaylist,
-        error: showError
-    });
+    ajax('/currently-playing', {}, refreshPlaylist);
 }
 
 function filterOnDownloadStatus() {
-    var data = getSelectedPlaylist();
-    data.notDownloaded = true;
-    refreshPlaylist(data);
-}
-
-function getSelectedTrack(lyrics) {
-    var result = getSelectedPlaylist();
-    result.artist = $('#lyrics-display').attr('data-artist');
-    result.title = $('#lyrics-display').attr('data-title');
-    if (lyrics != null)
-        result.lyrics = lyrics;
-    return result;
+    ajax('/find-in-database', { notDownloaded: true }, refreshPlaylistControls);
 }
 
 function storeLyrics() {
-    $.ajax({
-        url: 'lyrics', type: 'POST',
-        data: getSelectedTrack($('#lyrics-display').val()), error: showError
-    });
+    ajax('/lyrics', { lyrics: $('#lyrics-display').val() }, refreshPlaylist, 'POST');
+}
+
+function clearLyricsText(res) {
+    $('#lyrics-display').val('');
+    refreshPlaylist(res);
 }
 
 function removeLyrics() {
-    var selTrack = getSelectedTrack();
-    $.ajax({
-        url: 'lyrics',
-        type: 'DELETE',
-        data: selTrack,
-        success: res => {
-            $('#lyrics-display').val('');
-            refreshPlaylist(res);
-        }, error: showError
-    });
+    ajax('/lyrics', {}, clearLyricsText, 'DELETE');
 }
 
 function toggleVisibility(controlId) {
@@ -203,35 +149,7 @@ function toggleSpotifyPlayer() {
 }
 
 function playTrack(trackId) {
-    var data = getSelectedPlaylist();
-    data.trackId = trackId;
-    $.ajax({
-        url: '/play-track', type: 'GET',
-        data: data, error: showError
-    });
-}
-
-function createSongbook(textualPlaylist) {
-    var data = getSelectedPlaylist();
-    if (textualPlaylist)
-        data.playlist = $('#playlistText').val();
-    $.ajax({
-        url: '/songbook', type: 'GET',
-        data: data,
-        success: function(html) {
-            var wnd = window.open("", "_blank");
-            wnd.document.write(html);
-        },
-        error: showError
-    });
-}
-
-function showError(res) {
-    $('#alert-message').text(res && res.responseJSON ? res.responseJSON.error : res.error);
-    $('#alert-section').css('display', 'block');
-    window.setTimeout(() => {
-        $('#alert-section').css('display', 'none');
-    }, 10000);
+    ajax('/play-track', { trackId: trackId });
 }
 
 $(document).ready(function () {
@@ -241,3 +159,53 @@ $(document).ready(function () {
         playlistLinks.trigger('click');
     }
 });
+
+function getSelectedTrack() {
+    return {
+        artist: $('#lyrics-display').attr('data-artist'),
+        title: $('#lyrics-display').attr('data-title')
+    };
+}
+
+function showError(res) {
+    if (res.responseText)
+        $('#alert-message').replaceWith(res && res.responseText);
+    else
+        $('#alert-message').text(res && res.responseJSON ? res.responseJSON.error : res.statusText);
+    $('#alert-section').css('display', 'block');
+    window.setTimeout(() => {
+        $('#alert-section').css('display', 'none');
+    }, 10000);
+}
+
+function getSelectedPlaylist() {
+    return {
+        context: {
+            userId: $('#playlist').attr('data-user-id'),
+            playlistId: $('#playlist').attr('data-playlist'),
+            albumId: $('#playlist').attr('data-album-id')
+        }
+    };
+}
+
+function getContext(addedContext) {
+    var data = getSelectedPlaylist();
+    var selTrack = getSelectedTrack();
+    $.extend(data, selTrack);
+    $.extend(data, addedContext);
+    return data;
+}
+
+function ajax(url, addedContext, success, type) {
+    var data = getContext(addedContext);
+    var queryString = type ? '?' + $.param(data) : '';
+    data = type ? addedContext : data;
+    $.ajax({
+        url: url + queryString, type: type,
+        data: data,
+        context: data,
+        success: success,
+        error: showError
+    });
+}
+

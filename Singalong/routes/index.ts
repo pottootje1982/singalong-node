@@ -98,12 +98,12 @@ function removePlaylist(oldContext) {
 }
 
 router.get('/playlist', async (req, res) => {
-    removePlaylist(req.query.oldContext);
-    showPlaylist(res, req.query.context);
+    removePlaylist(req.query.context);
+    showPlaylist(res, req.query.newContext);
 });
 
 router.get('/currently-playing', async (req, res) => {
-    removePlaylist(req.query.oldContext);
+    removePlaylist(req.query.context);
     showPlaylist(res, {});
 });
 
@@ -125,13 +125,13 @@ router.get('/lyrics', async (req, res) => {
 });
 
 router.post('/lyrics', async (req, res) => {
-    lyrics_db.update(new Track(req.body.artist, req.body.title), req.body.lyrics);
-    res.json({});
+    lyrics_db.update(new Track(req.query.artist, req.query.title), req.body.lyrics);
+    showPlaylist(res, req.query.context);
 });
 
 router.delete('/lyrics', async (req, res) => {
-    lyrics_db.remove(new Track(req.body.artist, req.body.title));
-    showPlaylist(res, req.body.context);
+    lyrics_db.remove(new Track(req.query.artist, req.query.title));
+    showPlaylist(res, req.query.context);
 });
 
 router.get('/playlist-to-download', async (req, res) => {
@@ -160,7 +160,7 @@ router.post('/songbook', async (req, res) => {
     var textualPlaylist = req.body.playlist;
     let userId = req.body.userId;
     let playlistId = req.body.playlistId;
-    var playlist = textualPlaylist != null ? Playlist.textualPlaylistToPlaylist(textualPlaylist) : (await Spotify.getFullPlaylist(userId, playlistId)).items;
+    var playlist = textualPlaylist != null ? Playlist.textualPlaylistToPlaylist(textualPlaylist).items : (await Spotify.getFullPlaylist(userId, playlistId)).items;
     playlist = await download.getLyricsFromDatabase(playlist, false);
     res.render('songbook', {
         book: playlist, userId: userId, playlistId:playlistId
