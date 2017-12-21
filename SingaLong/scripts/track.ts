@@ -57,7 +57,8 @@
         return new Track(track.artist, track.title, track.site, track.lyrics, track.fullTrackTitle, track.id);
     }
 
-    static fromSpotify(track) : Track {
+    static fromSpotify(track): Track {;
+        if (track == null) return null;
         let artist = track.artists ? track.artists[0].name : '';
         let title = track.name;
         if (artist === '' && title === '') return null;
