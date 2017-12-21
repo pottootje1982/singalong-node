@@ -202,12 +202,12 @@ function toggleSpotifyPlayer() {
     toggleVisibility('#spotify-player');
 }
 
-function playTrack() {
+function playTrack(trackId) {
     $.ajax({
         url: '/play-track', type: 'POST',
         data: { userId: $('#userId').val(),
             playlistId: $('#playlistId').val(),
-            trackId: $('#trackId').val()
+            trackId: trackId
         }, error: showError
     });
 }

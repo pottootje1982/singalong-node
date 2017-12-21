@@ -20,7 +20,7 @@
                 input(type='hidden' id='userId' name='userId' value=userId)
                 input(type='hidden' id='playlistId' name='playlistId' value=playlistId)
                 input(type='hidden' id='trackId' name='trackId' value=track.id)
-                button(src='play.png' onclick='playTrack()' style='float:left;width:15px;height:15px;background: url(play.png);background-size: 100%;border: none;margin-right:5px')
+                button(src='play.png' onclick='playTrack("' + track.id + '")' style='float:left;width:15px;height:15px;background: url(play.png);background-size: 100%;border: none;margin-right:5px')
                 - var style = !searchedDb ? '' : (track.lyrics == null ? 'color:red' : 'color:green');
                 a.track(id=index href='#' onclick='getLyrics("' + track.artist + '", "' + track.title + '")' style=style data-artist=track.artist data-title=track.title)= index+1 + '. ' + track
                 br
