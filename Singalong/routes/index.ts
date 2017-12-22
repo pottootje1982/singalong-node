@@ -35,9 +35,11 @@ router.get('/authorized', async (req: express.Request, res: express.Response) =>
 });
 
 router.post('/search-playlists', async (req: express.Request, res: express.Response) => {
+    var ctx = req.body;
     var spotifyApi: SpotifyApi = res.locals.getSpotifyApi();
     var data = await spotifyApi.doAsyncApiCall(api => api.searchPlaylists(req.body.playlistQuery));
-    res.render('index', { playlists: data.body.playlists.items });
+    ctx.playlists = data.body.playlists.items;
+    res.render('index', ctx);
 });
 
 router.get('/playlist-without-artist', async (req: express.Request, res: express.Response) => {
@@ -88,7 +90,7 @@ async function showPlaylist(res: express.Response, ctx: any, showCurrentlyPlayin
     }
     catch (err)
     {
-        showError(res, 'Error retrieving playlist ' + ctx.playlistId + ' from database for user ' + ctx.userId, err);
+        showError(res, 'Error retrieving playlist ' + ctx.context.playlistId + ' from database for user ' + ctx.context.userId, err);
     }
 }
 
