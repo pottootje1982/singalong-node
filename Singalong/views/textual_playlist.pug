@@ -13,4 +13,6 @@
                 button.btn.btn-primary(onclick='filterOnDownloadStatus()' style=buttonStyle) Not yet downloaded
                 button.btn.btn-primary.download-button(style=buttonStyle onclick='downloadPlaylist()') Download
                 form(method='POST' action='songbook' id='playlist-form' target='_blank')
+                    input(type='hidden' name='accessToken' value=accessToken)
+                    input(type='hidden' name='refreshToken' value=refreshToken)
                     button.btn.btn-primary(type='submit' target='_blank' style=buttonStyle) Create Songbook

@@ -188,10 +188,18 @@ function getSelectedPlaylist() {
     };
 }
 
+function getTokens() {
+    return {
+        accessToken: $('#main-divider').attr('data-access-token'),
+        refreshToken: $('#main-divider').attr('data-refresh-token')
+    };
+}
+
 function getContext(addedContext) {
     var data = getSelectedPlaylist();
     var selTrack = getSelectedTrack();
     $.extend(data, selTrack);
+    $.extend(data, getTokens());
     $.extend(data, addedContext);
     return data;
 }

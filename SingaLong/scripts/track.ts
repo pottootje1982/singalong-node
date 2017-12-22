@@ -6,7 +6,7 @@
     lyrics: string;
     fullTrackTitle: string;
 
-    constructor(artist: string, title: string, site?: string, lyrics?: string, fullTrackTitle?: string, id?: string, ) {
+    constructor(artist: string, title: string, site?: string, lyrics?: string, fullTrackTitle?: string, id?: string) {
         this.artist = artist ? artist.trim() : '';
         this.title = title.trim();
         this.site = site;

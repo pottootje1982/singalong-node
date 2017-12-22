@@ -5,6 +5,7 @@ import path = require('path');
 import routes from './routes/index';
 import users from './routes/user';
 var bodyParser = require('body-parser');
+import { SpotifyApi } from "./scripts/spotify";
 
 var app = express();
 
@@ -16,6 +17,19 @@ app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'pug');
 
 app.use(express.static(path.join(__dirname, 'public')));
+
+function getTokens(req) {
+    return req.body.accessToken ? req.body : req.query;
+}
+
+app.use((req, res, next) => {
+    res.locals.getSpotifyApi = () : SpotifyApi => {
+        if (!res.locals.api)
+            res.locals.api = new SpotifyApi(req.headers.host, getTokens(req));
+        return res.locals.api;
+    }
+    next();
+});
 
 process.on('unhandledRejection', (reason, p) => {
     console.log('Unhandled Rejection at: Promise', p, 'reason:', reason);
