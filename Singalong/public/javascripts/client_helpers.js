@@ -18,9 +18,10 @@ function downloadPlaylist(fullPlaylist) {
         downloading = false;
     } else {
         if (fullPlaylist) startDownloadingPlaylist();
-        else
-            var data = {playlist: $('#playlistText').val()};
+        else {
+            var data = { playlist: $('#playlistText').val() };
             ajax('/playlist-to-download', data, updateTextualPlaylist);
+        }
     }
 }
 
