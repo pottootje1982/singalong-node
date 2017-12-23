@@ -7,9 +7,10 @@ block content
     div(id='playlist' style='margin-left:3%;width:100%' data-playlist=playlistId data-user-id=userId data-album-id=albumId)
         input(id='main-divider' data-access-token=accessToken data-refresh-token=refreshToken type='hidden')
         each track in book
-            div(style='width:100%')
+            div(id=track.id style='width:100%')
                 h1(style='display:inline-block;margin:0;font-size:4em')= track.toString()
-                button(src='play.png' onclick='playTrack("' + track.id + '")' style='margin-left:10px;width:25px;height:25px;background: url(play.png);background-size: 100%;border: none;margin-right:5px')
+                if (track.id)
+                    button(src='play.png' onclick='playTrack("' + track.id + '")' style='margin-left:10px;width:35px;height:35px;background: url(play.png);background-size: 100%;border: none;margin-right:5px')
             br
             font(class='lyrics' style='width:100%' size="6")= track.lyrics
             br

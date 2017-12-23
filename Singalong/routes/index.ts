@@ -167,24 +167,28 @@ router.post('/songbook', async (req, res) => {
     var textualPlaylist = req.body.playlist;
     let userId = req.body.userId;
     let playlistId = req.body.playlistId;
-    var playlist = textualPlaylist != null ? Playlist.textualPlaylistToPlaylist(textualPlaylist).items : (await spotifyApi.getFullPlaylist(userId, playlistId)).items;
-    playlist = await download.getLyricsFromDatabase(playlist, false);
+    var playlist: Playlist;
+    if (req.body.albumId)
+        playlist = await spotifyApi.getAlbum(req.body.albumId);
+    else
+        playlist = textualPlaylist != null ? Playlist.textualPlaylistToPlaylist(textualPlaylist) : (await spotifyApi.getFullPlaylist(userId, playlistId));
+    var tracks = await download.getLyricsFromDatabase(playlist.items, false);
     res.render('songbook', {
-        book: playlist, userId: userId, playlistId: playlistId, accessToken: req.body.accessToken, refreshToken: req.body.refreshToken 
+        book: tracks, userId: userId, playlistId: playlistId, accessToken: req.body.accessToken, refreshToken: req.body.refreshToken 
     });
 });
 
 router.get('/current-track', async (req, res) => {
     var spotifyApi: SpotifyApi = res.locals.getSpotifyApi();
-    var currentTrack = await spotifyApi.doAsyncApiCall(async(api) => await api.getMyCurrentPlayingTrack());
+    var currentTrack = await spotifyApi.doAsyncApiCall(async(api) => api.getMyCurrentPlayingTrack());
     let fromSpotify = Track.fromSpotify(currentTrack && currentTrack.body ? currentTrack.body.item : null);
     res.json({trackName: fromSpotify.toString()});
 });
 
 router.get('/play-track', async (req, res) => {
     var spotifyApi: SpotifyApi = res.locals.getSpotifyApi();
-    await spotifyApi.doAsyncApiCall(async (api) => {
-        await api.play({
+    spotifyApi.doAsyncApiCall(async (api) => {
+        api.play({
             context_uri: 'spotify:user:' + req.query.context.userId + ':playlist:' + req.query.context.playlistId,
             offset: { uri: 'spotify:track:' + req.query.trackId }
         });

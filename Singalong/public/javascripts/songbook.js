@@ -6,7 +6,11 @@ $(document).ready(function () {
         ajax('/current-track', {}, function (res) {
                 var track = res.trackName;
                 if (lastTrack !== track) {
-                    var header = $('h1:contains("' + track + '")');
+                    var header;
+                    if (track.id)
+                        header = $('#' + track.id + '")');
+                    else
+                        header = $('h1:contains("' + track + '")');
                     console.log(track, lastTrack, header);
                     if (header != null && header.offset() != null) {
                         $('html, body').animate({

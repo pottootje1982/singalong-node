@@ -48,7 +48,8 @@ export class Playlist {
         return textualPlaylist;
     }
 
-    static textualPlaylistToPlaylist(textualPlaylist: string, noArtist: boolean = false) {
+    static textualPlaylistToPlaylist(textualPlaylist: string, noArtist: boolean = false) : Playlist {
+        if (textualPlaylist == null) return new Playlist(null, null, null, null, []);
         var textualTracks = textualPlaylist.trim().split('\n');
         var tracks = [];
         for (let trackString of textualTracks) {

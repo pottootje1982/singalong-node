@@ -68,12 +68,15 @@ export async function queryTrack(track: Track): Promise<Track> {
         var tracks = await query(null, track.getMinimalTitle());
         if (tracks == null && track.canClean()) tracks = await query(track.cleanArtist(), track.cleanTitle());
         if (tracks == null) return null;
-        if (tracks.length === 1) return tracks[0];
+        var result: Track;
+        if (tracks.length === 1) result = tracks[0];
         else {
             var filteredTracks = tracks.filter(t => t.artist.toUpperCase() === track.artist.toUpperCase() &&
                 t.title.toUpperCase() === track.title.toUpperCase());
-            return filteredTracks.length === 0 ? tracks[0] : filteredTracks[0];
+            result = filteredTracks.length === 0 ? tracks[0] : filteredTracks[0];
         }
+        result.id = track.id;
+        return result;
     } catch (error) {
         console.log(error);
         return null;
