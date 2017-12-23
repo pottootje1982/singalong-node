@@ -4,16 +4,20 @@ import { Track } from './Track';
 var connection = null;
 
 function createConnection() {
-    if (connection != null) connection.end();
-    connection = mysql.createConnection({
-        //host: '192.168.178.65',
-        host: '87.195.169.201',
-        port: 3307,
-        user: 'pottootje1982',
-        password: 'Icf5uEiPRtjXD7GK',
-        database: 'singalong'
-    });
-    connection.connect();
+    try {
+        if (connection != null) connection.end();
+        connection = mysql.createConnection({
+            //host: '192.168.178.65',
+            host: '87.195.169.201',
+            port: 3307,
+            user: 'pottootje1982',
+            password: 'Icf5uEiPRtjXD7GK',
+            database: 'singalong'
+        });
+        connection.connect();
+    } catch (err) {
+        console.log('Failed establishing DB connection ' + err);
+    }
 }
 
 createConnection();
