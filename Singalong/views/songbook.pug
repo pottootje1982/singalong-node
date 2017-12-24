@@ -15,7 +15,7 @@ block content
                 if (track.id)
                     button(src='play.png' onclick='playTrack("' + track.id + '")' style='margin-left:10px;width:35px;height:35px;background: url(play.png);background-size: 100%;border: none;margin-right:5px')
             br
-            font(class='lyrics' style='width:100%' size="6")= track.lyrics
+            p(class='lyrics' style='column-count: 2;-moz-column-count: 2;-webkit-column-count: 2;font-size:1.3em')= track.lyrics
             br
             br
 
