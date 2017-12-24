@@ -32,6 +32,10 @@ export class Playlist {
         return Playlist.getMinimalTitlePlaylist(this.items);
     }
 
+    static Empty() {
+        return new Playlist(null, null, null, null, []);
+    }
+
     static getTitlePlaylist(playlist: Track[]) {
         var textualPlaylist = '';
         for (let track of playlist) {

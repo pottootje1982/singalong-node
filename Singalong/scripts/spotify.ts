@@ -108,7 +108,7 @@ export class SpotifyApi {
         var currentTrack = await this.spotifyApi.getMyCurrentPlayingTrack();
         var context = currentTrack.body.context;
         var tokens;
-        if (!context) return null;
+        if (!context) return Playlist.Empty();
         if (context.type === 'album') {
             tokens = context.uri.split(':');
             var albumId = tokens[2];
@@ -120,7 +120,7 @@ export class SpotifyApi {
             let playlistId = tokens[4];
             return await this.getFullPlaylist(userId, playlistId);
         }
-        return null;
+        return Playlist.Empty();
     }
 
     async doAsyncApiCall(func) : Promise<any> {

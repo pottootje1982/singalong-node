@@ -165,33 +165,40 @@ router.get('/download-track', async (req, res) => {
 router.post('/songbook', async (req, res) => {
     var spotifyApi: SpotifyApi = res.locals.getSpotifyApi();
     var textualPlaylist = req.body.playlist;
-    let userId = req.body.userId;
-    let playlistId = req.body.playlistId;
+    let context = { userId: req.body.userId, playlistId: req.body.playlistId, albumId: req.body.albumId };
     var playlist: Playlist;
     if (req.body.albumId)
         playlist = await spotifyApi.getAlbum(req.body.albumId);
     else
-        playlist = textualPlaylist != null ? Playlist.textualPlaylistToPlaylist(textualPlaylist) : (await spotifyApi.getFullPlaylist(userId, playlistId));
+        playlist = textualPlaylist != null ? Playlist.textualPlaylistToPlaylist(textualPlaylist) : (await spotifyApi.getFullPlaylist(context.userId, context.playlistId));
     var tracks = await download.getLyricsFromDatabase(playlist.items, false);
     res.render('songbook', {
-        book: tracks, userId: userId, playlistId: playlistId, accessToken: req.body.accessToken, refreshToken: req.body.refreshToken 
+        book: tracks, context: context, accessToken: req.body.accessToken, refreshToken: req.body.refreshToken 
     });
 });
 
 router.get('/current-track', async (req, res) => {
     var spotifyApi: SpotifyApi = res.locals.getSpotifyApi();
     var currentTrack = await spotifyApi.doAsyncApiCall(async(api) => api.getMyCurrentPlayingTrack());
-    let fromSpotify = Track.fromSpotify(currentTrack && currentTrack.body ? currentTrack.body.item : null);
-    res.json({trackName: fromSpotify.toString()});
+    let track = Track.fromSpotify(currentTrack && currentTrack.body ? currentTrack.body.item : null);
+    res.json({trackName: track && track.toString(), trackId: track && track.id});
 });
 
 router.get('/play-track', async (req, res) => {
     var spotifyApi: SpotifyApi = res.locals.getSpotifyApi();
     spotifyApi.doAsyncApiCall(async (api) => {
-        api.play({
-            context_uri: 'spotify:user:' + req.query.context.userId + ':playlist:' + req.query.context.playlistId,
-            offset: { uri: 'spotify:track:' + req.query.trackId }
-        });
+        if (req.query.context.albumId) {
+            api.play({
+                context_uri: 'spotify:album:' + req.query.context.albumId,
+                offset: { uri: 'spotify:track:' + req.query.trackId }
+            });
+        } else {
+            api.play({
+                context_uri: 'spotify:user:' + req.query.context.userId + ':playlist:' + req.query.context.playlistId,
+                offset: { uri: 'spotify:track:' + req.query.trackId }
+            });
+        }
+
     });
     res.status(200);
 });
