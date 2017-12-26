@@ -58,6 +58,7 @@ router.get('/find-in-database', async (req: express.Request, res: express.Respon
     var spotifyApi: SpotifyApi = res.locals.getSpotifyApi();
     var ctx: any = req.query;
     ctx.playlist = playlist_cache.get(ctx.context.userId, ctx.context.playlistId || ctx.context.albumId);
+    if (!ctx.playlist) res.json(ctx);
     ctx.playlist.items = await lyrics_db.queryPlaylist(ctx.playlist.items, req.query.notDownloaded === 'true');
     ctx.textualPlaylist = await spotifyApi.playlistToText(ctx.playlist.items);
     ctx.searchedDb = true;
