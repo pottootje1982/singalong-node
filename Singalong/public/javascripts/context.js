@@ -1,4 +1,13 @@
-﻿function getSelectedTrack() {
+﻿var spotifyPlayerVisibility = false;
+
+function toggleSpotifyPlayer() {
+    spotifyPlayerVisibility = !spotifyPlayerVisibility;
+    var control = $('#spotify-player');
+    var display = spotifyPlayerVisibility ? 'block' : 'none';
+    control.css('display', display);
+}
+
+function getSelectedTrack() {
     return {
         artist: $('#lyrics-display').attr('data-artist'),
         title: $('#lyrics-display').attr('data-title')
@@ -22,7 +31,8 @@ function getSelectedPlaylist() {
             userId: $('#playlist').attr('data-user-id'),
             playlistId: $('#playlist').attr('data-playlist'),
             albumId: $('#playlist').attr('data-album-id')
-        }
+        },
+        showSpotifyPlaylist: spotifyPlayerVisibility
     };
 }
 

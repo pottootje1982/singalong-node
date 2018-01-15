@@ -54,6 +54,17 @@ router.get('/minimize-title', async (req: express.Request, res: express.Response
     res.json(textualPlaylist);
 });
 
+var cachedUrl;
+
+router.get('/proxy', async (req: express.Request, res: express.Response) => {
+    res.render('proxy', { webUrl: cachedUrl });
+});
+
+router.post('/proxy', async (req: express.Request, res: express.Response) => {
+    cachedUrl = req.body.webUrl;
+    res.render('proxy', { webUrl: cachedUrl});
+});
+
 router.get('/find-in-database', async (req: express.Request, res: express.Response) => {
     var spotifyApi: SpotifyApi = res.locals.getSpotifyApi();
     var ctx: any = req.query;
@@ -201,7 +212,7 @@ router.get('/play-track', async (req, res) => {
         }
 
     });
-    res.status(200);
+    res.json({});
 });
 
 function showError(res, message, error) {

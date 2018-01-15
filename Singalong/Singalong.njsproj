@@ -90,7 +90,13 @@
     <Content Include="views\playlist.pug">
       <Publish>True</Publish>
     </Content>
-    <Content Include="views\playlists.pug" />
+    <Content Include="views\playlists.pug">
+      <Publish>True</Publish>
+    </Content>
+    <Content Include="views\proxy.pug">
+      <SubType>Code</SubType>
+      <Publish>True</Publish>
+    </Content>
     <Content Include="views\textual_playlist.pug">
       <SubType>Code</SubType>
     </Content>

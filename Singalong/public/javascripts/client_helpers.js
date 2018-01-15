@@ -139,23 +139,15 @@ function removeLyrics() {
     ajax('/lyrics', {}, clearLyricsText, 'DELETE');
 }
 
-function toggleVisibility(controlId) {
-    var control = $(controlId);
-    var visibility = control.css('display');
-    control.css('display', (visibility === 'block') ? 'none' : 'block');
-}
-
-function toggleSpotifyPlayer() {
-    toggleVisibility('#spotify-player');
-}
-
 function playTrack(trackId) {
+    console.log("Playing track " + trackId);
     ajax('/play-track', { trackId: trackId });
 }
 
 $(document).ready(function () {
     $("#collapseTwo").collapse();
     var playlistLinks = $('#playlist-link:first');
+
     if (playlistLinks != null) {
         playlistLinks.trigger('click');
     }
