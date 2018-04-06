@@ -23,6 +23,10 @@ function getTokens(req) {
 }
 
 app.use((req, res, next) => {
+    req.query.invoke = function () {
+        let params = Array.prototype.slice.call(arguments, 1);
+        return arguments[0] + '(' + params.map(arg => JSON.stringify(arg)).join(', ') + ')';
+    }
     res.locals.getSpotifyApi = () : SpotifyApi => {
         if (!res.locals.api)
             res.locals.api = new SpotifyApi(req.headers.host, getTokens(req));
