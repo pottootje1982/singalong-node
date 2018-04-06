@@ -75,10 +75,12 @@ function minimizeTitle() {
     $('#minimize-title-button').prop('disabled', true);
 }
 
-function updateLyrics(html) {
-    $('#track-section').replaceWith(html);
+function updateLyrics(res) {
+    $('#track-section').replaceWith(res.trackHtml);
     if ($('#collapseThree').attr('aria-expanded') !== "true")
         $('#collapseThree').collapse('show');
+    if (res.title || res.artist)
+        $('#lyricsHeader').text(res.artist + ' - ' + res.title);
 }
 
 function getLyrics(id, artist, title, site) {

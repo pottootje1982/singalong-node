@@ -147,7 +147,8 @@ router.get('/lyrics', async (req, res) => {
         selectedTrack.site = site;
     }
     res.render('track', req.query, (err, html) => {
-        res.json(html);
+        req.query.trackHtml = html;
+        res.json(req.query);
     });
 });
 
