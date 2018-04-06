@@ -3,6 +3,8 @@ html
   head
     title= title
     script(src="https://code.jquery.com/jquery-3.2.1.min.js")
+    script(src="https://code.jquery.com/ui/1.12.1/jquery-ui.js")
+    link(rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css")
     link(rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css")
     script(src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/js/bootstrap.min.js")
     style(type="text/css").
@@ -11,3 +13,10 @@ html
       }
   body
     block content
+
+    div(id='dialog' title='Custom Search' style='width:600px;height:200px')
+      p Artist
+      textarea(id='custom-artist' cols='70')
+      br
+      p Title
+      textarea(id='custom-title' cols='70')

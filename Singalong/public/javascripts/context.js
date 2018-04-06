@@ -10,7 +10,8 @@ function toggleSpotifyPlayer() {
 function getSelectedTrack() {
     return {
         artist: $('#lyrics-display').attr('data-artist'),
-        title: $('#lyrics-display').attr('data-title')
+        title: $('#lyrics-display').attr('data-title'),
+        id: $('#lyrics-display').attr('data-id')
     };
 }
 

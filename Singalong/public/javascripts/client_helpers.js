@@ -27,7 +27,7 @@ function downloadPlaylist(fullPlaylist) {
 
 function getTrack(trackElement) {
     trackElement = $(trackElement);
-    return { artist: trackElement.attr('data-artist'), title: trackElement.attr('data-title') };
+    return { artist: trackElement.attr('data-artist'), title: trackElement.attr('data-title'), id: trackElement.attr('data-id') };
 }
 
 function colorTrack(index, color) {
@@ -81,8 +81,8 @@ function updateLyrics(html) {
         $('#collapseThree').collapse('show');
 }
 
-function getLyrics(artist, title, site) {
-    ajax('/lyrics', {artist: artist, title:title, site:site}, updateLyrics);
+function getLyrics(id, artist, title, site) {
+    ajax('/lyrics', {artist: artist, title:title, id:id, site:site}, updateLyrics);
 }
 
 function refreshPlaylistControls(res) {
@@ -145,9 +145,39 @@ function playTrack(trackId, artist, title) {
     getLyrics(artist, title);
 }
 
+function customSearch(index, trackId, artist, title) {
+    $('#dialog').attr('data-id', trackId);
+    $('#dialog').attr('data-index', index);
+    $('#custom-artist').val(artist);
+    $('#custom-title').val(title);
+    $("#dialog").dialog("open");
+}
+
+function initDialog() {
+    $("#dialog").dialog({
+        autoOpen: false,
+        width: 600,
+        buttons: {
+            Ok: function () {
+                var id = $('#dialog').attr('data-id');
+                var index = $('#dialog').attr('data-index');
+                var artist = $('#custom-artist').val();
+                var title = $('#custom-title').val();
+                ajax('/download-track', { track: {artist: artist, title: title, id: id} }, updateDownloadStatus([], null, index));
+                $(this).dialog("close");
+            },
+            Cancel: function () {
+                $(this).dialog("close");
+            }
+        }
+    });
+}
+
 $(document).ready(function () {
     $("#collapseTwo").collapse();
     var playlistLinks = $('#playlist-link:first');
+
+    initDialog();
 
     if (playlistLinks != null) {
         playlistLinks.trigger('click');

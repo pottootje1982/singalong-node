@@ -58,6 +58,9 @@
     <Content Include="public\play.png">
       <Publish>True</Publish>
     </Content>
+    <Content Include="public\search.png">
+      <Publish>True</Publish>
+    </Content>
     <Content Include="public\spotify.png">
       <Publish>True</Publish>
     </Content>

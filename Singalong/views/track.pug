@@ -1,12 +1,13 @@
 ﻿div.card-body(id='track-section')
     if (selectedTrack != null)
         textarea.form-control(id='lyrics-display' form="submit-lyrics-form" name="lyrics" rows="20" style="width:78%;float:left;box-sizing:border-box" 
-            data-artist=selectedTrack.artist data-title=selectedTrack.title)= selectedTrack == null ? '' : selectedTrack.lyrics
+            data-artist=selectedTrack.artist data-title=selectedTrack.title data-id=selectedTrack.id)= selectedTrack == null ? '' : selectedTrack.lyrics
         div(style="margin-left:80%;width=18%")
             - var buttonStyle =  'width:100%;margin-bottom:5px;white-space:normal;|'
             h5 Download lyrics with:
             each engine in engines || download.engines
-                a.w3-hover-text-green(href='#' onclick='getLyrics("' + selectedTrack.artist + '", "' + selectedTrack.title + '", "' + engine.name + '")')= engine.name
+                - var getLyrics = invoke('getLyrics', selectedTrack.id, selectedTrack.artist, selectedTrack.title, engine.name);
+                a.w3-hover-text-green(href='#' onclick=getLyrics)= engine.name
                 br
             br
             button.btn.btn-primary(type='submit' onclick='storeLyrics()' style=buttonStyle) Store lyrics

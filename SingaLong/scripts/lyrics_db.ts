@@ -50,10 +50,11 @@ export function executeQuery(query : string, processResults = null) : Promise<an
     });
 }
 
-export function query(artist, title): Promise<Track[]> {
+export function query(artist: string, title: string, id?: string): Promise<Track[]> {
     if (title === '' || title == null) return null;
     var artistPart = artist != null ? 'Artist' + p(artist) + ' AND ' : '';
-    let query = 'SELECT * FROM lyrics WHERE ' + artistPart + 'Title' + p(title);
+    var idPart = id != null ? ' OR Id=' + p(id, false) : '';
+    var query = 'SELECT * FROM lyrics WHERE ' + artistPart + 'Title' + p(title) + idPart;
     return executeQuery(query,
         results => {
             var tracks = [];
@@ -65,7 +66,7 @@ export function query(artist, title): Promise<Track[]> {
 
 export async function queryTrack(track: Track): Promise<Track> {
     try {
-        var tracks = await query(null, track.getMinimalTitle());
+        var tracks = await query(null, track.getMinimalTitle(), track.id);
         if (tracks == null && track.canClean()) tracks = await query(track.cleanArtist(), track.cleanTitle());
         if (tracks == null) return null;
         var result: Track;
@@ -83,14 +84,14 @@ export async function queryTrack(track: Track): Promise<Track> {
     }
 }
 
-export async function queryPlaylist(playlist: Track[], notDownloaded: boolean) {
-    var titles = playlist.map(track => p(track.getMinimalTitle()));
-    var wherePart = 'Title' + titles.join(' OR Title');
+export async function queryPlaylist(playlist: Track[], notDownloaded: boolean): Promise<Track[]> {
+    var titles = playlist.map(track => 'Title' + p(track.getMinimalTitle()) + ' OR Id=' + p(track.id, false));
+    var wherePart = titles.join(' OR ');
     var query = 'SELECT * FROM lyrics WHERE ' + wherePart;
     let queryResults: any[] = await executeQuery(query);
     var results: Track[] = [];
     for (let track of playlist) {
-        var matches = queryResults.filter(match => match.Title.toUpperCase().includes(track.getMinimalTitle().toUpperCase()));
+        var matches = queryResults.filter(match => match.Title.toUpperCase().includes(track.getMinimalTitle().toUpperCase()) || match.Id === track.id);
         if (matches.length === 0) {
             results.push(track);
             continue;
@@ -107,26 +108,31 @@ export async function queryPlaylist(playlist: Track[], notDownloaded: boolean) {
     return results;
 }
 
+function invoke(functionName: string, ...params: string[]) {
+    return functionName + '(' + params.map(arg => JSON.stringify(arg)).join(', ') + ')';
+}
+
 export function insert(track: Track, lyrics: string) {
-    let query = "INSERT INTO lyrics (Artist,Title,Site,Lyrics) " +
-        'VALUES("' + track.artist + '", "' + track.title + '", "' + track.site + '", ' + clean(lyrics) + ')';
+    let query = "INSERT INTO lyrics (Artist,Title,Site,Lyrics,Id) " +
+        invoke('VALUES', track.artist, track.title, track.site, clean(lyrics), p(track.id, false));
     return executeQuery(query);
 }
 
 function clean(lyrics: string) {
-    return p(lyrics == null ? null : lyrics, true);
+    return p(lyrics == null ? null : lyrics, false);
 }
 
-function p(value: string, lyrics: boolean = false) {
+function p(value: string, like: boolean = true) {
+    if (value == null) return 'NULL';
     value = value.replace(/&/g, "\&").replace(/"/g, '\\"').trim();
-    value = lyrics ? '"' + value + '"' : ' LIKE "%' + value + '%"';
-    return value == null ? "NULL" : value;
+    value = like ? ' LIKE "%' + value + '%"' : '"' + value + '"';
+    return value;
 }
 
 function updateInternal(track: Track, lyrics: string) {
     let query = "UPDATE lyrics " +
-        'SET Site=' + clean(track.site) + ', Lyrics=' + clean(lyrics) + ' ' +
-        'WHERE Artist' + p(track.artist) + ' AND Title' + p(track.title);
+        'SET Site=' + clean(track.site) + ', Lyrics=' + clean(lyrics) + ', Id=' + p(track.id, false) +
+        ' WHERE Artist' + p(track.artist) + ' AND Title' + p(track.title);
     return executeQuery(query);
 }
 

@@ -136,6 +136,9 @@ router.get('/lyrics', async (req, res) => {
     var title = req.query.title;
     var site = req.query.site;
     var selectedTrack = new Track(artist, title, site);
+    req.query.selectedTrack = selectedTrack;
+    req.query.engines = download.engines;
+    selectedTrack.id = req.query.id;
     if (site == null) {
         let track = await lyrics_db.queryTrack(selectedTrack);
         selectedTrack.lyrics = track == null ? null : track.lyrics;
@@ -143,13 +146,15 @@ router.get('/lyrics', async (req, res) => {
         selectedTrack.lyrics = await download.engines[site].searchLyrics(artist, title);
         selectedTrack.site = site;
     }
-    res.render('track', {selectedTrack:selectedTrack, engines: download.engines}, (err, html) => {
+    res.render('track', req.query, (err, html) => {
         res.json(html);
     });
 });
 
 router.post('/lyrics', async (req, res) => {
-    lyrics_db.update(new Track(req.query.artist, req.query.title), req.body.lyrics);
+    let track = new Track(req.query.artist, req.query.title);
+    track.id = req.query.id;
+    lyrics_db.update(track, req.body.lyrics);
     showPlaylist(res, req.query);
 });
 
