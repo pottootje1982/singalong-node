@@ -151,6 +151,16 @@ $(document).ready(function () {
     if (playlistLinks != null) {
         playlistLinks.trigger('click');
     }
+
+    setInterval(function() {
+        console.log('Refreshing token');
+        ajax('/refreshToken',
+            {},
+            function(res) {
+                console.log('New access token ' + res.accessToken);
+                $('#main-divider').attr('data-access-token', res.accessToken);
+            });
+    }, 1000 * 3);
 });
 
 

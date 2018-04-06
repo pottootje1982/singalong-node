@@ -88,19 +88,24 @@ export class SpotifyApi {
                 var expireInterval = data.body['expires_in'];
                 console.log('Refreshed token. It now expires in ' + expireInterval + ' seconds!');
 
-                var api = this.spotifyApi;
-                setInterval(function () {
-                    console.log('Refreshed token. It now expires in ' + expireInterval + ' seconds!');
-                    clearInterval(this);
-                    // Refresh token
-                    api.refreshAccessToken().then(data => {
-                        api.setAccessToken(data.body['access_token']);
-                    });
-                }, expireInterval * 1000);
-
                 return data;
             }, err => {
                 console.log('Spotify: something went wrong setting token!', err);
+            });
+    }
+
+    refreshAccessToken() {
+        let api = this.spotifyApi;
+        return api.refreshAccessToken()
+            .then(data => {
+                console.log('The access token has been refreshed!');
+
+                // Save the access token so that it's used in future calls
+                api.setAccessToken(data.body['access_token']);
+
+                return data;
+            }, err => {
+                console.log('Could not refresh access token', err);
             });
     }
 

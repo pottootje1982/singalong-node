@@ -42,6 +42,12 @@ router.post('/search-playlists', async (req: express.Request, res: express.Respo
     res.render('index', ctx);
 });
 
+router.get('/refreshToken', async (req: express.Request, res: express.Response) => {
+    var spotifyApi: SpotifyApi = res.locals.getSpotifyApi();
+    var data = await spotifyApi.refreshAccessToken();
+    res.json({ accessToken: data.body.access_token, refreshToken: data.body.refresh_token });
+});
+
 router.get('/playlist-without-artist', async (req: express.Request, res: express.Response) => {
     var playlist = Playlist.textualPlaylistToPlaylist(req.query.playlist);
     var textualPlaylist = await playlist.getTitlePlaylist();
