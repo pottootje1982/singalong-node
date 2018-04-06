@@ -90,7 +90,7 @@ export async function queryPlaylist(playlist: Track[], notDownloaded: boolean) {
     let queryResults: any[] = await executeQuery(query);
     var results: Track[] = [];
     for (let track of playlist) {
-        var matches = queryResults.filter(match => match.Title.toUpperCase().startsWith(track.getMinimalTitle().toUpperCase()));
+        var matches = queryResults.filter(match => match.Title.toUpperCase().includes(track.getMinimalTitle().toUpperCase()));
         if (matches.length === 0) {
             results.push(track);
             continue;

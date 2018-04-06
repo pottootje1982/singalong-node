@@ -139,9 +139,10 @@ function removeLyrics() {
     ajax('/lyrics', {}, clearLyricsText, 'DELETE');
 }
 
-function playTrack(trackId) {
+function playTrack(trackId, artist, title) {
     console.log("Playing track " + trackId);
     ajax('/play-track', { trackId: trackId });
+    getLyrics(artist, title);
 }
 
 $(document).ready(function () {
