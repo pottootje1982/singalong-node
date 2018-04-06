@@ -160,7 +160,7 @@ $(document).ready(function () {
                 console.log('New access token ' + res.accessToken);
                 $('#main-divider').attr('data-access-token', res.accessToken);
             });
-    }, 1000 * 3);
+    }, 1000 * 3600);
 });
 
 
