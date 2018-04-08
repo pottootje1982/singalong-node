@@ -26,3 +26,4 @@
 /SingaLong/ftp.pubxml.user
 /SingaLong/routes/*.js
 /SingaLong/routes/*.map
+/SingaLong/public/javascripts/track_helpers.js.map

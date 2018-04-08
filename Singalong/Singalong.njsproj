@@ -75,6 +75,7 @@
     <Compile Include="public\javascripts\textual_playlist.js" />
     <Compile Include="public\javascripts\playlist.js" />
     <Compile Include="public\javascripts\init.js" />
+    <Compile Include="public\javascripts\track_helpers.js" />
     <Compile Include="public\javascripts\track.js" />
     <Compile Include="public\javascripts\context.js">
       <SubType>Code</SubType>

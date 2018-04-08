@@ -1,10 +1,10 @@
-﻿function removeArtist() {
+﻿function removeArtistFromTextualPlaylist() {
     modifyTextualPlaylist('/playlist-without-artist');
     $('#playlistText').prop('data-no-artist', true);
     $('#remove-artist-button').prop('disabled', true);
 }
 
-function minimizeTitle() {
+function minimizeTitleFromTextualPlaylist() {
     modifyTextualPlaylist('/minimize-title?noArtist=' + $('#playlistText').prop('data-no-artist'));
     $('#minimize-title-button').prop('disabled', true);
 }

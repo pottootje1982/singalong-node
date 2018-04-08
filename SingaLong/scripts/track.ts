@@ -1,4 +1,6 @@
-﻿export class Track {
+﻿var track_helpers = require("../public/javascripts/track_helpers");
+
+export class Track {
     id: string;
     artist: string;
     title: string;
@@ -35,18 +37,13 @@
         return track;
     }
 
-    private cleanString(str: string) {
-        var regex = /([^\(\)\[\]]*)/i;
-        var result = str.match(regex);
-        return result != null && result.length > 1 ? result[1].trim() : str;
-    }
 
     cleanArtist() : string {
-        return this.cleanString(this.artist);
+        return track_helpers.cleanString(this.artist);
     }
 
     cleanTitle() : string {
-        return this.cleanString(this.title);
+        return track_helpers.cleanString(this.title);
     }
 
     canClean() : boolean {
@@ -72,6 +69,6 @@
     }
 
     getMinimalTitle() {
-        return this.cleanString(this.title.split(' - ', 1)[0]);
+        return track_helpers.getMinimalTitle(this.title);
     }
 }

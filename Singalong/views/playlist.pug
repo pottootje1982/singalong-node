@@ -20,6 +20,11 @@ div.panel.panel-info.card(id='playlist' data-playlist=playlistId data-user-id=us
                     button.btn.btn-primary(type='submit' target='_blank' style=buttonStyle) Create Songbook
                 br
                 button(src='spotify.png' type='submit' onclick='toggleSpotifyPlayer()' style='width:30px;height:30px;background: url(spotify.png);background-size: 100%;border: none')
+                br
+                br
+                button.btn.btn-primary(style=buttonStyle onclick='removeArtist()') Remove Artist
+                button.btn.btn-primary(style=buttonStyle onclick='minimizeTitle()') Minimize Title
+                button.btn.btn-primary(style=buttonStyle onclick='filterOnDownloadStatus()') Not yet downloaded
 
             - var items = playlist != null ? playlist.items : []
             each track, index in items
