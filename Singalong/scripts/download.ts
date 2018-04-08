@@ -45,7 +45,13 @@ export async function getLyricsFromDatabase(playlist: Track[], pushAllTracks : b
 export async function downloadTrack(track : Track, sleepTime : number = 3000) {
     if (track == null) return null;
     var cached = await lyrics_db.queryTrack(track);
-    if (cached != null) return cached;
+    if (cached != null) {
+        if (!cached.id) {
+            cached.id = track.id;
+            lyrics_db.updateId(cached);
+        }
+        return cached;
+    }
     let lyrics: string = null;
     let searchEngineName: string = null;
     let keys = Object.keys(engines);

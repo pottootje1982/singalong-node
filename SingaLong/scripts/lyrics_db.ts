@@ -76,7 +76,6 @@ export async function queryTrack(track: Track): Promise<Track> {
                 t.title.toUpperCase() === track.title.toUpperCase());
             result = filteredTracks.length === 0 ? tracks[0] : filteredTracks[0];
         }
-        result.id = track.id;
         return result;
     } catch (error) {
         console.log(error);
@@ -114,7 +113,7 @@ function invoke(functionName: string, ...params: string[]) {
 
 export function insert(track: Track, lyrics: string) {
     let query = "INSERT INTO lyrics (Artist,Title,Site,Lyrics,Id) " +
-        invoke('VALUES', track.artist, track.title, track.site, clean(lyrics), p(track.id, false));
+        invoke('VALUES', track.artist, track.title, track.site, lyrics, track.id);
     return executeQuery(query);
 }
 
@@ -124,22 +123,33 @@ function clean(lyrics: string) {
 
 function p(value: string, like: boolean = true) {
     if (value == null) return 'NULL';
-    value = value.replace(/&/g, "\&").replace(/"/g, '\\"').trim();
+    value = escape(value);
     value = like ? ' LIKE "%' + value + '%"' : '"' + value + '"';
     return value;
 }
 
-function updateInternal(track: Track, lyrics: string) {
+function escape(str) {
+    return str.replace(/&/g, "\&").replace(/"/g, '\\"').trim();
+}
+
+export function updateId(track: Track) {
+    let query = "UPDATE lyrics " +
+        'SET Id=' + p(track.id, false) +
+        ' WHERE Artist' + p(track.artist) + ' AND Title' + p(track.title);
+    return executeQuery(query);
+}
+
+function update(track: Track, lyrics: string) {
     let query = "UPDATE lyrics " +
         'SET Site=' + clean(track.site) + ', Lyrics=' + clean(lyrics) + ', Id=' + p(track.id, false) +
         ' WHERE Artist' + p(track.artist) + ' AND Title' + p(track.title);
     return executeQuery(query);
 }
 
-export async function update(track: Track, lyrics: string) {
+export async function updateOrInsert(track: Track, lyrics: string) {
     var result = await queryTrack(track);
     if (result == null) insert(track, lyrics);
-    else updateInternal(result, lyrics);
+    else update(result, lyrics);
 }
 
 export async function remove(track: Track) {
