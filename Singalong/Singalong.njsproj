@@ -5,7 +5,7 @@
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
     <Name>SingaLong</Name>
     <RootNamespace>ExpressApp3</RootNamespace>
-    <NameOfLastUsedPublishProfile>ftp_remote</NameOfLastUsedPublishProfile>
+    <NameOfLastUsedPublishProfile>ftp</NameOfLastUsedPublishProfile>
     <LaunchUrl>authorize</LaunchUrl>
     <LastActiveSolutionConfig>Debug|Any CPU</LastActiveSolutionConfig>
   </PropertyGroup>
@@ -72,6 +72,10 @@
     <Content Include="package.json" />
     <Content Include="public\stylesheets\main.css" />
     <Content Include="README.md" />
+    <Compile Include="public\javascripts\textual_playlist.js" />
+    <Compile Include="public\javascripts\playlist.js" />
+    <Compile Include="public\javascripts\init.js" />
+    <Compile Include="public\javascripts\track.js" />
     <Compile Include="public\javascripts\context.js">
       <SubType>Code</SubType>
     </Compile>
@@ -178,7 +182,7 @@
     <Folder Include="views\" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="public\javascripts\client_helpers.js">
+    <Compile Include="public\javascripts\download.js">
       <SubType>Code</SubType>
     </Compile>
   </ItemGroup>
