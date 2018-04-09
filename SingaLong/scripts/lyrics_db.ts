@@ -108,7 +108,7 @@ export async function queryPlaylist(playlist: Track[], notDownloaded: boolean): 
 }
 
 function invoke(functionName: string, ...params: string[]) {
-    return functionName + '(' + params.map(arg => JSON.stringify(arg)).join(', ') + ')';
+    return functionName + '(' + params.map(arg => clean(arg)).join(', ') + ')';
 }
 
 export function insert(track: Track, lyrics: string) {
@@ -117,8 +117,9 @@ export function insert(track: Track, lyrics: string) {
     return executeQuery(query);
 }
 
-function clean(lyrics: string) {
-    return p(lyrics == null ? null : lyrics, false);
+function clean(str: string) {
+    str = str == null ? 'NULL' : str;
+    return JSON.stringify(str);
 }
 
 function p(value: string, like: boolean = true) {
