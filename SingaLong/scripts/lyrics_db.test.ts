@@ -4,28 +4,16 @@ import download = require('./download');
 import {Track} from './Track';
 var fs = require('fs');
 
-var knex = require('knex')({
-    client: 'mysql',
-    connection: {
-        host: '87.195.169.201',
-        port: 3307,
-        user: 'pottootje1982',
-        password: 'Icf5uEiPRtjXD7GK',
-        database: 'singalong'
-    },
-    useNullAsDefault: true
-});
-
 describe("Lyrics DB", () => {
     this.timeoutTimer = "25000";
 
     it("Get Beatles lyrics", async () => {
-        var res = await knex('lyrics').where({
-            artist: 'The Beatles',
-            title: 'Yellow Submarine'
-        }).orWhere('Title', 'like', '%Heroes%').select();
-
         var tracks = await lyrics_db.query('The Beatles', 'Yellow Submarine');
+        assert(tracks[0].lyrics.indexOf('In the town where I was born') >= 0);
+    });
+
+    it("Get Beatles lyrics like", async () => {
+        var tracks = await lyrics_db.query('The Beatles', '%Submarine%');
         assert(tracks[0].lyrics.indexOf('In the town where I was born') >= 0);
     });
 
@@ -89,6 +77,19 @@ describe("Lyrics DB", () => {
         assert.equal(null, playlist.find(track => track.title === '' || track.title == null));
         assert(playlist[4].lyrics.indexOf("Imagine there's no heaven") >= 0);
     });
+
+    it("Remove lyrics",
+        async function () {
+            let track = new Track('fake artist', 'fake title', 'MusixMatch');
+            await lyrics_db.insert(track, 'fake lyrics');
+            track = await lyrics_db.queryTrack(track);
+            assert.equal('fake artist', track.artist);
+            assert.equal('fake title', track.title);
+            assert.equal('fake lyrics', track.lyrics);
+            await lyrics_db.remove(track);
+            track = await lyrics_db.queryTrack(track);
+            assert.equal(track, null);
+        });
 
     it("Update John Lennon lyrics",
         async function () {

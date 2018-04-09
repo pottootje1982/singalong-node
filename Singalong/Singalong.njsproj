@@ -5,7 +5,7 @@
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
     <Name>SingaLong</Name>
     <RootNamespace>ExpressApp3</RootNamespace>
-    <NameOfLastUsedPublishProfile>ftp</NameOfLastUsedPublishProfile>
+    <NameOfLastUsedPublishProfile>ftp_remote</NameOfLastUsedPublishProfile>
     <LaunchUrl>authorize</LaunchUrl>
     <LastActiveSolutionConfig>Debug|Any CPU</LastActiveSolutionConfig>
   </PropertyGroup>

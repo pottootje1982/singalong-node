@@ -1,20 +1,20 @@
-﻿var mysql = require('mysql');
-import { Track } from './Track';
+﻿import { Track } from './Track';
 
-var connection = null;
+var knex = null;
 
 function createConnection() {
     try {
-        if (connection != null) connection.end();
-        connection = mysql.createConnection({
-            //host: '192.168.178.65',
-            host: '87.195.169.201',
-            port: 3307,
-            user: 'pottootje1982',
-            password: 'Icf5uEiPRtjXD7GK',
-            database: 'singalong'
+        knex = require('knex')({
+            client: 'mysql',
+            connection: {
+                host: '87.195.169.201',
+                port: 3307,
+                user: 'pottootje1982',
+                password: 'Icf5uEiPRtjXD7GK',
+                database: 'singalong'
+            },
+            useNullAsDefault: true
         });
-        connection.connect();
     } catch (err) {
         console.log('Failed establishing DB connection ' + err);
     }
@@ -22,51 +22,26 @@ function createConnection() {
 
 createConnection();
 
-// Default wait time out is 28800 seconds (8 hours), that's why we ping each hour the DB connection to avoid connection reset
-
-setInterval(() => {
-    executeQuery("SELECT 1", results => {
-        console.log('Executed Database heartbeat');
-        return results;
-    });
-}, 1000 * 3600);
-
-export function executeQuery(query : string, processResults = null) : Promise<any[]> {
-    return new Promise((resolve, reject) => {
-        try {
-            connection.query(query,
-                (error, results, fields) => {
-                    if (error) {
-                        if (error.code === 'ECONNRESET') { // Reestablish connection in case of connection reset
-                            console.log("Re-establishing connection");
-                            createConnection();
-                        }
-                        reject(Error(error));
-                    } else resolve(processResults != null ? processResults(results) : results);
-                });
-        } catch (error) {
-            console.log("Failed executing query " + query, error);
-        }
-    });
+function whereArtistTitle(artist: string, title: string) {
+    var query = knex('lyrics').where('title', 'like', title);
+    if (artist != null) query.andWhere('artist', artist);
+    return query;
 }
 
-export function query(artist: string, title: string, id?: string): Promise<Track[]> {
+export async function query(artist: string, title: string, id?: string): Promise<Track[]> {
     if (title === '' || title == null) return null;
-    var artistPart = artist != null ? 'Artist' + p(artist) + ' AND ' : '';
-    var idPart = id != null ? ' OR Id=' + p(id, false) : '';
-    var query = 'SELECT * FROM lyrics WHERE ' + artistPart + 'Title' + p(title) + idPart;
-    return executeQuery(query,
-        results => {
-            var tracks = [];
-            for (let result of results)
-                tracks.push(new Track(result.Artist, result.Title, result.Site, result.Lyrics));
-            return results.length === 0 ? null : tracks;
-        });
+    var query = whereArtistTitle(artist, title);
+    if (id != null) query = query.orWhere('id', id);
+    var results = await query;
+    var tracks = [];
+    for (let result of results)
+        tracks.push(new Track(result.Artist, result.Title, result.Site, result.Lyrics));
+    return results.length === 0 ? null : tracks;
 }
 
 export async function queryTrack(track: Track): Promise<Track> {
     try {
-        var tracks = await query(null, track.getMinimalTitle(), track.id);
+        var tracks = await query(null, track.getQueryTitle(), track.id);
         if (tracks == null && track.canClean()) tracks = await query(track.cleanArtist(), track.cleanTitle());
         if (tracks == null) return null;
         var result: Track;
@@ -84,10 +59,12 @@ export async function queryTrack(track: Track): Promise<Track> {
 }
 
 export async function queryPlaylist(playlist: Track[], notDownloaded: boolean): Promise<Track[]> {
-    var titles = playlist.map(track => 'Title' + p(track.getMinimalTitle()) + ' OR Id=' + p(track.id, false));
-    var wherePart = titles.join(' OR ');
-    var query = 'SELECT * FROM lyrics WHERE ' + wherePart;
-    let queryResults: any[] = await executeQuery(query);
+    var query = knex('lyrics');
+    for (let track of playlist) {
+        query = query.orWhere('title', 'like', track.getQueryTitle());
+        if (track.id) query = query.orWhere('id', track.id);
+    }
+    let queryResults: any[] = await query;
     var results: Track[] = [];
     for (let track of playlist) {
         var matches = queryResults.filter(match => match.Title.toUpperCase().includes(track.getMinimalTitle().toUpperCase()) || match.Id === track.id);
@@ -107,44 +84,27 @@ export async function queryPlaylist(playlist: Track[], notDownloaded: boolean): 
     return results;
 }
 
-function invoke(functionName: string, ...params: string[]) {
-    return functionName + '(' + params.map(arg => clean(arg)).join(', ') + ')';
-}
-
 export function insert(track: Track, lyrics: string) {
-    let query = "INSERT INTO lyrics (Artist,Title,Site,Lyrics,Id) " +
-        invoke('VALUES', track.artist, track.title, track.site, lyrics, track.id);
-    return executeQuery(query);
-}
-
-function clean(str: string) {
-    str = str == null ? 'NULL' : str;
-    return JSON.stringify(str);
-}
-
-function p(value: string, like: boolean = true) {
-    if (value == null) return 'NULL';
-    value = escape(value);
-    value = like ? ' LIKE "%' + value + '%"' : '"' + value + '"';
-    return value;
-}
-
-function escape(str) {
-    return str.replace(/&/g, "\&").replace(/"/g, '\\"').trim();
+    let query = knex('lyrics').insert({
+        artist: track.artist,
+        title: track.title,
+        site: track.site,
+        lyrics: lyrics,
+        id: track.id || ''
+    });
+    return query;
 }
 
 export function updateId(track: Track) {
-    let query = "UPDATE lyrics " +
-        'SET Id=' + p(track.id, false) +
-        ' WHERE Artist' + p(track.artist) + ' AND Title' + p(track.title);
-    return executeQuery(query);
+    var query = whereArtistTitle(track.artist, track.getQueryTitle());
+    if (track.id) query = query.update('id', track.id);
+    return query;
 }
 
 function update(track: Track, lyrics: string) {
-    let query = "UPDATE lyrics " +
-        'SET Site=' + clean(track.site) + ', Lyrics=' + clean(lyrics) + ', Id=' + p(track.id, false) +
-        ' WHERE Artist' + p(track.artist) + ' AND Title' + p(track.title);
-    return executeQuery(query);
+    var query = whereArtistTitle(track.artist, track.getQueryTitle());
+    query = query.update('lyrics', lyrics);
+    return query;
 }
 
 export async function updateOrInsert(track: Track, lyrics: string) {
@@ -156,7 +116,9 @@ export async function updateOrInsert(track: Track, lyrics: string) {
 export async function remove(track: Track) {
     var foundTrack = await queryTrack(track);
     if (foundTrack) {
-        let query = "DELETE FROM lyrics " + 'WHERE Artist' + p(foundTrack.artist) + ' AND Title' + p(foundTrack.title);
-        return executeQuery(query);
+        await knex('lyrics').where({
+            artist: track.artist,
+            title: track.title
+        }).del();
     }
 }

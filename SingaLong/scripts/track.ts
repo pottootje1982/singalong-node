@@ -71,4 +71,9 @@ export class Track {
     getMinimalTitle() {
         return track_helpers.getMinimalTitle(this.title);
     }
+
+    getQueryTitle() {
+        let minimalTitle = this.getMinimalTitle();
+        return minimalTitle == null || minimalTitle === '' ? minimalTitle : '%' + minimalTitle + '%';
+    }
 }
