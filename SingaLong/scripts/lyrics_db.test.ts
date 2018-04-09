@@ -4,10 +4,27 @@ import download = require('./download');
 import {Track} from './Track';
 var fs = require('fs');
 
+var knex = require('knex')({
+    client: 'mysql',
+    connection: {
+        host: '87.195.169.201',
+        port: 3307,
+        user: 'pottootje1982',
+        password: 'Icf5uEiPRtjXD7GK',
+        database: 'singalong'
+    },
+    useNullAsDefault: true
+});
+
 describe("Lyrics DB", () => {
     this.timeoutTimer = "25000";
 
-    it("Get Beatles lyrics", async() => {
+    it("Get Beatles lyrics", async () => {
+        var res = await knex('lyrics').where({
+            artist: 'The Beatles',
+            title: 'Yellow Submarine'
+        }).orWhere('Title', 'like', '%Heroes%').select();
+
         var tracks = await lyrics_db.query('The Beatles', 'Yellow Submarine');
         assert(tracks[0].lyrics.indexOf('In the town where I was born') >= 0);
     });
@@ -77,7 +94,7 @@ describe("Lyrics DB", () => {
         async function () {
             let track = new Track('', 'Imagine', 'MusixMatch');
             var lyrics = fs.readFileSync('./scripts/TestData/imagine.txt', 'utf8');
-            var res, error = await lyrics_db.update(track, lyrics);
+            var res, error = await lyrics_db.updateOrInsert(track, lyrics);
             assert.equal(error, null);
         });
 });
