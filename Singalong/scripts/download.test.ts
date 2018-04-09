@@ -1,12 +1,23 @@
 ﻿import assert = require('assert');
+var lyrics_db = require('./lyrics_db');
 import download = require('./download');
 import { Track } from "./track";
 import { MetroLyricsEngine } from "./LyricsEngines/MetroLyricsEngine";
 
+function insertTrack(artist, title, lyrics, site?: string) {
+    return lyrics_db.insert(new Track(artist, title, site), lyrics);
+}
+
+lyrics_db.setTable('test');
+
 describe("Downloading lyrics", () => {
-//    this.timeout = "100000";
+    this.timeout = "100000";
 
     var engine = download.engines["MusixMatch"];
+
+    before(async () => {
+        await lyrics_db.truncate();
+    });
 
     it("Search Euson - Leon", async () => {
         var content = await engine.searchLyrics("Euson", "Leon");
@@ -36,12 +47,13 @@ describe("Downloading lyrics", () => {
         console.log(content);
         assert(content.indexOf('In the town where I was born') >= 0, content);
     });
-    
-    it("Search Beatles AZ", async () => {
-        var content = await download.engines["AzLyrics"].searchLyrics("beatles", "yellow submarine");
-        console.log(content);
-        assert(content.indexOf('In the town where I was born') >= 0, content);
-    });
+
+    // AZ is banned
+    //it("Search Beatles AZ", async () => {
+    //    var content = await download.engines["AzLyrics"].searchLyrics("beatles", "yellow submarine");
+    //    console.log(content);
+    //    assert(content.indexOf('In the town where I was born') >= 0, content);
+    //});
     
     it("Search paul simon", async () => {
         var content = await engine.searchLyrics("paul simon", "graceland");
@@ -60,7 +72,7 @@ describe("Downloading lyrics", () => {
     });
 
     it("Search multiple lyrics", async function() {
-        this.timeout(10000);
+        this.timeout(20000);
         var book = await download.createSongbook("bladieblablabla\n" +
             "Beatles - Hard Day's night\n" +
             "John Lennon -  Imagine\n" +
@@ -81,7 +93,7 @@ describe("Downloading lyrics", () => {
         assert(book[3].lyrics.indexOf('Georgia') >= 0, "Georgia wasn't found");
         assert.equal('Ray Charles', book[3].artist);
         assert.equal("Georgia", book[3].title);
-        assert.equal("Genius", book[3].site);
+        assert.equal("LyricsFreak", book[3].site);
         assert(book[4].lyrics.indexOf("The Mississippi Delta was shining") >= 0, "Graceland wasn't found");
         assert.equal('paul simon', book[4].artist);
         assert.equal("graceland", book[4].title);
@@ -107,13 +119,15 @@ describe("Downloading lyrics", () => {
         assert.equal(lyrics, null);
     });
 
-    it('Download track',
-        async() => {
+    it('Download track', async() => {
             var track = await download.downloadTrack(new Track('Beatles', "Yellow Submarine"));
             assert(track.lyrics.indexOf('') >= 0);
         });
 
     it("Get lyrics from database", async () => {
+        await insertTrack('1793 George Harrison', 'Give Me Love (Give Me Peace On Earth)', "Give me love", "Genius");
+        await insertTrack("John Lennon", "Imagine", "Imagine there's no heaven", "MusixMatch");
+        await insertTrack("Beatles", "Yellow Submarine", 'In the town where I was born', "MusixMatch");
         let playlist = [
             new Track('1793 George Harrison', 'Give Me Love (Give Me Peace On Earth)'),
             new Track("Beatles", "Yellow Submarine"),

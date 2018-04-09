@@ -1,6 +1,7 @@
 ﻿import { Track } from './Track';
 
 var knex = null;
+var table = 'lyrics';
 
 function createConnection() {
     try {
@@ -20,10 +21,14 @@ function createConnection() {
     }
 }
 
+export function setTable(tableName: string) {
+    table = tableName;
+}
+
 createConnection();
 
 function whereArtistTitle(artist: string, title: string) {
-    var query = knex('lyrics').where('title', 'like', title);
+    var query = knex(table).where('title', 'like', title);
     if (artist != null) query.andWhere('artist', artist);
     return query;
 }
@@ -59,7 +64,7 @@ export async function queryTrack(track: Track): Promise<Track> {
 }
 
 export async function queryPlaylist(playlist: Track[], notDownloaded: boolean): Promise<Track[]> {
-    var query = knex('lyrics');
+    var query = knex(table);
     for (let track of playlist) {
         query = query.orWhere('title', 'like', track.getQueryTitle());
         if (track.id) query = query.orWhere('id', track.id);
@@ -85,12 +90,12 @@ export async function queryPlaylist(playlist: Track[], notDownloaded: boolean): 
 }
 
 export function insert(track: Track, lyrics: string) {
-    let query = knex('lyrics').insert({
+    let query = knex(table).insert({
         artist: track.artist,
         title: track.title,
-        site: track.site,
+        site: track.site || null,
         lyrics: lyrics,
-        id: track.id || ''
+        id: track.id || null
     });
     return query;
 }
@@ -103,7 +108,7 @@ export function updateId(track: Track) {
 
 function update(track: Track, lyrics: string) {
     var query = whereArtistTitle(track.artist, track.getQueryTitle());
-    query = query.update('lyrics', lyrics);
+    query = query.update(table, lyrics);
     return query;
 }
 
@@ -116,9 +121,13 @@ export async function updateOrInsert(track: Track, lyrics: string) {
 export async function remove(track: Track) {
     var foundTrack = await queryTrack(track);
     if (foundTrack) {
-        await knex('lyrics').where({
+        await knex(table).where({
             artist: track.artist,
             title: track.title
         }).del();
     }
+}
+
+export function truncate() {
+    return knex(table).truncate();
 }

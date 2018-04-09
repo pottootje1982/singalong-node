@@ -1,13 +1,23 @@
 ﻿var lyrics_db = require('./lyrics_db');
 var assert = require('assert');
-import download = require('./download');
 import {Track} from './Track';
 var fs = require('fs');
+
+function insertTrack(artist, title, lyrics) {
+    return lyrics_db.insert(new Track(artist, title), lyrics);
+}
+
+lyrics_db.setTable('test');
 
 describe("Lyrics DB", () => {
     this.timeoutTimer = "25000";
 
+    before(async () => {
+        await lyrics_db.truncate();
+    });
+
     it("Get Beatles lyrics", async () => {
+        await insertTrack('The Beatles', 'Yellow Submarine', 'In the town where I was born');
         var tracks = await lyrics_db.query('The Beatles', 'Yellow Submarine');
         assert(tracks[0].lyrics.indexOf('In the town where I was born') >= 0);
     });
@@ -23,13 +33,15 @@ describe("Lyrics DB", () => {
         assert(tracks[0].lyrics.indexOf('In the town where I was born') >= 0);
     });
 
-    it("Get Double lyrics", async() => {
+    it("Get Double lyrics", async () => {
+        await insertTrack('', 'Christmas Song', 'Chestnuts roasting on an open fire');
+        await insertTrack('Nat King Cole', 'Christmas Song', "Nat King Cole's version");
         var track = await lyrics_db.queryTrack(new Track('Nils Landgren', 'Christmas Song'));
         assert(track.lyrics.indexOf('Chestnuts roasting on an open fire') >= 0);
     });
 
-
     it("Get lyrics for title track", async() => {
+        await insertTrack('Frommerman', 'Es ist ein Ros entsprungen', "Es ist ein Ros' entsprungen");
         var track = await lyrics_db.queryTrack(new Track('', 'Es ist ein Ros entsprungen'));
         assert(track.lyrics.indexOf("Es ist ein Ros' entsprungen") >= 0);
     });
@@ -53,8 +65,9 @@ describe("Lyrics DB", () => {
     });
 
     it("Query playlist notDownloaded", async () => {
+        await insertTrack("Beatles", "Let t be", "Desmond has a barrow in the market place");
         var playlist = await lyrics_db.queryPlaylist([new Track("Freddy Kruger", "Nightmare on Elm Street"),
-            new Track("John Lennon", "Imagine")], true);
+            new Track("Beatles", "Let t be")], true);
         assert.equal(1, playlist.length);
         assert.equal(playlist[0].artist, 'Freddy Kruger');
         assert.equal(playlist[0].title, 'Nightmare on Elm Street');
@@ -62,6 +75,12 @@ describe("Lyrics DB", () => {
     });
 
     it("Query playlist", async() => {
+        await insertTrack("Ray Charles", "Georgia On My Mind", "Georgia, Georgia");
+        await insertTrack("Cesare Valletti", "Dein Angesicht", "Dein Angesicht so lieb und schön,");
+        await insertTrack("Jenny Arean & Frans Halsema", "Vluchten Kan Niet Meer", "Vluchten kan niet meer, 'k zou niet weten hoe");
+        await insertTrack("Simone Kleinsma & Robert Long", "Vanmorgen Vloog Ze Nog", "Vanmorgen vloog ze nog");
+        await insertTrack("", "Imagine", "Version without artist");
+        await insertTrack("John Lennon", "Imagine", "Imagine there's no heaven");
         var playlist = await lyrics_db.queryPlaylist([new Track("Ray Charles", "Georgia On My Mind"),
             new Track("Cesare Valletti", "Dein Angesicht"),
             new Track("Jenny Arean & Frans Halsema", "Vluchten Kan Niet Meer"),
