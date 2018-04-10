@@ -8,7 +8,7 @@
                 var index = $('#dialog').attr('data-index');
                 var artist = $('#custom-artist').val();
                 var title = $('#custom-title').val();
-                ajax('/download-track', { track: { artist: artist, title: title, id: id } }, updateDownloadStatus([], null, index));
+                ajax('/download-track', { track: { artist: artist, title: title, id: id }, getCached: false }, updateDownloadStatus([], 0, index, true));
                 $(this).dialog("close");
             },
             Cancel: function () {

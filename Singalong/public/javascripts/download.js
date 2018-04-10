@@ -28,9 +28,11 @@ function colorTrack(index, color) {
     $("#" + index).css({ 'color': color });
 }
 
-function updateDownloadStatus(playlist, sleepTime, index) {
+function updateDownloadStatus(playlist, sleepTime, index, updateLyrics) {
     return function(result) {
         var track = result.track;
+        if (updateLyrics)
+            $('#lyrics-display').val(track.lyrics);
         console.log('Downloaded ', track, track.lyrics != null, "#" + index);
         if (track.lyrics != null) {
             colorTrack(index, 'green');

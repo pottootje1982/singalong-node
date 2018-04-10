@@ -1,10 +1,7 @@
 ﻿/*
  * GET home page.
 
-- Hot Chocolate - I'll Put You Together Again contains garbage
-- NTH: Implement Levenshtein in SQL
 - unable to delete lyrics when stored with title only
-- probably one big query for all lyrics is quicker
 
 - log can be viewed with: sudo cat /var/log/upstart/singalong.log
 - startup script: /etc/init/singalong.conf
@@ -182,7 +179,7 @@ router.get('/playlist-to-download', async (req, res) => {
 });
 
 router.get('/download-track', async (req, res) => {
-    var track = await download.downloadTrack(Track.copy(req.query.track), parseInt(req.query.sleepTime));
+    var track = await download.downloadTrack(Track.copy(req.query.track), parseInt(req.query.sleepTime), req.query.getCached !== "false");
     res.json({ track: track });
 });
 

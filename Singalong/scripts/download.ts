@@ -42,8 +42,7 @@ export async function getLyricsFromDatabase(playlist: Track[], pushAllTracks : b
     return lyricsFromDatabase;
 }
 
-export async function downloadTrack(track : Track, sleepTime : number = 3000) {
-    if (track == null) return null;
+async function getFromCache(track: Track) {
     var cached = await lyrics_db.queryTrack(track);
     if (cached != null) {
         if (!cached.id) {
@@ -51,6 +50,15 @@ export async function downloadTrack(track : Track, sleepTime : number = 3000) {
             lyrics_db.updateId(cached);
         }
         return cached;
+    }
+    return null;
+}
+
+export async function downloadTrack(track : Track, sleepTime : number = 3000, getCached? : boolean) {
+    if (track == null) return null;
+    if (getCached) {
+        var cached = await getFromCache(track);
+        if (cached) return cached;
     }
     let lyrics: string = null;
     let searchEngineName: string = null;
@@ -81,7 +89,7 @@ export async function downloadTrack(track : Track, sleepTime : number = 3000) {
     track.site = searchEngineName;
     track.lyrics = lyrics;
     if (lyrics != null && searchEngineName != null) {
-        lyrics_db.insert(track, lyrics);
+        lyrics_db.updateOrInsert(track, lyrics);
     }
     return track;
 }
