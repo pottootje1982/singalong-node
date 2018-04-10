@@ -106,16 +106,16 @@ export function updateId(track: Track) {
     return query;
 }
 
-function update(track: Track, lyrics: string) {
+export function update(track: Track, lyrics: string) {
     var query = whereArtistTitle(track.artist, track.getQueryTitle());
-    query = query.update(table, lyrics);
+    query = query.update('lyrics', lyrics);
     return query;
 }
 
 export async function updateOrInsert(track: Track, lyrics: string) {
     var result = await queryTrack(track);
-    if (result == null) insert(track, lyrics);
-    else update(result, lyrics);
+    if (result == null) await insert(track, lyrics);
+    else await update(result, lyrics);
 }
 
 export async function remove(track: Track) {

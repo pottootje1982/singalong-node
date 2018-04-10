@@ -155,7 +155,7 @@ router.get('/lyrics', async (req, res) => {
 router.post('/lyrics', async (req, res) => {
     let track = new Track(req.query.artist, req.query.title);
     track.id = req.query.id;
-    lyrics_db.update(track, req.body.lyrics);
+    lyrics_db.updateOrInsert(track, req.body.lyrics);
     showPlaylist(res, req.query);
 });
 

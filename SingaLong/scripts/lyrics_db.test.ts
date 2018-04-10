@@ -112,9 +112,12 @@ describe("Lyrics DB", () => {
 
     it("Update John Lennon lyrics",
         async function () {
-            let track = new Track('', 'Imagine', 'MusixMatch');
-            var lyrics = fs.readFileSync('./scripts/TestData/imagine.txt', 'utf8');
-            var res, error = await lyrics_db.updateOrInsert(track, lyrics);
+            await insertTrack('Calexico', 'Sunken Waltz', '');
+            var track = await lyrics_db.queryTrack(new Track('Calexico', 'Sunken Waltz'));
+            assert.equal('', track.lyrics);
+            var res, error = await lyrics_db.updateOrInsert(track, 'Washed my face in the rivers of empire');
             assert.equal(error, null);
+            track = await lyrics_db.queryTrack(new Track('Calexico', 'Sunken Waltz'));
+            assert.equal('Washed my face in the rivers of empire', track.lyrics);
         });
 });
