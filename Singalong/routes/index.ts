@@ -2,6 +2,7 @@
  * GET home page.
 
 - unable to delete lyrics when stored with title only
+- if doing a custom search, the selected track title doesn't get updated
 
 - log can be viewed with: sudo cat /var/log/upstart/singalong.log
 - startup script: /etc/init/singalong.conf
