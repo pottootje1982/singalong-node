@@ -187,15 +187,17 @@ router.get('/download-track', async (req, res) => {
 router.post('/songbook', async (req, res) => {
     var spotifyApi: SpotifyApi = res.locals.getSpotifyApi();
     var textualPlaylist = req.body.playlist;
-    let context = { userId: req.body.userId, playlistId: req.body.playlistId, albumId: req.body.albumId };
+    var context: any = { userId: req.body.userId, playlistId: req.body.playlistId, albumId: req.body.albumId };
     var playlist: Playlist;
     if (req.body.albumId)
         playlist = await spotifyApi.getAlbum(req.body.albumId);
     else
         playlist = textualPlaylist != null ? Playlist.textualPlaylistToPlaylist(textualPlaylist) : (await spotifyApi.getFullPlaylist(context.userId, context.playlistId));
     var tracks = await download.getLyricsFromDatabase(playlist.items, false);
+    context.playlistName = playlist.name;
     res.render('songbook', {
-        book: tracks, context: context, accessToken: req.body.accessToken, refreshToken: req.body.refreshToken 
+        book: tracks, context: context, accessToken: req.body.accessToken,
+        refreshToken: req.body.refreshToken,
     });
 });
 

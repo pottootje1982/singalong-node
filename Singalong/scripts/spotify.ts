@@ -89,9 +89,8 @@ export class SpotifyApi {
                 console.log('Refreshed token. It now expires in ' + expireInterval + ' seconds!');
 
                 return data;
-            }, err => {
-                console.log('Spotify: something went wrong setting token!', err);
-            });
+            }).catch(ex => {
+                console.log('Spotify: something went wrong setting token!\n', ex)});
     }
 
     refreshAccessToken() {
