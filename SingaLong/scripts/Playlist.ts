@@ -8,12 +8,15 @@ export class Playlist {
     name: string;
     items: Track[];
 
-    constructor(userId: string, playlistId: string, albumId: string, name, playlist: Track[]) {
+    totalCount: number;
+
+    constructor(userId: string, playlistId: string, albumId: string, name, playlist: Track[], totalCount: number = 0) {
         this.userId = userId;
         this.playlistId = playlistId;
         this.albumId = albumId;
         this.name = name;
         this.items = playlist;
+        this.totalCount = totalCount;
     }
 
     getId() {

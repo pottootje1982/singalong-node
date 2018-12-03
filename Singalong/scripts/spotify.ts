@@ -30,7 +30,7 @@ export class SpotifyApi {
     }
 
     async getTextualPlaylist(userId: string, playlistId: string) {
-        var playlist = await this.getFullPlaylist(userId, playlistId);
+        var playlist = await this.getPlaylist(null, userId, playlistId);
         return this.playlistToText(playlist.items);
     }
 
@@ -39,19 +39,20 @@ export class SpotifyApi {
         return this.playlistToText(filtered);
     }
 
-    async getFullPlaylist(userId: string, playlistId: string): Promise<Playlist> {
-        var count = 0;
-        var playlist = [];
-        var data = await this.spotifyApi.getPlaylist(userId, playlistId);
-        count += this.addToPlaylist(data.body.tracks.items, playlist);
-        var total = data.body.tracks.total;
-        while (total > count || data.body.items === 0) {
+    async getPlaylist(playlist: Playlist, userId: string, playlistId: string, offset: number = 0): Promise<Playlist> {
+        var data;
+        if (playlist == null) {
+            data = await this.spotifyApi.getPlaylist(userId, playlistId);
+            var tracks = [];
+            this.addToPlaylist(data.body.tracks.items, tracks);
+            playlist = new Playlist(userId, playlistId, null, data.body.name, tracks, data.body.tracks.total);
+        } else {
             data = await this.spotifyApi.getPlaylistTracks(userId,
                 playlistId,
-                { offset: playlist.length, 'limit': playlistLimit, 'fields': 'items' });
-            count += this.addToPlaylist(data.body.items, playlist);
+                { offset: offset, 'limit': playlistLimit, 'fields': 'items' });
+            this.addToPlaylist(data.body.items, playlist.items);
         }
-        return new Playlist(userId, playlistId, null, data.body.name, playlist);
+        return playlist;
     }
 
     async getAlbum(albumId: string): Promise<Playlist> {
@@ -123,7 +124,7 @@ export class SpotifyApi {
             tokens = context.uri.split(':');
             let userId = tokens[2];
             let playlistId = tokens[4];
-            return await this.getFullPlaylist(userId, playlistId);
+            return await this.getPlaylist(null, userId, playlistId);
         }
         return Playlist.Empty();
     }

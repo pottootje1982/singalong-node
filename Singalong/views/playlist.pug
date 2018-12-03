@@ -26,19 +26,7 @@ div.panel.panel-info.card(id='playlist' data-playlist=playlistId data-user-id=us
                 button.btn.btn-primary(style=buttonStyle onclick='minimizeTitle()') Minimize Title
                 button.btn.btn-primary(style=buttonStyle onclick='filterOnDownloadStatus()') Not yet downloaded
 
-            - var items = playlist != null ? playlist.items : []
-            each track, index in items
-                input(type='hidden' id='userId' name='userId' value=userId)
-                input(type='hidden' id='playlistId' name='playlistId' value=playlistId)
-                if (track.id)
-                    - var playTrack = invoke('playTrack', track.id, track.artist, track.title);
-                    button(src='play.png' onclick=playTrack style='float:left;width:15px;height:15px;background: url(play.png);background-size: 100%;border: none;margin-right:5px')
-                - var style = !searchedDb ? '' : (track.lyrics == null ? 'color:red' : 'color:green');
-                - var getLyrics = invoke('getLyrics', track.id, track.artist, track.title);
-                a.track(id=index href='#' onclick=getLyrics style=style data-artist=track.artist data-title=track.title)= index+1 + '. ' + track
-                - var customSearch = invoke('customSearch', index, track.id, track.artist, track.title);
-                button(src='search.png' onclick=customSearch style='width:15px;height:15px;background: url(search.png);background-size: 100%;border: none;margin-left:5px')
-                br
+            include tracks.pug
 
     - var display = showSpotifyPlaylist === 'true' ? 'block' : 'none';
     iframe(id='spotify-player' style="margin-right:25px;margin-bottom:0px;position:fixed;bottom:0;right:0;display:" + display src="https://open.spotify.com/embed?uri=spotify:user:" + userId + ":playlist:" + playlistId width="300" height="380" frameborder="0" allowtransparency="true")

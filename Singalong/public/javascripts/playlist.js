@@ -28,14 +28,18 @@ function refreshPlaylistControls(res) {
 
 function refreshPlaylist(res) {
     refreshPlaylistControls(res);
-    ajax('/find-in-database', res, refreshPlaylistControls);
+    if (res.hasMore)
+        ajax('/playlist', res, refreshPlaylist);
+    else
+        ajax('/find-in-database', res, refreshPlaylistControls);
 }
 
 function showPlaylist(userId, playlistId) {
     var data = {
         notDownloaded: false,
-        newContext: { userId: userId, playlistId: playlistId }
-    }
+        newContext: { userId: userId, playlistId: playlistId },
+        offset: 0
+    };
     ajax('/playlist', data, refreshPlaylist);
 }
 
@@ -49,7 +53,7 @@ function removeArtist() {
 function cleanString(str) {
     var regex = /([^\(\)\[\]]*)/i;
     var result = str.match(regex);
-    return result != null && result.length > 1 ? result[1].trim() : str;
+    return result !== null && result.length > 1 ? result[1].trim() : str;
 }
 
 function getMinimalTitle(title) {

@@ -8,7 +8,7 @@ function createConnection() {
         knex = require('knex')({
             client: 'mysql',
             connection: {
-                host: '87.195.169.201',
+                host: '192.168.1.101',
                 port: 3307,
                 user: 'pottootje1982',
                 password: 'Icf5uEiPRtjXD7GK',
