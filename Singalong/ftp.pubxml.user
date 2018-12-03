@@ -6,15 +6,15 @@ by editing this MSBuild file. In order to learn more about this please visit htt
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <TimeStampOfAssociatedLegacyPublishXmlFile />
-    <EncryptedPassword>AQAAANCMnd8BFdERjHoAwE/Cl+sBAAAAq79cLU7HRUaxHs4+ouysGAAAAAACAAAAAAADZgAAwAAAABAAAAArAJOJixhx7pPovCxAKGmYAAAAAASAAACgAAAAEAAAABwnvUeulw7l9W+vVcoihVkgAAAAdUZsdVBN1S9gBKCVOsdqHdeA8R59HIJFu1W+nQ1zsJMUAAAA2o/fvql0VZgnElZ4Fs3FWNR3PHI=</EncryptedPassword>
-    <_PublishTargetUrl>ftp://192.168.178.65/web/test</_PublishTargetUrl>
+    <EncryptedPassword>AQAAANCMnd8BFdERjHoAwE/Cl+sBAAAAcIGp+uM1e0qOIuBSia8XjgAAAAACAAAAAAADZgAAwAAAABAAAAA9L5ODtBj58R1IU9gjeaEzAAAAAASAAACgAAAAEAAAAAdaoavTlnWoVisOf5OYWvQYAAAAk7bPD9jlE9RdB6auZpSIF1CTuRsnwI1yFAAAAP95HXs342q+9UdTuoXQJGHoChyc</EncryptedPassword>
+    <_PublishTargetUrl>ftp://192.168.1.101/web/test</_PublishTargetUrl>
   </PropertyGroup>
   <ItemGroup>
     <File Include="app.js">
-      <publishTime>04/07/2018 11:20:27</publishTime>
+      <publishTime>11/10/2018 16:36:18</publishTime>
     </File>
     <File Include="app.js.map">
-      <publishTime>04/07/2018 11:20:27</publishTime>
+      <publishTime>11/10/2018 16:36:18</publishTime>
     </File>
     <File Include="bin/Microsoft.NodejsTools.WebRole.dll">
       <publishTime>10/27/2017 22:12:06</publishTime>
@@ -15026,55 +15026,73 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>10/31/2017 16:28:22</publishTime>
     </File>
     <File Include="package.json">
-      <publishTime>04/03/2018 10:40:21</publishTime>
+      <publishTime>11/10/2018 16:24:51</publishTime>
     </File>
     <File Include="public/download.test.js">
-      <publishTime>04/07/2018 11:20:27</publishTime>
+      <publishTime>11/10/2018 16:36:19</publishTime>
     </File>
     <File Include="public/download.test.js.map">
-      <publishTime>04/07/2018 11:20:27</publishTime>
+      <publishTime>11/10/2018 16:36:19</publishTime>
     </File>
     <File Include="public/javascripts/client_helpers.js">
       <publishTime>04/07/2018 00:21:48</publishTime>
     </File>
     <File Include="public/javascripts/context.js">
-      <publishTime>04/06/2018 21:32:09</publishTime>
+      <publishTime>11/10/2018 15:10:52</publishTime>
+    </File>
+    <File Include="public/javascripts/download.js">
+      <publishTime>11/10/2018 15:10:52</publishTime>
+    </File>
+    <File Include="public/javascripts/init.js">
+      <publishTime>11/10/2018 15:10:52</publishTime>
+    </File>
+    <File Include="public/javascripts/playlist.js">
+      <publishTime>11/10/2018 15:10:52</publishTime>
     </File>
     <File Include="public/javascripts/songbook.js">
-      <publishTime>12/24/2017 19:59:46</publishTime>
+      <publishTime>11/10/2018 15:10:52</publishTime>
+    </File>
+    <File Include="public/javascripts/textual_playlist.js">
+      <publishTime>11/10/2018 15:10:52</publishTime>
+    </File>
+    <File Include="public/javascripts/track.js">
+      <publishTime>11/10/2018 15:10:52</publishTime>
+    </File>
+    <File Include="public/javascripts/track_helpers.js">
+      <publishTime>11/10/2018 15:10:52</publishTime>
     </File>
     <File Include="public/play.png">
-      <publishTime>12/16/2017 23:20:52</publishTime>
+      <publishTime>11/10/2018 15:10:52</publishTime>
     </File>
     <File Include="public/search.png">
-      <publishTime>04/06/2018 17:11:12</publishTime>
+      <publishTime>11/10/2018 15:10:52</publishTime>
     </File>
     <File Include="public/spotify.png">
-      <publishTime>12/12/2017 12:10:51</publishTime>
+      <publishTime>11/10/2018 15:10:52</publishTime>
     </File>
     <File Include="public/stylesheets/main.css">
-      <publishTime>04/06/2018 20:41:24</publishTime>
+      <publishTime>11/10/2018 15:10:52</publishTime>
     </File>
     <File Include="README.md">
-      <publishTime>10/28/2017 22:00:50</publishTime>
+      <publishTime>11/10/2018 15:10:52</publishTime>
     </File>
     <File Include="routes/index.js">
-      <publishTime>04/07/2018 11:20:27</publishTime>
+      <publishTime>11/10/2018 16:36:18</publishTime>
     </File>
     <File Include="routes/index.js.map">
-      <publishTime>04/07/2018 11:20:27</publishTime>
+      <publishTime>11/10/2018 16:36:18</publishTime>
     </File>
     <File Include="routes/playlist_cache.js">
-      <publishTime>04/07/2018 11:20:27</publishTime>
+      <publishTime>11/10/2018 16:36:18</publishTime>
     </File>
     <File Include="routes/playlist_cache.js.map">
-      <publishTime>04/07/2018 11:20:27</publishTime>
+      <publishTime>11/10/2018 16:36:18</publishTime>
     </File>
     <File Include="routes/user.js">
-      <publishTime>04/07/2018 11:20:27</publishTime>
+      <publishTime>11/10/2018 16:36:18</publishTime>
     </File>
     <File Include="routes/user.js.map">
-      <publishTime>04/07/2018 11:20:27</publishTime>
+      <publishTime>11/10/2018 16:36:18</publishTime>
     </File>
     <File Include="scripts/ContextMapper.js">
       <publishTime>12/17/2017 00:04:09</publishTime>
@@ -15083,166 +15101,166 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>12/17/2017 00:04:09</publishTime>
     </File>
     <File Include="scripts/download.js">
-      <publishTime>04/07/2018 11:20:27</publishTime>
+      <publishTime>11/10/2018 16:36:19</publishTime>
     </File>
     <File Include="scripts/download.js.map">
-      <publishTime>04/07/2018 11:20:27</publishTime>
+      <publishTime>11/10/2018 16:36:19</publishTime>
     </File>
     <File Include="scripts/download.test.js">
-      <publishTime>04/07/2018 11:20:27</publishTime>
+      <publishTime>11/10/2018 16:36:19</publishTime>
     </File>
     <File Include="scripts/download.test.js.map">
-      <publishTime>04/07/2018 11:20:27</publishTime>
+      <publishTime>11/10/2018 16:36:19</publishTime>
     </File>
     <File Include="scripts/google.js">
-      <publishTime>04/07/2018 11:20:27</publishTime>
+      <publishTime>11/10/2018 16:36:19</publishTime>
     </File>
     <File Include="scripts/google.js.map">
-      <publishTime>04/07/2018 11:20:27</publishTime>
+      <publishTime>11/10/2018 16:36:19</publishTime>
     </File>
     <File Include="scripts/LyricsEngines/AzLyricsEngine.js">
-      <publishTime>04/07/2018 11:20:27</publishTime>
+      <publishTime>11/10/2018 16:36:18</publishTime>
     </File>
     <File Include="scripts/LyricsEngines/AzLyricsEngine.js.map">
-      <publishTime>04/07/2018 11:20:27</publishTime>
+      <publishTime>11/10/2018 16:36:18</publishTime>
     </File>
     <File Include="scripts/LyricsEngines/FindReplace.js">
-      <publishTime>04/07/2018 11:20:27</publishTime>
+      <publishTime>11/10/2018 16:36:19</publishTime>
     </File>
     <File Include="scripts/LyricsEngines/FindReplace.js.map">
-      <publishTime>04/07/2018 11:20:27</publishTime>
+      <publishTime>11/10/2018 16:36:19</publishTime>
     </File>
     <File Include="scripts/LyricsEngines/GeniusEngine.js">
-      <publishTime>04/07/2018 11:20:27</publishTime>
+      <publishTime>11/10/2018 16:36:19</publishTime>
     </File>
     <File Include="scripts/LyricsEngines/GeniusEngine.js.map">
-      <publishTime>04/07/2018 11:20:27</publishTime>
+      <publishTime>11/10/2018 16:36:19</publishTime>
     </File>
     <File Include="scripts/LyricsEngines/LyricsFreakEngine.js">
-      <publishTime>04/07/2018 11:20:27</publishTime>
+      <publishTime>11/10/2018 16:36:19</publishTime>
     </File>
     <File Include="scripts/LyricsEngines/LyricsFreakEngine.js.map">
-      <publishTime>04/07/2018 11:20:27</publishTime>
+      <publishTime>11/10/2018 16:36:19</publishTime>
     </File>
     <File Include="scripts/LyricsEngines/LyricsSearchEngine.js">
-      <publishTime>04/07/2018 11:20:27</publishTime>
+      <publishTime>11/10/2018 16:36:18</publishTime>
     </File>
     <File Include="scripts/LyricsEngines/LyricsSearchEngine.js.map">
-      <publishTime>04/07/2018 11:20:27</publishTime>
+      <publishTime>11/10/2018 16:36:18</publishTime>
     </File>
     <File Include="scripts/LyricsEngines/LyricsSearchEngine.test.js">
-      <publishTime>04/07/2018 11:20:27</publishTime>
+      <publishTime>11/10/2018 16:36:19</publishTime>
     </File>
     <File Include="scripts/LyricsEngines/LyricsSearchEngine.test.js.map">
-      <publishTime>04/07/2018 11:20:27</publishTime>
+      <publishTime>11/10/2018 16:36:19</publishTime>
     </File>
     <File Include="scripts/LyricsEngines/MetroLyricsEngine.js">
-      <publishTime>04/07/2018 11:20:27</publishTime>
+      <publishTime>11/10/2018 16:36:19</publishTime>
     </File>
     <File Include="scripts/LyricsEngines/MetroLyricsEngine.js.map">
-      <publishTime>04/07/2018 11:20:27</publishTime>
+      <publishTime>11/10/2018 16:36:19</publishTime>
     </File>
     <File Include="scripts/LyricsEngines/MusixMatchEngine.js">
-      <publishTime>04/07/2018 11:20:27</publishTime>
+      <publishTime>11/10/2018 16:36:19</publishTime>
     </File>
     <File Include="scripts/LyricsEngines/MusixMatchEngine.js.map">
-      <publishTime>04/07/2018 11:20:27</publishTime>
+      <publishTime>11/10/2018 16:36:19</publishTime>
     </File>
     <File Include="scripts/LyricsEngines/SongtekstenEngine.js">
-      <publishTime>04/07/2018 11:20:27</publishTime>
+      <publishTime>11/10/2018 16:36:19</publishTime>
     </File>
     <File Include="scripts/LyricsEngines/SongtekstenEngine.js.map">
-      <publishTime>04/07/2018 11:20:27</publishTime>
+      <publishTime>11/10/2018 16:36:19</publishTime>
     </File>
     <File Include="scripts/lyrics_db.js">
-      <publishTime>04/07/2018 11:20:27</publishTime>
+      <publishTime>11/10/2018 16:36:19</publishTime>
     </File>
     <File Include="scripts/lyrics_db.js.map">
-      <publishTime>04/07/2018 11:20:27</publishTime>
+      <publishTime>11/10/2018 16:36:19</publishTime>
     </File>
     <File Include="scripts/lyrics_db.test.js">
-      <publishTime>04/07/2018 11:20:27</publishTime>
+      <publishTime>11/10/2018 16:36:19</publishTime>
     </File>
     <File Include="scripts/lyrics_db.test.js.map">
-      <publishTime>04/07/2018 11:20:27</publishTime>
+      <publishTime>11/10/2018 16:36:19</publishTime>
     </File>
     <File Include="scripts/Playlist.js">
-      <publishTime>04/07/2018 11:20:27</publishTime>
+      <publishTime>11/10/2018 16:36:18</publishTime>
     </File>
     <File Include="scripts/Playlist.js.map">
-      <publishTime>04/07/2018 11:20:27</publishTime>
+      <publishTime>11/10/2018 16:36:18</publishTime>
     </File>
     <File Include="scripts/Playlist.test.js">
-      <publishTime>04/07/2018 11:20:27</publishTime>
+      <publishTime>11/10/2018 16:36:19</publishTime>
     </File>
     <File Include="scripts/Playlist.test.js.map">
-      <publishTime>04/07/2018 11:20:27</publishTime>
+      <publishTime>11/10/2018 16:36:19</publishTime>
     </File>
     <File Include="scripts/spotify.js">
-      <publishTime>04/07/2018 11:20:27</publishTime>
+      <publishTime>11/10/2018 16:36:18</publishTime>
     </File>
     <File Include="scripts/spotify.js.map">
-      <publishTime>04/07/2018 11:20:27</publishTime>
+      <publishTime>11/10/2018 16:36:18</publishTime>
     </File>
     <File Include="scripts/spotify.test.js">
-      <publishTime>04/07/2018 11:20:27</publishTime>
+      <publishTime>11/10/2018 16:36:19</publishTime>
     </File>
     <File Include="scripts/spotify.test.js.map">
-      <publishTime>04/07/2018 11:20:27</publishTime>
+      <publishTime>11/10/2018 16:36:19</publishTime>
     </File>
     <File Include="scripts/TestData/imagine.txt">
       <publishTime>12/18/2017 09:33:14</publishTime>
     </File>
     <File Include="scripts/Track.js">
-      <publishTime>04/07/2018 11:20:27</publishTime>
+      <publishTime>11/10/2018 16:36:18</publishTime>
     </File>
     <File Include="scripts/Track.js.map">
-      <publishTime>04/07/2018 11:20:27</publishTime>
+      <publishTime>11/10/2018 16:36:18</publishTime>
     </File>
     <File Include="scripts/track.test.js">
-      <publishTime>04/07/2018 11:20:27</publishTime>
+      <publishTime>11/10/2018 16:36:19</publishTime>
     </File>
     <File Include="scripts/track.test.js.map">
-      <publishTime>04/07/2018 11:20:27</publishTime>
+      <publishTime>11/10/2018 16:36:19</publishTime>
     </File>
     <File Include="test/mocha.opts">
-      <publishTime>10/28/2017 17:39:01</publishTime>
+      <publishTime>11/10/2018 15:10:52</publishTime>
     </File>
     <File Include="tsconfig.json">
-      <publishTime>10/30/2017 20:04:35</publishTime>
+      <publishTime>11/10/2018 15:10:52</publishTime>
     </File>
     <File Include="views/error.pug">
-      <publishTime>10/27/2017 22:12:06</publishTime>
+      <publishTime>11/10/2018 15:10:52</publishTime>
     </File>
     <File Include="views/index.pug">
-      <publishTime>04/07/2018 00:23:01</publishTime>
+      <publishTime>11/10/2018 15:10:52</publishTime>
     </File>
     <File Include="views/layout.pug">
-      <publishTime>04/06/2018 21:15:21</publishTime>
+      <publishTime>11/10/2018 15:10:52</publishTime>
     </File>
     <File Include="views/playlist.pug">
-      <publishTime>04/06/2018 23:44:17</publishTime>
+      <publishTime>11/10/2018 15:10:52</publishTime>
     </File>
     <File Include="views/playlists.pug">
-      <publishTime>12/23/2017 22:56:21</publishTime>
+      <publishTime>11/10/2018 15:10:52</publishTime>
     </File>
     <File Include="views/proxy.pug">
-      <publishTime>01/15/2018 16:17:25</publishTime>
+      <publishTime>11/10/2018 15:10:52</publishTime>
     </File>
     <File Include="views/songbook.pug">
-      <publishTime>12/24/2017 21:30:25</publishTime>
+      <publishTime>11/10/2018 15:10:52</publishTime>
     </File>
     <File Include="views/textual_playlist.pug">
-      <publishTime>12/22/2017 13:32:27</publishTime>
+      <publishTime>11/10/2018 15:10:52</publishTime>
     </File>
     <File Include="views/track.pug">
-      <publishTime>04/06/2018 21:32:39</publishTime>
+      <publishTime>11/10/2018 15:10:52</publishTime>
     </File>
     <File Include="Web.config">
-      <publishTime>10/28/2017 22:00:50</publishTime>
+      <publishTime>11/10/2018 15:10:52</publishTime>
     </File>
     <File Include="Web.Debug.config">
-      <publishTime>10/28/2017 22:00:50</publishTime>
+      <publishTime>11/10/2018 15:10:52</publishTime>
     </File>
   </ItemGroup>
 </Project>
