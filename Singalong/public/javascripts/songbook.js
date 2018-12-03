@@ -13,7 +13,7 @@ $(document).ready(function () {
                 if (header.length === 0)
                     header = $('h1:contains("' + trackName + '")');
                 console.log(trackId, lastTrackId, header);
-                if (header != null && header.offset() != null) {
+                if (header !== null && header.offset() !== null) {
                     $('html, body').animate({
                         scrollTop: header.offset().top
                     }, 200);
