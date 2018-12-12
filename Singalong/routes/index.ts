@@ -3,8 +3,8 @@
 
 - unable to delete lyrics when stored with title only
 - if doing a custom search, the selected track title doesn't get updated
-- create a control where you can skip to previous & next track, & slider bar for track navigation
-- spotify navigator will show currently played lyrics
+- add play/pause button
+- add current track position in minutes:seconds next to track slider
 
 - log can be viewed with: sudo cat /var/log/upstart/singalong.log
 - startup script: /etc/init/singalong.conf
