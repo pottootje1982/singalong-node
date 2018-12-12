@@ -28,6 +28,8 @@ $(document).ready(function () {
         playlistLinks.trigger('click');
     }
 
+    ajax('/current-track', {}, setCurrentTrack);
+
     setInterval(function () {
         console.log('Refreshing token');
         ajax('/refreshToken',

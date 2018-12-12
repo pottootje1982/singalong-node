@@ -214,8 +214,9 @@ router.post('/songbook', async (req, res) => {
 
 router.get('/current-track', async (req, res) => {
     var spotifyApi: SpotifyApi = res.locals.getSpotifyApi();
-    var currentTrack = await spotifyApi.doAsyncApiCall(async (api) => api.getMyCurrentPlayingTrack());
-    let track = Track.fromSpotify(currentTrack && currentTrack.body ? currentTrack.body.item : null);
+    var currentTrack = await spotifyApi.api.getMyCurrentPlayingTrack();
+    let track : any = Track.fromSpotify(currentTrack && currentTrack.body ? currentTrack.body.item : null);
+    track.progress_ms = currentTrack.body.progress_ms;
     res.json(track);
 });
 

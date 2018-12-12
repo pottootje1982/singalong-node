@@ -1,7 +1,7 @@
 function setTrackSliderPosition(res) {
-    console.log('Currently playing: ', res.artist, res.title)
+    console.log('Currently playing: ', res.artist, res.title, res.progress_ms)
     $('#track-slider').attr('max', (res.duration_ms / 1000).toFixed(0));
-    $('#track-slider').val(0);
+    $('#track-slider').val(res.progress_ms / 1000);
 }
 
 $(document).ready(function () {

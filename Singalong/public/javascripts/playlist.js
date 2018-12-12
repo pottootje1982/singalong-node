@@ -31,7 +31,10 @@ function refreshPlaylist(res) {
     if (res.hasMore)
         ajax('/playlist', res, refreshPlaylist);
     else
-        ajax('/find-in-database', res, refreshPlaylistControls);
+        ajax('/find-in-database', res, function(res) {
+            refreshPlaylistControls(res);
+            ajax('/current-track', {}, setCurrentTrack)
+        });
 }
 
 function showPlaylist(userId, playlistId) {
@@ -71,6 +74,7 @@ function minimizeTitle() {
 
 function setCurrentTrack(res) {
     setTrackSliderPosition(res);
+    console.log('show lyrics of ', res.id);
     $('#' + res.id).trigger('click');
 }
 
