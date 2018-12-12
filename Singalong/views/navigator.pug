@@ -1,4 +1,4 @@
-div(id='spotify-player' style="margin-right:25px;margin-bottom:0px;position:fixed;bottom:0;right:0;width:400px;display:" + display frameborder="0" allowtransparency="true")
-    button(src='previous.png' onclick='prevTrack()' style='margin-left:0px;width:35px;height:35px;background: url(previous.png);background-size: 100%;border: none;margin-right:5px')
-    button(src='next.png' onclick='nextTrack()' style='margin-left:0px;width:35px;height:35px;background: url(next.png);background-size: 100%;border: none;margin-right:5px')
-    input.custom-range(id='track-slider' type="range" value="0" onchange="seek(this.value)" tabindex="0" style='width:250px;border:none')
+div(id='spotify-player' style="margin-right:25px;margin-bottom:0px;position:fixed;bottom:0;right:0;width:320px" allowtransparency="true")
+    button(src='previous.png' onclick='prevTrack()' style='margin-left:0px;width:25px;height:25px;background: url(previous.png);background-size: 100%;border: none;margin-right:5px;display:inline-block;' )
+    input(id='track-slider' type="range" value="0" onchange="seek(this.value)" tabindex="0" style='width:250px;display:inline-block;')
+    button(src='next.png' onclick='nextTrack()' style='margin-left:0px;width:25px;height:25px;background: url(next.png);background-size: 100%;border: none;margin-right:5px;display:inline-block;')
