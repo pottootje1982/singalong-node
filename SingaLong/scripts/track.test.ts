@@ -1,7 +1,7 @@
 ﻿import assert = require('assert');
 import { Track } from '../scripts/Track';
 
-describe("Lyrics DB", () => {
+describe("Track", () => {
     this.timeoutTimer = "25000";
 
     it("Get name of track",

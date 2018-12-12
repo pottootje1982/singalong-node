@@ -4,10 +4,10 @@ each track, index in items
     input(type='hidden' id='playlistId' name='playlistId' value=playlistId)
     if (track.id)
         - var playTrack = invoke('playTrack', track.id, track.artist, track.title);
-        button(src='play.png' onclick=playTrack style='float:left;width:15px;height:15px;background: url(play.png);background-size: 100%;border: none;margin-right:5px')
+        button(id='play-' + track.id src='play.png' onclick=playTrack style='float:left;width:15px;height:15px;background: url(play.png);background-size: 100%;border: none;margin-right:5px')
     - var style = !searchedDb ? '' : (track.lyrics == null ? 'color:red' : 'color:green');
     - var getLyrics = invoke('getLyrics', track.id, track.artist, track.title);
-    a.track(id=index href='#' onclick=getLyrics style=style data-artist=track.artist data-title=track.title)= index+1 + '. ' + track
+    a.track(id=track.id href='#' onclick=getLyrics style=style data-artist=track.artist data-title=track.title)= index+1 + '. ' + track
     - var customSearch = invoke('customSearch', index, track.id, track.artist, track.title);
     button(src='search.png' onclick=customSearch style='width:15px;height:15px;background: url(search.png);background-size: 100%;border: none;margin-left:5px')
     br

@@ -3,6 +3,8 @@
 
 - unable to delete lyrics when stored with title only
 - if doing a custom search, the selected track title doesn't get updated
+- create a control where you can skip to previous & next track, & slider bar for track navigation
+- spotify navigator will show currently played lyrics
 
 - log can be viewed with: sudo cat /var/log/upstart/singalong.log
 - startup script: /etc/init/singalong.conf
@@ -28,7 +30,7 @@ router.get('/', async (req: express.Request, res: express.Response) => {
 router.get('/authorized', async (req: express.Request, res: express.Response) => {
     var spotifyApi: SpotifyApi = res.locals.getSpotifyApi();
     var tokens = await spotifyApi.setToken(req.query.code);
-    var data = await spotifyApi.doAsyncApiCall(api => api.getUserPlaylists(null, { limit: 50 }));
+    var data = await spotifyApi.api.getUserPlaylists(null, { limit: 50 });
     res.render('index', { playlists: data ? data.body.items : [], accessToken: tokens.body.access_token, refreshToken: tokens.body.refresh_token });
 });
 
@@ -115,7 +117,7 @@ async function showPlaylist(res: express.Response, ctx: any, showCurrentlyPlayin
         });
     }
     catch (err) {
-        showError(res, 'Error retrieving playlist ' + ctx.context.playlistId + ' from database for user ' + ctx.context.userId, err);
+        showError(res, `Error retrieving playlist ${ctx.context.playlistId} from database for user ${ctx.context.userId}`, err);
     }
 }
 
@@ -195,14 +197,15 @@ router.get('/download-track', async (req, res) => {
 router.post('/songbook', async (req, res) => {
     var spotifyApi: SpotifyApi = res.locals.getSpotifyApi();
     var textualPlaylist = req.body.playlist;
-    var context: any = { userId: req.body.userId, playlistId: req.body.playlistId, albumId: req.body.albumId };
+    var context: any = req.body;
+    context.offset = context.offset || 0;
     var playlist: Playlist;
     if (req.body.albumId)
         playlist = await spotifyApi.getAlbum(req.body.albumId);
     else {
         playlist = textualPlaylist != null ? Playlist.textualPlaylistToPlaylist(textualPlaylist) : playlist_cache.get(context.userId, context.playlistId || context.albumId);
     }
-    var tracks = await download.getLyricsFromDatabase(playlist.items, false);
+    var tracks = playlist.items.filter(t => t.lyrics != null);
     context.playlistName = playlist.name;
     res.render('songbook', {
         book: tracks, context: context, accessToken: req.body.accessToken, refreshToken: req.body.refreshToken
@@ -213,7 +216,7 @@ router.get('/current-track', async (req, res) => {
     var spotifyApi: SpotifyApi = res.locals.getSpotifyApi();
     var currentTrack = await spotifyApi.doAsyncApiCall(async (api) => api.getMyCurrentPlayingTrack());
     let track = Track.fromSpotify(currentTrack && currentTrack.body ? currentTrack.body.item : null);
-    res.json({ trackName: track && track.toString(), trackId: track && track.id });
+    res.json(track);
 });
 
 router.get('/play-track', async (req, res) => {
@@ -232,6 +235,36 @@ router.get('/play-track', async (req, res) => {
         }
 
     });
+    res.json({});
+});
+
+router.get('/skip-to-track', async (req, res) => {
+    var context = req.query.context;
+    var playlist = playlist_cache.get(context.userId, context.playlistId);
+    var spotifyApi: SpotifyApi = res.locals.getSpotifyApi();
+    let api = spotifyApi.api;
+    var data = await api.getMyCurrentPlaybackState();
+    var id = data.body.item.id;
+    var track : Track;
+    if (req.query.withLyrics === 'true'){
+        track = playlist.getNextTrackWithLyrics(id, req.query.next === 'true');
+    }
+    else {
+        track = playlist.getNextTrack(id, req.query.next === 'true');
+    }
+
+    api.play({
+        context_uri: 'spotify:user:' + req.query.context.userId + ':playlist:' + req.query.context.playlistId,
+        offset: { uri: 'spotify:track:' + track.id }
+    });
+
+    res.json(track);
+});
+
+router.get('/seek', async (req, res) => {
+    var query = req.query;
+    var spotifyApi: SpotifyApi = res.locals.getSpotifyApi();
+    await spotifyApi.api.seek(query.position_ms);
     res.json({});
 });
 

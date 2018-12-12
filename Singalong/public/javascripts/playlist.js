@@ -69,3 +69,15 @@ function minimizeTitle() {
     });
 }
 
+function setCurrentTrack(res) {
+    setTrackSliderPosition(res);
+    $('#' + res.id).trigger('click');
+}
+
+function prevTrack() {
+    ajax('/skip-to-track', {}, setCurrentTrack);
+}
+
+function nextTrack() {
+    ajax('/skip-to-track', {next:true}, setCurrentTrack);
+}

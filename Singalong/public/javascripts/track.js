@@ -1,4 +1,6 @@
-﻿function storeLyrics() {
+﻿var currentTrack;
+
+function storeLyrics() {
     ajax('/lyrics', { lyrics: $('#lyrics-display').val() }, refreshPlaylist, 'POST');
 }
 
@@ -13,8 +15,12 @@ function removeLyrics() {
 
 function playTrack(trackId, artist, title) {
     console.log("Playing track " + trackId);
-    ajax('/play-track', { trackId: trackId });
+    ajax('/play-track', { trackId: trackId }, setCurrentTrack);
     getLyrics(artist, title);
+}
+
+function seek(val) {
+    ajax('/seek', {position_ms: val * 1000});
 }
 
 function customSearch(index, trackId, artist, title) {

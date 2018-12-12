@@ -19,6 +19,31 @@ export class Playlist {
         this.totalCount = totalCount;
     }
 
+    getNextTrackWithLyrics(id: string, next: boolean): any {
+        var currentTrack = this.items.find(track => track.id === id);
+        var index = this.items.indexOf(currentTrack);
+        if (index === -1) return null;
+        var offset = next ? +1 : -1;
+        var init = next ? offset : this.items.length - 1;
+        var end = next ? this.items.length - 1 : offset;
+        var track: Track;
+        for (var i = init; i != end; i = i + offset) {
+            var corrected = (i + this.items.length + index) % this.items.length;
+            track = this.items[corrected];
+            if (track.lyrics != null) {
+                return track;
+            }
+        }
+    }
+
+    getNextTrack(id: string, next: boolean): any {
+        var currentTrack = this.items.find(track => track.id === id);
+        var index = this.items.indexOf(currentTrack);
+        var offset = next ? +1 : -1;
+        var nextIndex = (index + this.items.length + offset) % this.items.length;
+        return this.items[nextIndex];
+    }
+
     getId() {
         return this.albumId || this.playlistId;
     }

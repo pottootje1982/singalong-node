@@ -7,6 +7,7 @@ export class Track {
     site: string;
     lyrics: string;
     fullTrackTitle: string;
+    duration_ms: number;
 
     constructor(artist: string, title: string, site?: string, lyrics?: string, fullTrackTitle?: string, id?: string) {
         this.artist = artist ? artist.trim() : '';
@@ -61,6 +62,7 @@ export class Track {
         if (artist === '' && title === '') return null;
         let result = new Track(artist, title);
         result.id = track.id;
+        result.duration_ms = track.duration_ms;
         return result;
     }
 

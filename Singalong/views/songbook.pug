@@ -2,6 +2,8 @@
 
 block content
     script(src="/javascripts/context.js")
+    script(src="/javascripts/navigator.js")
+    script(src="/javascripts/track.js")
     script(src="/javascripts/client_helpers.js")
     script(src="/javascripts/songbook.js")
     - var userId = context && context.userId
@@ -27,3 +29,5 @@ block content
             p(class='lyrics' style='column-count: 2;-moz-column-count: 2;-webkit-column-count: 2;font-size:1.3em')= track.lyrics
             br
             br
+
+    include navigator.pug

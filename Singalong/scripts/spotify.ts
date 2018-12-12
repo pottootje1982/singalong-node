@@ -9,16 +9,16 @@ var scopes = ['user-read-private', 'user-read-email', 'user-read-currently-playi
 const playlistLimit = 100;
 
 export class SpotifyApi {
-    private spotifyApi: SpotifyWebApi;
+    public api: SpotifyWebApi;
 
     constructor(host: string, tokens: any) {
-        this.spotifyApi = new SpotifyWebApi({
+        this.api = new SpotifyWebApi({
             clientId: clientId,
             clientSecret: 'c09a0bdffa7d452ca4fbe14c53d32f94',
             redirectUri: 'http://' + host + '/authorized'
         });
-        this.spotifyApi.setAccessToken(tokens.accessToken);
-        this.spotifyApi.setRefreshToken(tokens.refreshToken);
+        this.api.setAccessToken(tokens.accessToken);
+        this.api.setRefreshToken(tokens.refreshToken);
     }
 
     playlistToText(playlist: Track[]) {
@@ -42,12 +42,12 @@ export class SpotifyApi {
     async getPlaylist(playlist: Playlist, userId: string, playlistId: string, offset: number = 0): Promise<Playlist> {
         var data;
         if (playlist == null) {
-            data = await this.spotifyApi.getPlaylist(userId, playlistId);
+            data = await this.api.getPlaylist(userId, playlistId);
             var tracks = [];
             this.addToPlaylist(data.body.tracks.items, tracks);
             playlist = new Playlist(userId, playlistId, null, data.body.name, tracks, data.body.tracks.total);
         } else {
-            data = await this.spotifyApi.getPlaylistTracks(userId,
+            data = await this.api.getPlaylistTracks(userId,
                 playlistId,
                 { offset: offset, 'limit': playlistLimit, 'fields': 'items' });
             this.addToPlaylist(data.body.items, playlist.items);
@@ -57,7 +57,7 @@ export class SpotifyApi {
 
     async getAlbum(albumId: string): Promise<Playlist> {
         var playlist = [];
-        var data = await this.spotifyApi.getAlbum(albumId);
+        var data = await this.api.getAlbum(albumId);
         this.addToPlaylist(data.body.tracks.items, playlist);
         return new Playlist(null, null, albumId, data.body.name, playlist);
     }
@@ -73,19 +73,19 @@ export class SpotifyApi {
 
     getAuthorizeUrl() {
         // credentials are optional
-        let authorizeUrl = this.spotifyApi.createAuthorizeURL(scopes, state);
+        let authorizeUrl = this.api.createAuthorizeURL(scopes, state);
         console.log('Autorize url: ' + authorizeUrl);
         return authorizeUrl;
     }
 
     setToken(code) {
         console.log("Code is: " + code);
-        return this.spotifyApi.authorizationCodeGrant(code)
+        return this.api.authorizationCodeGrant(code)
             .then(data => {
                 // Set the access token on the API object to use it in later calls
                 console.log("Token is: " + data.body['access_token']);
-                this.spotifyApi.setAccessToken(data.body['access_token']);
-                this.spotifyApi.setRefreshToken(data.body['refresh_token']);
+                this.api.setAccessToken(data.body['access_token'], );
+                this.api.setRefreshToken(data.body['refresh_token']);
                 var expireInterval = data.body['expires_in'];
                 console.log('Refreshed token. It now expires in ' + expireInterval + ' seconds!');
 
@@ -95,7 +95,7 @@ export class SpotifyApi {
     }
 
     refreshAccessToken() {
-        let api = this.spotifyApi;
+        let api = this.api;
         return api.refreshAccessToken()
             .then(data => {
                 console.log('The access token has been refreshed!');
@@ -110,7 +110,7 @@ export class SpotifyApi {
     }
 
     async getCurrentlyPlaying() {
-        var currentTrack = await this.spotifyApi.getMyCurrentPlayingTrack();
+        var currentTrack = await this.api.getMyCurrentPlayingTrack();
         var context = currentTrack.body.context;
         var tokens;
         if (!context) return Playlist.Empty();
@@ -130,7 +130,7 @@ export class SpotifyApi {
 
     async doAsyncApiCall(func) : Promise<any> {
         try {
-            return await func(this.spotifyApi);
+            return await func(this.api);
         } catch (err) {
             console.log("Error executing async Spotify API call " + func.name + ": ", err.message);
         }
@@ -139,7 +139,7 @@ export class SpotifyApi {
 
     doApiCall(func) : any {
         try {
-            return func(this.spotifyApi);
+            return func(this.api);
         } catch (err) {
             console.log("Error executing Spotify API call " + func.name + ": ", err.message);
         }
