@@ -246,19 +246,19 @@ router.get('/skip-to-track', async (req, res) => {
     let api = spotifyApi.api;
     var data = await api.getMyCurrentPlaybackState();
     var id = data.body.item.id;
-    var track : Track;
+    var track : any;
     if (req.query.withLyrics === 'true'){
         track = playlist.getNextTrackWithLyrics(id, req.query.next === 'true');
     }
     else {
         track = playlist.getNextTrack(id, req.query.next === 'true');
     }
-
     api.play({
         context_uri: 'spotify:user:' + req.query.context.userId + ':playlist:' + req.query.context.playlistId,
         offset: { uri: 'spotify:track:' + track.id }
     });
 
+    track.progress_ms = 0;
     res.json(track);
 });
 
