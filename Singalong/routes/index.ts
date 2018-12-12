@@ -217,6 +217,7 @@ router.get('/current-track', async (req, res) => {
     var currentTrack = await spotifyApi.api.getMyCurrentPlayingTrack();
     let track : any = Track.fromSpotify(currentTrack && currentTrack.body ? currentTrack.body.item : null);
     track.progress_ms = currentTrack.body.progress_ms;
+    track.is_playing = currentTrack.body.is_playing;
     res.json(track);
 });
 
@@ -259,6 +260,7 @@ router.get('/skip-to-track', async (req, res) => {
     });
 
     track.progress_ms = 0;
+    track.is_playing = data.body.is_playing;
     res.json(track);
 });
 
