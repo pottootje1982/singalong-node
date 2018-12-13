@@ -8,7 +8,6 @@
 - on active window set current play status:
 - https://stackoverflow.com/questions/6966733/detect-tab-window-activation-in-javascript
 - select device on which to play
-- check for items[3].track.preview_url whether it is null, cannot be played (a stray dog)
 
 - log can be viewed with: sudo cat /var/log/upstart/singalong.log
 - startup script: /etc/init/singalong.conf
