@@ -5,6 +5,10 @@
 - if doing a custom search, the selected track title doesn't get updated
 - add play/pause button
 - add current track position in minutes:seconds next to track slider
+- on active window set current play status:
+- https://stackoverflow.com/questions/6966733/detect-tab-window-activation-in-javascript
+- select device on which to play
+- check for items[3].track.preview_url whether it is null, cannot be played (a stray dog)
 
 - log can be viewed with: sudo cat /var/log/upstart/singalong.log
 - startup script: /etc/init/singalong.conf
@@ -18,12 +22,12 @@ import { Playlist } from "../scripts/Playlist";
 import { Track } from '../scripts/Track';
 import playlist_cache = require('./playlist_cache');
 
-router.get('/authorize', (req: express.Request, res: express.Response) => {
+router.get('/', (req: express.Request, res: express.Response) => {
     var spotifyApi: SpotifyApi = res.locals.getSpotifyApi();
     res.redirect(spotifyApi.getAuthorizeUrl());
 });
 
-router.get('/', async (req: express.Request, res: express.Response) => {
+router.get('/manual', async (req: express.Request, res: express.Response) => {
     res.render('index', {});
 });
 
