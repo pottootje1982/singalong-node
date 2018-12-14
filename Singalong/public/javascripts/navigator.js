@@ -2,9 +2,20 @@ var is_playing = false;
 
 function setTrackSliderPosition(res) {
     is_playing = res.is_playing;
+    var backIcon = is_playing ? "url(pause.png)" : "url(play.png)";
     console.log('Currently playing: ', res.artist, res.title, res.progress_ms)
-    $('#track-slider').attr('max', (res.duration_ms / 1000).toFixed(0));
-    $('#track-slider').val(res.progress_ms / 1000);
+    $('#toggle-play-button').css('background-image', backIcon);
+    if (res.duration_ms)
+        $('#track-slider').attr('max', (res.duration_ms / 1000).toFixed(0));
+    if (res.progress_ms)
+        $('#track-slider').val(res.progress_ms / 1000);
+}
+
+function togglePlay() {
+    if (is_playing)
+        ajax('/toggle-play', {}, setCurrentTrack);
+    else
+        ajax('/toggle-play', {play:true}, setCurrentTrack);
 }
 
 $(document).ready(function () {

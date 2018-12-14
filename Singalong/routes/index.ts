@@ -252,6 +252,16 @@ router.get('/play-track', async (req, res) => {
     res.json({});
 });
 
+router.get('/toggle-play', async (req, res) => {
+    var spotifyApi: SpotifyApi = res.locals.getSpotifyApi();
+    var isPlaying = req.query.play === 'true';
+    if (isPlaying)
+        await spotifyApi.api.play();
+    else
+        await spotifyApi.api.pause();
+    res.json({is_playing: isPlaying});
+});
+
 router.get('/skip-to-track', async (req, res) => {
     var context = req.query.context;
     var playlist = playlist_cache.get(context.userId, context.playlistId);

@@ -1,5 +1,5 @@
 div(id='spotify-player' style="margin-right:25px;margin-bottom:0px;position:fixed;bottom:0;right:0;width:350px" allowtransparency="true")
-    button.navigate-button(onclick='togglePlay()' style='margin-left:0px;width:25px;height:25px;background: url(pause.png);background-size: 100%;border: none;margin-right:5px;display:inline-block;' )
+    button.navigate-button(id='toggle-play-button' onclick='togglePlay()' style='margin-left:0px;width:25px;height:25px;background: url(pause.png);background-size: 100%;border: none;margin-right:5px;display:inline-block;' )
     button.navigate-button(onclick='prevTrack()' style='margin-left:0px;width:25px;height:25px;background: url(previous.png);background-size: 100%;border: none;margin-right:5px;display:inline-block;' )
     input(id='track-slider' type="range" value="0" onchange="seek(this.value)" tabindex="0" style='width:250px;display:inline-block;')
     button.navigate-button(onclick='nextTrack()' style='margin-left:10px;width:25px;height:25px;background: url(next.png);background-size: 100%;border: none;margin-right:5px;display:inline-block;')
