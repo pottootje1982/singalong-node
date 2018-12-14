@@ -34,7 +34,16 @@ router.get('/authorized', async (req: express.Request, res: express.Response) =>
     var spotifyApi: SpotifyApi = res.locals.getSpotifyApi();
     var tokens = await spotifyApi.setToken(req.query.code);
     var data = await spotifyApi.api.getUserPlaylists(null, { limit: 50 });
-    res.render('index', { playlists: data ? data.body.items : [], accessToken: tokens.body.access_token, refreshToken: tokens.body.refresh_token });
+    var playlists = data ? data.body.items : [];
+    res.render('index', { 
+        playlists: playlists, 
+        accessToken: tokens.body.access_token, 
+        refreshToken: tokens.body.refresh_token,
+        context: {
+            playlistId: playlists[0] && playlists[0].id,
+            userId: playlists[0] && playlists[0].owner.id,
+        }
+    });
 });
 
 router.post('/search-playlists', async (req: express.Request, res: express.Response) => {

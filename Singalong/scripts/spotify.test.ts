@@ -20,7 +20,7 @@ describe("Spotify API", async () => {
 
     it("Get full playlist", async function() {
         this.timeout(25000);
-        var user = await spotifyApi.doAsyncApiCall(api => api.getMe());
+        var user = await spotifyApi.api.getMe();
         var playlist = await spotifyApi.getPlaylist(null, user.body.id, '6jaK2iM45Myomj4GJqCi4v'); // Top 2000
         console.log(playlist.items);
         assert(playlist.items.length === 100);
