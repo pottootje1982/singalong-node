@@ -3,7 +3,6 @@
 
 - unable to delete lyrics when stored with title only
 - if doing a custom search, the selected track title doesn't get updated
-- add play/pause button
 - add current track position in minutes:seconds next to track slider
 - on active window set current play status:
 - https://stackoverflow.com/questions/6966733/detect-tab-window-activation-in-javascript

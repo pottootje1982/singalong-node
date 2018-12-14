@@ -17,3 +17,29 @@
     white-space: pre
   }
 
+.navigate-button {
+    margin-left:0px;
+    width:4.5vh;
+    height:4.5vh;
+    background-size: 4vh;
+    border: none;
+    margin-right:5px;
+    display:inline-block;
+}
+
+.track-slider {
+    width:15vw;
+    height:4.5vh;
+    display:inline-block;
+    margin-left:10px;
+    margin-right:10px
+}
+
+.spotify-player {
+    margin-right:25px;
+    margin-bottom:0px;
+    position:fixed;
+    bottom:0;
+    right:0;
+    width:25vw
+}
