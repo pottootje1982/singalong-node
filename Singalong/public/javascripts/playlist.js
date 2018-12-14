@@ -75,7 +75,7 @@ function minimizeTitle() {
 function setCurrentTrack(res) {
     setTrackSliderPosition(res);
     console.log('show lyrics of ', res.id);
-    $('#' + res.id).trigger('click');
+    getLyrics(res.id, res.artist, res.title, res.site, false);
 }
 
 function prevTrack() {

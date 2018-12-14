@@ -33,12 +33,13 @@ function customSearch(index, trackId, artist, title) {
 
 function updateLyrics(res) {
     $('#track-section').replaceWith(res.trackHtml);
-    if ($('#collapseThree').attr('aria-expanded') !== "true")
+    if ($('#collapseThree').attr('aria-expanded') !== "true" && res.expand === "true") {
         $('#collapseThree').collapse('show');
+    }
     if (res.title || res.artist)
         $('#lyricsHeader').text(res.artist + ' - ' + res.title);
 }
 
-function getLyrics(id, artist, title, site) {
-    ajax('/lyrics', { artist: artist, title: title, id: id, site: site }, updateLyrics);
+function getLyrics(id, artist, title, site, expand = true) {
+    ajax('/lyrics', { artist: artist, title: title, id: id, site: site, expand: expand }, updateLyrics);
 }
