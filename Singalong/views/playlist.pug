@@ -7,7 +7,7 @@ div.panel.panel-info.card(id='playlist' data-playlist=playlistId data-user-id=us
             a.collapsed(id='playlist-title' data-toggle="collapse" href="#collapseFour" aria-expanded="true" aria-controls="collapseFour") Playlist
     div.panel-body.collapse.show.in(id="collapseFour" role="tabpanel" aria-labelledby="headingFour" )
         div.card-body
-            div(style="float:right;width:160px")
+            div(style="float:right;width:160px;padding-left:5px")
                 - var buttonStyle =  'width:150px;margin-bottom:5px'
                 input.form-control(form='playlist-form' id='sleepTimeInput' type='text' name='sleepTime' value='3000' data-toggle="tooltip" title="Sleep time (ms)" style=buttonStyle)
                 button.btn.btn-primary.download-button(style=buttonStyle onclick='downloadPlaylist(true)') Download
@@ -22,7 +22,8 @@ div.panel.panel-info.card(id='playlist' data-playlist=playlistId data-user-id=us
                 button.btn.btn-primary(style=buttonStyle onclick='minimizeTitle()') Minimize Title
                 button.btn.btn-primary(style=buttonStyle onclick='filterOnDownloadStatus()') Not yet downloaded
 
-            include tracks.pug
+            div.wrap-playlist
+                include tracks.pug
 
     //- - var display = showSpotifyPlaylist === 'true' ? 'block' : 'none';
     //- iframe(id='spotify-player' style="margin-right:25px;margin-bottom:0px;position:fixed;bottom:0;right:0;display:" + display src="https://open.spotify.com/embed?uri=spotify:user:" + userId + ":playlist:" + playlistId width="300" height="380" frameborder="0" allowtransparency="true")

@@ -1,8 +1,18 @@
 ﻿body {
-    padding: 50px;
+    padding: 5px;
     font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
 }
 
-a {
-    color: #00B7FF;
+.wrap-playlists {
+    height: calc(100vh - 290px);
+    overflow-y: scroll;
 }
+
+.wrap-playlist {
+    height: calc(100vh - 270px);
+    overflow-y: scroll;
+}
+
+.lyrics {
+    white-space: pre
+  }
