@@ -1,45 +1,109 @@
-﻿body {
-    padding: 5px;
-    font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+﻿
+@media all {
+
+	body {
+		padding: 5px;
+		font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+	}
+
+	.wrap-playlists {
+		height: calc(100vh - 290px);
+		overflow-y: scroll;
+	}
+
+	.wrap-playlist {
+		height: calc(100vh - 270px);
+		overflow-y: scroll;
+	}
+
+	.lyrics {
+		white-space: pre
+	  }
+
+	.spotify-player {
+		position:fixed;
+		bottom:20px;
+		right:20px;
+	}
+
+	.navigate-button {
+		border: none;
+		margin-right:5px;
+        display:inline-block;
+        position: relative;
+    }
+
+    .track-slider {
+        display:inline-block;
+		border-radius: 5px; 
+        -webkit-appearance: none;
+        position: absolute;
+		border-radius: 5px;
+		background: #d3d3d3;
+		outline: none;
+		opacity: 0.7;
+		-webkit-transition: opacity .15s ease-in-out;
+		transition: opacity .15s ease-in-out;
+	}
+	
+	.track-slider::-webkit-slider-thumb {
+		-webkit-appearance: none; /* Override default look */
+		appearance: none;
+		width: 25px; /* Set a specific slider handle width */
+		height: 25px; /* Slider handle height */
+        border-radius: 50%; 
+        background: #4CAF50; /* Green background */
+		cursor: pointer; /* Cursor on hover */
+	}
+	
+	.track-slider::-moz-range-thumb {
+		width: 25px; /* Set a specific slider handle width */
+		height: 25px; /* Slider handle height */
+		background: #4CAF50; /* Green background */
+		cursor: pointer; /* Cursor on hover */
+	}
+
+    .next {
+        right:0%;
+    }
+
 }
 
-.wrap-playlists {
-    height: calc(100vh - 290px);
-    overflow-y: scroll;
+@media all and (orientation:landscape) {
+	.spotify-player {
+        width:30vw;
+        height:3.5vw;
+	}
+
+	.navigate-button {
+        width:3.5vw;
+        height:3.5vw;
+		background-size: 3.5vh;
+	}
+
+	.track-slider {
+        left:28%;
+        top:1.5vw;
+        height:.5vw;
+    }
+    
 }
 
-.wrap-playlist {
-    height: calc(100vh - 270px);
-    overflow-y: scroll;
-}
+@media all and (orientation:portrait) {
+	.spotify-player {
+		width:70vw
+	}
 
-.lyrics {
-    white-space: pre
-  }
+	.navigate-button {
+		width:4.5vh;
+		height:4.5vh;
+		background-size: 4.5vh;
+	}
 
-.navigate-button {
-    margin-left:0px;
-    width:4.5vh;
-    height:4.5vh;
-    background-size: 4vh;
-    border: none;
-    margin-right:5px;
-    display:inline-block;
+	.track-slider {
+        left:28%;
+        top:1.75vh;
+        height:0.5vh;
+    }
 }
-
-.track-slider {
-    width:15vw;
-    height:4.5vh;
-    display:inline-block;
-    margin-left:10px;
-    margin-right:10px
-}
-
-.spotify-player {
-    margin-right:25px;
-    margin-bottom:0px;
-    position:fixed;
-    bottom:0;
-    right:0;
-    width:25vw
-}
+  

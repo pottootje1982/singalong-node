@@ -7,7 +7,7 @@
     <RootNamespace>ExpressApp3</RootNamespace>
     <NameOfLastUsedPublishProfile>ftp</NameOfLastUsedPublishProfile>
     <LaunchUrl>authorize</LaunchUrl>
-    <LastActiveSolutionConfig>Debug|Any CPU</LastActiveSolutionConfig>
+    <LastActiveSolutionConfig>Release|Any CPU</LastActiveSolutionConfig>
     <SaveNodeJsSettingsInProjectFile>True</SaveNodeJsSettingsInProjectFile>
   </PropertyGroup>
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
@@ -56,9 +56,12 @@
     <None Include="file.pubxml" />
     <None Include="ftp.pubxml" />
     <None Include="ftp_remote.pubxml" />
+    <Content Include="public\next.png" />
+    <Content Include="public\pause.png" />
     <Content Include="public\play.png">
       <Publish>True</Publish>
     </Content>
+    <Content Include="public\previous.png" />
     <Content Include="public\search.png">
       <Publish>True</Publish>
     </Content>
@@ -70,6 +73,7 @@
     <Content Include="package.json" />
     <Content Include="public\stylesheets\main.css" />
     <Content Include="README.md" />
+    <Compile Include="public\javascripts\navigator.js" />
     <Compile Include="public\javascripts\textual_playlist.js" />
     <Compile Include="public\javascripts\playlist.js" />
     <Compile Include="public\javascripts\init.js" />
@@ -94,6 +98,7 @@
       <SubType>Code</SubType>
       <Publish>True</Publish>
     </Compile>
+    <Content Include="views\navigator.pug" />
     <Content Include="views\playlist.pug">
       <Publish>True</Publish>
     </Content>

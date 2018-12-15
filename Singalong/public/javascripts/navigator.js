@@ -7,7 +7,7 @@ function setTrackSliderPosition(res) {
     $('#toggle-play-button').css('background-image', backIcon);
     if (res.duration_ms)
         $('#track-slider').attr('max', (res.duration_ms / 1000).toFixed(0));
-    if (res.progress_ms)
+    if (res.progress_ms != null)
         $('#track-slider').val(res.progress_ms / 1000);
 }
 

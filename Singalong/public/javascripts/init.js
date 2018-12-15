@@ -19,7 +19,8 @@
 }
 
 $(document).ready(function () {
-    window.history.pushState("", "", '/');
+    if (!window.location.href.endsWith("manual"))
+        window.history.pushState("", "", '/');
 
     $("#collapseTwo").collapse();
     var playlistLinks = $('#playlist-link:first');
