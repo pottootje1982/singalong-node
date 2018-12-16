@@ -9,24 +9,27 @@ block content
     - var playlistId = context && context.playlistId
     - var albumId = context && context.albumId
     - var playlistName = context && context.playlistName
+    br
     div(id='playlist' style='margin-left:3%;width:100%' data-playlist=playlistId data-user-id=userId data-album-id=albumId data-playlist-name=playlistName)
         h1(style='display:inline-block;margin:0;font-size:4em')= playlistName
 
-        p(class='lyrics' style='column-count: 2;-moz-column-count: 2;-webkit-column-count: 2;font-size:1.3em')
-            each track in book
+        div.two-columns
+            each track, index in book
                 - var showAndPlayTrack = invoke('showAndPlayTrack', track.id, track.artist, track.title);
-                a(id='track-link' onclick=showAndPlayTrack)= track.toString()
+                a(id='track-link' onclick=showAndPlayTrack)= (index + 1).toString() + '. ' +  track.toString()
                 br
 
+        br
+        br
         input(id='main-divider' data-access-token=accessToken data-refresh-token=refreshToken type='hidden')
-        each track in book
+        each track, index in book
             div(id=track.id style='width:100%')
                 h2(style='display:inline-block;margin:0;font-size:3em')= track.toString()
                 br
                 if (track.id)
                     button(src='play.png' onclick='playTrack("' + track.id + '")' style='margin-left:0px;width:35px;height:35px;background: url(play.png);background-size: 100%;border: none;margin-right:5px')
             br
-            p(class='lyrics' style='column-count: 2;-moz-column-count: 2;-webkit-column-count: 2;font-size:1.3em')= track.lyrics
+            p.two-columns.lyrics= track.lyrics
             br
             br
 

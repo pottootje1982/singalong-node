@@ -2,7 +2,8 @@
 - var playlistId = context && context.playlistId
 - var albumId = context && context.albumId
 - var buttonStyle =  'width:150px;margin-bottom:5px'
-input.form-control.playlist-control(form='playlist-form' id='sleepTimeInput' type='text' name='sleepTime' value='3000' data-toggle="tooltip" title="Sleep time (ms)" style=buttonStyle)
+input.form-control.playlist-control(form='playlist-form' id='sleepTimeInput' type='text' name='sleepTime' 
+    value='3000' data-toggle="tooltip" title="Sleep time (ms)" style=buttonStyle)
 button.btn.btn-primary.download-button.playlist-control(style=buttonStyle onclick='downloadPlaylist(true)') Download
 form.playlist-control(method='POST' action='songbook' id='playlist-form' target='_blank')
     input(type='hidden' name='accessToken' value=accessToken)

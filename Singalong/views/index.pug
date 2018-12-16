@@ -8,14 +8,14 @@ block content
     script(src="/javascripts/playlist.js")
     script(src="/javascripts/textual_playlist.js")
     script(src="/javascripts/context.js")
-    nav.navbar.navbar-expand-lg.navbar-dark.bg-primary(style="height:80px")
-      h1(style="text-align: center") SingaLong
-      a.nav-link(href='authorize' style='color:white;position:absolute;top:0;right:0;margin-right:10px;margin-top:10px;font-size:1.5em') Login to Spotify
+    nav.navbar.navbar-expand-lg.navbar-dark.bg-primary(style="height:50px")
+      h1(style="text-align:center;position:relative;top:-15px") SingaLong
+      a.nav-link(href='authorize' style='color:white;position:absolute;top:0;right:0;margin:5px;font-size:1em') Login to Spotify
     div(id='main-divider' data-access-token=accessToken data-refresh-token=refreshToken)
         div.alert.alert-danger(id='alert-section' style='display:none')
             p(style="color:rgb(255,0,0)" id='alert-message')
         div(role='tablist' style='width:40%;float:left')
-            include textual_playlist.pug
+            //- include textual_playlist.pug
             include playlists.pug
 
         div(role='tablist' style='padding-left:10px;float:right;width:60%')
