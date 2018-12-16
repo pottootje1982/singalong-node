@@ -11,10 +11,10 @@
             br
 
             div.wrap-playlists
-                a(id='currently-playing-link' href='#' onclick='showCurrentlyPlaying()' style='color:DarkViolet') Currently Playing
+                a.playlist(id='currently-playing-link' href='#' onclick='showCurrentlyPlaying()' style='color:DarkViolet') Currently Playing
                 br
 
                 each playlist in playlists || []
-                    a(id='playlist-link' href='#' onclick='showPlaylist("' + playlist.owner.id + '", "' + playlist.id + '")'
+                    a.playlist(id='playlist-link' href='#' onclick='showPlaylist("' + playlist.owner.id + '", "' + playlist.id + '")'
                         data-user-id=playlist.owner.id data-playlist-id=playlist.id)= playlist.name
                     br

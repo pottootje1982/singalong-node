@@ -1,4 +1,21 @@
-﻿
+﻿@media only screen and (-moz-min-device-pixel-ratio: 2), 
+only screen and (-o-min-device-pixel-ratio: 2/1), 
+only screen and (-webkit-min-device-pixel-ratio: 2), 
+only screen and (min-device-pixel-ratio: 2) {
+	a {
+		font-size: 125%;
+	}
+
+	.playlist {
+		font-size: 175%;
+	}
+
+	.track {
+		font-size: 175%;
+	}
+} 
+
+
 @media all {
 
 	body {
@@ -72,19 +89,19 @@
 @media all and (orientation:landscape) {
 	.spotify-player {
         width:30vw;
-        height:3.5vw;
+        height:2.5vw;
 	}
 
 	.navigate-button {
-        width:3.5vw;
-        height:3.5vw;
-		background-size: 3.5vh;
+        width:2.5vw;
+        height:2.5vw;
+		background-size: 2.5vh;
 	}
 
 	.track-slider {
         left:28%;
-        top:1.5vw;
-        height:.5vw;
+        top:.9vw;
+        height:.9vw;
     }
     
 }
@@ -95,14 +112,14 @@
 	}
 
 	.navigate-button {
-		width:4.5vh;
-		height:4.5vh;
-		background-size: 4.5vh;
+		width:3vh;
+		height:3vh;
+		background-size: 3vh;
 	}
 
 	.track-slider {
         left:28%;
-        top:1.75vh;
+        top:1vh;
         height:0.5vh;
     }
 }
