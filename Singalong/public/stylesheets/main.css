@@ -23,13 +23,20 @@ only screen and (min-device-pixel-ratio: 2) {
 		font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
 	}
 
+	.playlist-control {
+		display:inline-block;
+		width:150px;
+		margin-bottom:5px;
+		margin-left:5px
+	}
+
 	.wrap-playlists {
-		height: calc(100vh - 290px);
+		height: calc(100vh - 360px);
 		overflow-y: scroll;
 	}
 
 	.wrap-playlist {
-		height: calc(100vh - 270px);
+		height: calc(100vh - 290px);
 		overflow-y: scroll;
 	}
 
@@ -39,8 +46,17 @@ only screen and (min-device-pixel-ratio: 2) {
 
 	.spotify-player {
 		position:fixed;
-		bottom:20px;
-		right:20px;
+		bottom:15px;
+		background-color: white;
+		border-color: white;
+		opacity: 0.4;
+		border-width:5px;
+		border-bottom-width:47px;
+		border-style: solid;
+	}
+
+	.spotify-player:hover {
+		opacity: 1.0;
 	}
 
 	.navigate-button {
@@ -100,8 +116,8 @@ only screen and (min-device-pixel-ratio: 2) {
 
 	.track-slider {
         left:28%;
-        top:.9vw;
-        height:.9vw;
+        top:1vw;
+        height:.5vw;
     }
     
 }

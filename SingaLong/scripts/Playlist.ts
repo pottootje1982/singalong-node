@@ -44,6 +44,11 @@ export class Playlist {
         return this.items[nextIndex];
     }
 
+    getTrack(id: string): any {
+        var currentTrack = this.items.find(track => track.id === id);
+        return currentTrack;
+    }
+
     getId() {
         return this.albumId || this.playlistId;
     }

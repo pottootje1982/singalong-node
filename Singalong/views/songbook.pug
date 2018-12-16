@@ -4,7 +4,6 @@ block content
     script(src="/javascripts/context.js")
     script(src="/javascripts/navigator.js")
     script(src="/javascripts/track.js")
-    script(src="/javascripts/client_helpers.js")
     script(src="/javascripts/songbook.js")
     - var userId = context && context.userId
     - var playlistId = context && context.playlistId
@@ -15,7 +14,8 @@ block content
 
         p(class='lyrics' style='column-count: 2;-moz-column-count: 2;-webkit-column-count: 2;font-size:1.3em')
             each track in book
-                a(id='track-link' href='#' + track.id)= track.toString()
+                - var showAndPlayTrack = invoke('showAndPlayTrack', track.id, track.artist, track.title);
+                a(id='track-link' onclick=showAndPlayTrack)= track.toString()
                 br
 
         input(id='main-divider' data-access-token=accessToken data-refresh-token=refreshToken type='hidden')

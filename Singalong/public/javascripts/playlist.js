@@ -8,6 +8,8 @@ function filterOnDownloadStatus() {
 
 function refreshPlaylistControls(res) {
     var context = res.context;
+    $('#create-songbook').prop('disabled', !res.canCreateSongbook);
+
     if (res.updateTextualPlaylist)
         $('#playlistText').val(res.textualPlaylist);
     if (res.playlistHtml)
@@ -44,6 +46,8 @@ function showPlaylist(userId, playlistId) {
         offset: 0
     };
     ajax('/playlist', data, refreshPlaylist);
+    $('#create-songbook').prop('disabled', true);
+    getCurrentTrack();
 }
 
 function removeArtist() {

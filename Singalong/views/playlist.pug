@@ -1,27 +1,13 @@
 ﻿- var userId = context && context.userId
 - var playlistId = context && context.playlistId
 - var albumId = context && context.albumId
+
 div.panel.panel-info.card(id='playlist' data-playlist=playlistId data-user-id=userId data-album-id=albumId)
     div.panel-heading.card-header(role="tab" id="headingFour")
         h3.panel-title
             a.collapsed(id='playlist-title' data-toggle="collapse" href="#collapseFour" aria-expanded="true" aria-controls="collapseFour") Playlist
     div.panel-body.collapse.show.in(id="collapseFour" role="tabpanel" aria-labelledby="headingFour" )
         div.card-body
-            div(style="float:right;width:160px;padding-left:5px")
-                - var buttonStyle =  'width:150px;margin-bottom:5px'
-                input.form-control(form='playlist-form' id='sleepTimeInput' type='text' name='sleepTime' value='3000' data-toggle="tooltip" title="Sleep time (ms)" style=buttonStyle)
-                button.btn.btn-primary.download-button(style=buttonStyle onclick='downloadPlaylist(true)') Download
-                form(method='POST' action='songbook' id='playlist-form' target='_blank')
-                    input(type='hidden' name='accessToken' value=accessToken)
-                    input(type='hidden' name='refreshToken' value=refreshToken)
-                    input(type='hidden' name='userId' value=userId)
-                    input(type='hidden' name='playlistId' value=playlistId)
-                    input(type='hidden' name='albumId' value=albumId)
-                    button.btn.btn-primary(type='submit' target='_blank' style=buttonStyle) Create Songbook
-                button.btn.btn-primary(style=buttonStyle onclick='removeArtist()') Remove Artist
-                button.btn.btn-primary(style=buttonStyle onclick='minimizeTitle()') Minimize Title
-                button.btn.btn-primary(style=buttonStyle onclick='filterOnDownloadStatus()') Not yet downloaded
-
             div.wrap-playlist
                 include tracks.pug
 

@@ -18,6 +18,10 @@ function togglePlay() {
         ajax('/toggle-play', {play:true}, setCurrentTrack);
 }
 
+function getCurrentTrack() {
+    ajax('/current-track', {}, setCurrentTrack);
+}
+
 $(document).ready(function () {
     setInterval(function() {
         var pos = parseInt($('#track-slider').val());

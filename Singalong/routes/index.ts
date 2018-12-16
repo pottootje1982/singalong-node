@@ -7,6 +7,7 @@
 - on active window set current play status:
 - https://stackoverflow.com/questions/6966733/detect-tab-window-activation-in-javascript
 - select device on which to play
+- use memory cache to store playlists
 
 - log can be viewed with: sudo cat /var/log/upstart/singalong.log
 - startup script: /etc/init/singalong.conf
@@ -99,6 +100,7 @@ router.get('/find-in-database', async (req: express.Request, res: express.Respon
         ctx.playlist = null;
         ctx.playlistHtml = playlistHtml;
         ctx.updateTextualPlaylist = true;
+        ctx.canCreateSongbook = true;
         res.json(ctx);
     });
 });
@@ -219,6 +221,7 @@ router.post('/songbook', async (req, res) => {
     var tracks = playlist.items.filter(t => t.lyrics != null);
     context.playlistName = playlist.name;
     res.render('songbook', {
+        invoke: req.query.invoke,
         book: tracks, context: context, accessToken: req.body.accessToken, refreshToken: req.body.refreshToken
     });
 });
@@ -234,21 +237,18 @@ router.get('/current-track', async (req, res) => {
 
 router.get('/play-track', async (req, res) => {
     var spotifyApi: SpotifyApi = res.locals.getSpotifyApi();
-    spotifyApi.doAsyncApiCall(async (api) => {
-        if (req.query.context.albumId) {
-            api.play({
-                context_uri: 'spotify:album:' + req.query.context.albumId,
-                offset: { uri: 'spotify:track:' + req.query.trackId }
-            });
-        } else {
-            api.play({
-                context_uri: 'spotify:user:' + req.query.context.userId + ':playlist:' + req.query.context.playlistId,
-                offset: { uri: 'spotify:track:' + req.query.trackId }
-            });
-        }
-
-    });
-    res.json({});
+    if (req.query.context.albumId) {
+        spotifyApi.api.play({
+            context_uri: 'spotify:album:' + req.query.context.albumId,
+            offset: { uri: 'spotify:track:' + req.query.id }
+        });
+    } else {
+        spotifyApi.api.play({
+            context_uri: 'spotify:user:' + req.query.context.userId + ':playlist:' + req.query.context.playlistId,
+            offset: { uri: 'spotify:track:' + req.query.id }
+        });
+    }
+    res.json(req.query);
 });
 
 router.get('/toggle-play', async (req, res) => {
