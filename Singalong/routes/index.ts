@@ -9,6 +9,10 @@
 - select device on which to play
 - use memory cache to store playlists
 
+- playlist refresh error when switching too fast between playlists
+- play button in playlist doesn't work
+- timer too big in mobile
+
 - log can be viewed with: sudo cat /var/log/upstart/singalong.log
 - startup script: /etc/init/singalong.conf
  */

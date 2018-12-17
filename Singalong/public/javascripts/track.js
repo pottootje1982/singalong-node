@@ -15,12 +15,12 @@ function removeLyrics() {
 
 function playTrack(trackId, artist, title) {
     console.log("Playing track " + trackId);
-    ajax('/play-track', { trackId: trackId }, setCurrentTrack);
+    ajax('/play-track', { id: trackId }, setCurrentTrack);
     getLyrics(artist, title);
 }
 
 function seek(val) {
-    ajax('/seek', {position_ms: val * 1000});
+    ajax('/seek', {position_ms: val});
 }
 
 function customSearch(index, trackId, artist, title) {

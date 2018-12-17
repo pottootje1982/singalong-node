@@ -13,6 +13,10 @@ only screen and (min-device-pixel-ratio: 2) {
 	.track {
 		font-size: 150%;
 	}
+
+	.timer {
+		font-size: 150%;
+	}
 } 
 
 
