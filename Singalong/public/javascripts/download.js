@@ -21,11 +21,11 @@ function downloadPlaylist(fullPlaylist) {
 
 function getTrack(trackElement) {
     trackElement = $(trackElement);
-    return { artist: trackElement.attr('data-artist'), title: trackElement.attr('data-title'), id: trackElement.attr('data-id') };
+    return { artist: trackElement.attr('data-artist'), title: trackElement.attr('data-title'), id: trackElement.prop('id') };
 }
 
-function colorTrack(index, color) {
-    $("#" + index).css({ 'color': color });
+function colorTrack(id, color) {
+    $("#" + id).css({ 'color': color });
 }
 
 function updateDownloadStatus(playlist, sleepTime, index, updateLyrics) {
@@ -33,11 +33,11 @@ function updateDownloadStatus(playlist, sleepTime, index, updateLyrics) {
         var track = result.track;
         if (updateLyrics)
             $('#lyrics-display').val(track.lyrics);
-        console.log('Downloaded ', track, track.lyrics != null, "#" + index);
+        console.log('Downloaded ', track.id, track.lyrics != null, "#" + index);
         if (track.lyrics != null) {
-            colorTrack(index, 'green');
+            colorTrack(track.id, 'green');
         } else {
-            colorTrack(index, 'red');
+            colorTrack(track.id, 'red');
         }
         downloadPlaylistRecursive(playlist.slice(1), sleepTime, index + 1);
     }

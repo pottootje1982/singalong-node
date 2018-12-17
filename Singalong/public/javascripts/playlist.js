@@ -6,6 +6,8 @@ function filterOnDownloadStatus() {
     ajax('/find-in-database', { notDownloaded: true }, refreshPlaylistControls);
 }
 
+var currentPlaylist;
+
 function refreshPlaylistControls(res) {
     var context = res.context;
     $('#create-songbook').prop('disabled', !res.canCreateSongbook);
@@ -29,6 +31,7 @@ function refreshPlaylistControls(res) {
 }
 
 function refreshPlaylist(res) {
+    if (res.context.playlistId != currentPlaylist) return;
     refreshPlaylistControls(res);
     if (res.hasMore)
         ajax('/playlist', res, refreshPlaylist);
@@ -40,6 +43,7 @@ function refreshPlaylist(res) {
 }
 
 function showPlaylist(userId, playlistId) {
+    currentPlaylist = playlistId;
     var data = {
         notDownloaded: false,
         newContext: { userId: userId, playlistId: playlistId },
