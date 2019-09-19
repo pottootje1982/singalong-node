@@ -27,3 +27,12 @@
 /SingaLong/routes/*.js
 /SingaLong/routes/*.map
 /SingaLong/public/javascripts/track_helpers.js.map
+/node_modules
+/routes/*.js
+/routes/*.map
+/scripts/LyricsEngines/*.js
+/scripts/LyricsEngines/*.map
+/scripts/*.js
+/scripts/*.map
+/*.js
+/*.map
