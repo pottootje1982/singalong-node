@@ -71,9 +71,8 @@ export class Track {
 
   static fromSpotify(track): Track {
     if (track == null) return null
-    let artist = track.artists ? track.artists[0].name : ''
-    let title = track.name
-    if (artist === '' && title === '') return null
+    const artist = track.artists ? track.artists[0].name : ''
+    const title = track.name
     if (track.preview_url == null) return null
     let result = new Track(artist, title)
     result.id = track.id
