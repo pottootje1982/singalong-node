@@ -2,11 +2,11 @@
 
 export class LyricsFreakEngine extends LyricsSearchEngine {
     getHit(i: number) {
-        return '.r>a';
+        return '.jfp3ef>a';
     }
 
     constructor() {
-        super('LyricsFreak', 'http://www.lyricsfreak.com', 'https://www.google.nl/search?q=lyricsfreak.com+', '#content_h');
+        super('LyricsFreak', 'http://www.lyricsfreak.com', 'https://www.google.nl/search?q=lyricsfreak.com+', '#content');
     }
 
     protected getAttribute(hit) {

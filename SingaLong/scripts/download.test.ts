@@ -120,9 +120,9 @@ describe("Downloading lyrics", () => {
     });
 
     it('Download track', async() => {
-            var track = await download.downloadTrack(new Track('Beatles', "Yellow Submarine"));
-            assert(track.lyrics.indexOf('') >= 0);
-        });
+        var track = await download.downloadTrack(new Track('Beatles', "Yellow Submarine"));
+        assert(track.lyrics.indexOf('In the town where I was born') >= 0);
+    });
 
     it("Get lyrics from database", async () => {
         await insertTrack('1793 George Harrison', 'Give Me Love (Give Me Peace On Earth)', "Give me love", "Genius");
