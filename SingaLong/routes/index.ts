@@ -22,7 +22,7 @@ var download = require('../scripts/download')
 const router = express.Router()
 import { SpotifyApi } from '../scripts/spotify'
 import { Playlist } from '../scripts/Playlist'
-import { Track } from '../scripts/Track'
+import { Track } from '../scripts/track'
 import playlist_cache = require('./playlist_cache')
 
 router.get('/', (req: express.Request, res: express.Response) => {
