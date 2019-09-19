@@ -1,0 +1,18 @@
+﻿div.panel.panel-info.card
+    div.panel-heading.card-header(role="tab" id="headingOne")
+        h3.panel-title(style="width:610px")
+            a.collapsed(data-toggle="collapse" href="#collapseOne" aria-expanded="false" aria-controls="collapseOne") Freeform playlist
+    div.panel-body.collapse(id="collapseOne" role="tabpanel" aria-labelledby="headingOne")
+        div.card-body
+            textarea.form-control(id='playlistText' form='playlist-form' rows="20" cols="50" name='playlist' style="width:70%;float:left;box-sizing:border-box")= textualPlaylist || 'yellow submarine\nanother day'
+            div(style="margin-left:72%;width:28%")
+                - var buttonStyle =  'width:100%;margin-bottom:5px;white-space:normal;'
+                input.form-control(form='playlist-form' id='sleepTimeInput' type='text' name='sleepTime' value='3000' data-toggle="tooltip" title="Sleep time (ms)" style=buttonStyle)
+                button.btn.btn-primary(id='remove-artist-button' onclick='removeArtistFromTextualPlaylist()' style=buttonStyle) Remove Artist
+                button.btn.btn-primary(id='minimize-title-button' onclick='minimizeTitleFromTextualPlaylist()' style=buttonStyle) Minimize Title
+                button.btn.btn-primary(onclick='filterOnDownloadStatus()' style=buttonStyle) Not yet downloaded
+                button.btn.btn-primary.download-button(style=buttonStyle onclick='downloadPlaylist()') Download
+                form(method='POST' action='songbook' id='playlist-form' target='_blank')
+                    input(type='hidden' name='accessToken' value=accessToken)
+                    input(type='hidden' name='refreshToken' value=refreshToken)
+                    button.btn.btn-primary(type='submit' target='_blank' style=buttonStyle) Create Songbook

@@ -1,7 +1,0 @@
-﻿extends layout
-
-block content
-    form(method='POST' action='proxy' id='proxy')
-        input.form-control(id='web-url' form='proxy' type='text' name='webUrl' placeholder='Enter URL')
-    - var url = webUrl || '';
-    iframe(id='spotify-player' src=url allowtransparency="true" style='width:100%;height:100%;position: absolute;border: none')

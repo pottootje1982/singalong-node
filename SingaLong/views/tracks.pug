@@ -1,0 +1,32 @@
+﻿- var userId = context && context.userId
+- var playlistId = context && context.playlistId
+- var albumId = context && context.albumId
+- var buttonStyle =  'width:150px;margin-bottom:5px'
+input.form-control.playlist-control(form='playlist-form' id='sleepTimeInput' type='text' name='sleepTime' 
+    value='3000' data-toggle="tooltip" title="Sleep time (ms)" style=buttonStyle)
+button.btn.btn-primary.download-button.playlist-control(style=buttonStyle onclick='downloadPlaylist(true)') Download
+form.playlist-control(method='POST' action='songbook' id='playlist-form' target='_blank')
+    input(type='hidden' name='accessToken' value=accessToken)
+    input(type='hidden' name='refreshToken' value=refreshToken)
+    input(type='hidden' name='userId' value=userId)
+    input(type='hidden' name='playlistId' value=playlistId)
+    input(type='hidden' name='albumId' value=albumId)
+    button.btn.btn-primary(id='create-songbook' type='submit' target='_blank' style=buttonStyle) Create Songbook
+button.btn.btn-primary.playlist-control(style=buttonStyle onclick='removeArtist()') Remove Artist
+button.btn.btn-primary.playlist-control(style=buttonStyle onclick='minimizeTitle()') Minimize Title
+button.btn.btn-primary.playlist-control(style=buttonStyle onclick='filterOnDownloadStatus()') Not yet downloaded
+br
+
+- var items = playlist != null ? playlist.items : []
+each track, index in items
+    input(type='hidden' id='userId' name='userId' value=userId)
+    input(type='hidden' id='playlistId' name='playlistId' value=playlistId)
+    if (track.id)
+        - var playTrack = invoke('playTrack', track.id, track.artist, track.title);
+        button(id='play-' + track.id src='play.png' onclick=playTrack style='float:left;width:15px;height:15px;background: url(play.png);background-size: 100%;border: none;margin-right:5px')
+    - var style = !searchedDb ? '' : (track.lyrics == null ? 'color:red' : 'color:green');
+    - var getLyrics = invoke('getLyrics', track.id, track.artist, track.title);
+    a.playlist.track(id=track.id href='#' onclick=getLyrics style=style data-artist=track.artist data-title=track.title)= index+1 + '. ' + track
+    - var customSearch = invoke('customSearch', index, track.id, track.artist, track.title);
+    button(src='search.png' onclick=customSearch style='width:15px;height:15px;background: url(search.png);background-size: 100%;border: none;margin-left:5px')
+    br

@@ -1,0 +1,169 @@
+﻿@media all {
+	.two-columns {
+		column-count: 2;
+		-moz-column-count: 2;
+		-webkit-column-count: 2;
+		font-size:130%;
+	}
+
+	.panel {
+		margin-bottom:5px;
+	}
+
+	.navbar {
+		margin-bottom:5px;
+	}
+
+	body {
+		padding: 5px;
+		font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+	}
+
+	.playlist-control {
+		display:inline-block;
+		width:150px;
+		margin-bottom:5px;
+		margin-left:5px
+	}
+
+	.wrap-playlists {
+		height: calc(100vh - 230px);
+		overflow-y: scroll;
+	}
+
+	.wrap-playlist {
+		height: calc(100vh - 180px);
+		overflow-y: scroll;
+	}
+
+	.lyrics {
+		white-space: pre-wrap
+	  }
+
+	.spotify-player {
+		width:40vw;
+		height:2.5vw;
+		position:fixed;
+		bottom:-5px;
+		background-color: white;
+		border-color: white;
+		opacity: 0.4;
+		border-width:5px;
+		border-bottom-width:47px;
+		border-style: solid;
+	}
+
+	.spotify-player:hover {
+		opacity: 1.0;
+	}
+
+	.navigate-button {
+		width:2.5vw;
+		height:2.5vw;
+		background-size: 2.5vh;
+		border: none;
+		margin-right:5px;
+        display:inline-block;
+        position: relative;
+    }
+
+    .track-slider {
+		top:1vw;
+		height:.5vw;
+		left:18%;
+        display:inline-block;
+		border-radius: 5px; 
+        -webkit-appearance: none;
+        position: absolute;
+		border-radius: 5px;
+		background: #d3d3d3;
+		outline: none;
+		opacity: 0.7;
+		-webkit-transition: opacity .15s ease-in-out;
+		transition: opacity .15s ease-in-out;
+	}
+	
+	.track-slider::-webkit-slider-thumb {
+		-webkit-appearance: none; /* Override default look */
+		appearance: none;
+		width: 1vw; /* Set a specific slider handle width */
+		height: 1vw; /* Slider handle height */
+        border-radius: 50%; 
+        background: #4CAF50; /* Green background */
+		cursor: pointer; /* Cursor on hover */
+	}
+	
+	.track-slider::-moz-range-thumb {
+		width: 1vw; /* Set a specific slider handle width */
+		height: 1vw; /* Slider handle height */
+		background: #4CAF50; /* Green background */
+		cursor: pointer; /* Cursor on hover */
+	}
+
+    .next {
+        right:0%;
+	}
+	
+	.timer {
+		top:0.6vw;
+		right:20%;
+		width:20px;
+		display:inline-block;
+		position: absolute;
+	}
+
+}
+
+  
+@media only screen and (-moz-min-device-pixel-ratio: 2), 
+only screen and (-o-min-device-pixel-ratio: 2/1), 
+only screen and (-webkit-min-device-pixel-ratio: 2), 
+only screen and (min-device-pixel-ratio: 2) {
+	a {
+		font-size: 125%;
+	}
+
+	.playlist {
+		font-size: 150%;
+	}
+
+	.track {
+		font-size: 150%;
+	}
+
+	.timer {
+        top:0.4vw;
+		font-size: 150%;
+	}
+
+	@media all and (orientation:portrait) {
+		.track-slider::-webkit-slider-thumb {
+			width: 1.5vh; /* Set a specific slider handle width */
+			height: 1.5vh; /* Slider handle height */
+		}
+	
+		.spotify-player {
+			width:70vw;
+			bottom:15px;
+		}
+	
+		.navigate-button {
+			width:3vh;
+			height:3vh;
+			background-size: 3vh;
+		}
+	
+		.track-slider {
+			top:1vh;
+			height:0.5vh;
+		}
+	
+		.timer {
+			top:0.6vh;
+		}
+	
+	}
+	
+
+} 
+
