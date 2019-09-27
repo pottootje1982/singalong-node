@@ -1,5 +1,4 @@
 ﻿import { SpotifyApi } from "./spotify";
-import Playlist = require("./Playlist");
 var assert = require('assert');
 
 var refreshToken =
