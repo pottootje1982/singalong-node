@@ -37,3 +37,4 @@
 /*.js
 /*.map
 .npmrc
+.env

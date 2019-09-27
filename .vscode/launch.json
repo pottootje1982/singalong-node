@@ -8,7 +8,8 @@
       "type": "node",
       "request": "launch",
       "name": "NodeJS",
-      "program": "${workspaceFolder}/app.js"
+      "program": "${workspaceFolder}/app.js",
+      "runtimeExecutable": "/home/wouter/.nvm/versions/node/v10.14.2/bin/node"
     },
     {
       "type": "chrome",
@@ -28,20 +29,17 @@
         "--timeout",
         "999999",
         "--colors",
-        "${workspaceFolder}/modules/**/*-spec.ts",
+        "${workspaceFolder}/modules/**/*-spec.ts"
       ],
       "console": "integratedTerminal",
       "internalConsoleOptions": "neverOpen",
       "protocol": "inspector"
-    },
+    }
   ],
   "compounds": [
     {
       "name": "Full-stack",
-      "configurations": [
-        "NodeJS",
-        "Chrome"
-      ]
+      "configurations": ["NodeJS", "Chrome"]
     }
   ]
 }
