@@ -1,6 +1,20 @@
 {
   "files.exclude": {
-    "**/*.js": true,
+    //"**/*.js": true,
+    "routes/index.js": true,
+    "routes/playlist_cache.js": true,
+    "routes/user.js": true,
+    "scripts/download.js": true,
+    "scripts/download.test.js": true,
+    "scripts/google.js": true,
+    "scripts/lyrics_db.js": true,
+    "scripts/lyrics_db.test.js": true,
+    "scripts/Playlist.js": true,
+    "scripts/Playlist.test.js": true,
+    "scripts/spotify.js": true,
+    "scripts/spotify.test.js": true,
+    "scripts/track.js": true,
+    "scripts/track.test.js": true,
     "**/*.js.map": true
   }
 }
