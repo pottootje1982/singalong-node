@@ -8,8 +8,7 @@
       "type": "node",
       "request": "launch",
       "name": "NodeJS",
-      "program": "${workspaceFolder}/app.js",
-      "runtimeExecutable": "/home/wouter/.nvm/versions/node/v10.14.2/bin/node"
+      "program": "${workspaceFolder}/app.js"
     },
     {
       "type": "chrome",
