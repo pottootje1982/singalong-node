@@ -27,4 +27,11 @@ module.exports = class Table {
       .push(item)
       .write()
   }
+
+  update(query, item) {
+    return this.table()
+      .find(query)
+      .assign(item)
+      .write()
+  }
 }

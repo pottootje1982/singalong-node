@@ -1,157 +1,141 @@
-import { Track } from './track'
+import { Track } from "./track"
 
-var knex = null
-var table = 'lyrics'
-
-function createConnection() {
-  try {
-    knex = require('knex')({
-      client: 'mysql',
-      connection: {
-        host: '192.168.1.101',
-        port: 3307,
-        user: 'pottootje1982',
-        password: 'Icf5uEiPRtjXD7GK',
-        database: 'singalong'
-      },
-      useNullAsDefault: true
-    })
-  } catch (err) {
-    console.log('Failed establishing DB connection ' + err)
+export default class LyricsDb {
+  removeAll() {
+    return this.lyricsTable.remove()
   }
-}
 
-export function setTable(tableName: string) {
-  table = tableName
-}
+  lyricsTable: any
 
-createConnection()
+  constructor(lyricsTable) {
+    this.lyricsTable = lyricsTable
+  }
 
-function whereArtistTitle(artist: string, title: string) {
-  var query = knex(table).where('title', 'like', title)
-  if (artist != null) query.andWhere('artist', artist)
-  return query
-}
+  artistTitleQuery(artist: string, title: string) {
+    const query: any = {
+      title: new RegExp(title, "i")
+    }
+    if (artist) query.artist = new RegExp(artist, "i")
+    return query
+  }
 
-export async function query(
-  artist: string,
-  title: string,
-  id?: string
-): Promise<Track[]> {
-  if (title === '' || title == null) return null
-  var query = whereArtistTitle(artist, title)
-  if (id != null) query = query.orWhere('id', id)
-  var results = await query
-  var tracks = []
-  for (let result of results)
-    tracks.push(
-      new Track(result.Artist, result.Title, result.Site, result.Lyrics)
+  async query(artist: string, title: string, id?: string): Promise<Track[]> {
+    if (title === "" || title == null) return null
+    const query = this.artistTitleQuery(artist, title)
+    if (id) query.id = id
+    const results = await this.lyricsTable.get(query)
+    if (results.length === 0) return null
+    return results.map(
+      result =>
+        new Track(
+          result.artist,
+          result.title,
+          result.site,
+          result.lyrics,
+          null,
+          result.id
+        )
     )
-  return results.length === 0 ? null : tracks
-}
-
-export async function queryTrack(track: Track): Promise<Track> {
-  try {
-    var tracks = await query(null, track.getQueryTitle(), track.id)
-    if (tracks == null && track.canClean())
-      tracks = await query(track.cleanArtist(), track.cleanTitle())
-    if (tracks == null) return null
-    var result: Track
-    if (tracks.length === 1) result = tracks[0]
-    else {
-      var filteredTracks = tracks.filter(
-        t =>
-          t.artist.toUpperCase() === track.artist.toUpperCase() &&
-          t.title.toUpperCase() === track.title.toUpperCase()
-      )
-      result = filteredTracks.length === 0 ? tracks[0] : filteredTracks[0]
-    }
-    return result
-  } catch (error) {
-    console.log(error)
-    return null
   }
-}
 
-export async function queryPlaylist(
-  playlist: Track[],
-  notDownloaded: boolean
-): Promise<Track[]> {
-  var query = knex(table)
-  for (let track of playlist) {
-    query = query.orWhere('title', 'like', track.getQueryTitle())
-    if (track.id) query = query.orWhere('id', track.id)
-  }
-  let queryResults: any[] = await query
-  var results: Track[] = []
-  for (let track of playlist) {
-    var matches = queryResults.filter(
-      match =>
-        match.Title.toUpperCase().includes(
-          track.getMinimalTitle().toUpperCase()
-        ) || match.Id === track.id
-    )
-    if (matches.length === 0) {
-      results.push(track)
-      continue
+  async queryTrack(track: Track): Promise<Track> {
+    try {
+      var tracks = await this.query(null, track.title, track.id)
+      if (tracks == null && track.canClean())
+        tracks = await this.query(track.cleanArtist(), track.cleanTitle())
+      if (tracks == null) return null
+      var result: Track
+      if (tracks.length === 1) result = tracks[0]
+      else {
+        var filteredTracks = tracks.filter(
+          t =>
+            t.artist.toUpperCase() === track.artist.toUpperCase() &&
+            t.title.toUpperCase() === track.title.toUpperCase()
+        )
+        result = filteredTracks.length === 0 ? tracks[0] : filteredTracks[0]
+      }
+      return result
+    } catch (error) {
+      console.log(error)
+      return null
     }
-    if (notDownloaded) continue
-    var exactMatch = matches[0]
-    if (matches.length > 1) {
-      exactMatch =
-        matches.find(
-          match =>
-            match.Title.toUpperCase() === track.title.toUpperCase() &&
-            match.Artist.toUpperCase() === track.artist.toUpperCase()
-        ) || exactMatch
-    }
-    track.lyrics = exactMatch.Lyrics
-    results.push(track)
   }
-  return results
-}
 
-export function insert(track: Track, lyrics: string) {
-  let query = knex(table).insert({
-    artist: track.artist,
-    title: track.title,
-    site: track.site || null,
-    lyrics: lyrics,
-    id: track.id || null
-  })
-  return query
-}
-
-export function updateId(track: Track) {
-  var query = whereArtistTitle(track.artist, track.getQueryTitle())
-  if (track.id) query = query.update('id', track.id)
-  return query
-}
-
-export function update(track: Track, lyrics: string) {
-  var query = whereArtistTitle(track.artist, track.getQueryTitle())
-  query = query.update('lyrics', lyrics)
-  return query
-}
-
-export async function updateOrInsert(track: Track, lyrics: string) {
-  var result = await queryTrack(track)
-  if (result == null) await insert(track, lyrics)
-  else await update(result, lyrics)
-}
-
-export async function remove(track: Track) {
-  var foundTrack = await queryTrack(track)
-  if (foundTrack) {
-    await knex(table)
-      .where({
-        artist: track.artist,
-        title: track.title
+  async queryPlaylist(
+    playlist: Track[],
+    notDownloaded?: boolean
+  ): Promise<Track[]> {
+    var query = {
+      $or: playlist.map(track => {
+        const id = track.id
+        return { title: new RegExp(track.title, "i"), id }
       })
-      .del()
+    }
+    let queryResults: any[] = (await this.lyricsTable.get(query)) || []
+    var results: Track[] = []
+    console.log(queryResults)
+    for (let track of playlist) {
+      var matches = queryResults.filter(
+        match =>
+          match.title
+            .toUpperCase()
+            .includes(track.getMinimalTitle().toUpperCase()) ||
+          match.id === track.id
+      )
+      if (matches.length === 0) {
+        results.push(track)
+        continue
+      }
+      if (notDownloaded) continue
+      var exactMatch = matches[0]
+      if (matches.length > 1) {
+        exactMatch =
+          matches.find(
+            match =>
+              match.title.toUpperCase() === track.title.toUpperCase() &&
+              match.artist.toUpperCase() === track.artist.toUpperCase()
+          ) || exactMatch
+      }
+      track.lyrics = exactMatch.lyrics
+      results.push(track)
+    }
+    return results
   }
-}
 
-export function truncate() {
-  return knex(table).truncate()
+  insert(track: Track, lyrics: string) {
+    return this.lyricsTable.store({
+      artist: track.artist,
+      title: track.title,
+      site: track.site || null,
+      lyrics: lyrics,
+      id: track.id || null
+    })
+  }
+
+  updateId(track: Track) {
+    var query = this.artistTitleQuery(track.artist, track.title)
+    if (track.id) query = query.update("id", track.id)
+    return query
+  }
+
+  update(track: Track, lyrics: string) {
+    var query = this.artistTitleQuery(track.artist, track.title)
+    return this.lyricsTable.update(query, { lyrics })
+  }
+
+  async updateOrInsert(track: Track, lyrics: string) {
+    var result = await this.queryTrack(track)
+    if (result == null) await this.insert(track, lyrics)
+    else await this.update(result, lyrics)
+  }
+
+  async remove(track: Track) {
+    var foundTrack = await this.queryTrack(track)
+    if (foundTrack) {
+      return this.lyricsTable.remove({
+        artist: foundTrack.artist,
+        title: foundTrack.title
+      })
+    }
+  }
 }

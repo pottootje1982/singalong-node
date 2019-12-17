@@ -6,8 +6,6 @@ var refreshToken =
 var spotifyApi = new SpotifyApi('localhost:1337', { refreshToken: refreshToken });
 
 describe("Spotify API", async () => {
-    this.timeoutTimer = "10000";
-
     before(async () => {
         await spotifyApi.refreshAccessToken();
     });
