@@ -16,32 +16,39 @@
 - log can be viewed with: sudo cat /var/log/upstart/singalong.log
 - startup script: /etc/init/singalong.conf
  */
-import express = require('express')
-var lyrics_db = require('../scripts/lyrics_db')
-var download = require('../scripts/download')
+import express = require("express")
+var download = require("../scripts/download")
 const router = express.Router()
-import { SpotifyApi } from '../scripts/spotify'
-import { Playlist } from '../scripts/Playlist'
-import { Track } from '../scripts/track'
-import playlist_cache = require('./playlist_cache')
+import { SpotifyApi } from "../scripts/spotify"
+import { Playlist } from "../scripts/Playlist"
+import { Track } from "../scripts/track"
+import LyricsDb from "../scripts/lyrics_db"
+import playlist_cache = require("./playlist_cache")
+const createTable = require("../scripts/db/tables")
 
-router.get('/', (req: express.Request, res: express.Response) => {
+let lyricsDb: LyricsDb
+
+createTable("./mongo-client", "lyrics").then(({ lyricTable }) => {
+  lyricsDb = new LyricsDb(lyricTable)
+})
+
+router.get("/", (req: express.Request, res: express.Response) => {
   var spotifyApi: SpotifyApi = res.locals.getSpotifyApi()
   res.redirect(spotifyApi.getAuthorizeUrl())
 })
 
-router.get('/manual', async (req: express.Request, res: express.Response) => {
-  res.render('index', {})
+router.get("/manual", async (req: express.Request, res: express.Response) => {
+  res.render("index", {})
 })
 
 router.get(
-  '/authorized',
+  "/authorized",
   async (req: express.Request, res: express.Response) => {
     var spotifyApi: SpotifyApi = res.locals.getSpotifyApi()
     var tokens = await spotifyApi.setToken(req.query.code)
     var data = await spotifyApi.api.getUserPlaylists(null, { limit: 50 })
     var playlists = data ? data.body.items : []
-    res.render('index', {
+    res.render("index", {
       playlists: playlists,
       accessToken: tokens.body.access_token,
       refreshToken: tokens.body.refresh_token,
@@ -54,7 +61,7 @@ router.get(
 )
 
 router.post(
-  '/search-playlists',
+  "/search-playlists",
   async (req: express.Request, res: express.Response) => {
     var ctx = req.body
     var spotifyApi: SpotifyApi = res.locals.getSpotifyApi()
@@ -62,12 +69,12 @@ router.post(
       api.searchPlaylists(req.body.playlistQuery)
     )
     ctx.playlists = data.body.playlists.items
-    res.render('index', ctx)
+    res.render("index", ctx)
   }
 )
 
 router.get(
-  '/refreshToken',
+  "/refreshToken",
   async (req: express.Request, res: express.Response) => {
     var spotifyApi: SpotifyApi = res.locals.getSpotifyApi()
     var data = await spotifyApi.refreshAccessToken()
@@ -79,7 +86,7 @@ router.get(
 )
 
 router.get(
-  '/playlist-without-artist',
+  "/playlist-without-artist",
   async (req: express.Request, res: express.Response) => {
     var playlist = Playlist.textualPlaylistToPlaylist(req.query.playlist)
     var textualPlaylist = await playlist.getTitlePlaylist()
@@ -88,11 +95,11 @@ router.get(
 )
 
 router.get(
-  '/minimize-title',
+  "/minimize-title",
   async (req: express.Request, res: express.Response) => {
     var playlist = Playlist.textualPlaylistToPlaylist(
       req.query.playlist,
-      req.query.noArtist === 'true'
+      req.query.noArtist === "true"
     )
     var textualPlaylist = await playlist.getMinimalTitlePlaylist()
     res.json(textualPlaylist)
@@ -101,17 +108,17 @@ router.get(
 
 var cachedUrl
 
-router.get('/proxy', async (req: express.Request, res: express.Response) => {
-  res.render('proxy', { webUrl: cachedUrl })
+router.get("/proxy", async (req: express.Request, res: express.Response) => {
+  res.render("proxy", { webUrl: cachedUrl })
 })
 
-router.post('/proxy', async (req: express.Request, res: express.Response) => {
+router.post("/proxy", async (req: express.Request, res: express.Response) => {
   cachedUrl = req.body.webUrl
-  res.render('proxy', { webUrl: cachedUrl })
+  res.render("proxy", { webUrl: cachedUrl })
 })
 
 router.get(
-  '/find-in-database',
+  "/find-in-database",
   async (req: express.Request, res: express.Response) => {
     var spotifyApi: SpotifyApi = res.locals.getSpotifyApi()
     var ctx: any = req.query
@@ -121,16 +128,16 @@ router.get(
     )
     if (!ctx.playlist) res.json(ctx)
     try {
-      ctx.playlist.items = await lyrics_db.queryPlaylist(
+      ctx.playlist.items = await lyricsDb.queryPlaylist(
         ctx.playlist.items,
-        req.query.notDownloaded === 'true'
+        req.query.notDownloaded === "true"
       )
     } catch (e) {
-      console.log('Error when querying lyrics database:', e)
+      console.log("Error when querying lyrics database:", e)
     }
     ctx.textualPlaylist = await spotifyApi.playlistToText(ctx.playlist.items)
     ctx.searchedDb = true
-    res.render('playlist', ctx, (err, playlistHtml) => {
+    res.render("playlist", ctx, (err, playlistHtml) => {
       ctx.context = ctx.playlist.getContext()
       ctx.playlist = null
       ctx.playlistHtml = playlistHtml
@@ -166,7 +173,7 @@ async function showPlaylist(
     ctx.offset = ctx.playlist.items.length
     ctx.textualPlaylist = await spotifyApi.playlistToText(ctx.playlist.items)
     playlist_cache.store(ctx.playlist)
-    res.render('playlist', ctx, (err, playlistHtml) => {
+    res.render("playlist", ctx, (err, playlistHtml) => {
       ctx.playlistHtml = playlistHtml
       ctx.context = ctx.playlist.getContext()
       ctx.hasMore = ctx.offset < ctx.playlist.totalCount
@@ -192,15 +199,15 @@ function removePlaylist(query) {
   if (query.newContext) query.context = query.newContext
 }
 
-router.get('/playlist', async (req: express.Request, res: express.Response) => {
+router.get("/playlist", async (req: express.Request, res: express.Response) => {
   showPlaylist(res, req.query)
 })
 
-router.get('/currently-playing', async (req, res) => {
+router.get("/currently-playing", async (req, res) => {
   showPlaylist(res, req.query, true)
 })
 
-router.get('/lyrics', async (req, res) => {
+router.get("/lyrics", async (req, res) => {
   var artist = req.query.artist
   var title = req.query.title
   var site = req.query.site
@@ -209,7 +216,7 @@ router.get('/lyrics', async (req, res) => {
   req.query.engines = download.engines
   selectedTrack.id = req.query.id
   if (site == null) {
-    let track = await lyrics_db.queryTrack(selectedTrack)
+    let track = await lyricsDb.queryTrack(selectedTrack)
     selectedTrack.lyrics = track == null ? null : track.lyrics
   } else {
     selectedTrack.lyrics = await download.engines[site].searchLyrics(
@@ -218,47 +225,47 @@ router.get('/lyrics', async (req, res) => {
     )
     selectedTrack.site = site
   }
-  res.render('track', req.query, (err, html) => {
+  res.render("track", req.query, (err, html) => {
     req.query.trackHtml = html
     res.json(req.query)
   })
 })
 
-router.post('/lyrics', async (req, res) => {
+router.post("/lyrics", async (req, res) => {
   let track = new Track(req.query.artist, req.query.title)
   track.id = req.query.id
-  lyrics_db.updateOrInsert(track, req.body.lyrics)
+  lyricsDb.updateOrInsert(track, req.body.lyrics)
   showPlaylist(res, req.query)
 })
 
-router.delete('/lyrics', async (req, res) => {
-  lyrics_db.remove(new Track(req.query.artist, req.query.title))
+router.delete("/lyrics", async (req, res) => {
+  lyricsDb.remove(new Track(req.query.artist, req.query.title))
   showPlaylist(res, req.query)
 })
 
-router.get('/playlist-to-download', async (req, res) => {
+router.get("/playlist-to-download", async (req, res) => {
   var ctx: any = req.query
   ctx.textualPlaylist = req.query.playlist
   ctx.playlist = Playlist.textualPlaylistToPlaylist(ctx.textualPlaylist)
-  res.render('playlist', ctx, (err, playlistHtml) => {
+  res.render("playlist", ctx, (err, playlistHtml) => {
     ctx.context = ctx.playlist.getContext()
     ctx.playlist = null
     ctx.playlistHtml = playlistHtml
-    if (err) showError(res, 'Error rendering playlist', err)
+    if (err) showError(res, "Error rendering playlist", err)
     else res.json(ctx)
   })
 })
 
-router.get('/download-track', async (req, res) => {
+router.get("/download-track", async (req, res) => {
   var track = await download.downloadTrack(
     Track.copy(req.query.track),
     parseInt(req.query.sleepTime),
-    req.query.getCached !== 'false'
+    req.query.getCached !== "false"
   )
   res.json({ track: track })
 })
 
-router.post('/songbook', async (req, res) => {
+router.post("/songbook", async (req, res) => {
   var spotifyApi: SpotifyApi = res.locals.getSpotifyApi()
   var textualPlaylist = req.body.playlist
   var context: any = req.body
@@ -276,7 +283,7 @@ router.post('/songbook', async (req, res) => {
   }
   var tracks = playlist.items.filter(t => t.lyrics != null)
   context.playlistName = playlist.name
-  res.render('songbook', {
+  res.render("songbook", {
     invoke: req.query.invoke,
     book: tracks,
     context: context,
@@ -285,46 +292,48 @@ router.post('/songbook', async (req, res) => {
   })
 })
 
-router.get('/current-track', async (req, res) => {
+router.get("/current-track", async (req, res) => {
   var spotifyApi: SpotifyApi = res.locals.getSpotifyApi()
   var currentTrack = await spotifyApi.api.getMyCurrentPlayingTrack()
   let track: any = Track.fromSpotify(
     currentTrack && currentTrack.body ? currentTrack.body.item : null
   )
-  track.progress_ms = currentTrack.body.progress_ms
-  track.is_playing = currentTrack.body.is_playing
+  if (track) {
+    track.progress_ms = currentTrack.body.progress_ms
+    track.is_playing = currentTrack.body.is_playing
+  }
   res.json(track)
 })
 
-router.get('/play-track', async (req, res) => {
+router.get("/play-track", async (req, res) => {
   var spotifyApi: SpotifyApi = res.locals.getSpotifyApi()
   if (req.query.context.albumId) {
     spotifyApi.api.play({
-      context_uri: 'spotify:album:' + req.query.context.albumId,
-      offset: { uri: 'spotify:track:' + req.query.id }
+      context_uri: "spotify:album:" + req.query.context.albumId,
+      offset: { uri: "spotify:track:" + req.query.id }
     })
   } else {
     spotifyApi.api.play({
       context_uri:
-        'spotify:user:' +
+        "spotify:user:" +
         req.query.context.userId +
-        ':playlist:' +
+        ":playlist:" +
         req.query.context.playlistId,
-      offset: { uri: 'spotify:track:' + req.query.id }
+      offset: { uri: "spotify:track:" + req.query.id }
     })
   }
   res.json(req.query)
 })
 
-router.get('/toggle-play', async (req, res) => {
+router.get("/toggle-play", async (req, res) => {
   var spotifyApi: SpotifyApi = res.locals.getSpotifyApi()
-  var isPlaying = req.query.play === 'true'
+  var isPlaying = req.query.play === "true"
   if (isPlaying) await spotifyApi.api.play()
   else await spotifyApi.api.pause()
   res.json({ is_playing: isPlaying })
 })
 
-router.get('/skip-to-track', async (req, res) => {
+router.get("/skip-to-track", async (req, res) => {
   var context = req.query.context
   var playlist = playlist_cache.get(context.userId, context.playlistId)
   var spotifyApi: SpotifyApi = res.locals.getSpotifyApi()
@@ -332,18 +341,18 @@ router.get('/skip-to-track', async (req, res) => {
   var data = await api.getMyCurrentPlaybackState()
   var id = data.body.item.id
   var track: any
-  if (req.query.withLyrics === 'true') {
-    track = playlist.getNextTrackWithLyrics(id, req.query.next === 'true')
+  if (req.query.withLyrics === "true") {
+    track = playlist.getNextTrackWithLyrics(id, req.query.next === "true")
   } else {
-    track = playlist.getNextTrack(id, req.query.next === 'true')
+    track = playlist.getNextTrack(id, req.query.next === "true")
   }
   api.play({
     context_uri:
-      'spotify:user:' +
+      "spotify:user:" +
       req.query.context.userId +
-      ':playlist:' +
+      ":playlist:" +
       req.query.context.playlistId,
-    offset: { uri: 'spotify:track:' + track.id }
+    offset: { uri: "spotify:track:" + track.id }
   })
 
   track.progress_ms = 0
@@ -351,7 +360,7 @@ router.get('/skip-to-track', async (req, res) => {
   res.json(track)
 })
 
-router.get('/seek', async (req, res) => {
+router.get("/seek", async (req, res) => {
   var query = req.query
   var spotifyApi: SpotifyApi = res.locals.getSpotifyApi()
   await spotifyApi.api.seek(query.position_ms)
@@ -359,7 +368,7 @@ router.get('/seek', async (req, res) => {
 })
 
 function showError(res, message, error) {
-  error = message + ': ' + error
+  error = message + ": " + error
   res.status(500).json({ error: error })
 }
 

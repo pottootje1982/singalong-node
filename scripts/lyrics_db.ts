@@ -21,8 +21,10 @@ export default class LyricsDb {
 
   async query(artist: string, title: string, id?: string): Promise<Track[]> {
     if (title === "" || title == null) return null
-    const query = this.artistTitleQuery(artist, title)
-    if (id) query.id = id
+    let query = this.artistTitleQuery(artist, title)
+    if (id) {
+      query = { $or: [query, { id }] }
+    }
     const results = await this.lyricsTable.get(query)
     if (results.length === 0) return null
     return results.map(
@@ -65,15 +67,18 @@ export default class LyricsDb {
     playlist: Track[],
     notDownloaded?: boolean
   ): Promise<Track[]> {
+    let orSection: any = playlist.map(track => {
+      const id = track.id
+      return [{ title: new RegExp(track.title, "i") }, { id }]
+    })
+    orSection = [].concat(...orSection)
     var query = {
-      $or: playlist.map(track => {
-        const id = track.id
-        return { title: new RegExp(track.title, "i"), id }
-      })
+      $or: orSection
     }
+    console.log(query)
     let queryResults: any[] = (await this.lyricsTable.get(query)) || []
+    console.log(queryResults.length, "******")
     var results: Track[] = []
-    console.log(queryResults)
     for (let track of playlist) {
       var matches = queryResults.filter(
         match =>
