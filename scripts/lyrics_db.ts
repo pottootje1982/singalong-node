@@ -75,9 +75,7 @@ export default class LyricsDb {
     var query = {
       $or: orSection
     }
-    console.log(query)
     let queryResults: any[] = (await this.lyricsTable.get(query)) || []
-    console.log(queryResults.length, "******")
     var results: Track[] = []
     for (let track of playlist) {
       var matches = queryResults.filter(

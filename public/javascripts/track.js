@@ -49,7 +49,6 @@ function updateLyrics(res) {
 }
 
 function getLyrics(id, artist, title, site, expand = true) {
-  console.log(id, artist)
   ajax(
     "/lyrics",
     { artist: artist, title: title, id: id, site: site, expand: expand },
