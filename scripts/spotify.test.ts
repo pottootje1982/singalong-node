@@ -20,7 +20,7 @@ describe("Spotify API", async () => {
         var user = await spotifyApi.api.getMe();
         var playlist = await spotifyApi.getPlaylist(null, user.body.id, '3LWmcclCz2usTAVDBjDdi4'); // Top 2000
         console.log(playlist.items);
-        assert(playlist.items.length === 100);
+        assert.equal(playlist.items.length, 100);
     });
 
     it("Search artist", done => {
@@ -54,8 +54,8 @@ describe("Spotify API", async () => {
     });
 
     it("Get Album", () => {
-        var playlist = [];
-        spotifyApi.addToPlaylist(album.body.tracks.items, playlist);
+        var playlist = new playlist()
+        playlist.addTracks(album.body.tracks);
         assert.equal(9, playlist.length);
         assert.equal("Dire Straits", playlist[0].artist);
         assert.equal("So Far Away - Full Version", playlist[0].title);

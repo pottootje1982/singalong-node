@@ -170,13 +170,13 @@ async function showPlaylist(
       )
     else ctx.playlist = await spotifyApi.getCurrentlyPlaying()
 
-    ctx.offset = ctx.playlist.items.length
+    ctx.offset = ctx.playlist.offset
     ctx.textualPlaylist = await spotifyApi.playlistToText(ctx.playlist.items)
     playlist_cache.store(ctx.playlist)
     res.render("playlist", ctx, (err, playlistHtml) => {
       ctx.playlistHtml = playlistHtml
       ctx.context = ctx.playlist.getContext()
-      ctx.hasMore = ctx.offset < ctx.playlist.totalCount
+      ctx.hasMore = ctx.playlist.hasMore()
       ctx.playlist = null
       ctx.updateTextualPlaylist = true
       res.json(ctx)

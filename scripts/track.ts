@@ -76,7 +76,7 @@ export class Track {
     if (track == null) return null
     const artist = track.artists ? track.artists[0].name : ""
     const title = track.name
-    if (track.preview_url == null) return null
+    // if (track.preview_url == null) return null
     let result = new Track(artist, title)
     result.id = track.id
     result.duration_ms = track.duration_ms

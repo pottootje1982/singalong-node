@@ -1,4 +1,4 @@
-import { Track } from '../scripts/track'
+import { Track } from "../scripts/track"
 
 export class Playlist {
   userId: string
@@ -9,13 +9,14 @@ export class Playlist {
   items: Track[]
 
   totalCount: number
+  offset: number = 0
 
   constructor(
     userId: string,
     playlistId: string,
     albumId: string,
     name,
-    playlist: Track[],
+    playlist: Track[] = [],
     totalCount: number = 0
   ) {
     this.userId = userId
@@ -81,17 +82,17 @@ export class Playlist {
   }
 
   static getTitlePlaylist(playlist: Track[]) {
-    var textualPlaylist = ''
+    var textualPlaylist = ""
     for (let track of playlist) {
-      textualPlaylist += track.title + '\n'
+      textualPlaylist += track.title + "\n"
     }
     return textualPlaylist
   }
 
   static getMinimalTitlePlaylist(playlist: Track[]) {
-    var textualPlaylist = ''
+    var textualPlaylist = ""
     for (let track of playlist) {
-      textualPlaylist += track.toString(true) + '\n'
+      textualPlaylist += track.toString(true) + "\n"
     }
     return textualPlaylist
   }
@@ -100,7 +101,7 @@ export class Playlist {
     textualPlaylist: string,
     noArtist: boolean = false
   ): Playlist {
-    var textualTracks = textualPlaylist.trim().split('\n')
+    var textualTracks = textualPlaylist.trim().split("\n")
     var tracks = []
     for (let trackString of textualTracks) {
       var track = noArtist
@@ -109,5 +110,52 @@ export class Playlist {
       if (track != null) tracks.push(track)
     }
     return new Playlist(null, null, null, null, tracks)
+  }
+
+  addTracks(items: any) {
+    this.offset += items.length
+    const tracks = Playlist.createTracks(items)
+    this.items = this.items.concat(tracks)
+  }
+
+  hasMore(): boolean {
+    return this.offset < this.totalCount
+  }
+
+  static createTracks(items): Track[] {
+    var tracks = []
+    for (let item of items) {
+      var track = Track.fromSpotify(item.track || item)
+      if (track == null) continue
+      tracks.push(track)
+    }
+    return tracks
+  }
+
+  private static createFromRawSpotifyReply(
+    userId: string,
+    playlistId: string,
+    albumId: string,
+    body: any
+  ) {
+    const tracks = this.createTracks(body.tracks.items)
+    const playlist = new Playlist(
+      userId,
+      playlistId,
+      albumId,
+      body.name,
+      tracks,
+      body.tracks.total
+    )
+    playlist.offset = body.tracks.limit
+    return playlist
+  }
+
+  static createFromAlbum(albumId: string, body: any) {
+    return this.createFromRawSpotifyReply(null, null, albumId, body)
+  }
+
+  static createFromPlaylist(userId: string, playlistId: string, body: any) {
+    return this.createFromRawSpotifyReply(userId, playlistId, null, body)
   }
 }

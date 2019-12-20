@@ -1,17 +1,17 @@
-﻿import SpotifyWebApi = require('spotify-web-api-node')
-import { Track } from './track'
-import { Playlist } from './Playlist'
+﻿import SpotifyWebApi = require("spotify-web-api-node")
+import { Track } from "./track"
+import { Playlist } from "./Playlist"
 
 var scopes = [
-    'user-read-private',
-    'user-read-email',
-    'user-read-currently-playing',
-    'user-read-playback-state',
-    'playlist-read-private',
-    'user-modify-playback-state'
+    "user-read-private",
+    "user-read-email",
+    "user-read-currently-playing",
+    "user-read-playback-state",
+    "playlist-read-private",
+    "user-modify-playback-state"
   ],
-  clientId = '3a2c92864fe34fdfb674580a0901568e',
-  state = 'some-state-of-my-choice'
+  clientId = "3a2c92864fe34fdfb674580a0901568e",
+  state = "some-state-of-my-choice"
 
 const playlistLimit = 100
 
@@ -21,17 +21,17 @@ export class SpotifyApi {
   constructor(host: string, tokens: any) {
     this.api = new SpotifyWebApi({
       clientId: clientId,
-      clientSecret: 'c09a0bdffa7d452ca4fbe14c53d32f94',
-      redirectUri: 'http://' + host + '/authorized'
+      clientSecret: "c09a0bdffa7d452ca4fbe14c53d32f94",
+      redirectUri: "http://" + host + "/authorized"
     })
     this.api.setAccessToken(tokens.accessToken)
     this.api.setRefreshToken(tokens.refreshToken)
   }
 
   playlistToText(playlist: Track[]) {
-    var textualPlaylist = ''
+    var textualPlaylist = ""
     for (let track of playlist) {
-      textualPlaylist += track.toString() + '\n'
+      textualPlaylist += track.toString() + "\n"
     }
     return textualPlaylist
   }
@@ -57,68 +57,48 @@ export class SpotifyApi {
     var data
     if (playlist == null) {
       data = await this.api.getPlaylist(userId, playlistId)
-      var tracks = []
-      this.addToPlaylist(data.body.tracks.items, tracks)
-      playlist = new Playlist(
-        userId,
-        playlistId,
-        null,
-        data.body.name,
-        tracks,
-        data.body.tracks.total
-      )
+      playlist = Playlist.createFromPlaylist(userId, playlistId, data.body)
     } else {
       data = await this.api.getPlaylistTracks(userId, playlistId, {
         offset: offset,
         limit: playlistLimit,
-        fields: 'items'
+        fields: "items"
       })
-      this.addToPlaylist(data.body.items, playlist.items)
+      playlist.addTracks(data.body.items)
     }
     return playlist
   }
 
   async getAlbum(albumId: string): Promise<Playlist> {
-    var playlist = []
     var data = await this.api.getAlbum(albumId)
-    this.addToPlaylist(data.body.tracks.items, playlist)
-    return new Playlist(null, null, albumId, data.body.name, playlist)
-  }
-
-  addToPlaylist(items, playlist: Track[]): number {
-    for (let item of items) {
-      var track = Track.fromSpotify(item.track || item)
-      if (track == null) continue
-      playlist.push(track)
-    }
-    return items.length
+    return Playlist.createFromAlbum(albumId, data.body)
   }
 
   getAuthorizeUrl() {
     // credentials are optional
     let authorizeUrl = this.api.createAuthorizeURL(scopes, state)
-    console.log('Autorize url: ' + authorizeUrl)
+    console.log("Autorize url: " + authorizeUrl)
     return authorizeUrl
   }
 
   setToken(code) {
-    console.log('Code is: ' + code)
+    console.log("Code is: " + code)
     return this.api
       .authorizationCodeGrant(code)
       .then(data => {
         // Set the access token on the API object to use it in later calls
-        console.log('Token is: ' + data.body['access_token'])
-        this.api.setAccessToken(data.body['access_token'])
-        this.api.setRefreshToken(data.body['refresh_token'])
-        var expireInterval = data.body['expires_in']
+        console.log("Token is: " + data.body["access_token"])
+        this.api.setAccessToken(data.body["access_token"])
+        this.api.setRefreshToken(data.body["refresh_token"])
+        var expireInterval = data.body["expires_in"]
         console.log(
-          'Refreshed token. It now expires in ' + expireInterval + ' seconds!'
+          "Refreshed token. It now expires in " + expireInterval + " seconds!"
         )
 
         return data
       })
       .catch(ex => {
-        console.log('Spotify: something went wrong setting token!\n', ex)
+        console.log("Spotify: something went wrong setting token!\n", ex)
       })
   }
 
@@ -126,15 +106,15 @@ export class SpotifyApi {
     let api = this.api
     return api.refreshAccessToken().then(
       data => {
-        console.log('The access token has been refreshed!')
+        console.log("The access token has been refreshed!")
 
         // Save the access token so that it's used in future calls
-        api.setAccessToken(data.body['access_token'])
+        api.setAccessToken(data.body["access_token"])
 
         return data
       },
       err => {
-        console.log('Could not refresh access token', err)
+        console.log("Could not refresh access token", err)
       }
     )
   }
@@ -144,12 +124,12 @@ export class SpotifyApi {
     var context = currentTrack.body.context
     var tokens
     if (!context) return Playlist.Empty()
-    if (context.type === 'album') {
-      tokens = context.uri.split(':')
+    if (context.type === "album") {
+      tokens = context.uri.split(":")
       var albumId = tokens[2]
       return await this.getAlbum(albumId)
-    } else if (context.type === 'playlist') {
-      tokens = context.uri.split(':')
+    } else if (context.type === "playlist") {
+      tokens = context.uri.split(":")
       let userId = tokens[2]
       let playlistId = tokens[4]
       return await this.getPlaylist(null, userId, playlistId)
@@ -162,7 +142,7 @@ export class SpotifyApi {
       return await func(this.api)
     } catch (err) {
       console.log(
-        'Error executing async Spotify API call ' + func.name + ': ',
+        "Error executing async Spotify API call " + func.name + ": ",
         err.message
       )
     }
@@ -174,7 +154,7 @@ export class SpotifyApi {
       return func(this.api)
     } catch (err) {
       console.log(
-        'Error executing Spotify API call ' + func.name + ': ',
+        "Error executing Spotify API call " + func.name + ": ",
         err.message
       )
     }
