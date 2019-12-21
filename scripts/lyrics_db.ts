@@ -69,7 +69,7 @@ export default class LyricsDb {
   ): Promise<Track[]> {
     let orSection: any = playlist.map(track => {
       const id = track.id
-      return [{ title: new RegExp(track.title, "i") }, { id }]
+      return [{ title: new RegExp(track.getMinimalTitle(), "i") }, { id }]
     })
     orSection = [].concat(...orSection)
     var query = {
