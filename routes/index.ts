@@ -17,19 +17,21 @@
 - startup script: /etc/init/singalong.conf
  */
 import express = require("express")
-var download = require("../scripts/download")
 const router = express.Router()
 import { SpotifyApi } from "../scripts/spotify"
 import { Playlist } from "../scripts/Playlist"
 import { Track } from "../scripts/track"
 import LyricsDb from "../scripts/lyrics_db"
 import playlist_cache = require("./playlist_cache")
+import LyricsDownloader from "../scripts/download"
 const createTable = require("../scripts/db/tables")
 
 let lyricsDb: LyricsDb
+let lyricsDownloader: LyricsDownloader
 
 createTable("./mongo-client", "lyrics").then(({ lyricTable }) => {
   lyricsDb = new LyricsDb(lyricTable)
+  lyricsDownloader = new LyricsDownloader(lyricsDb)
 })
 
 router.get("/", (req: express.Request, res: express.Response) => {
@@ -213,13 +215,13 @@ router.get("/lyrics", async (req, res) => {
   var site = req.query.site
   var selectedTrack = new Track(artist, title, site)
   req.query.selectedTrack = selectedTrack
-  req.query.engines = download.engines
+  req.query.engines = lyricsDownloader.engines
   selectedTrack.id = req.query.id
   if (site == null) {
     let track = await lyricsDb.queryTrack(selectedTrack)
     selectedTrack.lyrics = track == null ? null : track.lyrics
   } else {
-    selectedTrack.lyrics = await download.engines[site].searchLyrics(
+    selectedTrack.lyrics = await lyricsDownloader.engines[site].searchLyrics(
       artist,
       title
     )
@@ -257,7 +259,7 @@ router.get("/playlist-to-download", async (req, res) => {
 })
 
 router.get("/download-track", async (req, res) => {
-  var track = await download.downloadTrack(
+  var track = await lyricsDownloader.downloadTrack(
     Track.copy(req.query.track),
     parseInt(req.query.sleepTime),
     req.query.getCached !== "false"
