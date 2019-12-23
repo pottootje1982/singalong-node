@@ -13,13 +13,10 @@ describe("Lyrics DB", () => {
     )
   }
 
-  before(async () => {
+  beforeEach(async () => {
     const { lyricTable } = await createTable("./mongo-client", "testLyrics")
     lyricsDb = new LyricsDb(lyricTable)
-  })
-
-  after(async () => {
-    lyricsDb.removeAll()
+    await lyricsDb.removeAll()
   })
 
   it("Insert and get Beatles lyrics", async () => {
@@ -31,10 +28,15 @@ describe("Lyrics DB", () => {
     )
     var tracks = await lyricsDb.query("The Beatles", "Yellow Submarine")
     assert(tracks[0].lyrics.indexOf("In the town where I was born") >= 0)
-    lyricsDb.remove(tracks[0])
   })
 
   it("Get Beatles lyrics like", async () => {
+    await insertTrack(
+      "The Beatles",
+      "Yellow Submarine",
+      "In the town where I was born",
+      "1234"
+    )
     await insertTrack(
       "The Beatles 2",
       "Yellow Submarine",
@@ -51,11 +53,6 @@ describe("Lyrics DB", () => {
     tracks = await lyricsDb.query("The Beatles", "Submarine", "1234")
     assert.equal(tracks[0].artist, "The Beatles")
     assert.equal(tracks[0].id, "1234")
-    assert(tracks[0].lyrics.indexOf("In the town where I was born") >= 0)
-  })
-
-  it("Get Beatles - Yellow Submarine lyrics", async () => {
-    var tracks = await lyricsDb.query(null, "Yellow Submarine")
     assert(tracks[0].lyrics.indexOf("In the town where I was born") >= 0)
   })
 

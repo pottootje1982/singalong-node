@@ -21,7 +21,7 @@ export class Track {
     id?: string
   ) {
     this.artist = artist ? artist.trim() : ""
-    this.title = title.trim()
+    this.title = title ? title.trim() : ""
     this.site = site
     this.lyrics = lyrics
     this.fullTrackTitle = fullTrackTitle

@@ -1,4 +1,5 @@
 ﻿import { SpotifyApi } from "./spotify";
+import {Playlist} from "./Playlist"
 var assert = require('assert');
 
 var refreshToken =
@@ -54,11 +55,11 @@ describe("Spotify API", async () => {
     });
 
     it("Get Album", () => {
-        var playlist = new playlist()
-        playlist.addTracks(album.body.tracks);
-        assert.equal(9, playlist.length);
-        assert.equal("Dire Straits", playlist[0].artist);
-        assert.equal("So Far Away - Full Version", playlist[0].title);
+        var playlist = new Playlist()
+        playlist.addTracks(album.body.tracks.items);
+        assert.equal(9, playlist.items.length);
+        assert.equal("Dire Straits", playlist.items[0].artist);
+        assert.equal("So Far Away - Full Version", playlist.items[0].title);
     });
 
 

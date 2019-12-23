@@ -1,20 +1,27 @@
 ﻿import assert = require("assert")
-var lyrics_db = require("./lyrics_db")
-import download = require("./download")
+import LyricsDownloader from "./download"
+import { LyricsSearchEngine } from "./LyricsEngines/LyricsSearchEngine"
 import { Track } from "./track"
 import { MetroLyricsEngine } from "./LyricsEngines/MetroLyricsEngine"
 
-function insertTrack(artist, title, lyrics, site?: string) {
-  return lyrics_db.insert(new Track(artist, title, site), lyrics)
-}
+import LyricsDb from "./lyrics_db"
+const createTable = require("./db/tables")
 
 describe("Downloading lyrics", () => {
-  this.timeout = "100000"
+  let lyricsDb: LyricsDb
+  let lyricsDownloader: LyricsDownloader
+  var engine: LyricsSearchEngine
 
-  var engine = download.engines["MusixMatch"]
+  function insertTrack(artist, title, lyrics, site?: string) {
+    return lyricsDb.insert(new Track(artist, title, site), lyrics)
+  }
 
   before(async () => {
-    //await lyrics_db.truncate();
+    const { lyricTable } = await createTable("./mongo-client", "testLyrics")
+    lyricsDb = new LyricsDb(lyricTable)
+    await lyricsDb.removeAll()
+    lyricsDownloader = new LyricsDownloader(lyricsDb)
+    engine = lyricsDownloader.engines["MusixMatch"]
   })
 
   it("Search Euson - Leon", async () => {
@@ -22,71 +29,48 @@ describe("Downloading lyrics", () => {
     assert.equal(content, null)
   })
 
-  it("Search David McWilliams", async () => {
-    var content = await engine.searchLyrics(
-      "David McWilliams",
-      "Can I Get There By Candlelight"
-    )
-    assert(
-      content.indexOf("This is the way to the rolling drums") >= 0,
-      content
-    )
-    assert(content.indexOf("Made with love & passion in Italy") === -1)
-  })
-
-  it("Search Frank Zappa", async () => {
-    var content = await engine.searchLyrics("Frank Zappa", "Dancin fool")
-    assert(content.indexOf("Don't know much about dancin'") >= 0, content)
-  })
-
   it("Search Beatles Genius", async function() {
     this.timeout(5000)
-    var content = await download.engines["Genius"].searchLyrics(
+    var content = await lyricsDownloader.engines["Genius"].searchLyrics(
       "beatles",
       "yellow submarine"
     )
-    console.log(content)
     assert(content.indexOf("In the town where I was born") >= 0, content)
   })
 
-  it("Search Beatles Metro", async () => {
-    var content = await new MetroLyricsEngine().searchLyrics(
+  it("Search Beatles MusixMatch", async () => {
+    var content = await lyricsDownloader.engines["MusixMatch"].searchLyrics(
       "beatles",
       "yellow submarine"
     )
-    console.log(content)
     assert(content.indexOf("In the town where I was born") >= 0, content)
   })
 
-  // AZ is banned
-  //it("Search Beatles AZ", async () => {
-  //    var content = await download.engines["AzLyrics"].searchLyrics("beatles", "yellow submarine");
-  //    console.log(content);
-  //    assert(content.indexOf('In the town where I was born') >= 0, content);
-  //});
-
-  it("Search paul simon", async () => {
-    var content = await engine.searchLyrics("paul simon", "graceland")
-    assert(content.indexOf("The Mississippi Delta was shining") > -1)
+  it("Search Beatles AZ", async () => {
+    var content = await lyricsDownloader.engines["AzLyrics"].searchLyrics(
+      "beatles",
+      "yellow submarine"
+    )
+    assert(content.indexOf("In the town where I was born") >= 0, content)
   })
 
   it("Search with LyricsFreak", async () => {
-    var content = await download.engines["LyricsFreak"].searchLyrics(
+    var content = await lyricsDownloader.engines["LyricsFreak"].searchLyrics(
       "Bonnie Raitt",
       "Angel from Montgomery"
     )
     assert(content.indexOf("I am an old woman\n") > -1)
   })
 
-  it("Search Paul simon", async () => {
-    var content = await engine.searchLyrics("paul simon", "graceland")
-    console.log(content)
-    assert(content.indexOf("The Mississippi Delta was shining") > -1)
+  it("test", () => {
+    ;/No hell below us/i.test(
+      "[Verse 1]\nImagine there's no heaven\nIt's easy if you try\nNo hell below us\nAbove us, only sky\nImagine all the people living for today\nAh\nImagine there's no countries\nIt isn't hard to do\nNothing to kill or die for\nAnd no religion too\nImagine all the people living life in peace\nYou\n\n[Chorus]\nYou may say I'm a dreamer\nBut I'm not the only one\nI hope some day you'll join us\nAnd the world will be as one\n\n[Verse 2]\nImagine no possessions\nI wonder if you can\nNo need for greed or hunger\nA brotherhood of man\nImagine all the people sharing all the world\nYou\n\n[Chorus]\nYou may say I'm a dreamer\nBut I'm not the only one\nI hope some day you'll join us\nAnd the world will live as one"
+    )
   })
 
   it("Search multiple lyrics", async function() {
     this.timeout(20000)
-    var book = await download.createSongbook(
+    var book = await lyricsDownloader.createSongbook(
       "bladieblablabla\n" +
         "Beatles - Hard Day's night\n" +
         "John Lennon -  Imagine\n" +
@@ -95,41 +79,43 @@ describe("Downloading lyrics", () => {
         "beatles - yellow submarine\n",
       3000
     )
+    console.log(book)
     assert.equal("bladieblablabla", book[0].title)
     assert.equal(null, book[0].site)
     assert.equal(null, book[0].lyrics)
     assert(
-      book[1].lyrics.indexOf("It's been a hard day's night") >= 0,
+      /It's been a hard day's night/i.test(book[1].lyrics),
       "It's been a hard day's night wasn't found"
     )
     assert.equal("Beatles", book[1].artist)
     assert.equal("Hard Day's night", book[1].title)
-    assert.equal("Genius", book[1].site)
+    assert.equal("AzLyrics", book[1].site)
+    console.log(book[2].lyrics)
     assert(
-      book[2].lyrics.indexOf("Imagine there's no heaven") >= 0,
-      "Imagine there's no heaven wasn't found"
+      /Imagine there's no heaven/i.test(book[2].lyrics),
+      "Imagine wasn't found"
     )
     assert.equal("John Lennon", book[2].artist)
     assert.equal("Imagine", book[2].title)
-    assert.equal("MusixMatch", book[2].site)
-    assert(book[3].lyrics.indexOf("Georgia") >= 0, "Georgia wasn't found")
+    assert.equal("Genius", book[2].site)
+    assert(/Georgia/i.test(book[3].lyrics), "Georgia wasn't found")
     assert.equal("Ray Charles", book[3].artist)
     assert.equal("Georgia", book[3].title)
-    assert.equal("LyricsFreak", book[3].site)
+    assert.equal("MusixMatch", book[3].site)
     assert(
-      book[4].lyrics.indexOf("The Mississippi Delta was shining") >= 0,
+      /The Mississippi Delta was shining/i.test(book[4].lyrics),
       "Graceland wasn't found"
     )
     assert.equal("paul simon", book[4].artist)
     assert.equal("graceland", book[4].title)
-    assert.equal("Genius", book[4].site)
+    assert.equal("LyricsFreak", book[4].site)
     assert(
-      book[5].lyrics.indexOf("In the town where I was born") >= 0,
+      /In the town where I was born/.test(book[5].lyrics),
       "Yellow submarine wasn't found"
     )
     assert.equal("beatles", book[5].artist)
     assert.equal("yellow submarine", book[5].title)
-    assert.equal("MusixMatch", book[5].site)
+    assert.equal("AzLyrics", book[5].site)
   })
 
   it("Search unexisting lyrics", async () => {
@@ -138,7 +124,7 @@ describe("Downloading lyrics", () => {
   })
 
   it("Search unexisting lyrics Genius", async () => {
-    var lyrics = await download.engines["Genius"].searchLyrics(
+    var lyrics = await lyricsDownloader.engines["Genius"].searchLyrics(
       "bladieblablabla",
       ""
     )
@@ -154,7 +140,7 @@ describe("Downloading lyrics", () => {
   })
 
   it("Download track", async () => {
-    var track = await download.downloadTrack(
+    var track = await lyricsDownloader.downloadTrack(
       new Track("Beatles", "Yellow Submarine")
     )
     assert(track.lyrics.indexOf("In the town where I was born") >= 0)
@@ -188,7 +174,7 @@ describe("Downloading lyrics", () => {
       new Track("John Lennon", "Imagine"),
       new Track("bladieblablabla", "")
     ]
-    playlist = await download.getLyricsFromDatabase(playlist, false)
+    playlist = await lyricsDownloader.getLyricsFromDatabase(playlist, false)
     assert.equal(playlist.length, 3)
     assert(
       playlist[0].lyrics.indexOf("Give me love") >= 0,

@@ -12,10 +12,10 @@ export class Playlist {
   offset: number = 0
 
   constructor(
-    userId: string,
-    playlistId: string,
-    albumId: string,
-    name,
+    userId: string = null,
+    playlistId: string = null,
+    albumId: string = null,
+    name: string = null,
     playlist: Track[] = [],
     totalCount: number = 0
   ) {
