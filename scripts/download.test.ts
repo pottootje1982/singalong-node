@@ -62,12 +62,6 @@ describe("Downloading lyrics", () => {
     assert(content.indexOf("I am an old woman\n") > -1)
   })
 
-  it("test", () => {
-    ;/No hell below us/i.test(
-      "[Verse 1]\nImagine there's no heaven\nIt's easy if you try\nNo hell below us\nAbove us, only sky\nImagine all the people living for today\nAh\nImagine there's no countries\nIt isn't hard to do\nNothing to kill or die for\nAnd no religion too\nImagine all the people living life in peace\nYou\n\n[Chorus]\nYou may say I'm a dreamer\nBut I'm not the only one\nI hope some day you'll join us\nAnd the world will be as one\n\n[Verse 2]\nImagine no possessions\nI wonder if you can\nNo need for greed or hunger\nA brotherhood of man\nImagine all the people sharing all the world\nYou\n\n[Chorus]\nYou may say I'm a dreamer\nBut I'm not the only one\nI hope some day you'll join us\nAnd the world will live as one"
-    )
-  })
-
   it("Search multiple lyrics", async function() {
     this.timeout(20000)
     var book = await lyricsDownloader.createSongbook(

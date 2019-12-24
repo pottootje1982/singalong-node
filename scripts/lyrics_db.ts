@@ -117,8 +117,7 @@ export default class LyricsDb {
 
   updateId(track: Track) {
     var query = this.artistTitleQuery(track.artist, track.title)
-    if (track.id) query = query.update("id", track.id)
-    return query
+    if (track.id) return this.lyricsTable.update(query, { id: track.id })
   }
 
   update(track: Track, lyrics: string) {
