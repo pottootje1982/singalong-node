@@ -1,5 +1,4 @@
-import express = require('express')
-const router = express.Router()
+const router = require('./router')()
 
 import { SpotifyApi } from '../scripts/spotify'
 
@@ -16,7 +15,6 @@ router.get('/:id', async (req, res) => {
         }))
       )
     )
-    .catch((err) => res.status(err.statusCode || 500).json(err))
 })
 
-export default router
+export default router.express()

@@ -1,13 +1,13 @@
-import express = require('express')
-const router = express.Router()
+const router = require('./router')()
 
 import { SpotifyApi } from '../scripts/spotify'
 
-router.get('/', async (req: express.Request, res: express.Response) => {
+router.get('/', async (req, res) => {
   var spotifyApi: SpotifyApi = res.locals.getSpotifyApi()
-  var data = await spotifyApi.api.getUserPlaylists(null, { limit: 50 })
-  var playlists = data ? data.body.items : []
-  res.json(playlists)
+  return spotifyApi.api.getUserPlaylists(null, { limit: 50 }).then((data) => {
+    var playlists = data ? data.body.items : []
+    res.json(playlists)
+  })
 })
 
-export default router
+export default router.express()
