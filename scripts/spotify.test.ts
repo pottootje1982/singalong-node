@@ -4,7 +4,7 @@ var assert = require('assert');
 
 var refreshToken =
     'AQAGNwDVuUsQDUaiSCDpkjTyRczEr5ekeKZ_0CFigXNQUEswWvjxPt_VIwv8mRM1Df64GUHK8RwfUk2Zmhpd1cN3_8xDVABqqtl90FEZ1jZUykPKiH2y-Izpust2fZMqXT4';
-var spotifyApi = new SpotifyApi('localhost:1337', { refreshToken: refreshToken });
+var spotifyApi = new SpotifyApi('http://localhost:1337', { refreshToken: refreshToken });
 
 describe("Spotify API", async () => {
     before(async () => {

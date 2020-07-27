@@ -2,10 +2,12 @@ import React, { useEffect, useState } from 'react'
 import List from '@material-ui/core/List'
 import ListItem from '@material-ui/core/ListItem'
 import ListItemText from '@material-ui/core/ListItemText'
-import server from '../server'
+import server, { setToken } from '../server'
 
-function Playlists({ setPlaylist }) {
+function Playlists({ setPlaylist, token }) {
   const [playlists, setPlaylists] = useState([])
+
+  setToken(token)
 
   useEffect(() => {
     server

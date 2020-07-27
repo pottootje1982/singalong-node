@@ -4,6 +4,7 @@ import path = require('path')
 
 import routes from './routes/index'
 import users from './routes/user'
+import authorize from './routes/authorize'
 import playlist from './routes/playlist'
 import playlists from './routes/playlists'
 var bodyParser = require('body-parser')
@@ -39,7 +40,10 @@ app.use((req, res, next) => {
   }
   res.locals.getSpotifyApi = (): SpotifyApi => {
     if (!res.locals.api)
-      res.locals.api = new SpotifyApi(req.headers.host, getTokens(req))
+      res.locals.api = new SpotifyApi(
+        `http://${req.headers.host}`,
+        getTokens(req)
+      )
     return res.locals.api
   }
   next()
@@ -55,39 +59,19 @@ app.use(cors())
 
 app.use('/', routes)
 app.use('/users', users)
+app.use('/v2/authorize', authorize)
 app.use('/v2/playlist', playlist)
 app.use('/v2/playlists', playlists)
 
-// catch 404 and forward to error handler
-app.use(function (req, res, next) {
-  var err = new Error('Not Found')
-  err['status'] = 404
-  next(err)
-})
-
 // error handlers
 
-// development error handler
-// will print stacktrace
-if (app.get('env') === 'development') {
-  app.use((err: any, req, res, next) => {
-    res.status(err['status'] || 500)
-    res.render('error', {
-      message: err.message,
-      error: err,
-    })
+app.use((err: any, req, res, next) => {
+  res.status(err['status'] || 500)
+  res.render('error', {
+    message: err.message,
+    error: app.get('env') === 'development' ? err : {},
   })
-} else {
-  // production error handler
-  // no stacktraces leaked to user
-  app.use((err: any, req, res, next) => {
-    res.status(err.status || 500)
-    res.render('error', {
-      message: err.message,
-      error: {},
-    })
-  })
-}
+})
 
 app.set('port', process.env.PORT || 5000)
 

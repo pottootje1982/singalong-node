@@ -47,7 +47,7 @@ router.get(
   '/authorized',
   async (req: express.Request, res: express.Response) => {
     var spotifyApi: SpotifyApi = res.locals.getSpotifyApi()
-    var tokens = await spotifyApi.setToken(req.query.code)
+    var tokens = await spotifyApi.getToken(req.query.code)
     var data = await spotifyApi.api.getUserPlaylists(null, { limit: 50 })
     var playlists = data ? data.body.items : []
     res.render('index', {

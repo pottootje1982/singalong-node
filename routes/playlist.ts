@@ -8,11 +8,13 @@ router.get('/:id', async (req, res) => {
     .getPlaylist(req.headers.user, req.params.id)
     .then((result) =>
       res.json(
-        result.body.tracks.items.map(({ track: { id, name, artists } }) => ({
-          id,
-          artist: artists[0] && artists[0].name,
-          title: name,
-        }))
+        result.body.tracks.items
+          .filter((item) => !item.track)
+          .map(({ track: { id, name, artists } }) => ({
+            id,
+            artist: artists[0] && artists[0].name,
+            title: name,
+          }))
       )
     )
 })
