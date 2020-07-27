@@ -11,9 +11,9 @@ class CatchRouter {
 
   wrapper = (fn) => (...args) =>
     fn(...args).catch((err) => {
-      const res = args[1]
-      console.log(res)
-      res.status(err.statusCode).json(err)
+      let res = args[1]
+      if (err.statusCode) res = res.status(err.statusCode)
+      res.json(err)
     })
 
   constructor(expressRouter: core.Router) {

@@ -1,14 +1,23 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import Playlists from './playlists'
 import Playlist from './playlist'
+import Lyrics from './lyrics'
 
 import { Grid } from '@material-ui/core'
 import qs from 'qs'
+import server from './server'
 
 function App({ location }) {
   const [playlist, setPlaylist] = useState()
+  const [user, setUser] = useState()
   const query = location.search
   const { token } = qs.parse(query, { ignoreQueryPrefix: true })
+
+  useEffect(() => {
+    server.get('/v2/authorize/me').then((res) => {
+      setUser(res.data.body.id)
+    })
+  }, [])
 
   window.history.pushState('', '', '/main')
   return (
@@ -20,7 +29,14 @@ function App({ location }) {
               <Playlists setPlaylist={setPlaylist} token={token}></Playlists>
             </Grid>
             <Grid item>
-              <Playlist playlist={playlist} token={token}></Playlist>
+              <div>
+                <Lyrics></Lyrics>
+                <Playlist
+                  playlist={playlist}
+                  token={token}
+                  user={user}
+                ></Playlist>
+              </div>
             </Grid>
           </Grid>
         )}

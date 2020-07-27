@@ -13,4 +13,9 @@ router.get('/token', async (req, res) => {
   res.json(tokens)
 })
 
+router.get('/me', async (req, res) => {
+  const spotifyApi = res.locals.getSpotifyApi()
+  res.json(await spotifyApi.api.getMe())
+})
+
 export default router.express()
