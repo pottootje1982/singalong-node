@@ -1,6 +1,18 @@
 const router = require('./router')()
 
 import { SpotifyApi } from '../scripts/spotify'
+import { Track } from '../scripts/track'
+import LyricsDownloader from '../scripts/download'
+import LyricsDb from '../scripts/lyrics_db'
+const createTable = require('../scripts/db/tables')
+
+let lyricsDb: LyricsDb
+let lyricsDownloader: LyricsDownloader
+
+createTable('./mongo-client', 'lyrics').then(({ lyricTable }) => {
+  lyricsDb = new LyricsDb(lyricTable)
+  lyricsDownloader = new LyricsDownloader(lyricsDb)
+})
 
 router.get('/', async (req, res) => {
   var spotifyApi: SpotifyApi = res.locals.getSpotifyApi()
@@ -16,15 +28,15 @@ router.get('/:id/users/:userId', async (req, res) => {
     req.params.userId,
     req.params.id
   )
-  res.json(
-    playlist.body.tracks.items
-      .filter((item) => item.track)
-      .map(({ track: { id, name, artists } }) => ({
-        id,
-        artist: artists[0] && artists[0].name,
-        title: name,
-      }))
-  )
+  let tracks = playlist.body.tracks.items
+    .filter((item) => item.track)
+    .map(
+      ({ track: { id, name, artists } }) =>
+        new Track(artists[0] && artists[0].name, name, null, null, null, id)
+    )
+
+  tracks = await lyricsDb.queryPlaylist(tracks)
+  res.json(tracks)
 })
 
 export default router.express()

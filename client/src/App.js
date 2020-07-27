@@ -9,6 +9,7 @@ import server from './server'
 
 function App({ location }) {
   const [playlist, setPlaylist] = useState()
+  const [track, setTrack] = useState('')
   const [user, setUser] = useState()
   const query = location.search
   const { token } = qs.parse(query, { ignoreQueryPrefix: true })
@@ -23,20 +24,25 @@ function App({ location }) {
   return (
     <div className="App">
       <header className="App-header">
-        {token && (
+        {(token || user) && (
           <Grid container>
-            <Grid item>
+            <Grid item xs={4}>
               <Playlists setPlaylist={setPlaylist} token={token}></Playlists>
             </Grid>
-            <Grid item>
-              <div>
-                <Lyrics></Lyrics>
-                <Playlist
-                  playlist={playlist}
-                  token={token}
-                  user={user}
-                ></Playlist>
-              </div>
+            <Grid item xs={8}>
+              <Grid container direction="column">
+                <Grid item>
+                  <Lyrics track={track}></Lyrics>
+                </Grid>
+                <Grid item>
+                  <Playlist
+                    playlist={playlist}
+                    token={token}
+                    user={user}
+                    setTrack={setTrack}
+                  ></Playlist>
+                </Grid>
+              </Grid>
             </Grid>
           </Grid>
         )}

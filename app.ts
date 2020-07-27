@@ -7,6 +7,7 @@ import users from './routes/user'
 import authorize from './routes/authorize'
 import playlist from './routes/playlist'
 import playlists from './routes/playlists'
+import lyrics from './routes/lyrics'
 var bodyParser = require('body-parser')
 import { SpotifyApi } from './scripts/spotify'
 
@@ -62,6 +63,7 @@ app.use('/users', users)
 app.use('/v2/authorize', authorize)
 app.use('/v2/playlist', playlist)
 app.use('/v2/playlists', playlists)
+app.use('/v2/lyrics', lyrics)
 
 // error handlers
 
