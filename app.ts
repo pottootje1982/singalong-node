@@ -5,11 +5,11 @@ import path = require('path')
 import routes from './routes/index'
 import users from './routes/user'
 import authorize from './routes/authorize'
-import playlist from './routes/playlist'
 import playlists from './routes/playlists'
 import lyrics from './routes/lyrics'
 var bodyParser = require('body-parser')
 import { SpotifyApi } from './scripts/spotify'
+const fs = require('fs')
 
 var app = express()
 
@@ -22,11 +22,19 @@ app.set('view engine', 'pug')
 
 app.use(express.static(path.join(__dirname, 'public')))
 
+let cachedFileToken
+
 function getTokens(req) {
   const { accessToken: bodyToken } = req.body
   const { accessToken: queryToken } = req.query
   const { accesstoken: headerToken } = req.headers
-  return { accessToken: bodyToken || queryToken || headerToken }
+  let accessToken = bodyToken || queryToken || headerToken
+  if (!accessToken && !process.env.NODE_ENV) {
+    cachedFileToken = accessToken =
+      cachedFileToken ||
+      fs.readFileSync('./token.txt', { encoding: 'utf8', flag: 'r' })
+  }
+  return { accessToken }
 }
 
 app.use((req, res, next) => {
@@ -61,7 +69,6 @@ app.use(cors())
 app.use('/', routes)
 app.use('/users', users)
 app.use('/v2/authorize', authorize)
-app.use('/v2/playlist', playlist)
 app.use('/v2/playlists', playlists)
 app.use('/v2/lyrics', lyrics)
 

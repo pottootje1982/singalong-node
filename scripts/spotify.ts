@@ -13,7 +13,7 @@ const scopes = [
 const clientId = '3a2c92864fe34fdfb674580a0901568e'
 const state = 'some-state-of-my-choice'
 
-const playlistLimit = 100
+export const playlistLimit = 100
 
 export class SpotifyApi {
   public api: SpotifyWebApi

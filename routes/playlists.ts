@@ -1,7 +1,7 @@
 const router = require('./router')()
 
-import { SpotifyApi } from '../scripts/spotify'
-import { Track } from '../scripts/track'
+import { SpotifyApi, playlistLimit } from '../scripts/spotify'
+import { createTrack } from '../scripts/track'
 import LyricsDownloader from '../scripts/download'
 import LyricsDb from '../scripts/lyrics_db'
 const createTable = require('../scripts/db/tables')
@@ -24,19 +24,23 @@ router.get('/', async (req, res) => {
 
 router.get('/:id/users/:userId', async (req, res) => {
   var spotifyApi: SpotifyApi = res.locals.getSpotifyApi()
-  const playlist = await spotifyApi.api.getPlaylist(
-    req.params.userId,
-    req.params.id
-  )
-  let tracks = playlist.body.tracks.items
+  const { userId, id } = req.params
+  let offset = req.query.offset
+  offset = offset && parseInt(offset)
+  const { body } = offset
+    ? await spotifyApi.api.getPlaylistTracks(userId, id, {
+        offset,
+        fields: 'items',
+      })
+    : await spotifyApi.api.getPlaylist(userId, id)
+  let tracks = (body.tracks ? body.tracks.items : body.items)
     .filter((item) => item.track)
-    .map(
-      ({ track: { id, name, artists } }) =>
-        new Track(artists[0] && artists[0].name, name, null, null, null, id)
+    .map(({ track: { id, name, artists } }) =>
+      createTrack(artists[0] && artists[0].name, name, id)
     )
 
   tracks = await lyricsDb.queryPlaylist(tracks)
-  res.json(tracks)
+  res.json({ hasMore: tracks.length === playlistLimit, tracks })
 })
 
 export default router.express()

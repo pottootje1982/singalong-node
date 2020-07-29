@@ -1,4 +1,4 @@
-import { Track } from "./track"
+import { Track } from './track'
 
 export default class LyricsDb {
   removeAll() {
@@ -13,14 +13,14 @@ export default class LyricsDb {
 
   artistTitleQuery(artist: string, title: string) {
     const query: any = {
-      title: new RegExp(title, "i")
+      title: new RegExp(title, 'i'),
     }
-    if (artist) query.artist = new RegExp(artist, "i")
+    if (artist) query.artist = new RegExp(artist, 'i')
     return query
   }
 
   async query(artist: string, title: string, id?: string): Promise<Track[]> {
-    if (title === "" || title == null) return null
+    if (title === '' || title == null) return null
     let query = this.artistTitleQuery(artist, title)
     if (id) {
       query = { $or: [query, { id }] }
@@ -28,7 +28,7 @@ export default class LyricsDb {
     const results = await this.lyricsTable.get(query)
     if (results.length === 0) return null
     return results.map(
-      result =>
+      (result) =>
         new Track(
           result.artist,
           result.title,
@@ -50,7 +50,7 @@ export default class LyricsDb {
       if (tracks.length === 1) result = tracks[0]
       else {
         var filteredTracks = tracks.filter(
-          t =>
+          (t) =>
             t.artist.toUpperCase() === track.artist.toUpperCase() &&
             t.title.toUpperCase() === track.title.toUpperCase()
         )
@@ -67,19 +67,20 @@ export default class LyricsDb {
     playlist: Track[],
     notDownloaded?: boolean
   ): Promise<Track[]> {
-    let orSection: any = playlist.map(track => {
+    const results: Track[] = []
+    if (playlist.length === 0) return results
+    let orSection: any = playlist.map((track) => {
       const id = track.id
-      return [{ title: new RegExp(track.getMinimalTitle(), "i") }, { id }]
+      return [{ title: new RegExp(track.getMinimalTitle(), 'i') }, { id }]
     })
     orSection = [].concat(...orSection)
     var query = {
-      $or: orSection
+      $or: orSection,
     }
     let queryResults: any[] = (await this.lyricsTable.get(query)) || []
-    var results: Track[] = []
     for (let track of playlist) {
       var matches = queryResults.filter(
-        match =>
+        (match) =>
           match.title
             .toUpperCase()
             .includes(track.getMinimalTitle().toUpperCase()) ||
@@ -94,7 +95,7 @@ export default class LyricsDb {
       if (matches.length > 1) {
         exactMatch =
           matches.find(
-            match =>
+            (match) =>
               match.title.toUpperCase() === track.title.toUpperCase() &&
               match.artist.toUpperCase() === track.artist.toUpperCase()
           ) || exactMatch
@@ -111,7 +112,7 @@ export default class LyricsDb {
       title: track.title,
       site: track.site || null,
       lyrics: lyrics,
-      id: track.id || null
+      id: track.id || null,
     })
   }
 
@@ -136,7 +137,7 @@ export default class LyricsDb {
     if (foundTrack) {
       return this.lyricsTable.remove({
         artist: foundTrack.artist,
-        title: foundTrack.title
+        title: foundTrack.title,
       })
     }
   }

@@ -8,22 +8,34 @@ import red from '@material-ui/core/colors/red'
 
 export default function Playlist({ playlist, token, user, setTrack }) {
   const [tracks, setTracks] = useState([])
+  const [offset, setOffset] = useState()
 
   setToken(token)
 
-  useEffect(() => {
-    playlist &&
-      user &&
-      server
-        .get(`v2/playlists/${playlist}/users/${user}`)
-        .then((res) => {
-          setTracks(res.data || [])
-        })
-        .catch((err) => console.log(err))
-  }, [playlist, user])
+  function init() {
+    playlist && user && getPlaylist()
+  }
+
+  useEffect(init, [])
+  useEffect(getPlaylist, [offset])
+
+  function getPlaylist() {
+    const offsetQuery = offset ? `?offset=${offset}` : ''
+    server
+      .get(`v2/playlists/${playlist}/users/${user}${offsetQuery}`)
+      .then(({ data: { tracks: newTracks, hasMore } }) => {
+        if (newTracks.length === 0) return
+        newTracks = [...tracks, ...newTracks]
+        setTracks(newTracks)
+        if (hasMore) {
+          setOffset(newTracks.length)
+        }
+      })
+      .catch((err) => console.log(err))
+  }
 
   return (
-    <List style={{ maxHeight: '100vh', overflow: 'auto' }} dense>
+    <List style={{ maxHeight: '50vh', overflow: 'auto' }} dense>
       {tracks.map((t, index) => (
         <ListItem button key={index} onClick={() => setTrack(t)}>
           <ListItemText

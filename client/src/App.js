@@ -36,6 +36,7 @@ function App({ location }) {
                 </Grid>
                 <Grid item>
                   <Playlist
+                    key={playlist}
                     playlist={playlist}
                     token={token}
                     user={user}
