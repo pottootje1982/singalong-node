@@ -9,14 +9,20 @@ function Playlists({ setPlaylist, token }) {
 
   setToken(token)
 
-  useEffect(() => {
+  function init() {
     server
       .get('v2/playlists')
       .then((res) => {
         setPlaylists(res.data)
       })
       .catch((err) => console.log(err))
-  }, [])
+  }
+
+  useEffect(init, [])
+
+  useEffect(() => {
+    setPlaylist(playlists[0] && playlists[0].id)
+  }, [playlists, setPlaylist])
 
   return (
     <List dense style={{ maxHeight: '100vh', overflow: 'auto' }}>

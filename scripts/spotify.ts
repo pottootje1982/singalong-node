@@ -10,7 +10,7 @@ const scopes = [
   'playlist-read-private',
   'user-modify-playback-state',
 ]
-const clientId = '3a2c92864fe34fdfb674580a0901568e'
+const clientId = process.env.SPOTIFY_KEY
 const state = 'some-state-of-my-choice'
 
 export const playlistLimit = 100
@@ -21,7 +21,7 @@ export class SpotifyApi {
   constructor(host: string, tokens?: any) {
     this.api = new SpotifyWebApi({
       clientId: clientId,
-      clientSecret: 'c09a0bdffa7d452ca4fbe14c53d32f94',
+      clientSecret: process.env.SPOTIFY_SECRET,
       redirectUri: host + '/authorized',
     })
     tokens = tokens || {}
