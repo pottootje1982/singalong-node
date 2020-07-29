@@ -7,18 +7,11 @@
 - on active window set current play status:
 - https://stackoverflow.com/questions/6966733/detect-tab-window-activation-in-javascript
 - select device on which to play
-- use memory cache to store playlists
 
-- playlist refresh error when switching too fast between playlists
-- play button in playlist doesn't work
-- timer too big in mobile
-
-- log can be viewed with: sudo cat /var/log/upstart/singalong.log
-- startup script: /etc/init/singalong.conf
  */
 import express = require('express')
 const router = express.Router()
-import { SpotifyApi } from '../scripts/spotify'
+import { SpotifyApi, createApi } from '../scripts/spotify'
 import { Playlist } from '../scripts/Playlist'
 import { Track } from '../scripts/track'
 import LyricsDb from '../scripts/lyrics_db'
@@ -35,7 +28,7 @@ createTable('./mongo-client', 'lyrics').then(({ lyricTable }) => {
 })
 
 router.get('/', (req: express.Request, res: express.Response) => {
-  var spotifyApi: SpotifyApi = res.locals.getSpotifyApi()
+  var spotifyApi: SpotifyApi = createApi(req)
   res.redirect(spotifyApi.getAuthorizeUrl())
 })
 
@@ -46,7 +39,7 @@ router.get('/manual', async (req: express.Request, res: express.Response) => {
 router.get(
   '/authorized',
   async (req: express.Request, res: express.Response) => {
-    var spotifyApi: SpotifyApi = res.locals.getSpotifyApi()
+    var spotifyApi: SpotifyApi = createApi(req)
     var tokens = await spotifyApi.getToken(req.query.code)
     var data = await spotifyApi.api.getUserPlaylists(null, { limit: 50 })
     var playlists = data ? data.body.items : []
@@ -63,7 +56,7 @@ router.get(
 )
 
 router.get('/token', async (req, res) => {
-  const api = res.locals.getSpotifyApi()
+  const api = createApi(req)
   console.log('test')
 })
 
@@ -71,7 +64,7 @@ router.post(
   '/search-playlists',
   async (req: express.Request, res: express.Response) => {
     var ctx = req.body
-    var spotifyApi: SpotifyApi = res.locals.getSpotifyApi()
+    var spotifyApi: SpotifyApi = createApi(req)
     var data = await spotifyApi.doAsyncApiCall((api) =>
       api.searchPlaylists(req.body.playlistQuery)
     )
@@ -83,7 +76,7 @@ router.post(
 router.get(
   '/refreshToken',
   async (req: express.Request, res: express.Response) => {
-    var spotifyApi: SpotifyApi = res.locals.getSpotifyApi()
+    var spotifyApi: SpotifyApi = createApi(req)
     var data = await spotifyApi.refreshAccessToken()
     res.json({
       accessToken: data.body.access_token,
@@ -127,7 +120,7 @@ router.post('/proxy', async (req: express.Request, res: express.Response) => {
 router.get(
   '/find-in-database',
   async (req: express.Request, res: express.Response) => {
-    var spotifyApi: SpotifyApi = res.locals.getSpotifyApi()
+    var spotifyApi: SpotifyApi = createApi(req)
     var ctx: any = req.query
     ctx.playlist = playlist_cache.get(
       ctx.context.userId,
@@ -157,11 +150,12 @@ router.get(
 
 async function showPlaylist(
   res: express.Response,
-  ctx: any,
+  req: express.Request,
   showCurrentlyPlaying: boolean = false
 ) {
+  const ctx: any = req.query
   try {
-    var spotifyApi: SpotifyApi = res.locals.getSpotifyApi()
+    var spotifyApi: SpotifyApi = createApi(req)
     ctx.offset = isNaN(ctx.offset) ? 0 : +ctx.offset
     if (ctx.offset === 0) removePlaylist(ctx)
     ctx.playlist = playlist_cache.get(
@@ -207,11 +201,11 @@ function removePlaylist(query) {
 }
 
 router.get('/playlist', async (req: express.Request, res: express.Response) => {
-  showPlaylist(res, req.query)
+  showPlaylist(res, req)
 })
 
 router.get('/currently-playing', async (req, res) => {
-  showPlaylist(res, req.query, true)
+  showPlaylist(res, req, true)
 })
 
 router.get('/lyrics', async (req, res) => {
@@ -242,12 +236,12 @@ router.post('/lyrics', async (req, res) => {
   let track = new Track(req.query.artist, req.query.title)
   track.id = req.query.id
   lyricsDb.updateOrInsert(track, req.body.lyrics)
-  showPlaylist(res, req.query)
+  showPlaylist(res, req)
 })
 
 router.delete('/lyrics', async (req, res) => {
   lyricsDb.remove(new Track(req.query.artist, req.query.title))
-  showPlaylist(res, req.query)
+  showPlaylist(res, req)
 })
 
 router.get('/playlist-to-download', async (req, res) => {
@@ -273,7 +267,7 @@ router.get('/download-track', async (req, res) => {
 })
 
 router.post('/songbook', async (req, res) => {
-  var spotifyApi: SpotifyApi = res.locals.getSpotifyApi()
+  var spotifyApi: SpotifyApi = createApi(req)
   var textualPlaylist = req.body.playlist
   var context: any = req.body
   context.offset = context.offset || 0
@@ -300,7 +294,7 @@ router.post('/songbook', async (req, res) => {
 })
 
 router.get('/current-track', async (req, res) => {
-  var spotifyApi: SpotifyApi = res.locals.getSpotifyApi()
+  var spotifyApi: SpotifyApi = createApi(req)
   var currentTrack = await spotifyApi.api.getMyCurrentPlayingTrack()
   let track: any = Track.fromSpotify(
     currentTrack && currentTrack.body ? currentTrack.body.item : null
@@ -313,7 +307,7 @@ router.get('/current-track', async (req, res) => {
 })
 
 router.get('/play-track', async (req, res) => {
-  var spotifyApi: SpotifyApi = res.locals.getSpotifyApi()
+  var spotifyApi: SpotifyApi = createApi(req)
   if (req.query.context.albumId) {
     spotifyApi.api.play({
       context_uri: 'spotify:album:' + req.query.context.albumId,
@@ -333,7 +327,7 @@ router.get('/play-track', async (req, res) => {
 })
 
 router.get('/toggle-play', async (req, res) => {
-  var spotifyApi: SpotifyApi = res.locals.getSpotifyApi()
+  var spotifyApi: SpotifyApi = createApi(req)
   var isPlaying = req.query.play === 'true'
   if (isPlaying) await spotifyApi.api.play()
   else await spotifyApi.api.pause()
@@ -343,7 +337,7 @@ router.get('/toggle-play', async (req, res) => {
 router.get('/skip-to-track', async (req, res) => {
   var context = req.query.context
   var playlist = playlist_cache.get(context.userId, context.playlistId)
-  var spotifyApi: SpotifyApi = res.locals.getSpotifyApi()
+  var spotifyApi: SpotifyApi = createApi(req)
   let api = spotifyApi.api
   var data = await api.getMyCurrentPlaybackState()
   var id = data.body.item.id
@@ -369,7 +363,7 @@ router.get('/skip-to-track', async (req, res) => {
 
 router.get('/seek', async (req, res) => {
   var query = req.query
-  var spotifyApi: SpotifyApi = res.locals.getSpotifyApi()
+  var spotifyApi: SpotifyApi = createApi(req)
   await spotifyApi.api.seek(query.position_ms)
   res.json({})
 })

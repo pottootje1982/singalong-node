@@ -1,6 +1,7 @@
 ﻿import SpotifyWebApi = require('spotify-web-api-node')
 import { Track } from './track'
 import { Playlist } from './Playlist'
+const fs = require('fs')
 
 const scopes = [
   'user-read-private',
@@ -10,7 +11,6 @@ const scopes = [
   'playlist-read-private',
   'user-modify-playback-state',
 ]
-const clientId = process.env.SPOTIFY_KEY
 const state = 'some-state-of-my-choice'
 
 export const playlistLimit = 100
@@ -20,7 +20,7 @@ export class SpotifyApi {
 
   constructor(host: string, tokens?: any) {
     this.api = new SpotifyWebApi({
-      clientId: clientId,
+      clientId: process.env.SPOTIFY_KEY,
       clientSecret: process.env.SPOTIFY_SECRET,
       redirectUri: host + '/authorized',
     })
@@ -138,6 +138,25 @@ export class SpotifyApi {
     return Playlist.Empty()
   }
 
+  async getPlaylistFromUri(uri: string) {
+    const [, type, id] = uri.split(':')
+    switch (type) {
+      case 'artist':
+        const artistTracks = await this.api.getArtistTopTracks(id, 'NL')
+        return artistTracks.body.tracks
+      case 'album':
+        const albumTracks = await this.api.getAlbum(id)
+        return albumTracks.body.tracks.items
+      case 'playlist':
+        const playlistTracks = await this.api.getPlaylist(id)
+        return playlistTracks.body.tracks.items
+          .map((i) => i.track)
+          .filter((t) => t)
+      default:
+        break
+    }
+  }
+
   async doAsyncApiCall(func): Promise<any> {
     try {
       return await func(this.api)
@@ -161,4 +180,23 @@ export class SpotifyApi {
     }
     return null
   }
+}
+
+let cachedFileToken
+
+function getTokens(req) {
+  const { accessToken: bodyToken } = req.body
+  const { accessToken: queryToken } = req.query
+  const { accesstoken: headerToken } = req.headers
+  let accessToken = bodyToken || queryToken || headerToken
+  if (!accessToken && !process.env.NODE_ENV) {
+    cachedFileToken = accessToken =
+      cachedFileToken ||
+      fs.readFileSync('./token.txt', { encoding: 'utf8', flag: 'r' })
+  }
+  return { accessToken }
+}
+
+export function createApi(req): SpotifyApi {
+  return new SpotifyApi(`http://${req.headers.host}`, getTokens(req))
 }

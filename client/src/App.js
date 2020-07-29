@@ -27,7 +27,11 @@ function App({ location }) {
         {(token || user) && (
           <Grid container>
             <Grid item xs={4}>
-              <Playlists setPlaylist={setPlaylist} token={token}></Playlists>
+              <Playlists
+                setPlaylist={setPlaylist}
+                user={user}
+                token={token}
+              ></Playlists>
             </Grid>
             <Grid item xs={8}>
               <Grid container direction="column">

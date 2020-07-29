@@ -1,22 +1,29 @@
 const router = require('./router')()
 
-import { SpotifyApi } from '../scripts/spotify'
+import { SpotifyApi, createApi } from '../scripts/spotify'
+import { Track } from '../scripts/track'
 
 router.get('/', async (req, res) => {
-  var spotifyApi: SpotifyApi = res.locals.getSpotifyApi()
-  return spotifyApi.api.getUserPlaylists(null, { limit: 50 }).then((data) => {
-    var playlists = data ? data.body.items : []
-    res.json(playlists)
-  })
+  var spotifyApi: SpotifyApi = createApi(req)
+  var currentTrack = await spotifyApi.api.getMyCurrentPlayingTrack()
+  let track: any = Track.fromSpotify(
+    currentTrack && currentTrack.body ? currentTrack.body.item : null
+  )
+  if (track) {
+    track.progress_ms = currentTrack.body.progress_ms
+    track.is_playing = currentTrack.body.is_playing
+  }
+  res.json(track)
 })
 
-router.get('/:id', async (req, res) => {
-  var spotifyApi: SpotifyApi = res.locals.getSpotifyApi()
-  const { user, playlist } = req.query
-  spotifyApi.api.play({
-    context_uri: 'spotify:user:' + user + ':playlist:' + playlist,
-    offset: { uri: 'spotify:track:' + req.params.id },
-  })
+const track = (id) => id && `spotify:track:${id}`
+
+router.put('/play', async (req, res) => {
+  var spotifyApi: SpotifyApi = createApi(req)
+  const { body } = req
+  body.uris = body.ids && body.ids.map((id) => track(id))
+  body.offset.uri = body.offset.id && track(body.offset.id)
+  await spotifyApi.api.play(body)
   res.sendStatus(200)
 })
 

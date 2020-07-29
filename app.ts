@@ -23,22 +23,7 @@ app.set('view engine', 'pug')
 
 app.use(express.static(path.join(__dirname, 'public')))
 
-let cachedFileToken
-
-function getTokens(req) {
-  const { accessToken: bodyToken } = req.body
-  const { accessToken: queryToken } = req.query
-  const { accesstoken: headerToken } = req.headers
-  let accessToken = bodyToken || queryToken || headerToken
-  if (!accessToken && !process.env.NODE_ENV) {
-    cachedFileToken = accessToken =
-      cachedFileToken ||
-      fs.readFileSync('./token.txt', { encoding: 'utf8', flag: 'r' })
-  }
-  return { accessToken }
-}
-
-app.use((req, res, next) => {
+app.use((req, _res, next) => {
   req.query.invoke = function () {
     let params = Array.prototype.slice.call(arguments, 1)
     return (
@@ -47,14 +32,6 @@ app.use((req, res, next) => {
       params.map((arg) => JSON.stringify(arg)).join(', ') +
       ')'
     )
-  }
-  res.locals.getSpotifyApi = (): SpotifyApi => {
-    if (!res.locals.api)
-      res.locals.api = new SpotifyApi(
-        `http://${req.headers.host}`,
-        getTokens(req)
-      )
-    return res.locals.api
   }
   next()
 })

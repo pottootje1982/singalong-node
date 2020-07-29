@@ -17,9 +17,9 @@ export default function Playlist({ playlist, token, user, setTrack }) {
     if (user && playlist) {
       const offsetQuery = offset ? `?offset=${offset}` : ''
 
-      get(`v2/playlists/${playlist}/users/${user}${offsetQuery}`)
+      get(`v2/playlists/${playlist}${offsetQuery}`)
         .then(({ data: { tracks: newTracks, hasMore } }) => {
-          if (newTracks.length === 0) return
+          if (!newTracks || newTracks.length === 0) return
           newTracks = [...tracks, ...newTracks]
           setTracks(newTracks)
           if (hasMore) {
@@ -30,8 +30,17 @@ export default function Playlist({ playlist, token, user, setTrack }) {
     }
   }
 
-  function playTrack(id) {
-    server.get(`v2/player/${id}?user=${user}&playlist=${playlist}`)
+  function playTrack(id, position) {
+    let ids, context_uri
+    const playArtist = playlist.includes('artist')
+    if (playArtist) {
+      ids = tracks.map((t) => t.id)
+      id = undefined
+    } else {
+      context_uri = playlist
+      position = undefined
+    }
+    server.put(`v2/player/play`, { ids, context_uri, offset: { id, position } })
   }
 
   return (
@@ -42,7 +51,7 @@ export default function Playlist({ playlist, token, user, setTrack }) {
             <IconButton
               size="small"
               style={{ width: 25, height: 25 }}
-              onClick={() => playTrack(t.id)}
+              onClick={() => playTrack(t.id, index)}
             >
               <PlayIcon></PlayIcon>
             </IconButton>

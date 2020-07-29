@@ -1,6 +1,6 @@
 const router = require('./router')()
 
-import { SpotifyApi } from '../scripts/spotify'
+import { SpotifyApi, createApi } from '../scripts/spotify'
 const fs = require('fs')
 
 router.get('/', async (req, res) => {
@@ -28,7 +28,7 @@ if (!process.env.NODE_ENV) {
 }
 
 router.get('/me', async (req, res) => {
-  const spotifyApi = res.locals.getSpotifyApi()
+  const spotifyApi = createApi(req)
   const me = await spotifyApi.api.getMe()
   res.json(me)
 })

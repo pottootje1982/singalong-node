@@ -13,8 +13,8 @@ export function setToken(token) {
 }
 
 export function get(...params) {
-  return axios.get(...params).catch((err, res) => {
-    if (err.response.status === 401) window.location = '/'
+  return axios.get(...params).catch(({ response }) => {
+    if (response && response.status === 401) window.location = '/'
   })
 }
 

@@ -1,6 +1,6 @@
 const router = require('./router')()
 
-import { SpotifyApi, playlistLimit } from '../scripts/spotify'
+import { SpotifyApi, playlistLimit, createApi } from '../scripts/spotify'
 import { createTrack } from '../scripts/track'
 import LyricsDownloader from '../scripts/download'
 import LyricsDb from '../scripts/lyrics_db'
@@ -15,15 +15,42 @@ createTable('./mongo-client', 'lyrics').then(({ lyricTable }) => {
 })
 
 router.get('/', async (req, res) => {
-  var spotifyApi: SpotifyApi = res.locals.getSpotifyApi()
-  return spotifyApi.api.getUserPlaylists(null, { limit: 50 }).then((data) => {
-    var playlists = data ? data.body.items : []
-    res.json(playlists)
+  var spotifyApi: SpotifyApi = createApi(req)
+  let { body } = await spotifyApi.api.getUserPlaylists(req.query.user, {
+    limit: 50,
   })
+  const playlists = body ? body.items : []
+  res.json(playlists)
+})
+
+router.get('/currently-playing', async (req, res) => {
+  var spotifyApi: SpotifyApi = createApi(req)
+  const currentlyPlaying = await spotifyApi.api.getMyCurrentPlayingTrack()
+  const result = []
+  if (
+    currentlyPlaying &&
+    (!currentlyPlaying.body.context ||
+      !currentlyPlaying.body.context.uri.includes('undefined'))
+  )
+    result.push({
+      uri: currentlyPlaying.body.context.uri,
+      name: 'Currently playing',
+    })
+  return res.json(result)
+})
+
+router.get('/:uri', async (req, res) => {
+  var spotifyApi: SpotifyApi = createApi(req)
+  let tracks = await spotifyApi.getPlaylistFromUri(req.params.uri)
+  tracks = tracks.map(({ id, name, artists }) =>
+    createTrack(artists[0] && artists[0].name, name, id)
+  )
+  tracks = await lyricsDb.queryPlaylist(tracks)
+  return res.json({ tracks })
 })
 
 router.get('/:id/users/:userId', async (req, res) => {
-  var spotifyApi: SpotifyApi = res.locals.getSpotifyApi()
+  var spotifyApi: SpotifyApi = createApi(req)
   const { userId, id } = req.params
   let offset = req.query.offset
   offset = offset && parseInt(offset)
