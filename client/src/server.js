@@ -12,4 +12,10 @@ export function setToken(token) {
   if (token) axios.defaults.headers.common['accessToken'] = token
 }
 
+export function get(...params) {
+  return axios.get(...params).catch((err, res) => {
+    if (err.response.status === 401) window.location = '/'
+  })
+}
+
 export default axios

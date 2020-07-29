@@ -5,7 +5,7 @@ import Lyrics from './lyrics'
 
 import { Grid } from '@material-ui/core'
 import qs from 'qs'
-import server from './server'
+import { get } from './server'
 
 function App({ location }) {
   const [playlist, setPlaylist] = useState()
@@ -15,7 +15,7 @@ function App({ location }) {
   const { token } = qs.parse(query, { ignoreQueryPrefix: true })
 
   useEffect(() => {
-    server.get('/v2/authorize/me').then((res) => {
+    get('/v2/authorize/me').then((res) => {
       setUser(res.data.body.id)
     })
   }, [])

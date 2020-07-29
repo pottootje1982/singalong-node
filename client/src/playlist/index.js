@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import server, { setToken } from '../server'
+import server, { setToken, get } from '../server'
 import green from '@material-ui/core/colors/green'
 import red from '@material-ui/core/colors/red'
 import { IconButton, ListItem, ListItemText, List } from '@material-ui/core'
@@ -16,8 +16,8 @@ export default function Playlist({ playlist, token, user, setTrack }) {
   function getPlaylist() {
     if (user && playlist) {
       const offsetQuery = offset ? `?offset=${offset}` : ''
-      server
-        .get(`v2/playlists/${playlist}/users/${user}${offsetQuery}`)
+
+      get(`v2/playlists/${playlist}/users/${user}${offsetQuery}`)
         .then(({ data: { tracks: newTracks, hasMore } }) => {
           if (newTracks.length === 0) return
           newTracks = [...tracks, ...newTracks]
