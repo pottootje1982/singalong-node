@@ -10,6 +10,7 @@ import { get } from './server'
 function App({ location }) {
   const [playlist, setPlaylist] = useState()
   const [track, setTrack] = useState('')
+  const [trackId, setTrackId] = useState('')
   const [user, setUser] = useState()
   const query = location.search
   const { token } = qs.parse(query, { ignoreQueryPrefix: true })
@@ -36,7 +37,7 @@ function App({ location }) {
             <Grid item xs={8}>
               <Grid container direction="column">
                 <Grid item>
-                  <Lyrics track={track}></Lyrics>
+                  <Lyrics track={track} setTrackId={setTrackId}></Lyrics>
                 </Grid>
                 <Grid item>
                   <Playlist
@@ -44,6 +45,7 @@ function App({ location }) {
                     playlist={playlist}
                     token={token}
                     user={user}
+                    trackId={trackId}
                     setTrack={setTrack}
                   ></Playlist>
                 </Grid>

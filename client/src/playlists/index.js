@@ -15,12 +15,12 @@ function Playlists({ setPlaylist, token, user }) {
       Promise.all([
         get('v2/playlists/currently-playing'),
         get(`v2/playlists?user=${user}`),
-      ]).then(([currentlyPlaying, rest]) => {
-        setPlaylists([...currentlyPlaying.data, ...rest.data])
+      ]).then(([{ data }, rest]) => {
+        setPlaylists([...data, ...rest.data])
       })
   }
 
-  useEffect(init, [])
+  useEffect(init, [user])
 
   useEffect(() => {
     setPlaylist(playlists[0] && playlists[0].uri)

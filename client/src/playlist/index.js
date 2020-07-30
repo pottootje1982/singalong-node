@@ -5,13 +5,18 @@ import red from '@material-ui/core/colors/red'
 import { IconButton, ListItem, ListItemText, List } from '@material-ui/core'
 import PlayIcon from '@material-ui/icons/PlayArrow'
 
-export default function Playlist({ playlist, token, user, setTrack }) {
-  const [tracks, setTracks] = useState([])
+export default function Playlist({ playlist, token, user, setTrack, trackId }) {
   const [offset, setOffset] = useState()
+  const [tracks, setTracks] = useState([])
 
   setToken(token)
 
   useEffect(getPlaylist, [offset])
+
+  useEffect(() => {
+    const cpTrack = tracks.find((t) => t.id === trackId)
+    setTrack(cpTrack)
+  }, [trackId, tracks, setTrack])
 
   function getPlaylist() {
     if (user && playlist) {

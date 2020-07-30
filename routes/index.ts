@@ -7,6 +7,7 @@
 - on active window set current play status:
 - https://stackoverflow.com/questions/6966733/detect-tab-window-activation-in-javascript
 - select device on which to play
+- the beatles/beach house/joan as police woman's 'real love' all give same lyrics
 
  */
 import express = require('express')
