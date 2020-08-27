@@ -21,4 +21,17 @@ router.get('/', async (req, res) => {
   res.json({ lyrics: track.lyrics })
 })
 
+router.get('/sites', async (req, res) => {
+  res.json({ sites: lyricsDownloader.engines })
+})
+
+router.post('/download', async (req, res) => {
+  const {
+    track: { artist, title },
+    site,
+  } = req.body
+  var lyrics = await lyricsDownloader.engines[site].searchLyrics(artist, title)
+  res.json({ lyrics })
+})
+
 export default router.express()

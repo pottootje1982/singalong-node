@@ -30,6 +30,7 @@ function App({ location }) {
             <Grid item xs={4}>
               <Playlists
                 setPlaylist={setPlaylist}
+                playlist={playlist}
                 user={user}
                 token={token}
               ></Playlists>
@@ -46,6 +47,7 @@ function App({ location }) {
                     token={token}
                     user={user}
                     trackId={trackId}
+                    track={track}
                     setTrack={setTrack}
                   ></Playlist>
                 </Grid>

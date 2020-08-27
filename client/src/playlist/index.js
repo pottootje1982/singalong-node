@@ -5,7 +5,14 @@ import red from '@material-ui/core/colors/red'
 import { IconButton, ListItem, ListItemText, List } from '@material-ui/core'
 import PlayIcon from '@material-ui/icons/PlayArrow'
 
-export default function Playlist({ playlist, token, user, setTrack, trackId }) {
+export default function Playlist({
+  playlist,
+  token,
+  user,
+  setTrack,
+  track,
+  trackId,
+}) {
   const [offset, setOffset] = useState()
   const [tracks, setTracks] = useState([])
 
@@ -51,7 +58,12 @@ export default function Playlist({ playlist, token, user, setTrack, trackId }) {
   return (
     <List style={{ maxHeight: '50vh', overflow: 'auto' }} dense>
       {tracks.map((t, index) => (
-        <ListItem button key={index} onClick={() => setTrack(t)}>
+        <ListItem
+          button
+          key={index}
+          selected={t === track}
+          onClick={() => setTrack(t)}
+        >
           <div style={{ display: 'flex', flexDirection: 'row' }}>
             <IconButton
               size="small"

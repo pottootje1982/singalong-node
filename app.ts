@@ -9,8 +9,6 @@ import playlists from './routes/playlists'
 import lyrics from './routes/lyrics'
 import player from './routes/player'
 var bodyParser = require('body-parser')
-import { SpotifyApi } from './scripts/spotify'
-const fs = require('fs')
 
 var app = express()
 

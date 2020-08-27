@@ -18,4 +18,10 @@ export function get(...params) {
   })
 }
 
+export function post(...params) {
+  return axios.post(...params).catch(({ response }) => {
+    if (response && response.status === 401) window.location = '/'
+  })
+}
+
 export default axios

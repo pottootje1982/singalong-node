@@ -5,7 +5,7 @@ import ListItemText from '@material-ui/core/ListItemText'
 import { setToken, get } from '../server'
 import purple from '@material-ui/core/colors/purple'
 
-function Playlists({ setPlaylist, token, user }) {
+function Playlists({ setPlaylist, playlist, token, user }) {
   const [playlists, setPlaylists] = useState([])
 
   setToken(token)
@@ -32,6 +32,7 @@ function Playlists({ setPlaylist, token, user }) {
         <ListItem
           button
           key={index}
+          selected={p.uri === playlist}
           onClick={() => {
             setPlaylist(p.uri)
           }}
