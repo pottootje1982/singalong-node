@@ -1,5 +1,5 @@
 const router = require('./router')()
-import { Track } from '../scripts/track'
+import { Track, createTrack } from '../scripts/track'
 import LyricsDownloader from '../scripts/download'
 import LyricsDb from '../scripts/lyrics_db'
 const createTable = require('../scripts/db/tables')
@@ -19,6 +19,19 @@ router.get('/', async (req, res) => {
   selectedTrack.id = req.query.id
   let track = await lyricsDb.queryTrack(selectedTrack)
   res.json({ lyrics: track.lyrics })
+})
+
+router.post('/', async (req, res) => {
+  const { artist, title, id } = req.body.track
+  const track = createTrack(artist, title, id)
+  lyricsDb.updateOrInsert(track, req.body.lyrics)
+  res.status(200)
+})
+
+router.delete('/', async (req, res) => {
+  const { artist, title } = req.query.track
+  lyricsDb.remove(new Track(artist, title))
+  res.status(204)
 })
 
 router.get('/sites', async (req, res) => {

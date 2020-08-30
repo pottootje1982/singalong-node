@@ -12,9 +12,10 @@ export default function Playlist({
   setTrack,
   track,
   trackId,
+  tracks,
+  setTracks,
 }) {
   const [offset, setOffset] = useState()
-  const [tracks, setTracks] = useState([])
 
   setToken(token)
 

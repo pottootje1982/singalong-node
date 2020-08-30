@@ -1,13 +1,15 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import { TextField, Checkbox, FormControlLabel } from '@material-ui/core'
 import { get, post } from '../server'
-import { Grid, Button } from '@material-ui/core'
+import { Grid } from '@material-ui/core'
+import { Button } from '../Styled'
 
-export default function Lyrics({ track, setTrackId }) {
+export default function Lyrics({ track, setTrackId, refreshTracks }) {
   const [showCurrentlyPlaying, setShowCurrentlyPlaying] = useState()
   const [currentlyPlayingProbe, setCurrentlyPlayingProbe] = useState()
   const [sites, setSites] = useState({})
   const [lyrics, setLyrics] = useState()
+  const lyricsRef = useRef(null)
 
   function setOrClearProbe() {
     if (showCurrentlyPlaying) {
@@ -33,7 +35,7 @@ export default function Lyrics({ track, setTrackId }) {
 
   function getSites() {
     get('/v2/lyrics/sites').then(({ data: { sites } }) => {
-      setSites(sites)
+      setSites(sites || {})
     })
   }
 
@@ -44,6 +46,19 @@ export default function Lyrics({ track, setTrackId }) {
         setLyrics(lyrics)
       }
     )
+  }
+
+  function saveLyrics(track) {
+    const lyrics = lyricsRef.current.value
+    post('/v2/lyrics', { track, lyrics })
+    track.lyrics = lyrics
+    refreshTracks()
+  }
+
+  function removeLyrics(track) {
+    track.lyrics = null
+    delete ('/v2/lyrics', { track })
+    refreshTracks()
   }
 
   track = track || {}
@@ -64,6 +79,7 @@ export default function Lyrics({ track, setTrackId }) {
         <Grid item xs={10}>
           <TextField
             key={lyrics}
+            inputRef={lyricsRef}
             id="outlined-multiline-static"
             label={`Lyrics${label}`}
             multiline
@@ -74,11 +90,19 @@ export default function Lyrics({ track, setTrackId }) {
           />
         </Grid>
         <Grid item xs={2}>
-          {Object.entries(sites).map(([key, engine]) => (
-            <Button key={key} onClick={() => downloadLyrics(track, key)}>
-              {engine.name}
-            </Button>
-          ))}
+          <Grid container>
+            {Object.entries(sites).map(([key, engine]) => (
+              <Grid key={key} item>
+                <Button onClick={() => downloadLyrics(track, key)}>
+                  {engine.name}
+                </Button>
+              </Grid>
+            ))}
+          </Grid>
+          <Grid container style={{ marginTop: 50 }}>
+            <Button onClick={() => saveLyrics(track)}>Save</Button>
+            <Button onClick={() => removeLyrics(track)}>Remove</Button>
+          </Grid>
         </Grid>
       </Grid>
     </div>
