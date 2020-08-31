@@ -1,20 +1,20 @@
-﻿import LyricsDb from "./lyrics_db"
-import { Track } from "./track"
-import { LyricsSearchEngine } from "./LyricsEngines/LyricsSearchEngine"
-import { AzLyricsEngine } from "./LyricsEngines/AzLyricsEngine"
+﻿import LyricsDb from './lyrics_db'
+import { Track } from './track'
+import { LyricsSearchEngine } from './LyricsEngines/LyricsSearchEngine'
+import { AzLyricsEngine } from './LyricsEngines/AzLyricsEngine'
 //import { MetroLyricsEngine } from "./LyricsEngines/MetroLyricsEngine";
-import { GeniusEngine } from "./LyricsEngines/GeniusEngine"
-import { MusixMatchEngine } from "./LyricsEngines/MusixMatchEngine"
+import { GeniusEngine } from './LyricsEngines/GeniusEngine'
+import { MusixMatchEngine } from './LyricsEngines/MusixMatchEngine'
 //import { SongtekstenEngine } from "./LyricsEngines/SongtekstenEngine";
-import { LyricsFreakEngine } from "./LyricsEngines/LyricsFreakEngine"
-import { Playlist } from "./Playlist"
+import { LyricsFreakEngine } from './LyricsEngines/LyricsFreakEngine'
+import { Playlist } from './Playlist'
 
 let engineIndex = -1
 
 const snooze = (ms: number, deviation: number = 0, offset: number = 0) => {
   ms = (1 - offset) * ms + Math.random() * ms * deviation
-  console.log("Waiting " + ms.toString() + " ms")
-  return new Promise(resolve => setTimeout(resolve, ms))
+  console.log('Waiting ' + ms.toString() + ' ms')
+  return new Promise((resolve) => setTimeout(resolve, ms))
 }
 
 export default class LyricsDownloader {
@@ -31,7 +31,7 @@ export default class LyricsDownloader {
       MusixMatch: new MusixMatchEngine(),
       // Says 'do not have rights to display lyrics'. However pasting the same URL in a browser does work
       //'Songteksten': new SongtekstenEngine(),
-      LyricsFreak: new LyricsFreakEngine()
+      LyricsFreak: new LyricsFreakEngine(),
     }
   }
 
@@ -71,7 +71,7 @@ export default class LyricsDownloader {
     if (track == null) return null
     if (getCached) {
       var cached = await this.getFromCache(track)
-      if (cached) return cached
+      if (cached && cached.lyrics && cached.lyrics !== '') return cached
     }
     let lyrics: string = null
     let searchEngineName: string = null
@@ -90,23 +90,23 @@ export default class LyricsDownloader {
         if (lyrics != null) {
           searchEngineName = searchEngine.name
           console.log(
-            "Found lyrics:\n" +
+            'Found lyrics:\n' +
               lyrics.substr(0, 100) +
-              "\nwith: " +
+              '\nwith: ' +
               searchEngineName +
-              "\n"
+              '\n'
           )
           engineIndex = index
         } else {
           console.log(
-            "Did not find " + track + " with: " + searchEngine.name + "\n"
+            'Did not find ' + track + ' with: ' + searchEngine.name + '\n'
           )
         }
       } catch (error) {
         console.log(error)
       }
     }
-    console.log("\n")
+    console.log('\n')
     track.site = searchEngineName
     track.lyrics = lyrics
     if (lyrics != null && searchEngineName != null) {
@@ -129,8 +129,8 @@ export default class LyricsDownloader {
         tracksNotFound.push(track)
       }
     }
-    console.log("Finished downloading lyrics")
-    console.log("Tracks not found: " + tracksNotFound.toString())
+    console.log('Finished downloading lyrics')
+    console.log('Tracks not found: ' + tracksNotFound.toString())
     return book
   }
 }

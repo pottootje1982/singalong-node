@@ -24,4 +24,10 @@ export function post(...params) {
   })
 }
 
+export function del(...params) {
+  return axios.delete(...params).catch(({ response }) => {
+    if (response && response.status === 401) window.location = '/'
+  })
+}
+
 export default axios

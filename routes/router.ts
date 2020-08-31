@@ -32,6 +32,10 @@ class CatchRouter {
     this.expressRouter.post(path, this.wrapper(requestHandler))
   }
 
+  delete(path, requestHandler) {
+    this.expressRouter.delete(path, this.wrapper(requestHandler))
+  }
+
   express() {
     return this.expressRouter
   }

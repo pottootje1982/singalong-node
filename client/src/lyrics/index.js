@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react'
 import { TextField, Checkbox, FormControlLabel } from '@material-ui/core'
-import { get, post } from '../server'
+import { get, post, del } from '../server'
 import { Grid } from '@material-ui/core'
 import { Button } from '../Styled'
 
@@ -42,7 +42,6 @@ export default function Lyrics({ track, setTrackId, refreshTracks }) {
   function downloadLyrics(track, site) {
     post('/v2/lyrics/download', { track, site }).then(
       ({ data: { lyrics } }) => {
-        console.log(lyrics)
         setLyrics(lyrics)
       }
     )
@@ -57,7 +56,7 @@ export default function Lyrics({ track, setTrackId, refreshTracks }) {
 
   function removeLyrics(track) {
     track.lyrics = null
-    delete ('/v2/lyrics', { track })
+    del('/v2/lyrics', { data: { track } })
     refreshTracks()
   }
 

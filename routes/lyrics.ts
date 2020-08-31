@@ -22,15 +22,14 @@ router.get('/', async (req, res) => {
 })
 
 router.post('/', async (req, res) => {
-  const { artist, title, id } = req.body.track
-  const track = createTrack(artist, title, id)
+  const track = Track.copy(req.body.track)
   lyricsDb.updateOrInsert(track, req.body.lyrics)
   res.status(200)
 })
 
 router.delete('/', async (req, res) => {
-  const { artist, title } = req.query.track
-  lyricsDb.remove(new Track(artist, title))
+  const track = req.body.track
+  lyricsDb.remove(Track.copy(track))
   res.status(204)
 })
 
@@ -39,11 +38,20 @@ router.get('/sites', async (req, res) => {
 })
 
 router.post('/download', async (req, res) => {
-  const {
-    track: { artist, title },
-    site,
-  } = req.body
-  var lyrics = await lyricsDownloader.engines[site].searchLyrics(artist, title)
+  const { track, sleepTime, getCached, site } = req.body
+  let lyrics
+  if (site) {
+    const { artist, title } = track
+    lyrics = await lyricsDownloader.engines[site].searchLyrics(artist, title)
+  } else {
+    const trackToDownload = Track.copy(track)
+    const downloadedTrack = await lyricsDownloader.downloadTrack(
+      trackToDownload,
+      parseInt(sleepTime || 3000),
+      getCached !== 'false'
+    )
+    lyrics = downloadedTrack.lyrics
+  }
   res.json({ lyrics })
 })
 
