@@ -4,11 +4,17 @@ import { get, post, del } from '../server'
 import { Grid } from '@material-ui/core'
 import { Button } from '../Styled'
 
-export default function Lyrics({ track, setTrackId, refreshTracks }) {
+export default function Lyrics({
+  track,
+  setPlaylist,
+  setTrackId,
+  refreshTracks,
+  lyrics,
+  setLyrics,
+}) {
   const [showCurrentlyPlaying, setShowCurrentlyPlaying] = useState()
   const [currentlyPlayingProbe, setCurrentlyPlayingProbe] = useState()
   const [sites, setSites] = useState({})
-  const [lyrics, setLyrics] = useState()
   const lyricsRef = useRef(null)
 
   function setOrClearProbe() {
@@ -21,16 +27,21 @@ export default function Lyrics({ track, setTrackId, refreshTracks }) {
   }
 
   useEffect(setOrClearProbe, [showCurrentlyPlaying])
-  useEffect(() => {
-    setLyrics(track.lyrics)
-  }, [track])
 
   useEffect(getSites, [])
 
   function checkCurrentlyPlaying() {
-    get('/v2/player').then(({ data: { id } }) => {
-      setTrackId(id)
-    })
+    get('/v2/player').then(
+      ({
+        data: {
+          track: { id },
+          uri,
+        },
+      }) => {
+        setPlaylist(uri)
+        setTrackId(id)
+      }
+    )
   }
 
   function getSites() {
@@ -84,7 +95,7 @@ export default function Lyrics({ track, setTrackId, refreshTracks }) {
             multiline
             rows={18}
             defaultValue={lyrics}
-            style={{ width: '50vw', margin: 5 }}
+            style={{ width: '50vw' }}
             variant="outlined"
           />
         </Grid>

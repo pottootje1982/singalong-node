@@ -9,12 +9,12 @@ import { get } from './server'
 
 function App({ location }) {
   const [playlist, setPlaylist] = useState()
-  const [track, setTrack] = useState('')
+  const [track, setTrack] = useState({})
   const [trackId, setTrackId] = useState('')
   const [user, setUser] = useState()
   const query = location.search
   const { token } = qs.parse(query, { ignoreQueryPrefix: true })
-  const [tracks, setTracks] = useState([])
+  const [lyrics, setLyrics] = useState()
 
   useEffect(() => {
     get('/v2/authorize/me').then((res) => {
@@ -22,16 +22,16 @@ function App({ location }) {
     })
   }, [])
 
-  function refreshTracks() {
-    setTracks([...tracks])
-  }
+  useEffect(() => {
+    if (track) setLyrics(track.lyrics)
+  }, [track])
 
   window.history.pushState('', '', '/main')
   return (
     <div className="App">
       <header className="App-header">
         {(token || user) && (
-          <Grid container>
+          <Grid container spacing={1}>
             <Grid item xs={4}>
               <Playlists
                 setPlaylist={setPlaylist}
@@ -41,12 +41,14 @@ function App({ location }) {
               ></Playlists>
             </Grid>
             <Grid item xs={8}>
-              <Grid container direction="column">
+              <Grid container direction="column" spacing={1}>
                 <Grid item>
                   <Lyrics
                     track={track}
                     setTrackId={setTrackId}
-                    refreshTracks={refreshTracks}
+                    setPlaylist={setPlaylist}
+                    lyrics={lyrics}
+                    setLyrics={setLyrics}
                   ></Lyrics>
                 </Grid>
                 <Grid item>
@@ -58,8 +60,7 @@ function App({ location }) {
                     trackId={trackId}
                     track={track}
                     setTrack={setTrack}
-                    tracks={tracks}
-                    setTracks={setTracks}
+                    lyrics={lyrics}
                   ></Playlist>
                 </Grid>
               </Grid>

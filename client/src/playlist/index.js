@@ -26,10 +26,10 @@ export default function Playlist({
   setTrack,
   track,
   trackId,
-  tracks,
-  setTracks,
+  lyrics,
 }) {
   const [offset, setOffset] = useState()
+  const [tracks, setTracks] = useState([])
   const [rawTracks, setRawTracks] = useState([])
   const [trackToDownload, setTrackToDownload] = useState()
   const [tracksToDownload, setTracksToDownload] = useState([])
@@ -39,17 +39,21 @@ export default function Playlist({
   const [hideArtist, setHideArtist] = useState(false)
 
   setToken(token)
-  useEffect(selectTrack, [trackId])
-  useEffect(refreshPlaylist, [playlist])
+  useEffect(selectTrack, [trackId, rawTracks])
+  useEffect(showPlaylist, [playlist])
   useEffect(addTracks, [offset])
+  useEffect(refreshPlaylist, [lyrics])
+
+  function refreshPlaylist() {
+    setTracks([...tracks])
+  }
 
   function selectTrack() {
     const cpTrack = tracks.find((t) => t.id === trackId)
-    setTrack(cpTrack)
+    setTrack(cpTrack || tracks[0])
   }
 
-  function refreshPlaylist() {
-    setTracks([])
+  function showPlaylist() {
     if (playlist) {
       setOffset(0)
     }
@@ -64,9 +68,6 @@ export default function Playlist({
           if (!newTracks || newTracks.length === 0) return
           newTracks = [...tracks, ...newTracks]
           setTracks(newTracks)
-          if (offset === 0) {
-            setTrack(newTracks[0])
-          }
           setOffset(hasMore ? newTracks.length : null)
           if (!hasMore) {
             setRawTracks(newTracks)

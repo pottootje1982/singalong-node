@@ -27,10 +27,14 @@ router.get('/currently-playing', async (req, res) => {
   var spotifyApi: SpotifyApi = createApi(req)
   const playing = await spotifyApi.api.getMyCurrentPlayingTrack()
   const result = []
-  const context = playing && playing.body.context
-  if (playing && context && context.uri && !context.uri.includes('undefined'))
+  let context = playing && playing.body.context
+  let uri =
+    context && context.uri && !context.uri.includes('undefined') && context.uri
+  const track = playing.body && playing.body.item && playing.body.item.uri
+  uri = uri || track
+  if (uri)
     result.push({
-      uri: context && context.uri,
+      uri: context ? context.uri : track,
       name: 'Currently playing',
     })
   return res.json(result)
@@ -38,9 +42,7 @@ router.get('/currently-playing', async (req, res) => {
 
 router.get('/:uri', async (req, res) => {
   var spotifyApi: SpotifyApi = createApi(req)
-  let tracks = await spotifyApi.getPlaylistFromUri(
-    req.params.uri.replace('spotify:user:', '')
-  )
+  let tracks = await spotifyApi.getPlaylistFromUri(req.params.uri)
   tracks = tracks.map(({ id, name, artists }) =>
     createTrack(artists[0] && artists[0].name, name, id)
   )

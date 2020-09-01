@@ -138,7 +138,15 @@ export class SpotifyApi {
     return Playlist.Empty()
   }
 
+  reformatUri(uri: string) {
+    return (
+      uri &&
+      uri.replace(/spotify:user:\d+/, 'spotify').replace('spotify:user:', '')
+    )
+  }
+
   async getPlaylistFromUri(uri: string) {
+    uri = this.reformatUri(uri)
     const [, type, id] = uri.split(':')
     switch (type) {
       case 'artist':
@@ -152,9 +160,30 @@ export class SpotifyApi {
         return playlistTracks.body.tracks.items
           .map((i) => i.track)
           .filter((t) => t)
+      case 'track':
+        const track = await this.api.getTrack(id)
+        return [track.body]
       default:
         break
     }
+  }
+
+  async getCurrentlyPlayingTrack() {
+    const currentTrack = await this.api.getMyCurrentPlayingTrack()
+    const track: any =
+      currentTrack && currentTrack.body && currentTrack.body.item
+        ? Track.fromSpotify(currentTrack.body.item)
+        : {}
+    const uri =
+      currentTrack &&
+      currentTrack.body &&
+      currentTrack.body.context &&
+      currentTrack.body.context.uri
+    if (track) {
+      track.progress_ms = currentTrack.body.progress_ms
+      track.is_playing = currentTrack.body.is_playing
+    }
+    return { track, uri: this.reformatUri(uri) }
   }
 
   async doAsyncApiCall(func): Promise<any> {
