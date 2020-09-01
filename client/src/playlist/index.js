@@ -4,6 +4,8 @@ import green from '@material-ui/core/colors/green'
 import red from '@material-ui/core/colors/red'
 import orange from '@material-ui/core/colors/orange'
 import {
+  Checkbox,
+  FormControlLabel,
   IconButton,
   ListItem,
   ListItemText,
@@ -14,7 +16,6 @@ import PlayIcon from '@material-ui/icons/PlayArrow'
 import DownloadIcon from '@material-ui/icons/GetApp'
 import ToggleButton from '@material-ui/lab/ToggleButton'
 import { getMinimalTitle } from '../track_helpers'
-import { Button } from '../Styled'
 
 const sleepTime = 3000
 
@@ -29,14 +30,16 @@ export default function Playlist({
   setTracks,
 }) {
   const [offset, setOffset] = useState()
+  const [rawTracks, setRawTracks] = useState([])
   const [trackToDownload, setTrackToDownload] = useState()
   const [tracksToDownload, setTracksToDownload] = useState([])
   const [isDownloading, setIsDownloading] = useState(false)
+  const [isTitleMinimal, setIsTitleMinimal] = useState(false)
+  const [isNotDownloaded, setIsNotDownloaded] = useState(false)
+  const [hideArtist, setHideArtist] = useState(false)
 
   setToken(token)
-
   useEffect(selectTrack, [trackId])
-
   useEffect(refreshPlaylist, [playlist])
   useEffect(addTracks, [offset])
 
@@ -53,7 +56,7 @@ export default function Playlist({
   }
 
   function addTracks() {
-    if (user && playlist && !isNaN(offset)) {
+    if (user && playlist && isNaN(offset)) {
       const offsetQuery = `?offset=${offset}`
 
       get(`v2/playlists/${playlist}${offsetQuery}`)
@@ -65,6 +68,9 @@ export default function Playlist({
             setTrack(newTracks[0])
           }
           setOffset(hasMore ? newTracks.length : null)
+          if (!hasMore) {
+            setRawTracks(newTracks)
+          }
         })
         .catch((err) => console.log(err))
     }
@@ -99,8 +105,6 @@ export default function Playlist({
   function downloadTrack() {
     const toDownload = tracksToDownload[0]
     if (!toDownload) return
-    console.log('Downloading ', toDownload)
-    console.log('Sleeping ', trackToDownload ? sleepTime : 0)
     sleep(trackToDownload ? sleepTime : 0).then(() => {
       if (!isDownloading) return
       setTrackToDownload(toDownload)
@@ -122,11 +126,19 @@ export default function Playlist({
     return new Promise((resolve) => setTimeout(resolve, ms))
   }
 
+  useEffect(minimizeTitle, [isTitleMinimal, isNotDownloaded, hideArtist])
+
   function minimizeTitle() {
-    for (const track of tracks) {
-      track.title = getMinimalTitle(track.title)
-      setTracks([...tracks])
-    }
+    const minimizedTracks = rawTracks.map((track) => ({
+      ...track,
+      artist: hideArtist ? null : track.artist,
+      title: isTitleMinimal ? getMinimalTitle(track.title) : track.title,
+    }))
+    setTracks(
+      minimizedTracks.filter((track) =>
+        isNotDownloaded ? !track.lyrics : true
+      )
+    )
   }
 
   return (
@@ -139,16 +151,45 @@ export default function Playlist({
         >
           <DownloadIcon />
         </ToggleButton>
-        <Button
-          onClick={() => {
-            minimizeTitle()
-          }}
-        >
-          Minimize
-        </Button>
+        <FormControlLabel
+          control={
+            <Checkbox
+              checked={isTitleMinimal}
+              onClick={() => {
+                setIsTitleMinimal(!isTitleMinimal)
+              }}
+            />
+          }
+          label="Minimize title"
+        />
+        <FormControlLabel
+          control={
+            <Checkbox
+              checked={isNotDownloaded}
+              onClick={() => {
+                setIsNotDownloaded(!isNotDownloaded)
+              }}
+            />
+          }
+          label="Not downloaded"
+        />
+        <FormControlLabel
+          control={
+            <Checkbox
+              checked={hideArtist}
+              onClick={() => {
+                setHideArtist(!hideArtist)
+              }}
+            />
+          }
+          label="Hide artist"
+        />
       </Grid>
       <Grid item>
-        <List style={{ maxHeight: '50vh', overflow: 'auto' }} dense>
+        <List
+          style={{ maxHeight: '50vh', overflow: 'auto', width: '50vw' }}
+          dense
+        >
           {tracks.map((t, index) => (
             <ListItem
               button
@@ -165,7 +206,7 @@ export default function Playlist({
                   <PlayIcon></PlayIcon>
                 </IconButton>
                 <ListItemText
-                  primary={`${t.artist} - ${t.title}`}
+                  primary={t.artist ? `${t.artist} - ${t.title}` : t.title}
                   style={{
                     color:
                       t === trackToDownload
