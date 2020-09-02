@@ -19,6 +19,7 @@ export class SpotifyApi {
   public api: SpotifyWebApi
 
   constructor(host: string, tokens?: any) {
+    host = host || process.env.ENDPOINT
     this.api = new SpotifyWebApi({
       clientId: process.env.SPOTIFY_KEY,
       clientSecret: process.env.SPOTIFY_SECRET,
