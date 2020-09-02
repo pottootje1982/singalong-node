@@ -2,7 +2,6 @@
 import express = require('express')
 import path = require('path')
 
-import users from './routes/user'
 import authorize from './routes/authorize'
 import playlists from './routes/playlists'
 import lyrics from './routes/lyrics'
@@ -31,7 +30,6 @@ process.on('unhandledRejection', (reason, p) => {
 const cors = require('cors')
 app.use(cors())
 
-app.use('/users', users)
 app.use('/v2/authorize', authorize)
 app.use('/v2/playlists', playlists)
 app.use('/v2/lyrics', lyrics)
