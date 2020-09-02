@@ -26,7 +26,7 @@ export default function Playlist({
   setTrack,
   track,
   trackId,
-  lyrics,
+  setTrackId,
 }) {
   const [offset, setOffset] = useState()
   const [tracks, setTracks] = useState([])
@@ -42,10 +42,15 @@ export default function Playlist({
   useEffect(selectTrack, [trackId, rawTracks])
   useEffect(showPlaylist, [playlist])
   useEffect(addTracks, [offset])
-  useEffect(refreshPlaylist, [lyrics])
+  useEffect(refreshPlaylist, [track])
 
   function refreshPlaylist() {
-    setTracks([...tracks])
+    if (track && track.id) {
+      const index = tracks.indexOf((t) => t.id === track.id)
+      const rawTrack = rawTracks.find((t) => t.id === track.id)
+      if (rawTrack) rawTrack.lyrics = track.lyrics
+      setTracks([...tracks.slice(0, index), track, tracks.slice(index + 1)])
+    }
   }
 
   function selectTrack() {
@@ -67,7 +72,6 @@ export default function Playlist({
         .then(({ data: { tracks: newTracks, hasMore } }) => {
           if (!newTracks || newTracks.length === 0) return
           newTracks = [...tracks, ...newTracks]
-          setTracks(newTracks)
           setOffset(hasMore ? newTracks.length : null)
           if (!hasMore) {
             setRawTracks(newTracks)
@@ -127,7 +131,12 @@ export default function Playlist({
     return new Promise((resolve) => setTimeout(resolve, ms))
   }
 
-  useEffect(minimizeTitle, [isTitleMinimal, isNotDownloaded, hideArtist])
+  useEffect(minimizeTitle, [
+    isTitleMinimal,
+    isNotDownloaded,
+    hideArtist,
+    rawTracks,
+  ])
 
   function minimizeTitle() {
     const minimizedTracks = rawTracks.map((track) => ({
@@ -195,8 +204,8 @@ export default function Playlist({
             <ListItem
               button
               key={index}
-              selected={t === track}
-              onClick={() => setTrack(t)}
+              selected={t.id === trackId}
+              onClick={() => setTrackId(t.id)}
             >
               <div style={{ display: 'flex', flexDirection: 'row' }}>
                 <IconButton

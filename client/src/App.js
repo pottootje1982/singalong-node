@@ -14,17 +14,12 @@ function App({ location }) {
   const [user, setUser] = useState()
   const query = location.search
   const { token } = qs.parse(query, { ignoreQueryPrefix: true })
-  const [lyrics, setLyrics] = useState()
 
   useEffect(() => {
     get('/v2/authorize/me').then((res) => {
       setUser(res.data.body.id)
     })
   }, [])
-
-  useEffect(() => {
-    if (track) setLyrics(track.lyrics)
-  }, [track])
 
   window.history.pushState('', '', '/main')
   return (
@@ -45,10 +40,9 @@ function App({ location }) {
                 <Grid item>
                   <Lyrics
                     track={track}
+                    setTrack={setTrack}
                     setTrackId={setTrackId}
                     setPlaylist={setPlaylist}
-                    lyrics={lyrics}
-                    setLyrics={setLyrics}
                   ></Lyrics>
                 </Grid>
                 <Grid item>
@@ -57,10 +51,10 @@ function App({ location }) {
                     playlist={playlist}
                     token={token}
                     user={user}
-                    trackId={trackId}
                     track={track}
+                    trackId={trackId}
+                    setTrackId={setTrackId}
                     setTrack={setTrack}
-                    lyrics={lyrics}
                   ></Playlist>
                 </Grid>
               </Grid>

@@ -4,18 +4,12 @@ import { get, post, del } from '../server'
 import { Grid } from '@material-ui/core'
 import { Button } from '../Styled'
 
-export default function Lyrics({
-  track,
-  setPlaylist,
-  setTrackId,
-  refreshTracks,
-  lyrics,
-  setLyrics,
-}) {
+export default function Lyrics({ track, setPlaylist, setTrack, setTrackId }) {
   const [showCurrentlyPlaying, setShowCurrentlyPlaying] = useState()
   const [currentlyPlayingProbe, setCurrentlyPlayingProbe] = useState()
   const [sites, setSites] = useState({})
   const lyricsRef = useRef(null)
+  const [lyrics, setLyrics] = useState()
 
   function setOrClearProbe() {
     if (showCurrentlyPlaying) {
@@ -29,6 +23,10 @@ export default function Lyrics({
   useEffect(setOrClearProbe, [showCurrentlyPlaying])
 
   useEffect(getSites, [])
+
+  useEffect(() => {
+    if (track) setLyrics(track.lyrics)
+  }, [track])
 
   function checkCurrentlyPlaying() {
     get('/v2/player').then(
@@ -62,13 +60,13 @@ export default function Lyrics({
     const lyrics = lyricsRef.current.value
     post('/v2/lyrics', { track, lyrics })
     track.lyrics = lyrics
-    refreshTracks()
+    setTrack({ ...track })
   }
 
   function removeLyrics(track) {
     track.lyrics = null
     del('/v2/lyrics', { data: { track } })
-    refreshTracks()
+    setTrack({ ...track })
   }
 
   track = track || {}
