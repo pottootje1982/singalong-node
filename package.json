@@ -5,7 +5,7 @@
   "scripts": {
     "start": "node app",
     "test": "jest",
-    "heroku-postbuild": "tsc"
+    "heroku-postbuild": "tsc && cd client && npm install && npm run build"
   },
   "description": "ExpressApp3",
   "author": {

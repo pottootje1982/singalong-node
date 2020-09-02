@@ -1,4 +1,4 @@
-var track_helpers = require('../public/javascripts/track_helpers')
+var track_helpers = require('../client/src/track_helpers')
 
 export class Track {
   getQueryTitle(): any {

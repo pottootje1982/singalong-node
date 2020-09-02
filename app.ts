@@ -2,7 +2,6 @@
 import express = require('express')
 import path = require('path')
 
-import routes from './routes/index'
 import users from './routes/user'
 import authorize from './routes/authorize'
 import playlists from './routes/playlists'
@@ -42,15 +41,19 @@ process.on('unhandledRejection', (reason, p) => {
 const cors = require('cors')
 app.use(cors())
 
-app.use('/', routes)
 app.use('/users', users)
 app.use('/v2/authorize', authorize)
 app.use('/v2/playlists', playlists)
 app.use('/v2/lyrics', lyrics)
 app.use('/v2/player', player)
 
-// error handlers
+// The "catchall" handler: for any request that doesn't
+// match one above, send back React's index.html file.
+app.get('*', (req, res) => {
+  res.sendFile(path.join(__dirname + '/client/build/index.html'))
+})
 
+// error handlers
 app.use((err: any, req, res, next) => {
   res.status(err['status'] || 500)
   res.render('error', {
