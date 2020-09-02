@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react'
-import { TextField, Checkbox, FormControlLabel } from '@material-ui/core'
+import { TextField, Checkbox } from '@material-ui/core'
 import { get, post, del } from '../server'
 import { Grid } from '@material-ui/core'
 import { Button } from '../Styled'
@@ -67,19 +67,27 @@ export default function Lyrics({ track, setPlaylist, setTrack, setTrackId }) {
   track = track || {}
   const label = track.artist ? ` ${track.artist} - ${track.title}` : ''
   return (
-    <div>
-      <FormControlLabel
-        control={
+    <Grid container spacing={1}>
+      <Grid container item alignItems="center">
+        <Grid item>
           <Checkbox
             color="primary"
             onChange={(_e, checked) => setShowCurrentlyPlaying(checked)}
-          ></Checkbox>
-        }
-        label="Show currently playing"
-      />
-
-      <Grid container>
-        <Grid item xs={10}>
+          />
+        </Grid>
+        <Grid item>
+          <Button
+            style={{ width: 200 }}
+            onClick={() => {
+              checkCurrentlyPlaying()
+            }}
+          >
+            Show currently playing
+          </Button>
+        </Grid>
+      </Grid>
+      <Grid container item>
+        <Grid item xs={11}>
           <TextField
             key={lyrics}
             inputRef={lyricsRef}
@@ -88,11 +96,11 @@ export default function Lyrics({ track, setPlaylist, setTrack, setTrackId }) {
             multiline
             rows={18}
             defaultValue={lyrics}
-            style={{ width: '50vw' }}
+            style={{ width: '60vw' }}
             variant="outlined"
           />
         </Grid>
-        <Grid item xs={2}>
+        <Grid item xs={1}>
           <Grid container>
             {Object.entries(sites).map(([key, engine]) => (
               <Grid key={key} item>
@@ -108,6 +116,6 @@ export default function Lyrics({ track, setPlaylist, setTrack, setTrackId }) {
           </Grid>
         </Grid>
       </Grid>
-    </div>
+    </Grid>
   )
 }

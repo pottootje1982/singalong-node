@@ -7,6 +7,11 @@ export default styled(({ ...otherProps }) => (
     variant="contained"
     color="primary"
     {...otherProps}
-    style={{ width: 100, margin: 5, textTransform: 'none' }}
+    style={{
+      width: 100,
+      margin: 5,
+      textTransform: 'none',
+      ...(otherProps.style || []),
+    }}
   />
 ))``

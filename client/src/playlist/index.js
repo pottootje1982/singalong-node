@@ -153,47 +153,56 @@ export default function Playlist({
 
   return (
     <Grid container>
-      <Grid item>
-        <ToggleButton
-          value="check"
-          selected={isDownloading}
-          onClick={() => setIsDownloading(!isDownloading)}
-        >
-          <DownloadIcon />
-        </ToggleButton>
-        <FormControlLabel
-          control={
-            <Checkbox
-              checked={isTitleMinimal}
-              onClick={() => {
-                setIsTitleMinimal(!isTitleMinimal)
-              }}
-            />
-          }
-          label="Minimize title"
-        />
-        <FormControlLabel
-          control={
-            <Checkbox
-              checked={isNotDownloaded}
-              onClick={() => {
-                setIsNotDownloaded(!isNotDownloaded)
-              }}
-            />
-          }
-          label="Not downloaded"
-        />
-        <FormControlLabel
-          control={
-            <Checkbox
-              checked={hideArtist}
-              onClick={() => {
-                setHideArtist(!hideArtist)
-              }}
-            />
-          }
-          label="Hide artist"
-        />
+      <Grid container item spacing={1} alignItems="center">
+        <Grid item>
+          <ToggleButton
+            value="check"
+            selected={isDownloading}
+            onClick={() => setIsDownloading(!isDownloading)}
+            style={{ width: 30, height: 30 }}
+          >
+            <DownloadIcon />
+          </ToggleButton>
+        </Grid>
+        <Grid item>
+          <FormControlLabel
+            control={
+              <Checkbox
+                checked={isTitleMinimal}
+                onClick={() => {
+                  setIsTitleMinimal(!isTitleMinimal)
+                }}
+              />
+            }
+            label="Minimize title"
+          />
+        </Grid>
+        <Grid item>
+          <FormControlLabel
+            control={
+              <Checkbox
+                checked={isNotDownloaded}
+                onClick={() => {
+                  setIsNotDownloaded(!isNotDownloaded)
+                }}
+              />
+            }
+            label="Not downloaded"
+          />
+        </Grid>
+        <Grid item>
+          <FormControlLabel
+            control={
+              <Checkbox
+                checked={hideArtist}
+                onClick={() => {
+                  setHideArtist(!hideArtist)
+                }}
+              />
+            }
+            label="Hide artist"
+          />
+        </Grid>
       </Grid>
       <Grid item>
         <List
