@@ -29,17 +29,12 @@ export default function Lyrics({ track, setPlaylist, setTrack, setTrackId }) {
   }, [track])
 
   function checkCurrentlyPlaying() {
-    get('/v2/player').then(
-      ({
-        data: {
-          track: { id },
-          uri,
-        },
-      }) => {
+    get('/v2/player').then(({ data: { track, uri } }) => {
+      if (track) {
         setPlaylist(uri)
-        setTrackId(id)
+        setTrackId(track.id)
       }
-    )
+    })
   }
 
   function getSites() {

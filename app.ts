@@ -11,6 +11,9 @@ var bodyParser = require('body-parser')
 
 var app = express()
 
+// Serve static files from the React app
+app.use(express.static(path.join(__dirname, 'client/build')))
+
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: false }))
 
@@ -18,20 +21,7 @@ app.use(bodyParser.urlencoded({ extended: false }))
 app.set('views', path.join(__dirname, 'views'))
 app.set('view engine', 'pug')
 
-app.use(express.static(path.join(__dirname, 'public')))
-
-app.use((req, _res, next) => {
-  req.query.invoke = function () {
-    let params = Array.prototype.slice.call(arguments, 1)
-    return (
-      arguments[0] +
-      '(' +
-      params.map((arg) => JSON.stringify(arg)).join(', ') +
-      ')'
-    )
-  }
-  next()
-})
+app.use(express.static(path.join(__dirname, '/client/public')))
 
 process.on('unhandledRejection', (reason, p) => {
   console.log('Unhandled Rejection at: Promise', p, 'reason:', reason)
