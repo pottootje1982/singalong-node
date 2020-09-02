@@ -87,7 +87,7 @@ export default function Lyrics({ track, setPlaylist, setTrack, setTrackId }) {
         </Grid>
       </Grid>
       <Grid container item>
-        <Grid item xs={11}>
+        <Grid item xs={10}>
           <TextField
             key={lyrics}
             inputRef={lyricsRef}
@@ -96,11 +96,11 @@ export default function Lyrics({ track, setPlaylist, setTrack, setTrackId }) {
             multiline
             rows={18}
             defaultValue={lyrics}
-            style={{ width: '60vw' }}
+            style={{ width: '50vw' }}
             variant="outlined"
           />
         </Grid>
-        <Grid item xs={1}>
+        <Grid item xs={2}>
           <Grid container>
             {Object.entries(sites).map(([key, engine]) => (
               <Grid key={key} item>

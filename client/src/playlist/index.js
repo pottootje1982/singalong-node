@@ -39,17 +39,21 @@ export default function Playlist({
   const [hideArtist, setHideArtist] = useState(false)
 
   setToken(token)
-  useEffect(selectTrack, [trackId, rawTracks])
+  useEffect(selectTrack, [trackId])
   useEffect(showPlaylist, [playlist])
   useEffect(addTracks, [offset])
   useEffect(refreshPlaylist, [track])
 
   function refreshPlaylist() {
     if (track && track.id) {
-      const index = tracks.indexOf((t) => t.id === track.id)
+      const foundTrack = tracks.find((t) => t.id === track.id)
       const rawTrack = rawTracks.find((t) => t.id === track.id)
+      if (!foundTrack) return
+      const index = tracks.indexOf(foundTrack)
       if (rawTrack) rawTrack.lyrics = track.lyrics
-      setTracks([...tracks.slice(0, index), track, tracks.slice(index + 1)])
+      if (!Object.is(track, foundTrack)) {
+        setTracks([...tracks.slice(0, index), track, tracks.slice(index + 1)])
+      }
     }
   }
 
@@ -65,17 +69,15 @@ export default function Playlist({
   }
 
   function addTracks() {
-    if (user && playlist && isNaN(offset)) {
+    if (user && playlist && !isNaN(offset)) {
       const offsetQuery = `?offset=${offset}`
 
       get(`v2/playlists/${playlist}${offsetQuery}`)
         .then(({ data: { tracks: newTracks, hasMore } }) => {
           if (!newTracks || newTracks.length === 0) return
           newTracks = [...tracks, ...newTracks]
+          setRawTracks(newTracks)
           setOffset(hasMore ? newTracks.length : null)
-          if (!hasMore) {
-            setRawTracks(newTracks)
-          }
         })
         .catch((err) => console.log(err))
     }
@@ -206,7 +208,7 @@ export default function Playlist({
       </Grid>
       <Grid item>
         <List
-          style={{ maxHeight: '50vh', overflow: 'auto', width: '50vw' }}
+          style={{ maxHeight: '48vh', overflow: 'auto', width: '50vw' }}
           dense
         >
           {tracks.map((t, index) => (
@@ -214,6 +216,7 @@ export default function Playlist({
               button
               key={index}
               selected={t.id === trackId}
+              autoFocus={t.id === trackId}
               onClick={() => setTrackId(t.id)}
             >
               <div style={{ display: 'flex', flexDirection: 'row' }}>

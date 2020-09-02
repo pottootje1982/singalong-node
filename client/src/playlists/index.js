@@ -27,7 +27,7 @@ function Playlists({ setPlaylist, playlist, token, user }) {
   }, [playlists, setPlaylist])
 
   return (
-    <List dense style={{ maxHeight: '100vh', overflow: 'auto' }}>
+    <List dense style={{ maxHeight: '97vh', overflow: 'auto' }}>
       {playlists.map((p, index) => (
         <ListItem
           button
