@@ -1,6 +1,6 @@
 const router = require('./router')()
 
-import { SpotifyApi, createApi } from '../scripts/spotify'
+import { SpotifyApi, createApi, saveToken } from '../scripts/spotify'
 const fs = require('fs')
 
 router.get('/', async (req, res) => {
@@ -12,7 +12,7 @@ router.get('/token', async (req, res) => {
   var spotifyApi: SpotifyApi = new SpotifyApi(req.headers.origin)
   const tokens = await spotifyApi.getToken(req.query.code)
   if (!process.env.NODE_ENV) {
-    fs.writeFileSync('./token.txt', tokens.body.access_token)
+    saveToken(tokens.body.access_token)
   }
   res.json(tokens)
 })

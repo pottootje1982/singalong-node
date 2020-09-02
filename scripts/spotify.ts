@@ -175,10 +175,11 @@ export class SpotifyApi {
         ? Track.fromSpotify(currentTrack.body.item)
         : {}
     const uri =
-      currentTrack &&
-      currentTrack.body &&
-      currentTrack.body.context &&
-      currentTrack.body.context.uri
+      (currentTrack &&
+        currentTrack.body &&
+        currentTrack.body.context &&
+        currentTrack.body.context.uri) ||
+      currentTrack.body.item.uri
     if (track) {
       track.progress_ms = currentTrack.body.progress_ms
       track.is_playing = currentTrack.body.is_playing
@@ -224,6 +225,11 @@ function getTokens(req) {
       fs.readFileSync('./token.txt', { encoding: 'utf8', flag: 'r' })
   }
   return { accessToken }
+}
+
+export function saveToken(token) {
+  cachedFileToken = token
+  fs.writeFileSync('./token.txt', token)
 }
 
 export function createApi(req): SpotifyApi {
