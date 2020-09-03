@@ -1,10 +1,25 @@
 import React, { useState, useEffect, useRef } from 'react'
-import { TextField, Checkbox } from '@material-ui/core'
+import { TextField, Checkbox, Fab } from '@material-ui/core'
 import { get, post, del } from '../server'
 import { Grid } from '@material-ui/core'
 import { Button } from '../Styled'
+import {
+  ChevronRight,
+  ChevronLeft,
+  KeyboardArrowUp,
+  KeyboardArrowDown,
+} from '@material-ui/icons'
 
-export default function Lyrics({ track, setPlaylist, setTrack, setTrackId }) {
+export default function Lyrics({
+  track,
+  setPlaylist,
+  setTrack,
+  setTrackId,
+  hidePlaylists,
+  setHidePlaylists,
+  hidePlaylist,
+  setHidePlaylist,
+}) {
   const [showCurrentlyPlaying, setShowCurrentlyPlaying] = useState()
   const [currentlyPlayingProbe, setCurrentlyPlayingProbe] = useState()
   const [sites, setSites] = useState({})
@@ -65,8 +80,11 @@ export default function Lyrics({ track, setPlaylist, setTrack, setTrackId }) {
   track = track || {}
   const label = track.artist ? ` ${track.artist} - ${track.title}` : ''
   return (
-    <Grid container spacing={1}>
+    <Grid container spacing={1} style={{ height: hidePlaylist && '100vh' }}>
       <Grid container item alignItems="center">
+        <Fab size="small" onClick={() => setHidePlaylists(!hidePlaylists)}>
+          {hidePlaylists ? <ChevronRight /> : <ChevronLeft />}
+        </Fab>
         <Grid item>
           <Checkbox
             color="primary"
@@ -98,18 +116,19 @@ export default function Lyrics({ track, setPlaylist, setTrack, setTrackId }) {
         <Grid item xs={10}>
           <TextField
             key={lyrics}
+            fullWidth
+            fullHeight
             inputRef={lyricsRef}
             id="outlined-multiline-static"
             label={`Lyrics${label}`}
             multiline
-            rows={18}
+            rows={!hidePlaylist && 18}
             defaultValue={lyrics}
-            style={{ width: '50vw' }}
             variant="outlined"
           />
         </Grid>
-        <Grid item xs={2}>
-          <Grid container>
+        <Grid item xs="auto">
+          <Grid container direction="column">
             {Object.entries(sites).map(([key, engine]) => (
               <Grid key={key} item>
                 <Button onClick={() => downloadLyrics(track, key)}>
@@ -118,9 +137,23 @@ export default function Lyrics({ track, setPlaylist, setTrack, setTrackId }) {
               </Grid>
             ))}
           </Grid>
-          <Grid container style={{ marginTop: 50 }}>
-            <Button onClick={() => saveLyrics(track)}>Save</Button>
-            <Button onClick={() => removeLyrics(track)}>Remove</Button>
+          <Grid
+            container
+            style={{ marginTop: 50 }}
+            direction="column"
+            alignItems="center"
+          >
+            <Grid item>
+              <Button onClick={() => saveLyrics(track)}>Save</Button>
+            </Grid>
+            <Grid item>
+              <Button onClick={() => removeLyrics(track)}>Remove</Button>
+            </Grid>
+            <Grid item>
+              <Fab size="small" onClick={() => setHidePlaylist(!hidePlaylist)}>
+                {hidePlaylist ? <KeyboardArrowUp /> : <KeyboardArrowDown />}
+              </Fab>
+            </Grid>
           </Grid>
         </Grid>
       </Grid>
