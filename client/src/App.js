@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react'
 import Playlists from './playlists'
 import Playlist from './playlist'
 import Lyrics from './lyrics'
+import Fab from '@material-ui/core/Fab'
+import AddIcon from '@material-ui/icons/Add'
 
 import { Grid } from '@material-ui/core'
 import qs from 'qs'
@@ -26,40 +28,52 @@ function App({ location }) {
     <div className="App">
       <header className="App-header">
         {(token || user) && (
-          <Grid container spacing={1}>
-            <Grid item xs={4}>
-              <Playlists
-                setPlaylist={setPlaylist}
-                playlist={playlist}
-                user={user}
-                token={token}
-              ></Playlists>
-            </Grid>
-            <Grid item xs={8}>
-              <Grid container direction="column" spacing={1}>
-                <Grid item>
-                  <Lyrics
-                    track={track}
-                    setTrack={setTrack}
-                    setTrackId={setTrackId}
-                    setPlaylist={setPlaylist}
-                  ></Lyrics>
-                </Grid>
-                <Grid item>
-                  <Playlist
-                    key={playlist}
-                    playlist={playlist}
-                    token={token}
-                    user={user}
-                    track={track}
-                    trackId={trackId}
-                    setTrackId={setTrackId}
-                    setTrack={setTrack}
-                  ></Playlist>
+          <div>
+            <Fab
+              style={{
+                position: 'fixed',
+                top: '1rem',
+                left: '30vw',
+                zIndex: 4,
+              }}
+            >
+              <AddIcon />
+            </Fab>
+            <Grid container spacing={1}>
+              <Grid item xs={4}>
+                <Playlists
+                  setPlaylist={setPlaylist}
+                  playlist={playlist}
+                  user={user}
+                  token={token}
+                ></Playlists>
+              </Grid>
+              <Grid item xs={8}>
+                <Grid container direction="column" spacing={1}>
+                  <Grid item>
+                    <Lyrics
+                      track={track}
+                      setTrack={setTrack}
+                      setTrackId={setTrackId}
+                      setPlaylist={setPlaylist}
+                    ></Lyrics>
+                  </Grid>
+                  <Grid item>
+                    <Playlist
+                      key={playlist}
+                      playlist={playlist}
+                      token={token}
+                      user={user}
+                      track={track}
+                      trackId={trackId}
+                      setTrackId={setTrackId}
+                      setTrack={setTrack}
+                    ></Playlist>
+                  </Grid>
                 </Grid>
               </Grid>
             </Grid>
-          </Grid>
+          </div>
         )}
       </header>
     </div>

@@ -1,7 +1,8 @@
 ﻿import SpotifyWebApi = require('spotify-web-api-node')
-import { Track } from './track'
+import { Track, createTrack } from './track'
 import { Playlist } from './Playlist'
 const fs = require('fs')
+const { get } = require('axios')
 
 const scopes = [
   'user-read-private',
@@ -13,10 +14,18 @@ const scopes = [
 ]
 const state = 'some-state-of-my-choice'
 
-export const playlistLimit = 100
+export const limit = 100
+
+function tracks(tracks, hasMore = false) {
+  tracks = tracks.map(({ id, name, artists }) =>
+    createTrack(artists[0] && artists[0].name, name, id)
+  )
+  return { tracks, hasMore }
+}
 
 export class SpotifyApi {
   public api: SpotifyWebApi
+  private headers: any
 
   constructor(host: string, tokens?: any) {
     host = host || process.env.ENDPOINT
@@ -26,6 +35,9 @@ export class SpotifyApi {
       redirectUri: host + '/authorized',
     })
     tokens = tokens || {}
+    this.headers = {
+      Authorization: `Bearer ${tokens.accessToken}`,
+    }
     this.api.setAccessToken(tokens.accessToken)
     this.api.setRefreshToken(tokens.refreshToken)
   }
@@ -38,37 +50,11 @@ export class SpotifyApi {
     return textualPlaylist
   }
 
-  async getTextualPlaylist(userId: string, playlistId: string) {
-    var playlist = await this.getPlaylist(null, userId, playlistId)
-    return this.playlistToText(playlist.items)
-  }
-
   getDownloadedLyrics(playlist: Track[], downloaded: boolean = false) {
     var filtered = playlist.filter((track) =>
       downloaded ? track.lyrics == null : track.lyrics != null
     )
     return this.playlistToText(filtered)
-  }
-
-  async getPlaylist(
-    playlist: Playlist,
-    userId: string,
-    playlistId: string,
-    offset: number = 0
-  ): Promise<Playlist> {
-    var data
-    if (playlist == null) {
-      data = await this.api.getPlaylist(userId, playlistId)
-      playlist = Playlist.createFromPlaylist(userId, playlistId, data.body)
-    } else {
-      data = await this.api.getPlaylistTracks(userId, playlistId, {
-        offset: offset,
-        limit: playlistLimit,
-        fields: 'items',
-      })
-      playlist.addTracks(data.body.items)
-    }
-    return playlist
   }
 
   async getAlbum(albumId: string): Promise<Playlist> {
@@ -121,24 +107,6 @@ export class SpotifyApi {
     )
   }
 
-  async getCurrentlyPlaying() {
-    var currentTrack = await this.api.getMyCurrentPlayingTrack()
-    var context = currentTrack.body.context
-    var tokens
-    if (!context) return Playlist.Empty()
-    if (context.type === 'album') {
-      tokens = context.uri.split(':')
-      var albumId = tokens[2]
-      return await this.getAlbum(albumId)
-    } else if (context.type === 'playlist') {
-      tokens = context.uri.split(':')
-      let userId = tokens[2]
-      let playlistId = tokens[4]
-      return await this.getPlaylist(null, userId, playlistId)
-    }
-    return Playlist.Empty()
-  }
-
   reformatUri(uri: string) {
     return (
       uri &&
@@ -146,24 +114,40 @@ export class SpotifyApi {
     )
   }
 
-  async getPlaylistFromUri(uri: string) {
+  get(uri, params) {
+    return get(uri, {
+      headers: this.headers,
+      params,
+    }).then((res) => res.data)
+  }
+
+  getPlaylist(id, params) {
+    params = { limit, ...params }
+    return this.get(
+      `https://api.spotify.com/v1/playlists/${id}/tracks?fields=items(track(name,artists(name))),next`,
+      params
+    )
+  }
+
+  async getPlaylistFromUri(uri: string, options: any) {
     uri = this.reformatUri(uri)
     const [, type, id] = uri.split(':')
     switch (type) {
       case 'artist':
         const artistTracks = await this.api.getArtistTopTracks(id, 'NL')
-        return artistTracks.body.tracks
+        return tracks(artistTracks.body.tracks)
       case 'album':
         const albumTracks = await this.api.getAlbum(id)
-        return albumTracks.body.tracks.items
+        return tracks(albumTracks.body.tracks.items)
       case 'playlist':
-        const playlistTracks = await this.api.getPlaylist(id)
-        return playlistTracks.body.tracks.items
-          .map((i) => i.track)
-          .filter((t) => t)
+        const { items, next } = await this.getPlaylist(id, options)
+        return tracks(
+          items.map((i) => i.track).filter((t) => t),
+          !!next
+        )
       case 'track':
         const track = await this.api.getTrack(id)
-        return [track.body]
+        return tracks([track.body])
       default:
         break
     }
@@ -187,39 +171,13 @@ export class SpotifyApi {
     }
     return { track, uri: this.reformatUri(uri) }
   }
-
-  async doAsyncApiCall(func): Promise<any> {
-    try {
-      return await func(this.api)
-    } catch (err) {
-      console.log(
-        'Error executing async Spotify API call ' + func.name + ': ',
-        err.message
-      )
-    }
-    return new Promise((resolve) => resolve())
-  }
-
-  doApiCall(func): any {
-    try {
-      return func(this.api)
-    } catch (err) {
-      console.log(
-        'Error executing Spotify API call ' + func.name + ': ',
-        err.message
-      )
-    }
-    return null
-  }
 }
 
 let cachedFileToken
 
 function getTokens(req) {
-  const { accessToken: bodyToken } = req.body
-  const { accessToken: queryToken } = req.query
   const { accesstoken: headerToken } = req.headers
-  let accessToken = bodyToken || queryToken || headerToken
+  let accessToken = headerToken
   if (!accessToken && !process.env.NODE_ENV) {
     cachedFileToken = accessToken =
       cachedFileToken ||

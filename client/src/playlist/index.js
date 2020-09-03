@@ -46,13 +46,12 @@ export default function Playlist({
 
   function refreshPlaylist() {
     if (track && track.id) {
-      const foundTrack = tracks.find((t) => t.id === track.id)
       const rawTrack = rawTracks.find((t) => t.id === track.id)
-      if (!foundTrack) return
-      const index = tracks.indexOf(foundTrack)
-      if (rawTrack) rawTrack.lyrics = track.lyrics
-      if (!Object.is(track, foundTrack)) {
-        setTracks([...tracks.slice(0, index), track, tracks.slice(index + 1)])
+      if (rawTrack) {
+        rawTrack.lyrics = track.lyrics
+        if (!Object.is(track, rawTrack)) {
+          setRawTracks([...rawTracks])
+        }
       }
     }
   }
@@ -69,15 +68,15 @@ export default function Playlist({
   }
 
   function addTracks() {
+    console.log(offset, isNaN(offset))
     if (user && playlist && !isNaN(offset)) {
-      const offsetQuery = `?offset=${offset}`
-
-      get(`v2/playlists/${playlist}${offsetQuery}`)
+      get(`v2/playlists/${playlist}`, { params: { offset } })
         .then(({ data: { tracks: newTracks, hasMore } }) => {
           if (!newTracks || newTracks.length === 0) return
-          newTracks = [...tracks, ...newTracks]
+          newTracks = [...rawTracks, ...newTracks]
           setRawTracks(newTracks)
-          setOffset(hasMore ? newTracks.length : null)
+          console.log(offset, isNaN(offset), newTracks.length)
+          setOffset(hasMore ? newTracks.length : undefined)
         })
         .catch((err) => console.log(err))
     }
