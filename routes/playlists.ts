@@ -50,25 +50,4 @@ router.get('/:uri', async (req, res) => {
   return res.json({ tracks, hasMore })
 })
 
-router.get('/:id/users/:userId', async (req, res) => {
-  var spotifyApi: SpotifyApi = createApi(req)
-  const { userId, id } = req.params
-  let offset = req.query.offset
-  offset = offset && parseInt(offset)
-  const { body } = offset
-    ? await spotifyApi.api.getPlaylistTracks(userId, id, {
-        offset,
-        fields: 'items',
-      })
-    : await spotifyApi.api.getPlaylist(userId, id)
-  let tracks = (body.tracks ? body.tracks.items : body.items)
-    .filter((item) => item.track)
-    .map(({ track: { id, name, artists } }) =>
-      createTrack(artists[0] && artists[0].name, name, id)
-    )
-
-  tracks = await lyricsDb.queryPlaylist(tracks)
-  res.json({ hasMore: tracks.length === limit, tracks })
-})
-
 export default router.express()

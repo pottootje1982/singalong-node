@@ -48,8 +48,8 @@ export default function Playlist({
     if (track && track.id) {
       const rawTrack = rawTracks.find((t) => t.id === track.id)
       if (rawTrack) {
-        rawTrack.lyrics = track.lyrics
         if (!Object.is(track, rawTrack)) {
+          rawTrack.lyrics = track.lyrics
           setRawTracks([...rawTracks])
         }
       }
@@ -63,19 +63,26 @@ export default function Playlist({
 
   function showPlaylist() {
     if (playlist) {
-      setOffset(0)
+      if (playlist === 'FIP') showCurrentlyOnFip()
+      else setOffset(0)
     }
   }
 
+  function showCurrentlyOnFip() {
+    get('/radio/fip').then(({ data: { tracks, position } }) => {
+      setRawTracks(tracks)
+      setTrackId(tracks[position].id)
+    })
+  }
+
   function addTracks() {
-    console.log(offset, isNaN(offset))
     if (user && playlist && !isNaN(offset)) {
-      get(`v2/playlists/${playlist}`, { params: { offset } })
+      get(`playlists/${playlist}`, { params: { offset } })
         .then(({ data: { tracks: newTracks, hasMore } }) => {
           if (!newTracks || newTracks.length === 0) return
           newTracks = [...rawTracks, ...newTracks]
           setRawTracks(newTracks)
-          console.log(offset, isNaN(offset), newTracks.length)
+          if (offset === 0 && newTracks[0]) setTrackId(newTracks[0].id)
           setOffset(hasMore ? newTracks.length : undefined)
         })
         .catch((err) => console.log(err))
@@ -92,7 +99,7 @@ export default function Playlist({
       context_uri = playlist
       position = undefined
     }
-    server.put(`v2/player/play`, { ids, context_uri, offset: { id, position } })
+    server.put(`player/play`, { ids, context_uri, offset: { id, position } })
   }
 
   useEffect(downloadTracks, [isDownloading])
@@ -116,7 +123,7 @@ export default function Playlist({
       setTrackToDownload(toDownload)
       const tail = tracksToDownload.slice(1)
       setTrack(toDownload)
-      post('v2/lyrics/download', {
+      post('lyrics/download', {
         track: trackToDownload,
         sleepTime,
       }).then(async ({ data: { lyrics } }) => {

@@ -124,7 +124,7 @@ export class SpotifyApi {
   getPlaylist(id, params) {
     params = { limit, ...params }
     return this.get(
-      `https://api.spotify.com/v1/playlists/${id}/tracks?fields=items(track(name,artists(name))),next`,
+      `https://api.spotify.com/v1/playlists/${id}/tracks?fields=items(track(id,name,artists(name))),next`,
       params
     )
   }

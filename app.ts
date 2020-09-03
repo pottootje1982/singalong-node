@@ -6,6 +6,7 @@ import authorize from './routes/authorize'
 import playlists from './routes/playlists'
 import lyrics from './routes/lyrics'
 import player from './routes/player'
+import radio from './routes/radio'
 var bodyParser = require('body-parser')
 
 var app = express()
@@ -30,10 +31,11 @@ process.on('unhandledRejection', (reason, p) => {
 const cors = require('cors')
 app.use(cors())
 
-app.use('/v2/authorize', authorize)
-app.use('/v2/playlists', playlists)
-app.use('/v2/lyrics', lyrics)
-app.use('/v2/player', player)
+app.use('/authorize', authorize)
+app.use('/playlists', playlists)
+app.use('/lyrics', lyrics)
+app.use('/player', player)
+app.use('/radio', radio)
 
 // The "catchall" handler: for any request that doesn't
 // match one above, send back React's index.html file.

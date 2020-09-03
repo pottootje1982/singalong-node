@@ -13,8 +13,8 @@ function Playlists({ setPlaylist, playlist, token, user }) {
   function init() {
     user &&
       Promise.all([
-        get('v2/playlists/currently-playing'),
-        get(`v2/playlists?user=${user}`),
+        get('playlists/currently-playing'),
+        get(`playlists?user=${user}`),
       ]).then(([{ data }, rest]) => {
         setPlaylists([...data, ...rest.data])
       })

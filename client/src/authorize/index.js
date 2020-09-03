@@ -4,7 +4,7 @@ import server from '../server'
 import { Redirect } from 'react-router-dom'
 
 function Authorize() {
-  server.get('/v2/authorize').then((res) => {
+  server.get('/authorize').then((res) => {
     window.location = res.data
   })
   return <React.Fragment />
@@ -18,7 +18,7 @@ export function Authorized({ location }) {
 
   useEffect(() => {
     server
-      .get(`/v2/authorize/token?code=${code}`)
+      .get(`/authorize/token?code=${code}`)
       .then((res) => {
         const body = res.data.body
         const accessToken = body && body.access_token

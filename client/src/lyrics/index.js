@@ -13,7 +13,7 @@ export default function Lyrics({ track, setPlaylist, setTrack, setTrackId }) {
 
   function setOrClearProbe() {
     if (showCurrentlyPlaying) {
-      const probe = setInterval(checkCurrentlyPlaying, 2000)
+      const probe = setInterval(showCurrentlyPlaying, 2000)
       setCurrentlyPlayingProbe(probe)
     } else {
       clearInterval(currentlyPlayingProbe)
@@ -28,8 +28,8 @@ export default function Lyrics({ track, setPlaylist, setTrack, setTrackId }) {
     if (track) setLyrics(track.lyrics)
   }, [track])
 
-  function checkCurrentlyPlaying() {
-    get('/v2/player').then(({ data: { track, uri } }) => {
+  function showCurrentlyPlayingTrack() {
+    get('/player').then(({ data: { track, uri } }) => {
       if (track) {
         setPlaylist(uri)
         setTrackId(track.id)
@@ -38,29 +38,27 @@ export default function Lyrics({ track, setPlaylist, setTrack, setTrackId }) {
   }
 
   function getSites() {
-    get('/v2/lyrics/sites').then(({ data: { sites } }) => {
+    get('/lyrics/sites').then(({ data: { sites } }) => {
       setSites(sites || {})
     })
   }
 
   function downloadLyrics(track, site) {
-    post('/v2/lyrics/download', { track, site }).then(
-      ({ data: { lyrics } }) => {
-        setLyrics(lyrics)
-      }
-    )
+    post('/lyrics/download', { track, site }).then(({ data: { lyrics } }) => {
+      setLyrics(lyrics)
+    })
   }
 
   function saveLyrics(track) {
     const lyrics = lyricsRef.current.value
-    post('/v2/lyrics', { track, lyrics })
+    post('/lyrics', { track, lyrics })
     track.lyrics = lyrics
     setTrack({ ...track })
   }
 
   function removeLyrics(track) {
     track.lyrics = null
-    del('/v2/lyrics', { data: { track } })
+    del('/lyrics', { data: { track } })
     setTrack({ ...track })
   }
 
@@ -79,10 +77,20 @@ export default function Lyrics({ track, setPlaylist, setTrack, setTrackId }) {
           <Button
             style={{ width: 200 }}
             onClick={() => {
-              checkCurrentlyPlaying()
+              showCurrentlyPlayingTrack()
             }}
           >
             Show currently playing
+          </Button>
+        </Grid>
+        <Grid item>
+          <Button
+            style={{ width: 200 }}
+            onClick={() => {
+              setPlaylist('FIP')
+            }}
+          >
+            Currently on FIP
           </Button>
         </Grid>
       </Grid>

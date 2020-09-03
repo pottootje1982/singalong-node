@@ -18,7 +18,7 @@ function App({ location }) {
   const { token } = qs.parse(query, { ignoreQueryPrefix: true })
 
   useEffect(() => {
-    get('/v2/authorize/me').then((res) => {
+    get('/authorize/me').then((res) => {
       setUser(res.data.body.id)
     })
   }, [])
