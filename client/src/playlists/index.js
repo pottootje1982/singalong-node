@@ -34,7 +34,6 @@ function Playlists({ setPlaylist, playlist, token, user }) {
   function init() {
     if (user) {
       get('playlists/currently-playing').then(({ data }) => {
-        console.log(data)
         setCurrentlyPlaying(data)
       })
       setOffset(0)

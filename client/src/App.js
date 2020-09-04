@@ -12,8 +12,7 @@ function App({ location }) {
   const [track, setTrack] = useState({})
   const [trackId, setTrackId] = useState('')
   const [user, setUser] = useState()
-  const [hidePlaylists, setHidePlaylists] = useState(false)
-  const [hidePlaylist, setHidePlaylist] = useState(false)
+  const [lyricsFullscreen, setLyricsFullscreen] = useState(false)
   const query = location.search
   const { token } = qs.parse(query, { ignoreQueryPrefix: true })
 
@@ -33,7 +32,7 @@ function App({ location }) {
         width: '100%',
       }}
     >
-      <Grid item xs={3} style={{ display: hidePlaylists && 'none' }}>
+      <Grid item xs={3} style={{ display: lyricsFullscreen && 'none' }}>
         <Playlists
           setPlaylist={setPlaylist}
           playlist={playlist}
@@ -41,7 +40,7 @@ function App({ location }) {
           token={token}
         ></Playlists>
       </Grid>
-      <Grid item xs={hidePlaylists ? 12 : 8}>
+      <Grid item xs={lyricsFullscreen ? 12 : 8}>
         <Grid container direction="column" spacing={1} alignItems="stretch">
           <Grid item>
             <Lyrics
@@ -49,13 +48,11 @@ function App({ location }) {
               setTrack={setTrack}
               setTrackId={setTrackId}
               setPlaylist={setPlaylist}
-              hidePlaylists={hidePlaylists}
-              setHidePlaylists={setHidePlaylists}
-              hidePlaylist={hidePlaylist}
-              setHidePlaylist={setHidePlaylist}
+              lyricsFullscreen={lyricsFullscreen}
+              setLyricsFullscreen={setLyricsFullscreen}
             ></Lyrics>
           </Grid>
-          <Grid item style={{ display: hidePlaylist && 'none' }}>
+          <Grid item style={{ display: lyricsFullscreen && 'none' }}>
             <Playlist
               key={playlist}
               playlist={playlist}

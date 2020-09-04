@@ -1,15 +1,27 @@
 import React, { useState, useEffect, useRef } from 'react'
-import { TextField, Checkbox, Fab, Tooltip } from '@material-ui/core'
+import { TextField, Fab, Tooltip } from '@material-ui/core'
 import { get, post, del } from '../server'
-import { Grid, Menu, MenuItem, Divider } from '@material-ui/core'
 import {
-  ChevronRight,
-  ChevronLeft,
-  KeyboardArrowUp,
-  KeyboardArrowDown,
+  Grid,
+  Menu,
+  MenuItem,
+  Divider,
+  ListItemIcon,
+  ListItemText,
+} from '@material-ui/core'
+import {
+  Fullscreen,
+  FullscreenExit,
   Menu as MenuIcon,
   GetApp as DownloadIcon,
   QueueMusic,
+  Delete,
+  Save,
+  Search,
+  CheckBoxOutlineBlank,
+  CheckBoxOutlined,
+  SkipPrevious,
+  SkipNext,
 } from '@material-ui/icons'
 
 export default function Lyrics({
@@ -17,10 +29,8 @@ export default function Lyrics({
   setPlaylist,
   setTrack,
   setTrackId,
-  hidePlaylists,
-  setHidePlaylists,
-  hidePlaylist,
-  setHidePlaylist,
+  lyricsFullscreen,
+  setLyricsFullscreen,
 }) {
   const [showCurrentlyPlaying, setShowCurrentlyPlaying] = useState()
   const [currentlyPlayingProbe, setCurrentlyPlayingProbe] = useState()
@@ -30,8 +40,9 @@ export default function Lyrics({
   const [anchorEl, setAnchorEl] = useState()
 
   function setOrClearProbe() {
+    closeMenu()
     if (showCurrentlyPlaying) {
-      const probe = setInterval(showCurrentlyPlaying, 2000)
+      const probe = setInterval(showCurrentlyPlayingTrack, 2000)
       setCurrentlyPlayingProbe(probe)
     } else {
       clearInterval(currentlyPlayingProbe)
@@ -66,19 +77,23 @@ export default function Lyrics({
     post('/lyrics', { track, lyrics })
     track.lyrics = lyrics
     setTrack({ ...track })
-    setAnchorEl(null)
+    closeMenu()
   }
 
   function removeLyrics(track) {
     track.lyrics = null
     del('/lyrics', { data: { track } })
     setTrack({ ...track })
+    closeMenu()
+  }
+
+  function closeMenu() {
     setAnchorEl(null)
   }
 
   function downloadLyrics(track, site) {
     post('lyrics/download', { track, site }).then(({ data: { lyrics } }) => {
-      setAnchorEl(null)
+      closeMenu()
       if (lyrics) {
         track.lyrics = lyrics
         setTrack({ ...track })
@@ -86,26 +101,30 @@ export default function Lyrics({
     })
   }
 
+  function searchLyrics(track) {
+    window.open(
+      `https://www.google.com/search?q=${track.artist}+${track.title}+lyrics`,
+      '_blank'
+    )
+    closeMenu()
+  }
+
+  function skipTrack(direction) {
+    get('player/skip-track', { params: { direction } })
+  }
+
   track = track || {}
   const label = track.artist ? ` ${track.artist} - ${track.title}` : ''
   return (
-    <Grid container spacing={1} alignItems="stretch">
+    <Grid container spacing={1} direction="column" alignItems="stretch">
       <Grid container item alignItems="center" spacing={1}>
         <Grid item>
-          <Fab size="small" onClick={() => setHidePlaylists(!hidePlaylists)}>
-            {hidePlaylists ? <ChevronRight /> : <ChevronLeft />}
-          </Fab>
-        </Grid>
-        <Grid item>
-          <Tooltip
-            title="Monitor currently playing track on Spotify"
-            aria-label="add"
+          <Fab
+            size="small"
+            onClick={() => setLyricsFullscreen(!lyricsFullscreen)}
           >
-            <Checkbox
-              color="primary"
-              onChange={(_e, checked) => setShowCurrentlyPlaying(checked)}
-            />
-          </Tooltip>
+            {lyricsFullscreen ? <FullscreenExit /> : <Fullscreen />}
+          </Fab>
         </Grid>
         <Grid item>
           <Tooltip
@@ -117,13 +136,7 @@ export default function Lyrics({
             </Fab>
           </Tooltip>
         </Grid>
-        <Grid item>
-          <Tooltip title="Download current track" aria-label="add">
-            <Fab size="small" onClick={() => downloadLyrics(track)}>
-              <DownloadIcon />
-            </Fab>
-          </Tooltip>
-        </Grid>
+
         <Grid item>
           <Fab
             size="small"
@@ -135,42 +148,83 @@ export default function Lyrics({
           <Menu
             id="simple-menu"
             anchorEl={anchorEl}
-            keepMounted
-            open={Boolean(anchorEl)}
+            open={!!anchorEl}
             onClose={() => {
-              setAnchorEl(null)
+              closeMenu()
             }}
           >
+            <MenuItem
+              onClick={() => setShowCurrentlyPlaying(!showCurrentlyPlaying)}
+            >
+              <ListItemIcon>
+                {showCurrentlyPlaying ? (
+                  <CheckBoxOutlined />
+                ) : (
+                  <CheckBoxOutlineBlank />
+                )}
+              </ListItemIcon>
+              <ListItemText primary="Monitor currently playing track" />
+            </MenuItem>
+            <MenuItem onClick={() => downloadLyrics(track)}>
+              <ListItemIcon>
+                <DownloadIcon fontSize="small" />
+              </ListItemIcon>
+              <ListItemText primary="Download current track" />
+            </MenuItem>
+            <Divider />
             {Object.entries(sites).map(([key, engine]) => (
               <MenuItem key={key} onClick={() => downloadLyrics(track, key)}>
-                {engine.name}
+                <ListItemIcon>
+                  <DownloadIcon fontSize="small" />
+                </ListItemIcon>
+                <ListItemText primary={engine.name} />
               </MenuItem>
             ))}
             <Divider />
-            <MenuItem onClick={() => saveLyrics(track)}>Save</MenuItem>
-            <MenuItem onClick={() => removeLyrics(track)}>Remove</MenuItem>
+            <MenuItem onClick={() => saveLyrics(track)}>
+              <ListItemIcon>
+                <Save fontSize="small" />
+              </ListItemIcon>
+              <ListItemText primary="Save" />
+            </MenuItem>
+            <MenuItem onClick={() => removeLyrics(track)}>
+              <ListItemIcon>
+                <Delete fontSize="small" />
+              </ListItemIcon>
+              <ListItemText primary="Remove" />
+            </MenuItem>
+            <Divider />
+            <MenuItem onClick={() => searchLyrics(track)}>
+              <ListItemIcon>
+                <Search fontSize="small" />
+              </ListItemIcon>
+              <ListItemText primary="Search with Google" />
+            </MenuItem>
           </Menu>
         </Grid>
-      </Grid>
-      <Grid container item alignItems="flex-end" direction="row" spacing={1}>
-        <Grid item xs={10}>
-          <TextField
-            key={lyrics}
-            fullWidth
-            inputRef={lyricsRef}
-            id="outlined-multiline-static"
-            label={`Lyrics${label}`}
-            multiline
-            rows={!hidePlaylist && 18}
-            defaultValue={lyrics}
-            variant="outlined"
-          />
-        </Grid>
-        <Grid item>
-          <Fab size="small" onClick={() => setHidePlaylist(!hidePlaylist)}>
-            {hidePlaylist ? <KeyboardArrowUp /> : <KeyboardArrowDown />}
+        <Grid item style={{ marginLeft: 20 }}>
+          <Fab size="small" onClick={() => skipTrack('previous')}>
+            <SkipPrevious />
           </Fab>
         </Grid>
+        <Grid item>
+          <Fab size="small" onClick={() => skipTrack('next')}>
+            <SkipNext />
+          </Fab>
+        </Grid>
+      </Grid>
+      <Grid item>
+        <TextField
+          key={lyrics}
+          fullWidth
+          inputRef={lyricsRef}
+          id="outlined-multiline-static"
+          label={`Lyrics${label}`}
+          multiline
+          rows={!lyricsFullscreen ? 18 : undefined}
+          defaultValue={lyrics}
+          variant="outlined"
+        />
       </Grid>
     </Grid>
   )
