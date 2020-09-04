@@ -16,7 +16,7 @@ router.get('/fip', async (req, res) => {
   const { items, position } = levels[0]
   let tracks = items
     .map((id) => steps[id])
-    .map(({ uuid: id, authors: artist, title }) =>
+    .map(({ songId: id, authors: artist, title }) =>
       Track.copy({ id, artist, title })
     )
   tracks = await lyricsDb.queryPlaylist(tracks)

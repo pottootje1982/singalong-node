@@ -1,14 +1,15 @@
 import React, { useState, useEffect, useRef } from 'react'
-import { TextField, Checkbox, Fab } from '@material-ui/core'
+import { TextField, Checkbox, Fab, Tooltip } from '@material-ui/core'
 import { get, post, del } from '../server'
 import { Grid, Menu, MenuItem, Divider } from '@material-ui/core'
-import { Button } from '../Styled'
 import {
   ChevronRight,
   ChevronLeft,
   KeyboardArrowUp,
   KeyboardArrowDown,
   Menu as MenuIcon,
+  GetApp as DownloadIcon,
+  QueueMusic,
 } from '@material-ui/icons'
 
 export default function Lyrics({
@@ -80,34 +81,59 @@ export default function Lyrics({
     setTrack({ ...track })
   }
 
+  function downloadLyrics() {
+    post('lyrics/download', { track }).then(({ data: { lyrics } }) => {
+      if (lyrics) {
+        track.lyrics = lyrics
+        setTrack({ ...track })
+      }
+    })
+  }
+
   track = track || {}
   const label = track.artist ? ` ${track.artist} - ${track.title}` : ''
   return (
     <Grid container spacing={1} alignItems="stretch">
-      <Grid container item alignItems="center">
+      <Grid container item alignItems="center" spacing={1}>
         <Grid item>
           <Fab size="small" onClick={() => setHidePlaylists(!hidePlaylists)}>
             {hidePlaylists ? <ChevronRight /> : <ChevronLeft />}
           </Fab>
         </Grid>
         <Grid item>
-          <Checkbox
-            color="primary"
-            onChange={(_e, checked) => setShowCurrentlyPlaying(checked)}
-          />
-        </Grid>
-        <Grid item>
-          <Button
-            style={{ width: 200 }}
-            onClick={() => {
-              showCurrentlyPlayingTrack()
-            }}
+          <Tooltip
+            title="Monitor currently playing track on Spotify"
+            aria-label="add"
           >
-            Show currently playing
-          </Button>
+            <Checkbox
+              color="primary"
+              onChange={(_e, checked) => setShowCurrentlyPlaying(checked)}
+            />
+          </Tooltip>
         </Grid>
         <Grid item>
-          <Fab size="small" onClick={(event) => setAnchorEl(event.target)}>
+          <Tooltip
+            title="Show currently playing track on Spotify"
+            aria-label="add"
+          >
+            <Fab size="small" onClick={() => showCurrentlyPlayingTrack()}>
+              <QueueMusic />
+            </Fab>
+          </Tooltip>
+        </Grid>
+        <Grid item>
+          <Tooltip title="Download current track" aria-label="add">
+            <Fab size="small" onClick={() => downloadLyrics()}>
+              <DownloadIcon />
+            </Fab>
+          </Tooltip>
+        </Grid>
+        <Grid item>
+          <Fab
+            size="small"
+            onClick={(event) => setAnchorEl(event.target)}
+            label="label"
+          >
             <MenuIcon />
           </Fab>
           <Menu

@@ -12,8 +12,7 @@ import {
   List,
   Grid,
 } from '@material-ui/core'
-import PlayIcon from '@material-ui/icons/PlayArrow'
-import DownloadIcon from '@material-ui/icons/GetApp'
+import { PlayArrow, GetApp as DownloadIcon } from '@material-ui/icons'
 import ToggleButton from '@material-ui/lab/ToggleButton'
 import { getMinimalTitle } from '../track_helpers'
 
@@ -125,7 +124,7 @@ export default function Playlist({
       post('lyrics/download', {
         track: trackIdToDownload,
         sleepTime,
-      }).then(async ({ data: { lyrics } }) => {
+      }).then(({ data: { lyrics } }) => {
         if (lyrics) {
           toDownload.lyrics = lyrics
           setTrackId(toDownload.id)
@@ -230,7 +229,7 @@ export default function Playlist({
                   style={{ width: 25, height: 25 }}
                   onClick={() => playTrack(t.id, index)}
                 >
-                  <PlayIcon></PlayIcon>
+                  <PlayArrow></PlayArrow>
                 </IconButton>
                 <ListItemText
                   primary={t.artist ? `${t.artist} - ${t.title}` : t.title}
