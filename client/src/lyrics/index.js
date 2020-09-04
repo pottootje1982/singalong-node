@@ -80,7 +80,7 @@ export default function Lyrics({
   track = track || {}
   const label = track.artist ? ` ${track.artist} - ${track.title}` : ''
   return (
-    <Grid container spacing={1} style={{ height: hidePlaylist && '100vh' }}>
+    <Grid container spacing={1} alignItems="stretch">
       <Grid container item alignItems="center">
         <Fab size="small" onClick={() => setHidePlaylists(!hidePlaylists)}>
           {hidePlaylists ? <ChevronRight /> : <ChevronLeft />}
@@ -117,7 +117,6 @@ export default function Lyrics({
           <TextField
             key={lyrics}
             fullWidth
-            fullHeight
             inputRef={lyricsRef}
             id="outlined-multiline-static"
             label={`Lyrics${label}`}

@@ -1,9 +1,6 @@
 var track_helpers = require('../client/src/track_helpers')
 
 export class Track {
-  getQueryTitle(): any {
-    throw new Error('Method not implemented.')
-  }
   id: string
   artist: string
   title: string

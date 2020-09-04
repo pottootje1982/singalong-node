@@ -16,28 +16,25 @@ createTable('./mongo-client', 'lyrics').then(({ lyricTable }) => {
 
 router.get('/', async (req, res) => {
   var spotifyApi: SpotifyApi = createApi(req)
-  let { body } = await spotifyApi.api.getUserPlaylists(req.query.user, {
-    limit: 50,
-  })
-  const playlists = body ? body.items : []
+  let { limit, offset } = req.query
+  limit = limit && parseInt(limit)
+  offset = offset && parseInt(offset)
+  let playlists = await spotifyApi.getUserPlaylists({ limit, offset })
   res.json(playlists)
 })
 
 router.get('/currently-playing', async (req, res) => {
   var spotifyApi: SpotifyApi = createApi(req)
   const playing = await spotifyApi.api.getMyCurrentPlayingTrack()
-  const result = []
   let context = playing && playing.body.context
   let uri =
     context && context.uri && !context.uri.includes('undefined') && context.uri
   const track = playing.body && playing.body.item && playing.body.item.uri
   uri = uri || track
-  if (uri)
-    result.push({
-      uri: context ? context.uri : track,
-      name: 'Currently playing',
-    })
-  return res.json(result)
+  return res.json({
+    uri: context ? context.uri : track,
+    name: 'Currently playing',
+  })
 })
 
 router.get('/:uri', async (req, res) => {

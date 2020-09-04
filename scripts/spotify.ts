@@ -171,6 +171,17 @@ export class SpotifyApi {
     }
     return { track, uri: this.reformatUri(uri) }
   }
+
+  async getUserPlaylists(options: {
+    limit: number
+    offset: number
+  }): Promise<{ playlists: any; hasMore: boolean }> {
+    const { items: playlists, next: hasMore } = await this.get(
+      'https://api.spotify.com/v1/me/playlists',
+      options
+    )
+    return { playlists, hasMore }
+  }
 }
 
 let cachedFileToken

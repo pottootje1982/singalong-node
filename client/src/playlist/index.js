@@ -31,7 +31,7 @@ export default function Playlist({
   const [offset, setOffset] = useState()
   const [tracks, setTracks] = useState([])
   const [rawTracks, setRawTracks] = useState([])
-  const [trackToDownload, setTrackToDownload] = useState()
+  const [trackIdToDownload, setTrackIdToDownload] = useState()
   const [tracksToDownload, setTracksToDownload] = useState([])
   const [isDownloading, setIsDownloading] = useState(false)
   const [isTitleMinimal, setIsTitleMinimal] = useState(false)
@@ -106,7 +106,7 @@ export default function Playlist({
 
   function downloadTracks() {
     if (!isDownloading) {
-      setTrackToDownload(null)
+      setTrackIdToDownload(null)
       setTracksToDownload([])
       return
     }
@@ -118,18 +118,20 @@ export default function Playlist({
   function downloadTrack() {
     const toDownload = tracksToDownload[0]
     if (!toDownload) return
-    sleep(trackToDownload ? sleepTime : 0).then(() => {
+    setTrackIdToDownload(toDownload.id)
+    sleep(trackIdToDownload ? sleepTime : 0).then(() => {
       if (!isDownloading) return
-      setTrackToDownload(toDownload)
       const tail = tracksToDownload.slice(1)
-      setTrack(toDownload)
       post('lyrics/download', {
-        track: trackToDownload,
+        track: trackIdToDownload,
         sleepTime,
       }).then(async ({ data: { lyrics } }) => {
-        toDownload.lyrics = lyrics
+        if (lyrics) {
+          toDownload.lyrics = lyrics
+          setTrackId(toDownload.id)
+          setTrack({ ...toDownload })
+        }
         if (!isDownloading) return
-        setTracks([...tracks])
         if (isDownloading && tail.length > 0) setTracksToDownload(tail)
       })
     })
@@ -160,7 +162,7 @@ export default function Playlist({
   }
 
   return (
-    <Grid container>
+    <Grid container alignItems="stretch">
       <Grid container item spacing={1} alignItems="center">
         <Grid item>
           <ToggleButton
@@ -213,10 +215,7 @@ export default function Playlist({
         </Grid>
       </Grid>
       <Grid item>
-        <List
-          style={{ maxHeight: '48vh', overflow: 'auto', width: '50vw' }}
-          dense
-        >
+        <List style={{ maxHeight: '48vh', overflow: 'auto' }} dense>
           {tracks.map((t, index) => (
             <ListItem
               button
@@ -237,7 +236,7 @@ export default function Playlist({
                   primary={t.artist ? `${t.artist} - ${t.title}` : t.title}
                   style={{
                     color:
-                      t === trackToDownload
+                      t.id === trackIdToDownload
                         ? orange[500]
                         : t.lyrics
                         ? green[500]

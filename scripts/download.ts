@@ -109,7 +109,8 @@ export default class LyricsDownloader {
     console.log('\n')
     track.site = searchEngineName
     track.lyrics = lyrics
-    if (lyrics != null && searchEngineName != null) {
+    if (lyrics && searchEngineName) {
+      console.log(`Saving ${track.toString()} to db`)
       this.lyricsDb.updateOrInsert(track, lyrics)
     }
     return track

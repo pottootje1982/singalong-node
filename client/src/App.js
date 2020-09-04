@@ -55,7 +55,6 @@ function App({ location }) {
                       setHidePlaylists={setHidePlaylists}
                       hidePlaylist={hidePlaylist}
                       setHidePlaylist={setHidePlaylist}
-                      fullHeight
                     ></Lyrics>
                   </Grid>
                   <Grid item style={{ display: hidePlaylist && 'none' }}>
