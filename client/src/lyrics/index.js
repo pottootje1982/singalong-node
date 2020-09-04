@@ -1,13 +1,14 @@
 import React, { useState, useEffect, useRef } from 'react'
 import { TextField, Checkbox, Fab } from '@material-ui/core'
 import { get, post, del } from '../server'
-import { Grid } from '@material-ui/core'
+import { Grid, Menu, MenuItem, Divider } from '@material-ui/core'
 import { Button } from '../Styled'
 import {
   ChevronRight,
   ChevronLeft,
   KeyboardArrowUp,
   KeyboardArrowDown,
+  Menu as MenuIcon,
 } from '@material-ui/icons'
 
 export default function Lyrics({
@@ -25,6 +26,7 @@ export default function Lyrics({
   const [sites, setSites] = useState({})
   const lyricsRef = useRef(null)
   const [lyrics, setLyrics] = useState()
+  const [anchorEl, setAnchorEl] = useState()
 
   function setOrClearProbe() {
     if (showCurrentlyPlaying) {
@@ -62,6 +64,7 @@ export default function Lyrics({
     post('/lyrics/download', { track, site }).then(({ data: { lyrics } }) => {
       setLyrics(lyrics)
     })
+    setAnchorEl(null)
   }
 
   function saveLyrics(track) {
@@ -82,9 +85,11 @@ export default function Lyrics({
   return (
     <Grid container spacing={1} alignItems="stretch">
       <Grid container item alignItems="center">
-        <Fab size="small" onClick={() => setHidePlaylists(!hidePlaylists)}>
-          {hidePlaylists ? <ChevronRight /> : <ChevronLeft />}
-        </Fab>
+        <Grid item>
+          <Fab size="small" onClick={() => setHidePlaylists(!hidePlaylists)}>
+            {hidePlaylists ? <ChevronRight /> : <ChevronLeft />}
+          </Fab>
+        </Grid>
         <Grid item>
           <Checkbox
             color="primary"
@@ -102,18 +107,31 @@ export default function Lyrics({
           </Button>
         </Grid>
         <Grid item>
-          <Button
-            style={{ width: 200 }}
-            onClick={() => {
-              setPlaylist('FIP')
+          <Fab size="small" onClick={(event) => setAnchorEl(event.target)}>
+            <MenuIcon />
+          </Fab>
+          <Menu
+            id="simple-menu"
+            anchorEl={anchorEl}
+            keepMounted
+            open={Boolean(anchorEl)}
+            onClose={() => {
+              setAnchorEl(null)
             }}
           >
-            Currently on FIP
-          </Button>
+            {Object.entries(sites).map(([key, engine]) => (
+              <MenuItem key={key} onClick={() => downloadLyrics(track, key)}>
+                {engine.name}
+              </MenuItem>
+            ))}
+            <Divider />
+            <MenuItem onClick={() => saveLyrics(track)}>Save</MenuItem>
+            <MenuItem onClick={() => removeLyrics(track)}>Remove</MenuItem>
+          </Menu>
         </Grid>
       </Grid>
-      <Grid container item>
-        <Grid item xs={10}>
+      <Grid container item alignItems="flex-end" spacing={1}>
+        <Grid item xs={11}>
           <TextField
             key={lyrics}
             fullWidth
@@ -126,34 +144,10 @@ export default function Lyrics({
             variant="outlined"
           />
         </Grid>
-        <Grid item xs="auto">
-          <Grid container direction="column">
-            {Object.entries(sites).map(([key, engine]) => (
-              <Grid key={key} item>
-                <Button onClick={() => downloadLyrics(track, key)}>
-                  {engine.name}
-                </Button>
-              </Grid>
-            ))}
-          </Grid>
-          <Grid
-            container
-            style={{ marginTop: 50 }}
-            direction="column"
-            alignItems="center"
-          >
-            <Grid item>
-              <Button onClick={() => saveLyrics(track)}>Save</Button>
-            </Grid>
-            <Grid item>
-              <Button onClick={() => removeLyrics(track)}>Remove</Button>
-            </Grid>
-            <Grid item>
-              <Fab size="small" onClick={() => setHidePlaylist(!hidePlaylist)}>
-                {hidePlaylist ? <KeyboardArrowUp /> : <KeyboardArrowDown />}
-              </Fab>
-            </Grid>
-          </Grid>
+        <Grid item>
+          <Fab size="small" onClick={() => setHidePlaylist(!hidePlaylist)}>
+            {hidePlaylist ? <KeyboardArrowUp /> : <KeyboardArrowDown />}
+          </Fab>
         </Grid>
       </Grid>
     </Grid>
