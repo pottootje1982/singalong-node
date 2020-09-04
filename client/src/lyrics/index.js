@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react'
-import { TextField, Fab, Tooltip } from '@material-ui/core'
+import { TextField, IconButton, Tooltip } from '@material-ui/core'
 import { get, post, del } from '../server'
 import {
   Grid,
@@ -109,8 +109,8 @@ export default function Lyrics({
     closeMenu()
   }
 
-  function skipTrack(direction) {
-    get('player/skip-track', { params: { direction } })
+  function skipTrack(command) {
+    post('player', { command })
   }
 
   track = track || {}
@@ -119,32 +119,35 @@ export default function Lyrics({
     <Grid container spacing={1} direction="column" alignItems="stretch">
       <Grid container item alignItems="center" spacing={1}>
         <Grid item>
-          <Fab
+          <IconButton
             size="small"
             onClick={() => setLyricsFullscreen(!lyricsFullscreen)}
           >
             {lyricsFullscreen ? <FullscreenExit /> : <Fullscreen />}
-          </Fab>
+          </IconButton>
         </Grid>
         <Grid item>
           <Tooltip
             title="Show currently playing track on Spotify"
             aria-label="add"
           >
-            <Fab size="small" onClick={() => showCurrentlyPlayingTrack()}>
+            <IconButton
+              size="small"
+              onClick={() => showCurrentlyPlayingTrack()}
+            >
               <QueueMusic />
-            </Fab>
+            </IconButton>
           </Tooltip>
         </Grid>
 
         <Grid item>
-          <Fab
+          <IconButton
             size="small"
             onClick={(event) => setAnchorEl(event.target)}
             label="label"
           >
             <MenuIcon />
-          </Fab>
+          </IconButton>
           <Menu
             id="simple-menu"
             anchorEl={anchorEl}
@@ -203,14 +206,14 @@ export default function Lyrics({
           </Menu>
         </Grid>
         <Grid item style={{ marginLeft: 20 }}>
-          <Fab size="small" onClick={() => skipTrack('previous')}>
+          <IconButton size="small" onClick={() => skipTrack('previous')}>
             <SkipPrevious />
-          </Fab>
+          </IconButton>
         </Grid>
         <Grid item>
-          <Fab size="small" onClick={() => skipTrack('next')}>
+          <IconButton size="small" onClick={() => skipTrack('next')}>
             <SkipNext />
-          </Fab>
+          </IconButton>
         </Grid>
       </Grid>
       <Grid item>

@@ -8,6 +8,14 @@ router.get('/', async (req, res) => {
   res.json(currentlyPlaying)
 })
 
+router.post('/', async (req, res) => {
+  const spotifyApi: SpotifyApi = createApi(req)
+  const { command } = req.body
+  if (command === 'previous') spotifyApi.api.skipToPrevious()
+  else if (command === 'next') spotifyApi.api.skipToNext()
+  res.status(200)
+})
+
 const track = (id) => id && `spotify:track:${id}`
 
 router.put('/play', async (req, res) => {
