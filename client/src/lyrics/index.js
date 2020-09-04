@@ -61,28 +61,24 @@ export default function Lyrics({
     })
   }
 
-  function downloadLyrics(track, site) {
-    post('/lyrics/download', { track, site }).then(({ data: { lyrics } }) => {
-      setLyrics(lyrics)
-    })
-    setAnchorEl(null)
-  }
-
   function saveLyrics(track) {
     const lyrics = lyricsRef.current.value
     post('/lyrics', { track, lyrics })
     track.lyrics = lyrics
     setTrack({ ...track })
+    setAnchorEl(null)
   }
 
   function removeLyrics(track) {
     track.lyrics = null
     del('/lyrics', { data: { track } })
     setTrack({ ...track })
+    setAnchorEl(null)
   }
 
-  function downloadLyrics() {
-    post('lyrics/download', { track }).then(({ data: { lyrics } }) => {
+  function downloadLyrics(track, site) {
+    post('lyrics/download', { track, site }).then(({ data: { lyrics } }) => {
+      setAnchorEl(null)
       if (lyrics) {
         track.lyrics = lyrics
         setTrack({ ...track })
@@ -123,7 +119,7 @@ export default function Lyrics({
         </Grid>
         <Grid item>
           <Tooltip title="Download current track" aria-label="add">
-            <Fab size="small" onClick={() => downloadLyrics()}>
+            <Fab size="small" onClick={() => downloadLyrics(track)}>
               <DownloadIcon />
             </Fab>
           </Tooltip>
@@ -156,8 +152,8 @@ export default function Lyrics({
           </Menu>
         </Grid>
       </Grid>
-      <Grid container item alignItems="flex-end" spacing={1}>
-        <Grid item xs={11}>
+      <Grid container item alignItems="flex-end" direction="row" spacing={1}>
+        <Grid item xs={10}>
           <TextField
             key={lyrics}
             fullWidth

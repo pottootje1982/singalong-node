@@ -24,58 +24,54 @@ function App({ location }) {
   }, [])
 
   window.history.pushState('', '', '/main')
-  return (
-    <div className="App">
-      <header className="App-header">
-        {(token || user) && (
-          <div>
-            <Grid container spacing={1}>
-              <Grid item xs={4} style={{ display: hidePlaylists && 'none' }}>
-                <Playlists
-                  setPlaylist={setPlaylist}
-                  playlist={playlist}
-                  user={user}
-                  token={token}
-                ></Playlists>
-              </Grid>
-              <Grid item xs={hidePlaylists ? 12 : 8}>
-                <Grid
-                  container
-                  direction="column"
-                  spacing={1}
-                  alignItems="stretch"
-                >
-                  <Grid item>
-                    <Lyrics
-                      track={track}
-                      setTrack={setTrack}
-                      setTrackId={setTrackId}
-                      setPlaylist={setPlaylist}
-                      hidePlaylists={hidePlaylists}
-                      setHidePlaylists={setHidePlaylists}
-                      hidePlaylist={hidePlaylist}
-                      setHidePlaylist={setHidePlaylist}
-                    ></Lyrics>
-                  </Grid>
-                  <Grid item style={{ display: hidePlaylist && 'none' }}>
-                    <Playlist
-                      key={playlist}
-                      playlist={playlist}
-                      token={token}
-                      user={user}
-                      track={track}
-                      trackId={trackId}
-                      setTrackId={setTrackId}
-                      setTrack={setTrack}
-                    ></Playlist>
-                  </Grid>
-                </Grid>
-              </Grid>
-            </Grid>
-          </div>
-        )}
-      </header>
-    </div>
+  return token || user ? (
+    <Grid
+      container
+      spacing={1}
+      style={{
+        margin: 0,
+        width: '100%',
+      }}
+    >
+      <Grid item xs={3} style={{ display: hidePlaylists && 'none' }}>
+        <Playlists
+          setPlaylist={setPlaylist}
+          playlist={playlist}
+          user={user}
+          token={token}
+        ></Playlists>
+      </Grid>
+      <Grid item xs={hidePlaylists ? 12 : 8}>
+        <Grid container direction="column" spacing={1} alignItems="stretch">
+          <Grid item>
+            <Lyrics
+              track={track}
+              setTrack={setTrack}
+              setTrackId={setTrackId}
+              setPlaylist={setPlaylist}
+              hidePlaylists={hidePlaylists}
+              setHidePlaylists={setHidePlaylists}
+              hidePlaylist={hidePlaylist}
+              setHidePlaylist={setHidePlaylist}
+            ></Lyrics>
+          </Grid>
+          <Grid item style={{ display: hidePlaylist && 'none' }}>
+            <Playlist
+              key={playlist}
+              playlist={playlist}
+              token={token}
+              user={user}
+              track={track}
+              trackId={trackId}
+              setTrackId={setTrackId}
+              setTrack={setTrack}
+            ></Playlist>
+          </Grid>
+        </Grid>
+      </Grid>
+    </Grid>
+  ) : (
+    <React.Fragment />
   )
 }
 
