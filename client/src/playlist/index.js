@@ -62,7 +62,7 @@ export default function Playlist({
 
   function showPlaylist() {
     if (playlist) {
-      if (playlist === 'FIP') showCurrentlyOnFip()
+      if (playlist.startsWith('FIP_')) showCurrentlyOnFip()
       else setOffset(0)
     }
   }
@@ -75,14 +75,18 @@ export default function Playlist({
   }
 
   function addTracks() {
-    if (user && playlist && !isNaN(offset)) {
+    if (offset === -1) {
+      // end of playlist
+      selectTrack()
+    } else if (user && playlist && offset >= 0) {
       get(`playlists/${playlist}`, { params: { offset } })
         .then(({ data: { tracks: newTracks, hasMore } }) => {
           if (!newTracks || newTracks.length === 0) return
           newTracks = [...rawTracks, ...newTracks]
           setRawTracks(newTracks)
-          if (offset === 0 && newTracks[0]) setTrackId(newTracks[0].id)
-          setOffset(hasMore ? newTracks.length : undefined)
+          if (!trackId && offset === 0 && newTracks[0])
+            setTrackId(newTracks[0].id)
+          setOffset(hasMore ? newTracks.length : -1)
         })
         .catch((err) => console.log(err))
     }

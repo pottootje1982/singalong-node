@@ -92,13 +92,15 @@ export default function Lyrics({
   }
 
   function downloadLyrics(track, site) {
-    post('lyrics/download', { track, site }).then(({ data: { lyrics } }) => {
-      closeMenu()
-      if (lyrics) {
-        track.lyrics = lyrics
-        setTrack({ ...track })
+    post('lyrics/download', { track, site, getCached: false }).then(
+      ({ data: { lyrics } }) => {
+        closeMenu()
+        if (lyrics) {
+          track.lyrics = lyrics
+          setTrack({ ...track })
+        }
       }
-    })
+    )
   }
 
   function searchLyrics(track) {

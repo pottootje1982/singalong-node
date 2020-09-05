@@ -7,7 +7,6 @@ import { GeniusEngine } from './LyricsEngines/GeniusEngine'
 import { MusixMatchEngine } from './LyricsEngines/MusixMatchEngine'
 //import { SongtekstenEngine } from "./LyricsEngines/SongtekstenEngine";
 import { LyricsFreakEngine } from './LyricsEngines/LyricsFreakEngine'
-import { Playlist } from './Playlist'
 
 let engineIndex = -1
 
@@ -114,24 +113,5 @@ export default class LyricsDownloader {
       this.lyricsDb.updateOrInsert(track, lyrics)
     }
     return track
-  }
-
-  async createSongbook(
-    textualPlaylist: string,
-    sleepTime: number = 0
-  ): Promise<Track[]> {
-    var playlist = Playlist.textualPlaylistToPlaylist(textualPlaylist)
-    var book = []
-    var tracksNotFound = []
-    for (let track of playlist.items) {
-      track = await this.downloadTrack(track, sleepTime)
-      book.push(track)
-      if (track.lyrics == null) {
-        tracksNotFound.push(track)
-      }
-    }
-    console.log('Finished downloading lyrics')
-    console.log('Tracks not found: ' + tracksNotFound.toString())
-    return book
   }
 }

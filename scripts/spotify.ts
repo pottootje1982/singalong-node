@@ -1,6 +1,5 @@
 ﻿import SpotifyWebApi = require('spotify-web-api-node')
 import { Track, createTrack } from './track'
-import { Playlist } from './Playlist'
 const fs = require('fs')
 const { get } = require('axios')
 
@@ -55,11 +54,6 @@ export class SpotifyApi {
       downloaded ? track.lyrics == null : track.lyrics != null
     )
     return this.playlistToText(filtered)
-  }
-
-  async getAlbum(albumId: string): Promise<Playlist> {
-    var data = await this.api.getAlbum(albumId)
-    return Playlist.createFromAlbum(albumId, data.body)
   }
 
   getAuthorizeUrl() {

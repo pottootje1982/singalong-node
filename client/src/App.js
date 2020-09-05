@@ -38,6 +38,7 @@ function App({ location }) {
           playlist={playlist}
           user={user}
           token={token}
+          setTrackId={setTrackId}
         ></Playlists>
       </Grid>
       <Grid item xs={lyricsFullscreen ? 12 : 8}>
