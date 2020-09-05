@@ -4,15 +4,19 @@ import green from '@material-ui/core/colors/green'
 import red from '@material-ui/core/colors/red'
 import orange from '@material-ui/core/colors/orange'
 import {
-  Checkbox,
-  FormControlLabel,
+  Menu,
   IconButton,
   ListItem,
   ListItemText,
   List,
   Grid,
 } from '@material-ui/core'
-import { PlayArrow, GetApp as DownloadIcon } from '@material-ui/icons'
+import CheckMenuItem from '../CheckMenuItem'
+import {
+  PlayArrow,
+  GetApp as DownloadIcon,
+  Menu as MenuIcon,
+} from '@material-ui/icons'
 import ToggleButton from '@material-ui/lab/ToggleButton'
 import { getMinimalTitle } from '../track_helpers'
 
@@ -33,9 +37,10 @@ export default function Playlist({
   const [trackIdToDownload, setTrackIdToDownload] = useState()
   const [tracksToDownload, setTracksToDownload] = useState([])
   const [isDownloading, setIsDownloading] = useState(false)
-  const [isTitleMinimal, setIsTitleMinimal] = useState(false)
+  const [isTitleMinimal, setIsTitleMinimal] = useState(true)
   const [isNotDownloaded, setIsNotDownloaded] = useState(false)
   const [hideArtist, setHideArtist] = useState(false)
+  const [anchorEl, setAnchorEl] = useState()
 
   setToken(token)
   useEffect(selectTrack, [trackId])
@@ -164,6 +169,10 @@ export default function Playlist({
     )
   }
 
+  function closeMenu() {
+    setAnchorEl(null)
+  }
+
   return (
     <Grid container alignItems="stretch">
       <Grid container item spacing={1} alignItems="center">
@@ -177,44 +186,44 @@ export default function Playlist({
             <DownloadIcon />
           </ToggleButton>
         </Grid>
+
         <Grid item>
-          <FormControlLabel
-            control={
-              <Checkbox
-                checked={isTitleMinimal}
-                onClick={() => {
-                  setIsTitleMinimal(!isTitleMinimal)
-                }}
-              />
-            }
-            label="Minimize title"
-          />
-        </Grid>
-        <Grid item>
-          <FormControlLabel
-            control={
-              <Checkbox
-                checked={isNotDownloaded}
-                onClick={() => {
-                  setIsNotDownloaded(!isNotDownloaded)
-                }}
-              />
-            }
-            label="Not downloaded"
-          />
-        </Grid>
-        <Grid item>
-          <FormControlLabel
-            control={
-              <Checkbox
-                checked={hideArtist}
-                onClick={() => {
-                  setHideArtist(!hideArtist)
-                }}
-              />
-            }
-            label="Hide artist"
-          />
+          <IconButton
+            size="small"
+            onClick={(event) => setAnchorEl(event.currentTarget)}
+            label="label"
+          >
+            <MenuIcon />
+          </IconButton>
+          <Menu
+            id="simple-menu"
+            getContentAnchorEl={null}
+            anchorEl={anchorEl}
+            keepMounted
+            transformOrigin={{
+              vertical: 'top',
+              horizontal: 'center',
+            }}
+            open={!!anchorEl}
+            onClose={closeMenu}
+          >
+            <CheckMenuItem
+              setter={setIsTitleMinimal}
+              checked={isTitleMinimal}
+              name="Minimize title"
+              close={closeMenu}
+            />
+            <CheckMenuItem
+              setter={setIsNotDownloaded}
+              checked={isNotDownloaded}
+              name="Not downloaded"
+            />
+            <CheckMenuItem
+              setter={setHideArtist}
+              checked={hideArtist}
+              name="Hide artist"
+            />
+          </Menu>
         </Grid>
       </Grid>
       <Grid item>

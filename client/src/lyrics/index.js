@@ -18,11 +18,10 @@ import {
   Delete,
   Save,
   Search,
-  CheckBoxOutlineBlank,
-  CheckBoxOutlined,
   SkipPrevious,
   SkipNext,
 } from '@material-ui/icons'
+import CheckMenuItem from '../CheckMenuItem'
 
 export default function Lyrics({
   track,
@@ -145,31 +144,30 @@ export default function Lyrics({
         <Grid item>
           <IconButton
             size="small"
-            onClick={(event) => setAnchorEl(event.target)}
+            onClick={(event) => setAnchorEl(event.currentTarget)}
             label="label"
           >
             <MenuIcon />
           </IconButton>
           <Menu
             id="simple-menu"
+            getContentAnchorEl={null}
             anchorEl={anchorEl}
-            open={!!anchorEl}
-            onClose={() => {
-              closeMenu()
+            keepMounted
+            transformOrigin={{
+              vertical: 'top',
+              horizontal: 'center',
             }}
+            open={!!anchorEl}
+            onClose={closeMenu}
           >
-            <MenuItem
-              onClick={() => setShowCurrentlyPlaying(!showCurrentlyPlaying)}
-            >
-              <ListItemIcon>
-                {showCurrentlyPlaying ? (
-                  <CheckBoxOutlined />
-                ) : (
-                  <CheckBoxOutlineBlank />
-                )}
-              </ListItemIcon>
-              <ListItemText primary="Monitor currently playing track" />
-            </MenuItem>
+            <CheckMenuItem
+              setter={setShowCurrentlyPlaying}
+              checked={showCurrentlyPlaying}
+              name="Monitor currently playing track"
+              close={closeMenu}
+            />
+
             <MenuItem onClick={() => downloadLyrics(track)}>
               <ListItemIcon>
                 <DownloadIcon fontSize="small" />
