@@ -131,7 +131,7 @@ export default function Playlist({
       if (!isDownloading) return
       const tail = tracksToDownload.slice(1)
       post('lyrics/download', {
-        track: trackIdToDownload,
+        track: toDownload,
         sleepTime,
       }).then(({ data: { lyrics } }) => {
         if (lyrics) {
@@ -217,11 +217,13 @@ export default function Playlist({
               setter={setIsNotDownloaded}
               checked={isNotDownloaded}
               name="Not downloaded"
+              close={closeMenu}
             />
             <CheckMenuItem
               setter={setHideArtist}
               checked={hideArtist}
               name="Hide artist"
+              close={closeMenu}
             />
           </Menu>
         </Grid>

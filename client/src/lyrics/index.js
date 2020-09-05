@@ -175,15 +175,6 @@ export default function Lyrics({
               <ListItemText primary="Download current track" />
             </MenuItem>
             <Divider />
-            {Object.entries(sites).map(([key, engine]) => (
-              <MenuItem key={key} onClick={() => downloadLyrics(track, key)}>
-                <ListItemIcon>
-                  <DownloadIcon fontSize="small" />
-                </ListItemIcon>
-                <ListItemText primary={engine.name} />
-              </MenuItem>
-            ))}
-            <Divider />
             <MenuItem onClick={() => saveLyrics(track)}>
               <ListItemIcon>
                 <Save fontSize="small" />

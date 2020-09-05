@@ -48,7 +48,7 @@ router.post('/download', async (req, res) => {
     const downloadedTrack = await lyricsDownloader.downloadTrack(
       trackToDownload,
       parseInt(sleepTime || 3000),
-      getCached !== 'false'
+      getCached
     )
     lyrics = downloadedTrack.lyrics
   }
