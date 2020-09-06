@@ -1,7 +1,6 @@
 const router = require('./router')()
 
 import { SpotifyApi, limit, createApi } from '../scripts/spotify'
-import { createTrack } from '../scripts/track'
 import LyricsDownloader from '../scripts/download'
 import LyricsDb from '../scripts/lyrics_db'
 const createTable = require('../scripts/db/tables')

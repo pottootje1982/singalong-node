@@ -19,6 +19,7 @@ import {
 } from '@material-ui/icons'
 import ToggleButton from '@material-ui/lab/ToggleButton'
 import { getMinimalTitle } from '../track_helpers'
+import isEquivalent from '../isEquivalent'
 
 const sleepTime = 3000
 
@@ -52,7 +53,7 @@ export default function Playlist({
     if (track && track.id) {
       const rawTrack = rawTracks.find((t) => t.id === track.id)
       if (rawTrack) {
-        if (!Object.is(track, rawTrack)) {
+        if (!isEquivalent(track, rawTrack)) {
           rawTrack.lyrics = track.lyrics
           setRawTracks([...rawTracks])
         }
@@ -123,24 +124,30 @@ export default function Playlist({
 
   useEffect(downloadTrack, [tracksToDownload])
 
+  function isCancelled() {
+    if (!isDownloading) {
+      setTrackIdToDownload(null)
+    }
+    return !isDownloading
+  }
+
   function downloadTrack() {
     const toDownload = tracksToDownload[0]
     if (!toDownload) return
     setTrackIdToDownload(toDownload.id)
     sleep(trackIdToDownload ? sleepTime : 0).then(() => {
-      if (!isDownloading) return
+      if (isCancelled()) return
       const tail = tracksToDownload.slice(1)
       post('lyrics/download', {
         track: toDownload,
         sleepTime,
       }).then(({ data: { lyrics } }) => {
         if (lyrics) {
-          toDownload.lyrics = lyrics
-          setTrackId(toDownload.id)
-          setTrack({ ...toDownload })
+          setTrack({ ...toDownload, lyrics })
         }
-        if (!isDownloading) return
+        if (isCancelled()) return
         if (isDownloading && tail.length > 0) setTracksToDownload(tail)
+        else setTrackIdToDownload(null)
       })
     })
   }
@@ -250,7 +257,7 @@ export default function Playlist({
                   primary={t.artist ? `${t.artist} - ${t.title}` : t.title}
                   style={{
                     color:
-                      t.id === trackIdToDownload
+                      t.id === trackIdToDownload && t.id
                         ? orange[500]
                         : t.lyrics
                         ? green[500]

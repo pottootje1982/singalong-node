@@ -33,7 +33,6 @@ export default function Lyrics({
 }) {
   const [showCurrentlyPlaying, setShowCurrentlyPlaying] = useState()
   const [currentlyPlayingProbe, setCurrentlyPlayingProbe] = useState()
-  const [sites, setSites] = useState({})
   const lyricsRef = useRef(null)
   const [lyrics, setLyrics] = useState()
   const [anchorEl, setAnchorEl] = useState()
@@ -50,8 +49,6 @@ export default function Lyrics({
 
   useEffect(setOrClearProbe, [showCurrentlyPlaying])
 
-  useEffect(getSites, [])
-
   useEffect(() => {
     if (track) setLyrics(track.lyrics)
   }, [track])
@@ -62,12 +59,6 @@ export default function Lyrics({
         setPlaylist(uri)
         setTrackId(track.id)
       }
-    })
-  }
-
-  function getSites() {
-    get('/lyrics/sites').then(({ data: { sites } }) => {
-      setSites(sites || {})
     })
   }
 

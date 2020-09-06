@@ -58,6 +58,12 @@ export class Track {
     )
   }
 
+  matchesTitle(match: any): unknown {
+    return match.title
+      .toUpperCase()
+      .includes(this.getMinimalTitle().toUpperCase())
+  }
+
   static copy(track) {
     return new Track(
       track.artist,
@@ -90,5 +96,6 @@ export class Track {
 }
 
 export function createTrack(artist: string, title: string, id?: string) {
+  id = id || `${artist} - ${title}`
   return new Track(artist, title, null, null, null, id)
 }

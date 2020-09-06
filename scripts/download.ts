@@ -86,7 +86,7 @@ export default class LyricsDownloader {
       var searchEngine = this.engines[key]
       try {
         lyrics = await this.engines[key].searchLyrics(track.artist, track.title)
-        if (lyrics != null) {
+        if (lyrics && lyrics !== '') {
           searchEngineName = searchEngine.name
           console.log(
             'Found lyrics:\n' +

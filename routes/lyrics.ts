@@ -1,5 +1,5 @@
 const router = require('./router')()
-import { Track, createTrack } from '../scripts/track'
+import { Track } from '../scripts/track'
 import LyricsDownloader from '../scripts/download'
 import LyricsDb from '../scripts/lyrics_db'
 const createTable = require('../scripts/db/tables')

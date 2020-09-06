@@ -20,7 +20,7 @@ export default class LyricsDb {
   }
 
   async query(artist: string, title: string, id?: string): Promise<Track[]> {
-    if (title === '' || title == null) return null
+    if (title === '' || !title) return null
     let query = this.artistTitleQuery(artist, title)
     if (id) {
       query = { $or: [query, { id }] }
@@ -47,15 +47,12 @@ export default class LyricsDb {
         tracks = await this.query(track.cleanArtist(), track.cleanTitle())
       if (tracks == null) return null
       var result: Track
-      if (tracks.length === 1) result = tracks[0]
-      else {
-        var filteredTracks = tracks.filter(
-          (t) =>
-            t.artist.toUpperCase() === track.artist.toUpperCase() &&
-            t.title.toUpperCase() === track.title.toUpperCase()
-        )
-        result = filteredTracks.length === 0 ? tracks[0] : filteredTracks[0]
-      }
+      var filteredTracks = tracks.filter(
+        (t) =>
+          t.artist.toUpperCase() === track.artist.toUpperCase() &&
+          t.title.toUpperCase() === track.title.toUpperCase()
+      )
+      result = filteredTracks[0]
       return result
     } catch (error) {
       console.log(error)
@@ -70,8 +67,12 @@ export default class LyricsDb {
     const results: Track[] = []
     if (playlist.length === 0) return results
     let orSection: any = playlist.map((track) => {
+      const expression: Array<any> = [
+        { title: new RegExp(track.getMinimalTitle(), 'i') },
+      ]
       const id = track.id
-      return [{ title: new RegExp(track.getMinimalTitle(), 'i') }, { id }]
+      if (id) expression.push({ id })
+      return expression
     })
     orSection = [].concat(...orSection)
     var query = {
@@ -80,27 +81,19 @@ export default class LyricsDb {
     let queryResults: any[] = (await this.lyricsTable.get(query)) || []
     for (let track of playlist) {
       var matches = queryResults.filter(
-        (match) =>
-          match.title
-            .toUpperCase()
-            .includes(track.getMinimalTitle().toUpperCase()) ||
-          match.id === track.id
+        (match) => track.matchesTitle(match) || match.id === track.id
       )
       if (matches.length === 0) {
         results.push(track)
         continue
       }
-      if (notDownloaded) continue
-      var exactMatch = matches[0]
-      if (matches.length > 1) {
-        exactMatch =
-          matches.find(
-            (match) =>
-              match.title.toUpperCase() === track.title.toUpperCase() &&
-              match.artist.toUpperCase() === track.artist.toUpperCase()
-          ) || exactMatch
-      }
-      track.lyrics = exactMatch.lyrics
+      if (notDownloaded === false) continue
+      const exactMatch = matches.find(
+        (match) =>
+          track.matchesTitle(match) &&
+          match.artist.toUpperCase() === track.artist.toUpperCase()
+      )
+      track.lyrics = exactMatch && exactMatch.lyrics
       results.push(track)
     }
     return results
