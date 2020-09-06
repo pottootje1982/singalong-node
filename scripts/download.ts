@@ -65,7 +65,8 @@ export default class LyricsDownloader {
   async downloadTrack(
     track: Track,
     sleepTime: number = 3000,
-    getCached?: boolean
+    getCached?: boolean,
+    save?: boolean
   ) {
     if (track == null) return null
     if (getCached) {
@@ -108,7 +109,7 @@ export default class LyricsDownloader {
     console.log('\n')
     track.site = searchEngineName
     track.lyrics = lyrics
-    if (lyrics && searchEngineName) {
+    if (lyrics && searchEngineName && save !== false) {
       console.log(`Saving ${track.toString()} to db`)
       this.lyricsDb.updateOrInsert(track, lyrics)
     }

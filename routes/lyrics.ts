@@ -38,7 +38,7 @@ router.get('/sites', async (req, res) => {
 })
 
 router.post('/download', async (req, res) => {
-  const { track, sleepTime, getCached, site } = req.body
+  const { track, sleepTime, getCached, site, save } = req.body
   let lyrics
   if (site) {
     const { artist, title } = track
@@ -48,7 +48,8 @@ router.post('/download', async (req, res) => {
     const downloadedTrack = await lyricsDownloader.downloadTrack(
       trackToDownload,
       parseInt(sleepTime || 3000),
-      getCached
+      getCached,
+      save
     )
     lyrics = downloadedTrack.lyrics
   }

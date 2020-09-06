@@ -8,6 +8,11 @@ import {
   Divider,
   ListItemIcon,
   ListItemText,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
+  Button,
 } from '@material-ui/core'
 import {
   Fullscreen,
@@ -34,8 +39,11 @@ export default function Lyrics({
   const [showCurrentlyPlaying, setShowCurrentlyPlaying] = useState()
   const [currentlyPlayingProbe, setCurrentlyPlayingProbe] = useState()
   const lyricsRef = useRef(null)
+  const artistRef = useRef(null)
+  const titleRef = useRef(null)
   const [lyrics, setLyrics] = useState()
   const [anchorEl, setAnchorEl] = useState()
+  const [modalOpen, setModalOpen] = useState(false)
 
   function setOrClearProbe() {
     closeMenu()
@@ -81,13 +89,13 @@ export default function Lyrics({
     setAnchorEl(null)
   }
 
-  function downloadLyrics(track, site) {
-    post('lyrics/download', { track, site, getCached: false }).then(
+  function downloadLyrics(track, save) {
+    post('lyrics/download', { track, getCached: false, save }).then(
       ({ data: { lyrics } }) => {
         closeMenu()
         if (lyrics) {
           track.lyrics = lyrics
-          setTrack({ ...track })
+          setTrack({ ...track, lyrics })
         }
       }
     )
@@ -103,6 +111,12 @@ export default function Lyrics({
 
   function skipTrack(command) {
     post('player', { command })
+  }
+
+  function doCustomSearch(artist, title) {
+    console.log(artist, title)
+    downloadLyrics({ ...track, artist, title }, false)
+    setModalOpen(false)
   }
 
   track = track || {}
@@ -185,8 +199,48 @@ export default function Lyrics({
               </ListItemIcon>
               <ListItemText primary="Search with Google" />
             </MenuItem>
+            <MenuItem onClick={() => setModalOpen(true)}>
+              <ListItemIcon>
+                <Search fontSize="small" />
+              </ListItemIcon>
+              <ListItemText primary="Custom search" />
+            </MenuItem>
           </Menu>
         </Grid>
+        <Dialog open={modalOpen} onClose={() => setModalOpen(false)} fullWidth>
+          <DialogTitle>Search lyrics manually</DialogTitle>
+          <DialogContent>
+            <Grid container direction="column" alignItems="stretch">
+              <Grid item>
+                <TextField
+                  label="Artist"
+                  fullWidth
+                  inputRef={artistRef}
+                  defaultValue={track.artist}
+                ></TextField>
+              </Grid>
+              <Grid item>
+                <TextField
+                  label="Title"
+                  fullWidth
+                  inputRef={titleRef}
+                  defaultValue={track.title}
+                ></TextField>
+              </Grid>
+            </Grid>
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={() => setModalOpen(false)}>Cancel</Button>
+            <Button
+              autoFocus
+              onClick={() =>
+                doCustomSearch(artistRef.current.value, titleRef.current.value)
+              }
+            >
+              Ok
+            </Button>
+          </DialogActions>
+        </Dialog>
         <Grid item style={{ marginLeft: 20 }}>
           <IconButton size="small" onClick={() => skipTrack('previous')}>
             <SkipPrevious />

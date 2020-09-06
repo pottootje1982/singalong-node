@@ -6,7 +6,6 @@
 - use useMemo for playlists
 
 - implement play slider & skip to next/previous button
-- implement custom search (with dialog)
 - select device on which to play
 
 - consider using material ui Alert for exception coming from server
