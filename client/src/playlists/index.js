@@ -1,32 +1,13 @@
-import React, { useEffect, useState } from 'react'
-import List from '@material-ui/core/List'
-import ListItem from '@material-ui/core/ListItem'
-import ListItemText from '@material-ui/core/ListItemText'
+import React, { useEffect, useState, useRef } from 'react'
+import { Grid, TextField } from '@material-ui/core'
+import { Button } from '../Styled'
+import Autocomplete from '@material-ui/lab/Autocomplete'
 import { setToken, get } from '../server'
-import purple from '@material-ui/core/colors/purple'
-
-function PlaylistItem({ uri, name, playlist, onClick }) {
-  return (
-    <ListItem
-      button
-      selected={uri && uri === playlist}
-      onClick={() => {
-        onClick(uri)
-      }}
-    >
-      <ListItemText
-        primary={name}
-        style={{
-          color: name.match(/currently playing/gi) && purple[500],
-        }}
-      />
-    </ListItem>
-  )
-}
 
 function Playlists({ setPlaylist, playlist, setTrackId, token, user }) {
   const [playlists, setPlaylists] = useState([])
   const [offset, setOffset] = useState()
+  const searchRef = useRef(null)
 
   setToken(token)
 
@@ -37,7 +18,10 @@ function Playlists({ setPlaylist, playlist, setTrackId, token, user }) {
   }
 
   function getPlaylists() {
-    if (offset >= 0) {
+    if (offset === -1) {
+      console.log(searchRef)
+      searchRef.current.focus()
+    } else if (offset >= 0) {
       get(`playlists`, { params: { offset, limit: 50 } }).then(
         ({ data: { playlists: newPlaylists, hasMore } }) => {
           const items = [...playlists, ...newPlaylists]
@@ -58,9 +42,11 @@ function Playlists({ setPlaylist, playlist, setTrackId, token, user }) {
     })
   }
 
-  function onPlaylistClick(uri) {
-    setTrackId(null)
-    setPlaylist(uri)
+  function onPlaylistClick(event, playlist) {
+    if (playlist) {
+      setTrackId(null)
+      setPlaylist(playlist.uri)
+    }
   }
 
   useEffect(getPlaylists, [offset])
@@ -71,26 +57,40 @@ function Playlists({ setPlaylist, playlist, setTrackId, token, user }) {
   }, [playlists, setPlaylist])
 
   return (
-    <List dense style={{ maxHeight: '97vh', overflow: 'auto' }}>
-      <PlaylistItem
-        name="Currently playing on FIP"
-        onClick={showFip}
-      ></PlaylistItem>
-      <PlaylistItem
-        name="Currently playing on Spotify"
-        onClick={showCurrentlyPlaying}
-      ></PlaylistItem>
-
-      {playlists.map((p, index) => (
-        <PlaylistItem
-          key={index}
-          uri={p.uri}
-          name={p.name}
-          playlist={playlist}
-          onClick={onPlaylistClick}
-        />
-      ))}
-    </List>
+    <Grid container direction="column" alignItems="stretch">
+      <Grid item>
+        <Button onClick={showFip}>Currently playing on FIP</Button>
+      </Grid>
+      <Grid item>
+        <Button onClick={showCurrentlyPlaying}>
+          Currently playing on Spotify
+        </Button>
+      </Grid>
+      <Grid item>
+        <Autocomplete
+          id="combo-box-demo"
+          open
+          onChange={onPlaylistClick}
+          autoHighlight
+          style={{ height: '97vh' }}
+          options={playlists}
+          getOptionLabel={(option) => option.name}
+          renderInput={(params) => (
+            <TextField
+              {...params}
+              label="Select playlist:"
+              inputRef={searchRef}
+              variant="outlined"
+            />
+          )}
+          ListboxProps={{
+            style: {
+              minHeight: '80vh',
+            },
+          }}
+        />{' '}
+      </Grid>
+    </Grid>
   )
 }
 
