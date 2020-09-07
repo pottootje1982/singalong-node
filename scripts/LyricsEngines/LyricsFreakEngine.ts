@@ -1,4 +1,4 @@
-﻿import { LyricsSearchEngine } from "./LyricsSearchEngine"
+﻿import { LyricsSearchEngine } from './LyricsSearchEngine'
 
 export class LyricsFreakEngine extends LyricsSearchEngine {
   getHit(i: number) {
@@ -7,10 +7,11 @@ export class LyricsFreakEngine extends LyricsSearchEngine {
 
   constructor() {
     super(
-      "LyricsFreak",
-      "http://www.lyricsfreak.com",
-      "https://www.google.nl/search?q=lyricsfreak.com+",
-      "#content"
+      'LyricsFreak',
+      'http://www.lyricsfreak.com',
+      'https://www.google.nl/search?q=lyricsfreak.com+',
+      '#content',
+      [[/\n\n/g, '\n']]
     )
   }
 
@@ -22,10 +23,10 @@ export class LyricsFreakEngine extends LyricsSearchEngine {
     var lyrics = super.replaceInLyrics($)
     if (lyrics.length === 0) return null
     for (var child of lyrics[0].children.filter(
-      child => child.type === "tag"
+      (child) => child.type === 'tag'
     )) {
-      child.type = "text"
-      child.data = "\n"
+      child.type = 'text'
+      child.data = '\n'
     }
     return lyrics
   }

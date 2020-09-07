@@ -164,6 +164,10 @@ export default function Playlist({
     setAnchorEl(null)
   }
 
+  function selectTrackId(track) {
+    if (track) setTrackId(track.id)
+  }
+
   return (
     <Grid container alignItems="stretch">
       <Grid container item spacing={1} alignItems="center">
@@ -223,12 +227,11 @@ export default function Playlist({
             <Autocomplete
               fullWidth
               value={track}
-              onChange={(_, t) => setTrackId(t.id)}
+              onChange={(_, t) => selectTrackId(t)}
               autoHighlight
               options={tracks}
-              getOptionLabel={(track) =>
-                track.getTitle(!hideArtist, isTitleMinimal)
-              }
+              getOptionLabel={(t) => t.getTitle(!hideArtist, isTitleMinimal)}
+              getOptionSelected={(option, value) => option.id === value.id}
               style={{ width: 300 }}
               renderInput={(params) => (
                 <TextField
@@ -252,7 +255,7 @@ export default function Playlist({
                 key={index}
                 selected={t.id === trackId}
                 autoFocus={t.id === trackId}
-                onClick={() => setTrackId(t.id)}
+                onClick={() => selectTrackId(t)}
               >
                 <div style={{ display: 'flex', flexDirection: 'row' }}>
                   <IconButton

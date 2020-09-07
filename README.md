@@ -2,15 +2,13 @@
 
 - Bugs
   -- Refresh token after hour
-  -- Fix 2 newlines for lyricsfreak
-  -- Fix '(Sitting in) dock of the bay' yielding empty title because of getMinimalTitle()
 
 - Features
-  -- add lyricfind for ''
+  -- add lyricfind for french lyrics 'mc solaar geopoetique lyrics'
   -- add to playlist from FIP playlist
   -- sorting of playlist
 
--- implement play slider & skip to next/previous button
+-- implement play slider
 -- select device on which to play
 
 - Improvements

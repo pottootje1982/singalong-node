@@ -49,7 +49,7 @@ function Playlists({
     })
   }
 
-  function onPlaylistClick(_, playlist) {
+  function onPlaylistClick(playlist) {
     if (playlist) {
       setTrackId(null)
       setPlaylist(playlist.uri)
@@ -78,9 +78,8 @@ function Playlists({
       <Grid item>
         {selectedPlaylist && (
           <Autocomplete
-            id="combo-box-demo"
             value={selectedPlaylist}
-            onChange={onPlaylistClick}
+            onChange={(_, p) => onPlaylistClick(p)}
             autoHighlight
             options={playlists}
             getOptionLabel={(option) => option.name}

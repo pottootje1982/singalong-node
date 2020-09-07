@@ -27,6 +27,7 @@ import {
   SkipNext,
 } from '@material-ui/icons'
 import CheckMenuItem from '../CheckMenuItem'
+import { Track } from '../track'
 
 export default function Lyrics({
   track,
@@ -74,14 +75,14 @@ export default function Lyrics({
     const lyrics = lyricsRef.current.value
     post('/lyrics', { track, lyrics })
     track.lyrics = lyrics
-    setTrack({ ...track })
+    setTrack(Track.copy({ ...track }))
     closeMenu()
   }
 
   function removeLyrics(track) {
     track.lyrics = null
     del('/lyrics', { data: { track } })
-    setTrack({ ...track })
+    setTrack(Track.copy({ ...track }))
     closeMenu()
   }
 
@@ -95,7 +96,7 @@ export default function Lyrics({
         closeMenu()
         if (lyrics) {
           track.lyrics = lyrics
-          setTrack({ ...track, lyrics })
+          setTrack(Track.copy({ ...track, lyrics }))
         }
       }
     )

@@ -1,4 +1,4 @@
-import assert = require('assert')
+const assert = require('assert')
 import { Track } from './track'
 
 describe('Track', () => {
@@ -59,6 +59,20 @@ describe('Track', () => {
     var track = Track.parse('Bonnie Raitt - Angel From Montgomery (Remastered)')
     assert.equal(track.cleanArtist(), 'Bonnie Raitt')
     assert.equal(track.cleanTitle(), 'Angel From Montgomery')
+  })
+
+  it('Cleans title starting with ()', () => {
+    var track = Track.parse('Otis Redding - (Sitting in the) dock of the bay')
+    assert.equal(track.cleanArtist(), 'Otis Redding')
+    assert.equal(track.cleanTitle(), '(Sitting in the) dock of the bay')
+  })
+
+  it('Cleans title containing []', () => {
+    var track = Track.parse(
+      'Otis Redding - (Sitting in the) dock of the bay [Remastered]'
+    )
+    assert.equal(track.cleanArtist(), 'Otis Redding')
+    assert.equal(track.cleanTitle(), '(Sitting in the) dock of the bay')
   })
 
   it('Empty track', function () {

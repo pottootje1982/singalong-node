@@ -1,7 +1,9 @@
 function cleanString(str) {
-  var regex = /([^()[\]]*)/i
+  const regex = /([^[\]]+)/i
   var result = str.match(regex)
-  return result != null && result.length > 1 ? result[1].trim() : str
+  result = result && result.length > 1 ? result[1] : str
+  result = result.replace(/(.+)(\(.*\))/, '$1')
+  return result.trim()
 }
 
 function getMinimalTitle(title) {
