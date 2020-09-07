@@ -9,6 +9,7 @@ import { get } from './server'
 
 function App({ location }) {
   const [playlist, setPlaylist] = useState()
+  const [radio, setRadio] = useState()
   const [track, setTrack] = useState({})
   const [trackId, setTrackId] = useState('')
   const [user, setUser] = useState()
@@ -35,6 +36,7 @@ function App({ location }) {
       <Grid item xs={3} style={{ display: lyricsFullscreen && 'none' }}>
         <Playlists
           setPlaylist={setPlaylist}
+          setRadio={setRadio}
           playlist={playlist}
           user={user}
           token={token}
@@ -57,6 +59,7 @@ function App({ location }) {
             <Playlist
               key={playlist}
               playlist={playlist}
+              radio={radio}
               token={token}
               user={user}
               track={track}

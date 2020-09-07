@@ -3,8 +3,16 @@ import { Grid, TextField } from '@material-ui/core'
 import { Button } from '../Styled'
 import Autocomplete from '@material-ui/lab/Autocomplete'
 import { setToken, get } from '../server'
+import PlaylistsList from './List'
 
-function Playlists({ setPlaylist, playlist, setTrackId, token, user }) {
+function Playlists({
+  setPlaylist,
+  setRadio,
+  playlist,
+  setTrackId,
+  token,
+  user,
+}) {
   const [playlists, setPlaylists] = useState([])
   const [offset, setOffset] = useState()
   const searchRef = useRef(null)
@@ -32,7 +40,7 @@ function Playlists({ setPlaylist, playlist, setTrackId, token, user }) {
   }
 
   function showFip() {
-    setPlaylist(`FIP_${Date.now()}`)
+    setRadio(`FIP_${Date.now()}`)
   }
 
   function showCurrentlyPlaying() {
@@ -41,7 +49,7 @@ function Playlists({ setPlaylist, playlist, setTrackId, token, user }) {
     })
   }
 
-  function onPlaylistClick(event, playlist) {
+  function onPlaylistClick(_, playlist) {
     if (playlist) {
       setTrackId(null)
       setPlaylist(playlist.uri)
@@ -55,6 +63,8 @@ function Playlists({ setPlaylist, playlist, setTrackId, token, user }) {
     setPlaylist(playlists[0] && playlists[0].uri)
   }, [playlists, setPlaylist])
 
+  const selectedPlaylist = playlists.find((p) => p.uri === playlist)
+
   return (
     <Grid container direction="column" alignItems="stretch" spacing={1}>
       <Grid item>
@@ -66,14 +76,12 @@ function Playlists({ setPlaylist, playlist, setTrackId, token, user }) {
         </Button>
       </Grid>
       <Grid item>
-        {playlist && (
+        {selectedPlaylist && (
           <Autocomplete
             id="combo-box-demo"
-            open
-            value={playlists.find((p) => p.uri === playlist)}
+            value={selectedPlaylist}
             onChange={onPlaylistClick}
             autoHighlight
-            style={{ height: '97vh' }}
             options={playlists}
             getOptionLabel={(option) => option.name}
             renderInput={(params) => (
@@ -84,14 +92,14 @@ function Playlists({ setPlaylist, playlist, setTrackId, token, user }) {
                 variant="outlined"
               />
             )}
-            ListboxProps={{
-              style: {
-                minHeight: '80vh',
-              },
-            }}
           />
         )}
       </Grid>
+      <PlaylistsList
+        playlists={playlists}
+        playlist={playlist}
+        onPlaylistClick={onPlaylistClick}
+      />
     </Grid>
   )
 }

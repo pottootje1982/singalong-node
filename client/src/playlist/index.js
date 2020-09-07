@@ -10,6 +10,7 @@ import {
   ListItemText,
   List,
   Grid,
+  TextField,
 } from '@material-ui/core'
 import CheckMenuItem from '../CheckMenuItem'
 import {
@@ -20,11 +21,13 @@ import {
 import ToggleButton from '@material-ui/lab/ToggleButton'
 import isEquivalent from '../isEquivalent'
 import { Track } from '../track'
+import Autocomplete from '@material-ui/lab/Autocomplete'
 
 const sleepTime = 3000
 
 export default function Playlist({
   playlist,
+  radio,
   token,
   user,
   setTrack,
@@ -45,6 +48,7 @@ export default function Playlist({
   setToken(token)
   useEffect(selectTrack, [trackId])
   useEffect(showPlaylist, [playlist])
+  useEffect(showCurrentlyOnFip, [radio])
   useEffect(addTracks, [offset])
   useEffect(refreshPlaylist, [track])
 
@@ -67,16 +71,17 @@ export default function Playlist({
 
   function showPlaylist() {
     if (playlist) {
-      if (playlist.startsWith('FIP_')) showCurrentlyOnFip()
-      else setOffset(0)
+      setOffset(0)
     }
   }
 
   function showCurrentlyOnFip() {
-    get('/radio/fip').then(({ data: { tracks, position } }) => {
-      setTracks(tracks)
-      setTrackId(tracks[position].id)
-    })
+    if (radio) {
+      get('/radio/fip').then(({ data: { tracks, position } }) => {
+        setTracks(tracks.map((t) => Track.copy(t)))
+        setTrackId(tracks[position].id)
+      })
+    }
   }
 
   function addTracks() {
@@ -213,7 +218,30 @@ export default function Playlist({
             />
           </Menu>
         </Grid>
+        <Grid item>
+          {track && trackId && (
+            <Autocomplete
+              fullWidth
+              value={track}
+              onChange={(_, t) => setTrackId(t.id)}
+              autoHighlight
+              options={tracks}
+              getOptionLabel={(track) =>
+                track.getTitle(!hideArtist, isTitleMinimal)
+              }
+              style={{ width: 300 }}
+              renderInput={(params) => (
+                <TextField
+                  {...params}
+                  label="Select track:"
+                  variant="outlined"
+                />
+              )}
+            />
+          )}
+        </Grid>
       </Grid>
+
       <Grid item>
         <List style={{ maxHeight: '48vh', overflow: 'auto' }} dense>
           {tracks

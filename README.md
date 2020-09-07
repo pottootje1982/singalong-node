@@ -8,7 +8,7 @@
 - Features
   -- add lyricfind for ''
   -- add to playlist from FIP playlist
-  -- use Track class client side as well so we can get rid of rawTracks
+  -- sorting of playlist
 
 -- implement play slider & skip to next/previous button
 -- select device on which to play
