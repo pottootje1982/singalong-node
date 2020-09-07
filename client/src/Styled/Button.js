@@ -9,7 +9,6 @@ export default styled(({ ...otherProps }) => (
     color="primary"
     {...otherProps}
     style={{
-      margin: 5,
       textTransform: 'none',
       ...(otherProps.style || []),
     }}

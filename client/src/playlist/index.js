@@ -18,8 +18,8 @@ import {
   Menu as MenuIcon,
 } from '@material-ui/icons'
 import ToggleButton from '@material-ui/lab/ToggleButton'
-import { getMinimalTitle } from '../track_helpers'
 import isEquivalent from '../isEquivalent'
+import { Track } from '../track'
 
 const sleepTime = 3000
 
@@ -34,7 +34,6 @@ export default function Playlist({
 }) {
   const [offset, setOffset] = useState()
   const [tracks, setTracks] = useState([])
-  const [rawTracks, setRawTracks] = useState([])
   const [trackIdToDownload, setTrackIdToDownload] = useState()
   const [tracksToDownload, setTracksToDownload] = useState([])
   const [isDownloading, setIsDownloading] = useState(false)
@@ -51,11 +50,11 @@ export default function Playlist({
 
   function refreshPlaylist() {
     if (track && track.id) {
-      const rawTrack = rawTracks.find((t) => t.id === track.id)
-      if (rawTrack) {
-        if (!isEquivalent(track, rawTrack)) {
-          rawTrack.lyrics = track.lyrics
-          setRawTracks([...rawTracks])
+      const foundTrack = tracks.find((t) => t.id === track.id)
+      if (foundTrack) {
+        if (!isEquivalent(track, foundTrack)) {
+          foundTrack.lyrics = track.lyrics
+          setTracks([...tracks])
         }
       }
     }
@@ -75,7 +74,7 @@ export default function Playlist({
 
   function showCurrentlyOnFip() {
     get('/radio/fip').then(({ data: { tracks, position } }) => {
-      setRawTracks(tracks)
+      setTracks(tracks)
       setTrackId(tracks[position].id)
     })
   }
@@ -88,8 +87,8 @@ export default function Playlist({
       get(`playlists/${playlist}`, { params: { offset } })
         .then(({ data: { tracks: newTracks, hasMore } }) => {
           if (!newTracks || newTracks.length === 0) return
-          newTracks = [...rawTracks, ...newTracks]
-          setRawTracks(newTracks)
+          newTracks = [...tracks, ...newTracks]
+          setTracks(newTracks.map((t) => Track.copy(t)))
           if (!trackId && offset === 0 && newTracks[0])
             setTrackId(newTracks[0].id)
           setOffset(hasMore ? newTracks.length : -1)
@@ -156,26 +155,6 @@ export default function Playlist({
     return new Promise((resolve) => setTimeout(resolve, ms))
   }
 
-  useEffect(minimizeTitle, [
-    isTitleMinimal,
-    isNotDownloaded,
-    hideArtist,
-    rawTracks,
-  ])
-
-  function minimizeTitle() {
-    const minimizedTracks = rawTracks.map((track) => ({
-      ...track,
-      artist: hideArtist ? null : track.artist,
-      title: isTitleMinimal ? getMinimalTitle(track.title) : track.title,
-    }))
-    setTracks(
-      minimizedTracks.filter((track) =>
-        isNotDownloaded ? !track.lyrics : true
-      )
-    )
-  }
-
   function closeMenu() {
     setAnchorEl(null)
   }
@@ -237,36 +216,38 @@ export default function Playlist({
       </Grid>
       <Grid item>
         <List style={{ maxHeight: '48vh', overflow: 'auto' }} dense>
-          {tracks.map((t, index) => (
-            <ListItem
-              button
-              key={index}
-              selected={t.id === trackId}
-              autoFocus={t.id === trackId}
-              onClick={() => setTrackId(t.id)}
-            >
-              <div style={{ display: 'flex', flexDirection: 'row' }}>
-                <IconButton
-                  size="small"
-                  style={{ width: 25, height: 25 }}
-                  onClick={() => playTrack(t.id, index)}
-                >
-                  <PlayArrow></PlayArrow>
-                </IconButton>
-                <ListItemText
-                  primary={t.artist ? `${t.artist} - ${t.title}` : t.title}
-                  style={{
-                    color:
-                      t.id === trackIdToDownload && t.id
-                        ? orange[500]
-                        : t.lyrics
-                        ? green[500]
-                        : red[500],
-                  }}
-                />
-              </div>
-            </ListItem>
-          ))}
+          {tracks
+            .filter((t) => !isNotDownloaded || !t.lyrics)
+            .map((t, index) => (
+              <ListItem
+                button
+                key={index}
+                selected={t.id === trackId}
+                autoFocus={t.id === trackId}
+                onClick={() => setTrackId(t.id)}
+              >
+                <div style={{ display: 'flex', flexDirection: 'row' }}>
+                  <IconButton
+                    size="small"
+                    style={{ width: 25, height: 25 }}
+                    onClick={() => playTrack(t.id, index)}
+                  >
+                    <PlayArrow></PlayArrow>
+                  </IconButton>
+                  <ListItemText
+                    primary={t.getTitle(!hideArtist, isTitleMinimal)}
+                    style={{
+                      color:
+                        t.id === trackIdToDownload && t.id
+                          ? orange[500]
+                          : t.lyrics
+                          ? green[500]
+                          : red[500],
+                    }}
+                  />
+                </div>
+              </ListItem>
+            ))}
         </List>
       </Grid>
     </Grid>

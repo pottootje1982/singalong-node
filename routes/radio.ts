@@ -2,7 +2,7 @@ const router = require('./router')()
 const { get } = require('axios')
 import LyricsDb from '../scripts/lyrics_db'
 const createTable = require('../scripts/db/tables')
-import { Track } from '../scripts/track'
+import { Track } from '../client/src/track'
 
 let lyricsDb: LyricsDb
 

@@ -1,4 +1,4 @@
-var track_helpers = require('../client/src/track_helpers')
+var track_helpers = require('./track_helpers')
 
 export class Track {
   id: string
@@ -15,7 +15,8 @@ export class Track {
     site?: string,
     lyrics?: string,
     fullTrackTitle?: string,
-    id?: string
+    id?: string,
+    duration_ms?: number
   ) {
     this.artist = artist ? artist.trim() : ''
     this.title = title ? title.trim() : ''
@@ -23,6 +24,7 @@ export class Track {
     this.lyrics = lyrics
     this.fullTrackTitle = fullTrackTitle
     this.id = id
+    this.duration_ms = duration_ms
   }
 
   public toString(minimal: boolean = false): string {
@@ -71,7 +73,8 @@ export class Track {
       track.site,
       track.lyrics,
       track.fullTrackTitle,
-      track.id
+      track.id,
+      track.duration_ms
     )
   }
 
@@ -86,16 +89,22 @@ export class Track {
     return result
   }
 
-  static toTracks(playlist: any[]) {
-    return playlist.map((track) => Track.copy(track))
-  }
-
   getMinimalTitle() {
     return track_helpers.getMinimalTitle(this.title)
   }
+
+  getTitle(showArtist: boolean, minimalTitle: boolean) {
+    const title = minimalTitle ? this.getMinimalTitle() : this.title
+    return this.artist && showArtist ? `${this.artist} - ${title}` : title
+  }
 }
 
-export function createTrack(artist: string, title: string, id?: string) {
+export function createTrack(
+  artist: string,
+  title: string,
+  id: string,
+  duration_ms: number
+) {
   id = id || `${artist} - ${title}`
-  return new Track(artist, title, null, null, null, id)
+  return new Track(artist, title, null, null, null, id, duration_ms)
 }

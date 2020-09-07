@@ -19,7 +19,6 @@ function Playlists({ setPlaylist, playlist, setTrackId, token, user }) {
 
   function getPlaylists() {
     if (offset === -1) {
-      console.log(searchRef)
       searchRef.current.focus()
     } else if (offset >= 0) {
       get(`playlists`, { params: { offset, limit: 50 } }).then(
@@ -57,7 +56,7 @@ function Playlists({ setPlaylist, playlist, setTrackId, token, user }) {
   }, [playlists, setPlaylist])
 
   return (
-    <Grid container direction="column" alignItems="stretch">
+    <Grid container direction="column" alignItems="stretch" spacing={1}>
       <Grid item>
         <Button onClick={showFip}>Currently playing on FIP</Button>
       </Grid>
@@ -67,28 +66,31 @@ function Playlists({ setPlaylist, playlist, setTrackId, token, user }) {
         </Button>
       </Grid>
       <Grid item>
-        <Autocomplete
-          id="combo-box-demo"
-          open
-          onChange={onPlaylistClick}
-          autoHighlight
-          style={{ height: '97vh' }}
-          options={playlists}
-          getOptionLabel={(option) => option.name}
-          renderInput={(params) => (
-            <TextField
-              {...params}
-              label="Select playlist:"
-              inputRef={searchRef}
-              variant="outlined"
-            />
-          )}
-          ListboxProps={{
-            style: {
-              minHeight: '80vh',
-            },
-          }}
-        />{' '}
+        {playlist && (
+          <Autocomplete
+            id="combo-box-demo"
+            open
+            value={playlists.find((p) => p.uri === playlist)}
+            onChange={onPlaylistClick}
+            autoHighlight
+            style={{ height: '97vh' }}
+            options={playlists}
+            getOptionLabel={(option) => option.name}
+            renderInput={(params) => (
+              <TextField
+                {...params}
+                label="Select playlist:"
+                inputRef={searchRef}
+                variant="outlined"
+              />
+            )}
+            ListboxProps={{
+              style: {
+                minHeight: '80vh',
+              },
+            }}
+          />
+        )}
       </Grid>
     </Grid>
   )

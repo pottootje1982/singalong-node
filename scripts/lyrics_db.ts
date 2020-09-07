@@ -1,4 +1,4 @@
-import { Track } from './track'
+import { Track } from '../client/src/track'
 
 export default class LyricsDb {
   removeAll() {

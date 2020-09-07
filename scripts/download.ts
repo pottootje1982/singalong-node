@@ -1,5 +1,5 @@
 ﻿import LyricsDb from './lyrics_db'
-import { Track } from './track'
+import { Track } from '../client/src/track'
 import { LyricsSearchEngine } from './LyricsEngines/LyricsSearchEngine'
 import { AzLyricsEngine } from './LyricsEngines/AzLyricsEngine'
 //import { MetroLyricsEngine } from "./LyricsEngines/MetroLyricsEngine";

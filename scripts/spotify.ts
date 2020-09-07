@@ -1,5 +1,5 @@
 ﻿import SpotifyWebApi = require('spotify-web-api-node')
-import { Track, createTrack } from './track'
+import { Track, createTrack } from '../client/src/track'
 const fs = require('fs')
 const { get } = require('axios')
 
@@ -16,8 +16,8 @@ const state = 'some-state-of-my-choice'
 export const limit = 100
 
 function tracks(tracks, hasMore = false) {
-  tracks = tracks.map(({ id, name, artists }) =>
-    createTrack(artists[0] && artists[0].name, name, id)
+  tracks = tracks.map(({ id, name, artists, duration_ms }) =>
+    createTrack(artists[0] && artists[0].name, name, id, duration_ms)
   )
   return { tracks, hasMore }
 }
@@ -118,7 +118,7 @@ export class SpotifyApi {
   getPlaylist(id, params) {
     params = { limit, ...params }
     return this.get(
-      `https://api.spotify.com/v1/playlists/${id}/tracks?fields=items(track(id,name,artists(name))),next`,
+      `https://api.spotify.com/v1/playlists/${id}/tracks?fields=items(track(id,name,artists(name),duration_ms)),next`,
       params
     )
   }

@@ -1,7 +1,7 @@
 ﻿import assert = require('assert')
 import LyricsDownloader from './download'
 import { LyricsSearchEngine } from './LyricsEngines/LyricsSearchEngine'
-import { Track } from './track'
+import { Track } from '../client/src/track'
 import { MetroLyricsEngine } from './LyricsEngines/MetroLyricsEngine'
 
 import LyricsDb from './lyrics_db'

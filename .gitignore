@@ -13,3 +13,8 @@
 .npmrc
 .env
 token.txt
+client/src/react-app-env.d.ts
+client/src/track.js
+client/src/track.js.map
+client/src/track.test.js.map
+client/src/track.test.js
