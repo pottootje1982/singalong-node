@@ -13,7 +13,7 @@ describe('Downloading lyrics', () => {
   var engine: LyricsSearchEngine
 
   function insertTrack(artist, title, lyrics, site?: string) {
-    return lyricsDb.insert(new Track(artist, title, site), lyrics)
+    return lyricsDb.insert(new Track(artist, title, null, site), lyrics)
   }
 
   before(async () => {

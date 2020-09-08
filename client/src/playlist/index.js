@@ -65,8 +65,8 @@ export default function Playlist({
   }
 
   function selectTrack() {
-    const cpTrack = tracks.find((t) => t.id === trackId)
-    setTrack(cpTrack || tracks[0])
+    const trackToSelect = tracks.find((t) => t.id === trackId) || tracks[0]
+    setTrack(trackToSelect)
   }
 
   function showPlaylist() {
@@ -78,7 +78,7 @@ export default function Playlist({
   function showCurrentlyOnFip() {
     if (radio) {
       get('/radio/fip').then(({ data: { tracks, position } }) => {
-        setTracks(tracks.map((t) => Track.copy(t)))
+        setTracks(tracks.map(Track.copy))
         setTrackId(tracks[position].id)
       })
     }
@@ -93,7 +93,7 @@ export default function Playlist({
         .then(({ data: { tracks: newTracks, hasMore } }) => {
           if (!newTracks || newTracks.length === 0) return
           newTracks = [...tracks, ...newTracks]
-          setTracks(newTracks.map((t) => Track.copy(t)))
+          setTracks(newTracks.map(Track.copy))
           if (!trackId && offset === 0 && newTracks[0])
             setTrackId(newTracks[0].id)
           setOffset(hasMore ? newTracks.length : -1)
@@ -230,7 +230,7 @@ export default function Playlist({
               onChange={(_, t) => selectTrackId(t)}
               autoHighlight
               options={tracks}
-              getOptionLabel={(t) => t.getTitle(!hideArtist, isTitleMinimal)}
+              getOptionLabel={(t) => t.toString(isTitleMinimal, hideArtist)}
               getOptionSelected={(option, value) => option.id === value.id}
               style={{ width: 300 }}
               renderInput={(params) => (
@@ -266,7 +266,7 @@ export default function Playlist({
                     <PlayArrow></PlayArrow>
                   </IconButton>
                   <ListItemText
-                    primary={t.getTitle(!hideArtist, isTitleMinimal)}
+                    primary={t.toString(isTitleMinimal, hideArtist)}
                     style={{
                       color:
                         t.id === trackIdToDownload && t.id

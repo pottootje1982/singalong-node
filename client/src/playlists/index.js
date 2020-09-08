@@ -43,12 +43,6 @@ function Playlists({
     setRadio(`FIP_${Date.now()}`)
   }
 
-  function showCurrentlyPlaying() {
-    get('playlists/currently-playing').then(({ data }) => {
-      setPlaylist(data.uri)
-    })
-  }
-
   function onPlaylistClick(playlist) {
     if (playlist) {
       setTrackId(null)
@@ -69,11 +63,6 @@ function Playlists({
     <Grid container direction="column" alignItems="stretch" spacing={1}>
       <Grid item>
         <Button onClick={showFip}>Currently playing on FIP</Button>
-      </Grid>
-      <Grid item>
-        <Button onClick={showCurrentlyPlaying}>
-          Currently playing on Spotify
-        </Button>
       </Grid>
       <Grid item>
         {selectedPlaylist && (

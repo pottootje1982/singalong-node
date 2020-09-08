@@ -1,37 +1,35 @@
 var track_helpers = require('./track_helpers')
 
+function includes(str1, str2) {
+  return str1.toUpperCase().includes(str2.toUpperCase())
+}
+
+function equals(str1, str2) {
+  return str1.toUpperCase() === str2.toUpperCase()
+}
+
 export class Track {
-  id: string
-  artist: string
-  title: string
+  readonly id: string
+  readonly artist: string
+  readonly title: string
   site: string
   lyrics: string
-  fullTrackTitle: string
-  duration_ms: number
+  readonly duration_ms: number
 
   constructor(
     artist: string,
     title: string,
+    id?: string,
     site?: string,
     lyrics?: string,
-    fullTrackTitle?: string,
-    id?: string,
     duration_ms?: number
   ) {
     this.artist = artist ? artist.trim() : ''
     this.title = title ? title.trim() : ''
     this.site = site
     this.lyrics = lyrics
-    this.fullTrackTitle = fullTrackTitle
     this.id = id
     this.duration_ms = duration_ms
-  }
-
-  public toString(minimal: boolean = false): string {
-    if (this.fullTrackTitle != null && !minimal) return this.fullTrackTitle
-    let title = minimal ? this.getMinimalTitle() : this.title
-    if (this.artist == null || this.artist === '') return title
-    return this.artist + ' - ' + title
   }
 
   public static parse(trackStr: string): Track {
@@ -42,7 +40,6 @@ export class Track {
     let title = trackItems.join(' - ').trim()
     if (artist === '' && title === '') return null
     let track = new Track(artist, title)
-    track.fullTrackTitle = trackStr
     return track
   }
 
@@ -60,22 +57,30 @@ export class Track {
     )
   }
 
-  matchesTitle(match: any): unknown {
-    return match.title
-      .toUpperCase()
-      .includes(this.getMinimalTitle().toUpperCase())
+  matchesTitleOrId(match: any): boolean {
+    return (
+      includes(match.title, this.getMinimalTitle()) || equals(match.id, this.id)
+    )
   }
 
-  static copy(track) {
-    return new Track(
+  matchesArtistTitleOrId(match: any): boolean {
+    return (
+      (includes(match.title, this.getMinimalTitle()) &&
+        match.artist.toUpperCase() === this.artist.toUpperCase()) ||
+      equals(match.id, this.id)
+    )
+  }
+
+  static copy(track: any): Track {
+    const result = new Track(
       track.artist,
       track.title,
+      track.id,
       track.site,
       track.lyrics,
-      track.fullTrackTitle,
-      track.id,
       track.duration_ms
     )
+    return result
   }
 
   static fromSpotify(track): Track {
@@ -83,9 +88,14 @@ export class Track {
     const artist = track.artists ? track.artists[0].name : ''
     const title = track.name
     // if (track.preview_url == null) return null
-    let result = new Track(artist, title)
-    result.id = track.id
-    result.duration_ms = track.duration_ms
+    let result = new Track(
+      artist,
+      title,
+      track.id,
+      null,
+      null,
+      track.duration_ms
+    )
     return result
   }
 
@@ -93,9 +103,13 @@ export class Track {
     return track_helpers.getMinimalTitle(this.title)
   }
 
-  getTitle(showArtist: boolean, minimalTitle: boolean) {
-    const title = minimalTitle ? this.getMinimalTitle() : this.title
-    return this.artist && showArtist ? `${this.artist} - ${title}` : title
+  getTitle(minimalTitle?: boolean) {
+    return minimalTitle ? this.getMinimalTitle() : this.title
+  }
+
+  toString(minimalTitle?: boolean, hideArtist?: boolean) {
+    const title = this.getTitle(minimalTitle)
+    return this.artist && !hideArtist ? `${this.artist} - ${title}` : title
   }
 }
 
@@ -106,5 +120,5 @@ export function createTrack(
   duration_ms: number
 ) {
   id = id || `${artist} - ${title}`
-  return new Track(artist, title, null, null, null, id, duration_ms)
+  return new Track(artist, title, id, null, null, duration_ms)
 }

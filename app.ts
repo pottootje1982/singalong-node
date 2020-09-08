@@ -17,10 +17,6 @@ app.use(express.static(path.join(__dirname, 'client/build')))
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: false }))
 
-// view engine setup
-app.set('views', path.join(__dirname, 'views'))
-app.set('view engine', 'pug')
-
 app.use(express.static(path.join(__dirname, '/client/public')))
 
 process.on('unhandledRejection', (reason, p) => {

@@ -53,9 +53,8 @@ export default class LyricsDownloader {
   async getFromCache(track: Track) {
     var cached = await this.lyricsDb.queryTrack(track)
     if (cached != null) {
-      if (!cached.id) {
-        cached.id = track.id
-        this.lyricsDb.updateId(cached)
+      if (!cached.id && track.id) {
+        this.lyricsDb.updateId(Track.copy({ ...cached, id: track.id }))
       }
       return cached
     }

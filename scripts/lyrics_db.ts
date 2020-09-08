@@ -32,10 +32,9 @@ export default class LyricsDb {
         new Track(
           result.artist,
           result.title,
+          result.id,
           result.site,
-          result.lyrics,
-          null,
-          result.id
+          result.lyrics
         )
     )
   }
@@ -80,18 +79,16 @@ export default class LyricsDb {
     }
     let queryResults: any[] = (await this.lyricsTable.get(query)) || []
     for (let track of playlist) {
-      var matches = queryResults.filter(
-        (match) => track.matchesTitle(match) || match.id === track.id
+      var matches = queryResults.filter((match) =>
+        track.matchesTitleOrId(match)
       )
       if (matches.length === 0) {
         results.push(track)
         continue
       }
       if (notDownloaded === false) continue
-      const exactMatch = matches.find(
-        (match) =>
-          track.matchesTitle(match) &&
-          match.artist.toUpperCase() === track.artist.toUpperCase()
+      const exactMatch = matches.find((match) =>
+        track.matchesArtistTitleOrId(match)
       )
       track.lyrics = exactMatch && exactMatch.lyrics
       results.push(track)

@@ -7,10 +7,7 @@ describe('Lyrics DB', () => {
   let lyricsDb: LyricsDb
 
   function insertTrack(artist, title, lyrics, id?) {
-    return lyricsDb.insert(
-      new Track(artist, title, null, null, null, id),
-      lyrics
-    )
+    return lyricsDb.insert(new Track(artist, title, id), lyrics)
   }
 
   beforeEach(async () => {
