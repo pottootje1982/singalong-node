@@ -21,7 +21,7 @@ const track = (id) => id && `spotify:track:${id}`
 router.put('/play', async (req, res) => {
   var spotifyApi: SpotifyApi = createApi(req)
   const { body } = req
-  body.uris = body.ids && body.ids.map((id) => track(id))
+  body.uris = body.ids && body.ids.filter((id) => id).map((id) => track(id))
   body.offset.uri = body.offset.id && track(body.offset.id)
   await spotifyApi.api.play(body)
   res.sendStatus(200)

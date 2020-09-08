@@ -15,10 +15,8 @@ const state = 'some-state-of-my-choice'
 
 export const limit = 100
 
-function tracks(tracks, hasMore = false) {
-  tracks = tracks.map(({ id, name, artists, duration_ms }) =>
-    createTrack(artists[0] && artists[0].name, name, id, duration_ms)
-  )
+export function createTracks(tracks, hasMore = false) {
+  tracks = tracks.map(createTrack)
   return { tracks, hasMore }
 }
 
@@ -129,19 +127,19 @@ export class SpotifyApi {
     switch (type) {
       case 'artist':
         const artistTracks = await this.api.getArtistTopTracks(id, 'NL')
-        return tracks(artistTracks.body.tracks)
+        return createTracks(artistTracks.body.tracks)
       case 'album':
         const albumTracks = await this.api.getAlbum(id)
-        return tracks(albumTracks.body.tracks.items)
+        return createTracks(albumTracks.body.tracks.items)
       case 'playlist':
         const { items, next } = await this.getPlaylist(id, options)
-        return tracks(
+        return createTracks(
           items.map((i) => i.track).filter((t) => t),
           !!next
         )
       case 'track':
         const track = await this.api.getTrack(id)
-        return tracks([track.body])
+        return createTracks([track.body])
       default:
         break
     }

@@ -47,6 +47,7 @@ function Playlists({
     if (playlist) {
       setTrackId(null)
       setPlaylist(playlist.uri)
+      setRadio(null)
     }
   }
 

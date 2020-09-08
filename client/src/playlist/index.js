@@ -79,6 +79,13 @@ export default function Playlist({
       get('/radio/fip').then(({ data: { tracks, position } }) => {
         setTracks(tracks.map(Track.copy))
         setTrackId(tracks[position].id)
+        post('/spotify/search', { tracks }).then(
+          ({ data: { tracks: foundTracks } }) => {
+            setTracks(
+              tracks.map((t, i) => Track.copy({ ...t, id: foundTracks[i].id }))
+            )
+          }
+        )
       })
     }
   }
@@ -111,7 +118,16 @@ export default function Playlist({
       context_uri = playlist
       position = undefined
     }
-    server.put(`player/play`, { ids, context_uri, offset: { id, position } })
+    if (radio && id) {
+      const body = {
+        ids: tracks.map((t) => t.id),
+        offset: { id },
+      }
+      console.log(body, id)
+      server.put(`player/play`, body)
+    } else {
+      server.put(`player/play`, { ids, context_uri, offset: { id, position } })
+    }
   }
 
   useEffect(downloadTracks, [isDownloading])

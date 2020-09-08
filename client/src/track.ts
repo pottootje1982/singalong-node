@@ -108,18 +108,16 @@ export class Track {
   }
 
   toString(options?: any) {
+    options = options || {}
     const { minimalTitle, hideArtist } = options
     const title = this.getTitle(minimalTitle)
     return this.artist && !hideArtist ? `${this.artist} - ${title}` : title
   }
 }
 
-export function createTrack(
-  artist: string,
-  title: string,
-  id: string,
-  duration_ms: number
-) {
-  id = id || `${artist} - ${title}`
-  return new Track(artist, title, id, null, null, duration_ms)
+export function createTrack(track: any) {
+  let { id, name, artists, duration_ms } = track
+  const artist = artists[0] && artists[0].name
+  id = id || `${artist} - ${name}`
+  return new Track(artist, name, id, null, null, duration_ms)
 }

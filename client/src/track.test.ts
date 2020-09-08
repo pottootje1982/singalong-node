@@ -38,13 +38,16 @@ describe('Track', () => {
       'The Drifters - Under The Boardwalk - Single/LP Version'
     )
     assert.equal(track.getMinimalTitle(), 'Under The Boardwalk')
-    assert.equal(track.toString(true), 'The Drifters - Under The Boardwalk')
+    assert.equal(
+      track.toString({ minimalTitle: true }),
+      'The Drifters - Under The Boardwalk'
+    )
   })
 
   it('Get minimal track title only', function () {
     var track = new Track(null, 'Under The Boardwalk - Single/LP Version')
     assert.equal(track.getMinimalTitle(), 'Under The Boardwalk')
-    assert.equal(track.toString(true), 'Under The Boardwalk')
+    assert.equal(track.toString({ minimalTitle: true }), 'Under The Boardwalk')
   })
 
   it('Get minimal track title of track with parenthese', function () {
@@ -52,7 +55,10 @@ describe('Track', () => {
       'Bee Gees - Massachusetts (2008 Remastered LP Version)'
     )
     assert.equal(track.getMinimalTitle(), 'Massachusetts')
-    assert.equal(track.toString(true), 'Bee Gees - Massachusetts')
+    assert.equal(
+      track.toString({ minimalTitle: true }),
+      'Bee Gees - Massachusetts'
+    )
   })
 
   it('Clean title', function () {

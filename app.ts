@@ -7,6 +7,7 @@ import playlists from './routes/playlists'
 import lyrics from './routes/lyrics'
 import player from './routes/player'
 import radio from './routes/radio'
+import spotify from './routes/spotify'
 var bodyParser = require('body-parser')
 
 var app = express()
@@ -32,6 +33,7 @@ app.use('/playlists', playlists)
 app.use('/lyrics', lyrics)
 app.use('/player', player)
 app.use('/radio', radio)
+app.use('/spotify', spotify)
 
 // The "catchall" handler: for any request that doesn't
 // match one above, send back React's index.html file.
