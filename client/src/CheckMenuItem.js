@@ -5,9 +5,16 @@ import { MenuItem, ListItemIcon, ListItemText } from '@material-ui/core'
 import { CheckBoxOutlineBlank, CheckBoxOutlined } from '@material-ui/icons'
 
 const CheckMenuItem = React.forwardRef(
-  ({ setter, checked, name, close }, ref) => {
+  ({ setter, state, checked, filterKey, name, close }, ref) => {
+    checked = state ? state[filterKey] : checked
+
     function onCheckClick() {
-      setter(!checked)
+      if (state) {
+        state[filterKey] = !checked
+        setter({ ...state })
+      } else {
+        setter(!checked)
+      }
       close()
     }
 

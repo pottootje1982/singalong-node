@@ -10,12 +10,17 @@ import { get } from './server'
 function App({ location }) {
   const [playlist, setPlaylist] = useState()
   const [radio, setRadio] = useState()
-  const [track, setTrack] = useState({})
+  const [track, setTrack] = useState()
   const [trackId, setTrackId] = useState('')
   const [user, setUser] = useState()
   const [lyricsFullscreen, setLyricsFullscreen] = useState(false)
   const query = location.search
   const { token } = qs.parse(query, { ignoreQueryPrefix: true })
+  const [trackFilters, setTrackFilters] = useState({
+    minimalTitle: true,
+    isNotDownloaded: false,
+    hideArtist: false,
+  })
 
   useEffect(() => {
     get('/authorize/me').then((res) => {
@@ -53,6 +58,7 @@ function App({ location }) {
               setPlaylist={setPlaylist}
               lyricsFullscreen={lyricsFullscreen}
               setLyricsFullscreen={setLyricsFullscreen}
+              trackFilters={trackFilters}
             ></Lyrics>
           </Grid>
           <Grid item style={{ display: lyricsFullscreen && 'none' }}>
@@ -66,6 +72,8 @@ function App({ location }) {
               trackId={trackId}
               setTrackId={setTrackId}
               setTrack={setTrack}
+              trackFilters={trackFilters}
+              setTrackFilters={setTrackFilters}
             ></Playlist>
           </Grid>
         </Grid>

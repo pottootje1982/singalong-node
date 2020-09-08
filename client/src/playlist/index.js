@@ -34,15 +34,14 @@ export default function Playlist({
   track,
   trackId,
   setTrackId,
+  trackFilters,
+  setTrackFilters,
 }) {
   const [offset, setOffset] = useState()
   const [tracks, setTracks] = useState([])
   const [trackIdToDownload, setTrackIdToDownload] = useState()
   const [tracksToDownload, setTracksToDownload] = useState([])
   const [isDownloading, setIsDownloading] = useState(false)
-  const [isTitleMinimal, setIsTitleMinimal] = useState(true)
-  const [isNotDownloaded, setIsNotDownloaded] = useState(false)
-  const [hideArtist, setHideArtist] = useState(false)
   const [anchorEl, setAnchorEl] = useState()
 
   setToken(token)
@@ -65,8 +64,8 @@ export default function Playlist({
   }
 
   function selectTrack() {
-    const trackToSelect = tracks.find((t) => t.id === trackId) || tracks[0]
-    setTrack(trackToSelect)
+    const trackToSelect = tracks.find((t) => t.id === trackId)
+    setTrack(trackToSelect || tracks[0])
   }
 
   function showPlaylist() {
@@ -147,7 +146,7 @@ export default function Playlist({
         sleepTime,
       }).then(({ data: { lyrics } }) => {
         if (lyrics) {
-          setTrack({ ...toDownload, lyrics })
+          setTrack(Track.copy({ ...toDownload, lyrics }))
         }
         if (isCancelled()) return
         if (isDownloading && tail.length > 0) setTracksToDownload(tail)
@@ -203,20 +202,23 @@ export default function Playlist({
             onClose={closeMenu}
           >
             <CheckMenuItem
-              setter={setIsTitleMinimal}
-              checked={isTitleMinimal}
+              setter={setTrackFilters}
+              state={trackFilters}
+              filterKey="minimalTitle"
               name="Minimize title"
               close={closeMenu}
             />
             <CheckMenuItem
-              setter={setIsNotDownloaded}
-              checked={isNotDownloaded}
+              setter={setTrackFilters}
+              state={trackFilters}
+              filterKey="isNotDownloaded"
               name="Not downloaded"
               close={closeMenu}
             />
             <CheckMenuItem
-              setter={setHideArtist}
-              checked={hideArtist}
+              setter={setTrackFilters}
+              state={trackFilters}
+              filterKey="hideArtist"
               name="Hide artist"
               close={closeMenu}
             />
@@ -230,7 +232,7 @@ export default function Playlist({
               onChange={(_, t) => selectTrackId(t)}
               autoHighlight
               options={tracks}
-              getOptionLabel={(t) => t.toString(isTitleMinimal, hideArtist)}
+              getOptionLabel={(t) => t.toString(trackFilters)}
               getOptionSelected={(option, value) => option.id === value.id}
               style={{ width: 300 }}
               renderInput={(params) => (
@@ -248,7 +250,7 @@ export default function Playlist({
       <Grid item>
         <List style={{ maxHeight: '48vh', overflow: 'auto' }} dense>
           {tracks
-            .filter((t) => !isNotDownloaded || !t.lyrics)
+            .filter((t) => !trackFilters.isNotDownloaded || !t.lyrics)
             .map((t, index) => (
               <ListItem
                 button
@@ -266,7 +268,7 @@ export default function Playlist({
                     <PlayArrow></PlayArrow>
                   </IconButton>
                   <ListItemText
-                    primary={t.toString(isTitleMinimal, hideArtist)}
+                    primary={t.toString(trackFilters)}
                     style={{
                       color:
                         t.id === trackIdToDownload && t.id

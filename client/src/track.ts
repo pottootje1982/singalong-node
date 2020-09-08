@@ -107,7 +107,8 @@ export class Track {
     return minimalTitle ? this.getMinimalTitle() : this.title
   }
 
-  toString(minimalTitle?: boolean, hideArtist?: boolean) {
+  toString(options?: any) {
+    const { minimalTitle, hideArtist } = options
     const title = this.getTitle(minimalTitle)
     return this.artist && !hideArtist ? `${this.artist} - ${title}` : title
   }

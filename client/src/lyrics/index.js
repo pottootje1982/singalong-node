@@ -36,6 +36,7 @@ export default function Lyrics({
   setTrackId,
   lyricsFullscreen,
   setLyricsFullscreen,
+  trackFilters,
 }) {
   const [showCurrentlyPlaying, setShowCurrentlyPlaying] = useState()
   const [currentlyPlayingProbe, setCurrentlyPlayingProbe] = useState()
@@ -103,8 +104,10 @@ export default function Lyrics({
   }
 
   function searchLyrics(track) {
+    const artist = trackFilters.hideArtist ? '' : `${track.artist}+`
+    const title = track.getTitle(trackFilters)
     window.open(
-      `https://www.google.com/search?q=${track.artist}+${track.title}+lyrics`,
+      `https://www.google.com/search?q=${artist}${title}+lyrics`,
       '_blank'
     )
     closeMenu()
@@ -115,14 +118,11 @@ export default function Lyrics({
   }
 
   function doCustomSearch(artist, title) {
-    console.log(artist, title)
     downloadLyrics({ ...track, artist, title }, false)
     setModalOpen(false)
   }
 
-  track = track || {}
-  const label = track.artist ? ` ${track.artist} - ${track.title}` : ''
-  return (
+  return track ? (
     <Grid container spacing={1} direction="column" alignItems="stretch">
       <Grid container item alignItems="center" spacing={1}>
         <Grid item>
@@ -217,7 +217,7 @@ export default function Lyrics({
                   label="Artist"
                   fullWidth
                   inputRef={artistRef}
-                  defaultValue={track.artist}
+                  defaultValue={!trackFilters.hideArtist && track.artist}
                 ></TextField>
               </Grid>
               <Grid item>
@@ -225,7 +225,7 @@ export default function Lyrics({
                   label="Title"
                   fullWidth
                   inputRef={titleRef}
-                  defaultValue={track.title}
+                  defaultValue={track.getTitle(trackFilters.minimalTitle)}
                 ></TextField>
               </Grid>
             </Grid>
@@ -259,7 +259,8 @@ export default function Lyrics({
           fullWidth
           inputRef={lyricsRef}
           id="outlined-multiline-static"
-          label={`Lyrics${label}`}
+          filters={trackFilters}
+          label={`Lyrics ${track.toString(trackFilters)}`}
           multiline
           rows={!lyricsFullscreen ? 18 : undefined}
           defaultValue={lyrics}
@@ -267,5 +268,7 @@ export default function Lyrics({
         />
       </Grid>
     </Grid>
+  ) : (
+    <React.Fragment />
   )
 }
