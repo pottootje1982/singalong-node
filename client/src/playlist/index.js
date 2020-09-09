@@ -15,6 +15,7 @@ import {
 import CheckMenuItem from '../CheckMenuItem'
 import {
   PlayArrow,
+  PlaylistAdd,
   GetApp as DownloadIcon,
   Menu as MenuIcon,
 } from '@material-ui/icons'
@@ -81,9 +82,7 @@ export default function Playlist({
         setTrackId(tracks[position].id)
         post('/spotify/search', { tracks }).then(
           ({ data: { tracks: foundTracks } }) => {
-            setTracks(
-              tracks.map((t, i) => Track.copy({ ...t, id: foundTracks[i].id }))
-            )
+            setTracks(foundTracks.map(Track.copy))
           }
         )
       })
@@ -108,26 +107,26 @@ export default function Playlist({
     }
   }
 
-  function playTrack(id, position) {
-    let ids, context_uri
+  function playTrack(uri) {
+    let uris, context_uri, position
     const playArtist = playlist.includes('artist')
-    if (playArtist) {
-      ids = tracks.map((t) => t.id)
-      id = undefined
+    if (playArtist || radio) {
+      uris = tracks.map((t) => t.uri).filter((uri) => uri)
+      position = uris.indexOf(uri)
+      uri = undefined
     } else {
       context_uri = playlist
-      position = undefined
     }
-    if (radio && id) {
-      const body = {
-        ids: tracks.map((t) => t.id),
-        offset: { id },
-      }
-      console.log(body, id)
-      server.put(`player/play`, body)
-    } else {
-      server.put(`player/play`, { ids, context_uri, offset: { id, position } })
-    }
+    server.put(`/player/play`, {
+      uris,
+      context_uri,
+      offset: { position, uri },
+    })
+  }
+
+  function addTrackToPlaylist(uri) {
+    console.log(uri, playlist)
+    server.post(`/playlists/${playlist}/tracks`, { uris: [uri] })
   }
 
   useEffect(downloadTracks, [isDownloading])
@@ -249,7 +248,7 @@ export default function Playlist({
               autoHighlight
               options={tracks}
               getOptionLabel={(t) => t.toString(trackFilters)}
-              getOptionSelected={(option, value) => option.id === value.id}
+              getOptionSelected={(option, value) => option.id === trackId}
               style={{ width: 300 }}
               renderInput={(params) => (
                 <TextField
@@ -276,13 +275,24 @@ export default function Playlist({
                 onClick={() => selectTrackId(t)}
               >
                 <div style={{ display: 'flex', flexDirection: 'row' }}>
-                  <IconButton
-                    size="small"
-                    style={{ width: 25, height: 25 }}
-                    onClick={() => playTrack(t.id, index)}
-                  >
-                    <PlayArrow></PlayArrow>
-                  </IconButton>
+                  {t.uri && (
+                    <IconButton
+                      size="small"
+                      style={{ width: 25, height: 25 }}
+                      onClick={() => playTrack(t.uri)}
+                    >
+                      <PlayArrow></PlayArrow>
+                    </IconButton>
+                  )}
+                  {t.uri && radio && (
+                    <IconButton
+                      size="small"
+                      style={{ width: 25, height: 25 }}
+                      onClick={() => addTrackToPlaylist(t.uri)}
+                    >
+                      <PlaylistAdd></PlaylistAdd>
+                    </IconButton>
+                  )}
                   <ListItemText
                     primary={t.toString(trackFilters)}
                     style={{

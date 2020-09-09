@@ -13,9 +13,8 @@ createTable('./mongo-client', 'lyrics').then(({ lyricTable }) => {
 })
 
 router.get('/', async (req, res) => {
-  var artist = req.query.artist
-  var title = req.query.title
-  var selectedTrack = new Track(artist, title, req.query.id)
+  var { artist, title, id } = req.query
+  var selectedTrack = new Track({ artist, title, id })
   let track = await lyricsDb.queryTrack(selectedTrack)
   res.json({ lyrics: track.lyrics })
 })

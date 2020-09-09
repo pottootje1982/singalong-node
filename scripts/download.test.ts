@@ -1,7 +1,7 @@
 ﻿import assert = require('assert')
 import LyricsDownloader from './download'
 import { LyricsSearchEngine } from './LyricsEngines/LyricsSearchEngine'
-import { Track } from '../client/src/track'
+import { Track, simpleTrack } from '../client/src/track'
 import { MetroLyricsEngine } from './LyricsEngines/MetroLyricsEngine'
 
 import LyricsDb from './lyrics_db'
@@ -13,7 +13,7 @@ describe('Downloading lyrics', () => {
   var engine: LyricsSearchEngine
 
   function insertTrack(artist, title, lyrics, site?: string) {
-    return lyricsDb.insert(new Track(artist, title, null, site), lyrics)
+    return lyricsDb.insert(new Track({ artist, title, site }), lyrics)
   }
 
   before(async () => {
@@ -85,7 +85,7 @@ describe('Downloading lyrics', () => {
 
   it('Download track', async () => {
     var track = await lyricsDownloader.downloadTrack(
-      new Track('Beatles', 'Yellow Submarine')
+      simpleTrack('Beatles', 'Yellow Submarine')
     )
     assert(track.lyrics.indexOf('In the town where I was born') >= 0)
   })
@@ -110,13 +110,13 @@ describe('Downloading lyrics', () => {
       'MusixMatch'
     )
     let playlist = [
-      new Track(
+      simpleTrack(
         '1793 George Harrison',
         'Give Me Love (Give Me Peace On Earth)'
       ),
-      new Track('Beatles', 'Yellow Submarine'),
-      new Track('John Lennon', 'Imagine'),
-      new Track('bladieblablabla', ''),
+      simpleTrack('Beatles', 'Yellow Submarine'),
+      simpleTrack('John Lennon', 'Imagine'),
+      simpleTrack('bladieblablabla', ''),
     ]
     playlist = await lyricsDownloader.getLyricsFromDatabase(playlist, false)
     assert.equal(playlist.length, 3)

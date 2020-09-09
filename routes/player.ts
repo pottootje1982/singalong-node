@@ -16,14 +16,15 @@ router.post('/', async (req, res) => {
   res.status(200)
 })
 
-const track = (id) => id && `spotify:track:${id}`
-
 router.put('/play', async (req, res) => {
   var spotifyApi: SpotifyApi = createApi(req)
-  const { body } = req
-  body.uris = body.ids && body.ids.filter((id) => id).map((id) => track(id))
-  body.offset.uri = body.offset.id && track(body.offset.id)
-  await spotifyApi.api.play(body)
+  let {
+    uris,
+    context_uri,
+    offset: { position, uri },
+  } = req.body
+  uris = uris && uris.filter((id) => id)
+  await spotifyApi.api.play({ uris, context_uri, offset: { position, uri } })
   res.sendStatus(200)
 })
 

@@ -30,7 +30,7 @@ router.get('/currently-playing', async (req, res) => {
     context && context.uri && !context.uri.includes('undefined') && context.uri
   const track = playing.body && playing.body.item && playing.body.item.uri
   uri = uri || track
-  return res.json({
+  res.json({
     uri: context ? context.uri : track,
     name: 'Currently playing',
   })
@@ -43,7 +43,15 @@ router.get('/:uri', async (req, res) => {
   offset = offset && parseInt(offset)
   let { tracks, hasMore } = await spotifyApi.getPlaylistFromUri(uri, { offset })
   tracks = await lyricsDb.queryPlaylist(tracks)
-  return res.json({ tracks, hasMore })
+  res.json({ tracks, hasMore })
+})
+
+router.post('/:uri/tracks', async (req, res) => {
+  var spotifyApi: SpotifyApi = createApi(req)
+  const { uri } = req.params
+  const { uris } = req.body
+  spotifyApi.addToPlaylist(uri, uris)
+  res.status(200)
 })
 
 export default router.express()

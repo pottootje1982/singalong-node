@@ -8,13 +8,17 @@ router.post('/search', async (req, res) => {
   const { tracks: tracksToSearch } = req.body
   const results: Array<any> = await Promise.all(
     tracksToSearch.map((t) =>
-      spotifyApi.api.search(Track.copy(t).toString(), ['track'])
+      spotifyApi.api.search(Track.copy(t).getQuery(), ['track'])
     )
   )
-  const tracks = results.map((result) => {
+  const foundTracks: Array<any> = results.map((result) => {
     const t = result.body.tracks.items[0]
     return t ? createTrack(t) : {}
   })
+  const tracks = tracksToSearch.map((t, i) => ({
+    ...t,
+    uri: foundTracks[i].uri,
+  }))
   res.json({ tracks })
 })
 

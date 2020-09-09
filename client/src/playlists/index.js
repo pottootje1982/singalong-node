@@ -40,6 +40,7 @@ function Playlists({
   }
 
   function showFip() {
+    setTrackId(null)
     setRadio(`FIP_${Date.now()}`)
   }
 

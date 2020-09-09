@@ -27,16 +27,7 @@ export default class LyricsDb {
     }
     const results = await this.lyricsTable.get(query)
     if (results.length === 0) return null
-    return results.map(
-      (result) =>
-        new Track(
-          result.artist,
-          result.title,
-          result.id,
-          result.site,
-          result.lyrics
-        )
-    )
+    return results.map(Track.copy)
   }
 
   async queryTrack(track: Track): Promise<Track> {

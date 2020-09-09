@@ -1,7 +1,7 @@
 ﻿import SpotifyWebApi = require('spotify-web-api-node')
 import { Track, createTrack } from '../client/src/track'
 const fs = require('fs')
-const { get } = require('axios')
+const { get, post } = require('axios')
 
 const scopes = [
   'user-read-private',
@@ -10,6 +10,8 @@ const scopes = [
   'user-read-playback-state',
   'playlist-read-private',
   'user-modify-playback-state',
+  'playlist-modify-public',
+  'playlist-modify-private',
 ]
 const state = 'some-state-of-my-choice'
 
@@ -113,12 +115,25 @@ export class SpotifyApi {
     }).then((res) => res.data)
   }
 
+  post(uri, body) {
+    return post(uri, body, {
+      headers: this.headers,
+    })
+  }
+
   getPlaylist(id, params) {
     params = { limit, ...params }
     return this.get(
-      `https://api.spotify.com/v1/playlists/${id}/tracks?fields=items(track(id,name,artists(name),duration_ms)),next`,
+      `https://api.spotify.com/v1/playlists/${id}/tracks?fields=items(track(id,name,artists(name),duration_ms,uri)),next`,
       params
     )
+  }
+
+  addToPlaylist(uri, uris) {
+    const [, , id] = uri.split(':')
+    return this.post(`https://api.spotify.com/v1/playlists/${id}/tracks`, {
+      uris,
+    })
   }
 
   async getPlaylistFromUri(uri: string, options: any) {

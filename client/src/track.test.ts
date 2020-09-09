@@ -1,11 +1,11 @@
 const assert = require('assert')
-import { Track } from './track'
+import { Track, simpleTrack } from './track'
 
 describe('Track', () => {
   this.timeoutTimer = '25000'
 
   it('Get name of track', function () {
-    var track = new Track('', 'George Harrisson - Give me Love')
+    var track = simpleTrack('', 'George Harrisson - Give me Love')
     assert.equal(track.toString(), 'George Harrisson - Give me Love')
   })
 
@@ -17,7 +17,7 @@ describe('Track', () => {
   })
 
   it('Get name of valide track', function () {
-    var track = new Track('George Harrisson', 'Give me Love')
+    var track = simpleTrack('George Harrisson', 'Give me Love')
     assert.equal(track.toString(), 'George Harrisson - Give me Love')
   })
 
@@ -45,7 +45,7 @@ describe('Track', () => {
   })
 
   it('Get minimal track title only', function () {
-    var track = new Track(null, 'Under The Boardwalk - Single/LP Version')
+    var track = simpleTrack(null, 'Under The Boardwalk - Single/LP Version')
     assert.equal(track.getMinimalTitle(), 'Under The Boardwalk')
     assert.equal(track.toString({ minimalTitle: true }), 'Under The Boardwalk')
   })
@@ -86,10 +86,21 @@ describe('Track', () => {
     assert.equal(track, null)
   })
 
+  it('Get query string track', () => {
+    const track = simpleTrack(
+      'Pat Thomas & Kwashibu Area Band',
+      'Onfa nkosi hwee'
+    )
+    assert.equal(
+      track.getQuery(),
+      'Pat Thomas  Kwashibu Area Band Onfa nkosi hwee'
+    )
+  })
+
   // Decided to not clean numbers from artist/title, since the clean function also affects titles
   // It is quite common to start a title with a number
   it('Is track dirty?', function () {
-    var track = new Track('1793 George Harrison', 'Give me Love')
+    var track = simpleTrack('1793 George Harrison', 'Give me Love')
     assert.equal(false, track.canClean())
     assert.equal('1793 George Harrison', track.cleanArtist())
     assert.equal('Give me Love', track.cleanTitle())

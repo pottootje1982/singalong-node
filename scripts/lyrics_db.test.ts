@@ -1,13 +1,13 @@
 import LyricsDb from './lyrics_db'
 var assert = require('assert')
-import { Track } from '../client/src/track'
+import { Track, simpleTrack } from '../client/src/track'
 const createTable = require('./db/tables')
 
 describe('Lyrics DB', () => {
   let lyricsDb: LyricsDb
 
   function insertTrack(artist, title, lyrics, id?) {
-    return lyricsDb.insert(new Track(artist, title, id), lyrics)
+    return lyricsDb.insert(new Track({ artist, title, id }), lyrics)
   }
 
   beforeEach(async () => {
@@ -65,7 +65,7 @@ describe('Lyrics DB', () => {
       "Nat King Cole's version"
     )
     var track = await lyricsDb.queryTrack(
-      new Track('Nils Landgren', 'Christmas Song')
+      simpleTrack('Nils Landgren', 'Christmas Song')
     )
     assert(track.lyrics.indexOf('Chestnuts roasting on an open fire') >= 0)
   })
@@ -77,13 +77,13 @@ describe('Lyrics DB', () => {
       "Es ist ein Ros' entsprungen"
     )
     var track = await lyricsDb.queryTrack(
-      new Track('', 'Es ist ein Ros entsprungen')
+      simpleTrack('', 'Es ist ein Ros entsprungen')
     )
     assert(track.lyrics.indexOf("Es ist ein Ros' entsprungen") >= 0)
   })
 
   it('Search for empty title', async () => {
-    var track = await lyricsDb.queryTrack(new Track('Beatles', ''))
+    var track = await lyricsDb.queryTrack(simpleTrack('Beatles', ''))
     assert.equal(track, null)
   })
 
@@ -97,7 +97,7 @@ describe('Lyrics DB', () => {
 
   it('Query unexisting playlist pushAllTracks', async () => {
     var playlist = await lyricsDb.queryPlaylist([
-      new Track('Freddy Kruger', 'Nightmare on Elm Street'),
+      simpleTrack('Freddy Kruger', 'Nightmare on Elm Street'),
     ])
     assert.equal(1, playlist.length)
     assert.equal(playlist[0].artist, 'Freddy Kruger')
@@ -113,8 +113,8 @@ describe('Lyrics DB', () => {
     )
     var playlist = await lyricsDb.queryPlaylist(
       [
-        new Track('Freddy Kruger', 'Nightmare on Elm Street'),
-        new Track('Beatles', 'Let t be'),
+        simpleTrack('Freddy Kruger', 'Nightmare on Elm Street'),
+        simpleTrack('Beatles', 'Let t be'),
       ],
       true
     )
@@ -144,11 +144,11 @@ describe('Lyrics DB', () => {
     await insertTrack('', 'Imagine', 'Version without artist')
     await insertTrack('John Lennon', 'Imagine', "Imagine there's no heaven")
     var playlist = await lyricsDb.queryPlaylist([
-      new Track('Ray Charles', 'Georgia On My Mind'),
-      new Track('Cesare Valletti', 'Dein Angesicht'),
-      new Track('Jenny Arean & Frans Halsema', 'Vluchten Kan Niet Meer'),
-      new Track('Simone Kleinsma & Robert Long', 'Vanmorgen Vloog Ze Nog'),
-      new Track('John Lennon', 'Imagine'),
+      simpleTrack('Ray Charles', 'Georgia On My Mind'),
+      simpleTrack('Cesare Valletti', 'Dein Angesicht'),
+      simpleTrack('Jenny Arean & Frans Halsema', 'Vluchten Kan Niet Meer'),
+      simpleTrack('Simone Kleinsma & Robert Long', 'Vanmorgen Vloog Ze Nog'),
+      simpleTrack('John Lennon', 'Imagine'),
     ])
     // There is an entry present in DB with Artist = 'John Lennon' AND Title = 'Imagine',
     // and one with Artist = '' AND Title = 'Imagine',
@@ -164,7 +164,7 @@ describe('Lyrics DB', () => {
   })
 
   it('Remove lyrics', async function () {
-    let track = new Track('fake artist', 'fake title', 'MusixMatch')
+    let track = simpleTrack('fake artist', 'fake title', 'MusixMatch')
     await lyricsDb.insert(track, 'fake lyrics')
     track = await lyricsDb.queryTrack(track)
     assert.equal('fake artist', track.artist)
@@ -177,7 +177,9 @@ describe('Lyrics DB', () => {
 
   it('Update John Lennon lyrics', async function () {
     await insertTrack('Calexico', 'Sunken Waltz', '')
-    var track = await lyricsDb.queryTrack(new Track('Calexico', 'Sunken Waltz'))
+    var track = await lyricsDb.queryTrack(
+      simpleTrack('Calexico', 'Sunken Waltz')
+    )
     assert.equal('', track.lyrics)
     var res,
       error = await lyricsDb.updateOrInsert(
@@ -185,7 +187,7 @@ describe('Lyrics DB', () => {
         'Washed my face in the rivers of empire'
       )
     assert.equal(error, null)
-    track = await lyricsDb.queryTrack(new Track('Calexico', 'Sunken Waltz'))
+    track = await lyricsDb.queryTrack(simpleTrack('Calexico', 'Sunken Waltz'))
     assert.equal('Washed my face in the rivers of empire', track.lyrics)
   })
 })

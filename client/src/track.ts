@@ -16,20 +16,10 @@ export class Track {
   lyrics: string
   readonly duration_ms: number
 
-  constructor(
-    artist: string,
-    title: string,
-    id?: string,
-    site?: string,
-    lyrics?: string,
-    duration_ms?: number
-  ) {
-    this.artist = artist ? artist.trim() : ''
-    this.title = title ? title.trim() : ''
-    this.site = site
-    this.lyrics = lyrics
-    this.id = id
-    this.duration_ms = duration_ms
+  constructor(track: any) {
+    Object.assign(this, track)
+    this.artist = this.artist ? this.artist.trim() : ''
+    this.title = this.title ? this.title.trim() : ''
   }
 
   public static parse(trackStr: string): Track {
@@ -39,12 +29,12 @@ export class Track {
     if (trackItems.length > 1) trackItems.splice(0, 1)
     let title = trackItems.join(' - ').trim()
     if (artist === '' && title === '') return null
-    let track = new Track(artist, title)
+    let track = new Track({ artist, title })
     return track
   }
 
   cleanArtist(): string {
-    return track_helpers.cleanString(this.artist)
+    return track_helpers.cleanString(this.artist).replace('&', '')
   }
 
   cleanTitle(): string {
@@ -72,30 +62,16 @@ export class Track {
   }
 
   static copy(track: any): Track {
-    const result = new Track(
-      track.artist,
-      track.title,
-      track.id,
-      track.site,
-      track.lyrics,
-      track.duration_ms
-    )
-    return result
+    return new Track(track)
   }
 
   static fromSpotify(track): Track {
     if (track == null) return null
     const artist = track.artists ? track.artists[0].name : ''
     const title = track.name
+    const { id, duration_ms } = track
     // if (track.preview_url == null) return null
-    let result = new Track(
-      artist,
-      title,
-      track.id,
-      null,
-      null,
-      track.duration_ms
-    )
+    let result = new Track({ id, artist, title, duration_ms })
     return result
   }
 
@@ -107,17 +83,26 @@ export class Track {
     return minimalTitle ? this.getMinimalTitle() : this.title
   }
 
+  getQuery() {
+    return `${this.cleanArtist()} ${this.getMinimalTitle()}`
+  }
+
   toString(options?: any) {
     options = options || {}
     const { minimalTitle, hideArtist } = options
     const title = this.getTitle(minimalTitle)
-    return this.artist && !hideArtist ? `${this.artist} - ${title}` : title
+    const artist = this.artist !== '' && !hideArtist && this.artist
+    return artist ? `${artist} - ${title}` : title
   }
 }
 
 export function createTrack(track: any) {
-  let { id, name, artists, duration_ms } = track
+  let { id, name: title, artists, duration_ms, uri } = track
   const artist = artists[0] && artists[0].name
-  id = id || `${artist} - ${name}`
-  return new Track(artist, name, id, null, null, duration_ms)
+  id = id || `${artist} - ${title}`
+  return new Track({ artist, title, id, duration_ms, uri })
+}
+
+export function simpleTrack(artist: string, title: string, site?: string) {
+  return new Track({ artist, title, site })
 }
