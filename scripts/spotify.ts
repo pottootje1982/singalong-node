@@ -4,8 +4,6 @@ const fs = require('fs')
 const { get, post } = require('axios')
 
 const scopes = [
-  'user-read-private',
-  'user-read-email',
   'user-read-currently-playing',
   'user-read-playback-state',
   'playlist-read-private',
