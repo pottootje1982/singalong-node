@@ -1,7 +1,7 @@
-import SpotifyWebApi = require('spotify-web-api-node')
+﻿import SpotifyWebApi = require('spotify-web-api-node')
 import { Track, createTrack } from '../client/src/track'
 const fs = require('fs')
-const { get, post } = require('axios')
+const { get, post, put } = require('axios')
 const qs = require('qs')
 
 const scopes = [
@@ -109,6 +109,12 @@ export class SpotifyApi {
     })
   }
 
+  put(uri, body) {
+    return put(uri, body, {
+      headers: this.headers,
+    })
+  }
+
   getPlaylist(id, params) {
     params = { limit, ...params }
     return this.get(
@@ -194,6 +200,14 @@ export class SpotifyApi {
       options
     )
     return { playlists, hasMore }
+  }
+
+  devices() {
+    return this.get(`${base}/me/player/devices`)
+  }
+
+  transferPlayback(id: string) {
+    return this.put(`${base}/me/player`, { device_ids: [id] })
   }
 }
 

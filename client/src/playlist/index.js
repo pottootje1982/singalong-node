@@ -11,6 +11,10 @@ import {
   List,
   Grid,
   TextField,
+  InputLabel,
+  FormControl,
+  Select,
+  MenuItem,
 } from '@material-ui/core'
 import CheckMenuItem from '../CheckMenuItem'
 import {
@@ -43,6 +47,9 @@ export default function Playlist({
   const [tracksToDownload, setTracksToDownload] = useState([])
   const [isDownloading, setIsDownloading] = useState(false)
   const [anchorEl, setAnchorEl] = useState()
+  const [deviceOpen, setDeviceOpen] = useState(false)
+  const [devices, setDevices] = useState([])
+  const [device, setDevice] = useState()
 
   useEffect(selectTrack, [trackId])
   useEffect(showPlaylist, [playlist])
@@ -117,6 +124,7 @@ export default function Playlist({
       context_uri = playlist
     }
     server.put(`/player/play`, {
+      deviceId: device && device.id,
       uris,
       context_uri,
       offset: { position, uri },
@@ -124,11 +132,17 @@ export default function Playlist({
   }
 
   function addTrackToPlaylist(uri) {
-    console.log(uri, playlist)
     server.post(`/playlists/${playlist}/tracks`, { uris: [uri] })
   }
 
   useEffect(downloadTracks, [isDownloading])
+  useEffect(() => {
+    get('/player/devices').then(({ data: { devices } }) => {
+      devices = devices || []
+      setDevices(devices)
+      setDevice(devices[0])
+    })
+  }, [])
 
   function downloadTracks() {
     if (!isDownloading) {
@@ -259,6 +273,28 @@ export default function Playlist({
             />
           )}
         </Grid>
+        {device && (
+          <Grid item>
+            <FormControl>
+              <InputLabel>Device</InputLabel>
+              <Select
+                open={deviceOpen}
+                onClose={() => setDeviceOpen(false)}
+                onOpen={() => setDeviceOpen(true)}
+                value={device}
+                onChange={(e) => setDevice(e.target.value)}
+                fullWidth
+                style={{ width: 200 }}
+              >
+                {devices.map((d, i) => (
+                  <MenuItem key={i} value={d}>
+                    {d.name}
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
+          </Grid>
+        )}
       </Grid>
 
       <Grid item>

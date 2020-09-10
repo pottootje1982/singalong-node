@@ -13,6 +13,7 @@ import {
   DialogContent,
   DialogActions,
   Button,
+  Slider,
 } from '@material-ui/core'
 import {
   Fullscreen,
@@ -46,6 +47,7 @@ export default function Lyrics({
   const [lyrics, setLyrics] = useState()
   const [anchorEl, setAnchorEl] = useState()
   const [modalOpen, setModalOpen] = useState(false)
+  const [playPosition, setPlayPosition] = useState(0)
 
   function setOrClearProbe() {
     closeMenu()
@@ -68,6 +70,7 @@ export default function Lyrics({
       if (track) {
         setPlaylist(uri)
         setTrackId(track.id)
+        setPlayPosition(track.progress_ms / 1000)
       }
     })
   }
@@ -111,8 +114,8 @@ export default function Lyrics({
     closeMenu()
   }
 
-  function skipTrack(command) {
-    post('player', { command })
+  function skipTrack(command, playPosition) {
+    post('player', { command, position: playPosition || 0 })
   }
 
   function doCustomSearch(artist, title) {
@@ -245,6 +248,15 @@ export default function Lyrics({
           <IconButton size="small" onClick={() => skipTrack('previous')}>
             <SkipPrevious />
           </IconButton>
+        </Grid>
+        <Grid item>
+          <Slider
+            min={0}
+            max={track.duration_ms / 1000}
+            step={1}
+            style={{ width: 150 }}
+            onChange={(e, value) => skipTrack('position', value * 1000)}
+          />
         </Grid>
         <Grid item>
           <IconButton size="small" onClick={() => skipTrack('next')}>
