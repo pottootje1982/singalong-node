@@ -2,34 +2,48 @@ import React, { useState, useEffect } from 'react'
 import Playlists from './playlists'
 import Playlist from './playlist'
 import Lyrics from './lyrics'
-
 import { Grid } from '@material-ui/core'
-import qs from 'qs'
+import { Redirect } from 'react-router-dom'
+import { getCookie, setCookie } from './cookie'
 import { get } from './server'
 
-function App({ location }) {
+function App() {
   const [playlist, setPlaylist] = useState()
   const [radio, setRadio] = useState()
   const [track, setTrack] = useState()
   const [trackId, setTrackId] = useState('')
-  const [user, setUser] = useState()
   const [lyricsFullscreen, setLyricsFullscreen] = useState(false)
-  const query = location.search
-  const { token } = qs.parse(query, { ignoreQueryPrefix: true })
+  const [token, setToken] = useState(getCookie('accessToken'))
+
   const [trackFilters, setTrackFilters] = useState({
     minimalTitle: true,
     isNotDownloaded: false,
     hideArtist: false,
   })
 
-  useEffect(() => {
-    get('/authorize/me').then((res) => {
-      setUser(res.data.body.id)
-    })
-  }, [])
+  function refreshToken() {
+    if (!token) {
+      get('/authorize/refresh', {
+        refreshToken: getCookie('refreshToken'),
+      }).then(({ data: { accessToken } }) => {
+        if (accessToken) {
+          setCookie('accessToken', accessToken, 1)
+          setToken(accessToken)
+        } else {
+          setToken('redirect')
+        }
+      })
+    }
+  }
+
+  useEffect(refreshToken, [])
+
+  if (token === 'redirect') {
+    return <Redirect to={'/authorize'} />
+  }
 
   window.history.pushState('', '', '/main')
-  return token || user ? (
+  return token ? (
     <Grid
       container
       spacing={1}
@@ -43,7 +57,6 @@ function App({ location }) {
           setPlaylist={setPlaylist}
           setRadio={setRadio}
           playlist={playlist}
-          user={user}
           token={token}
           setTrackId={setTrackId}
         ></Playlists>
@@ -67,7 +80,6 @@ function App({ location }) {
               playlist={playlist}
               radio={radio}
               token={token}
-              user={user}
               track={track}
               trackId={trackId}
               setTrackId={setTrackId}

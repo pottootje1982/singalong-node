@@ -1,15 +1,16 @@
 const router = require('./router')()
 
-import { SpotifyApi, createApi, saveToken } from '../scripts/spotify'
+import { createApi, saveToken, SpotifyApi } from '../scripts/spotify'
 const fs = require('fs')
 
 router.get('/', async (req, res) => {
-  var spotifyApi: SpotifyApi = new SpotifyApi(req.headers.origin)
-  res.json(spotifyApi.getAuthorizeUrl())
+  const spotifyApi = new SpotifyApi(req.headers.origin)
+  const url = spotifyApi.getAuthorizeUrl()
+  res.json(url)
 })
 
 router.get('/token', async (req, res) => {
-  var spotifyApi: SpotifyApi = new SpotifyApi(req.headers.origin)
+  const spotifyApi = new SpotifyApi(req.headers.origin)
   const tokens = await spotifyApi.getToken(req.query.code)
   if (!process.env.NODE_ENV) {
     saveToken(tokens.body.access_token)
@@ -17,15 +18,11 @@ router.get('/token', async (req, res) => {
   res.json(tokens)
 })
 
-if (!process.env.NODE_ENV) {
-  router.get('/cached_token', async (_req, res) => {
-    const accessToken = fs.readFileSync('./token.txt', {
-      encoding: 'utf8',
-      flag: 'r',
-    })
-    res.json({ accessToken })
-  })
-}
+router.get('/refresh', async (req, res) => {
+  const spotifyApi = createApi(req)
+  const tokens = await spotifyApi.refresh()
+  res.json({ accessToken: tokens.data.access_token })
+})
 
 router.get('/me', async (req, res) => {
   const spotifyApi = createApi(req)

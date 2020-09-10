@@ -1,11 +1,16 @@
 var track_helpers = require('./track_helpers')
 
 function includes(str1, str2) {
-  return str1.toUpperCase().includes(str2.toUpperCase())
+  return (
+    str1 === str2 ||
+    (str1 && str2 && str1.toUpperCase().includes(str2.toUpperCase()))
+  )
 }
 
 function equals(str1, str2) {
-  return str1.toUpperCase() === str2.toUpperCase()
+  return (
+    str1 === str2 || (str1 && str2 && str1.toUpperCase() === str2.toUpperCase())
+  )
 }
 
 export class Track {

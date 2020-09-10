@@ -1,4 +1,5 @@
 import axios from 'axios'
+import { getCookie } from './cookie'
 
 axios.defaults.baseURL =
   process.env.NODE_ENV !== 'production'
@@ -7,10 +8,8 @@ axios.defaults.baseURL =
 axios.defaults.headers.post['Content-Type'] = 'application/json;charset=utf-8'
 axios.defaults.headers.post['Access-Control-Allow-Origin'] = '*'
 axios.defaults.headers.post['X-Requested-With'] = 'XMLHttpRequest'
-
-export function setToken(token) {
-  if (token) axios.defaults.headers.common['accessToken'] = token
-}
+axios.defaults.headers.common['accessToken'] = getCookie('accessToken')
+axios.defaults.headers.common['refreshToken'] = getCookie('refreshToken')
 
 export function get(...params) {
   return axios.get(...params).catch(({ response }) => {

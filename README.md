@@ -2,8 +2,6 @@
 
 ## Bugs
 
-- Refresh token after hour
-
 ## Features
 
 - hide playlists for mobile

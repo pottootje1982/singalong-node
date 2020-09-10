@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import server, { setToken, get, post } from '../server'
+import server, { get, post } from '../server'
 import green from '@material-ui/core/colors/green'
 import red from '@material-ui/core/colors/red'
 import orange from '@material-ui/core/colors/orange'
@@ -30,7 +30,6 @@ export default function Playlist({
   playlist,
   radio,
   token,
-  user,
   setTrack,
   track,
   trackId,
@@ -45,7 +44,6 @@ export default function Playlist({
   const [isDownloading, setIsDownloading] = useState(false)
   const [anchorEl, setAnchorEl] = useState()
 
-  setToken(token)
   useEffect(selectTrack, [trackId])
   useEffect(showPlaylist, [playlist])
   useEffect(showCurrentlyOnFip, [radio])
@@ -78,11 +76,12 @@ export default function Playlist({
   function showCurrentlyOnFip() {
     if (radio) {
       get('/radio/fip').then(({ data: { tracks, position } }) => {
+        if (!tracks) return alert('Cannot retrieve playing status radio')
         setTracks(tracks.map(Track.copy))
         setTrackId(tracks[position].id)
         post('/spotify/search', { tracks }).then(
           ({ data: { tracks: foundTracks } }) => {
-            setTracks(foundTracks.map(Track.copy))
+            setTracks((foundTracks || []).map(Track.copy))
           }
         )
       })
@@ -93,7 +92,7 @@ export default function Playlist({
     if (offset === -1) {
       // end of playlist
       selectTrack()
-    } else if (user && playlist && offset >= 0) {
+    } else if (token && playlist && offset >= 0) {
       get(`playlists/${playlist}`, { params: { offset } })
         .then(({ data: { tracks: newTracks, hasMore } }) => {
           if (!newTracks || newTracks.length === 0) return
@@ -263,7 +262,7 @@ export default function Playlist({
       </Grid>
 
       <Grid item>
-        <List style={{ maxHeight: '48vh', overflow: 'auto' }} dense>
+        <List style={{ maxHeight: '40vh', overflow: 'auto' }} dense>
           {tracks
             .filter((t) => !trackFilters.isNotDownloaded || !t.lyrics)
             .map((t, index) => (

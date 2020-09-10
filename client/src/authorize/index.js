@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from 'react'
 import qs from 'qs'
-import server from '../server'
+import { get } from '../server'
 import { Redirect } from 'react-router-dom'
+import { setCookie } from '../cookie'
 
 function Authorize() {
-  server.get('/authorize').then((res) => {
+  get('/authorize').then((res) => {
     window.location = res.data
   })
   return <React.Fragment />
@@ -17,20 +18,21 @@ export function Authorized({ location }) {
   const [token, setToken] = useState()
 
   useEffect(() => {
-    server
-      .get(`/authorize/token?code=${code}`)
+    get(`/authorize/token?code=${code}`)
       .then((res) => {
-        const body = res.data.body
-        const accessToken = body && body.access_token
+        const body = res.data.body || {}
+        const { access_token, refresh_token } = body
 
-        if (accessToken) {
-          setToken(accessToken)
+        if (access_token) {
+          setCookie('accessToken', access_token, 1)
+          setCookie('refreshToken', refresh_token)
+          setToken(access_token)
         }
       })
       .catch((err) => console.log(err))
   }, [code])
   if (token) {
-    return <Redirect to={`/main?token=${token}`} />
+    return <Redirect to={'/main'} />
   } else return <React.Fragment />
 }
 

@@ -1,7 +1,8 @@
-﻿import SpotifyWebApi = require('spotify-web-api-node')
+import SpotifyWebApi = require('spotify-web-api-node')
 import { Track, createTrack } from '../client/src/track'
 const fs = require('fs')
 const { get, post } = require('axios')
+const qs = require('qs')
 
 const scopes = [
   'user-read-currently-playing',
@@ -12,6 +13,7 @@ const scopes = [
   'playlist-modify-private',
 ]
 const state = 'some-state-of-my-choice'
+const base = 'https://api.spotify.com/v1'
 
 export const limit = 100
 
@@ -23,8 +25,12 @@ export function createTracks(tracks, hasMore = false) {
 export class SpotifyApi {
   public api: SpotifyWebApi
   private headers: any
+  private tokens: { accessToken?: string; refreshToken?: string }
 
-  constructor(host: string, tokens?: any) {
+  constructor(
+    host: string,
+    tokens?: { accessToken?: string; refreshToken?: string }
+  ) {
     host = host || process.env.ENDPOINT
     this.api = new SpotifyWebApi({
       clientId: process.env.SPOTIFY_KEY,
@@ -37,6 +43,7 @@ export class SpotifyApi {
     }
     this.api.setAccessToken(tokens.accessToken)
     this.api.setRefreshToken(tokens.refreshToken)
+    this.tokens = tokens
   }
 
   playlistToText(playlist: Track[]) {
@@ -82,23 +89,6 @@ export class SpotifyApi {
       })
   }
 
-  refreshAccessToken() {
-    let api = this.api
-    return api.refreshAccessToken().then(
-      (data) => {
-        console.log('The access token has been refreshed!')
-
-        // Save the access token so that it's used in future calls
-        api.setAccessToken(data.body['access_token'])
-
-        return data
-      },
-      (err) => {
-        console.log('Could not refresh access token', err)
-      }
-    )
-  }
-
   reformatUri(uri: string) {
     return (
       uri &&
@@ -106,7 +96,7 @@ export class SpotifyApi {
     )
   }
 
-  get(uri, params) {
+  get(uri, params?) {
     return get(uri, {
       headers: this.headers,
       params,
@@ -122,14 +112,14 @@ export class SpotifyApi {
   getPlaylist(id, params) {
     params = { limit, ...params }
     return this.get(
-      `https://api.spotify.com/v1/playlists/${id}/tracks?fields=items(track(id,name,artists(name),duration_ms,uri)),next`,
+      `${base}/playlists/${id}/tracks?fields=items(track(id,name,artists(name),duration_ms,uri)),next`,
       params
     )
   }
 
   addToPlaylist(uri, uris) {
     const [, , id] = uri.split(':')
-    return this.post(`https://api.spotify.com/v1/playlists/${id}/tracks`, {
+    return this.post(`${base}/playlists/${id}/tracks`, {
       uris,
     })
   }
@@ -158,6 +148,24 @@ export class SpotifyApi {
     }
   }
 
+  refresh() {
+    return post(
+      'https://accounts.spotify.com/api/token',
+      qs.stringify({
+        grant_type: 'refresh_token',
+        refresh_token: this.tokens.refreshToken,
+      }),
+      {
+        headers: {
+          Authorization: `Basic ${Buffer.from(
+            `${process.env.SPOTIFY_KEY}:${process.env.SPOTIFY_SECRET}`
+          ).toString('base64')}`,
+          'Content-Type': 'application/x-www-form-urlencoded',
+        },
+      }
+    )
+  }
+
   async getCurrentlyPlayingTrack() {
     const currentTrack = await this.api.getMyCurrentPlayingTrack()
     const track: any =
@@ -182,7 +190,7 @@ export class SpotifyApi {
     offset: number
   }): Promise<{ playlists: any; hasMore: boolean }> {
     const { items: playlists, next: hasMore } = await this.get(
-      'https://api.spotify.com/v1/me/playlists',
+      `${base}/me/playlists`,
       options
     )
     return { playlists, hasMore }
@@ -192,14 +200,13 @@ export class SpotifyApi {
 let cachedFileToken
 
 function getTokens(req) {
-  const { accesstoken: headerToken } = req.headers
-  let accessToken = headerToken
+  let { accesstoken: accessToken, refreshtoken: refreshToken } = req.headers
   if (!accessToken && !process.env.NODE_ENV) {
     cachedFileToken = accessToken =
       cachedFileToken ||
       fs.readFileSync('./token.txt', { encoding: 'utf8', flag: 'r' })
   }
-  return { accessToken }
+  return { accessToken, refreshToken }
 }
 
 export function saveToken(token) {

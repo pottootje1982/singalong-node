@@ -2,28 +2,20 @@ import React, { useEffect, useState, useRef } from 'react'
 import { Grid, TextField } from '@material-ui/core'
 import { Button } from '../Styled'
 import Autocomplete from '@material-ui/lab/Autocomplete'
-import { setToken, get } from '../server'
+import { get } from '../server'
 import PlaylistsList from './List'
 
-function Playlists({
-  setPlaylist,
-  setRadio,
-  playlist,
-  setTrackId,
-  token,
-  user,
-}) {
+function Playlists({ setPlaylist, setRadio, playlist, setTrackId }) {
   const [playlists, setPlaylists] = useState([])
   const [offset, setOffset] = useState()
   const searchRef = useRef(null)
 
-  setToken(token)
-
   function init() {
-    if (user) {
-      setOffset(0)
-    }
+    setOffset(0)
   }
+
+  useEffect(getPlaylists, [offset])
+  useEffect(init, [])
 
   function getPlaylists() {
     if (offset === -1) {
@@ -51,9 +43,6 @@ function Playlists({
       setRadio(null)
     }
   }
-
-  useEffect(getPlaylists, [offset])
-  useEffect(init, [user])
 
   useEffect(() => {
     setPlaylist(playlists[0] && playlists[0].uri)
@@ -85,11 +74,13 @@ function Playlists({
           />
         )}
       </Grid>
-      <PlaylistsList
-        playlists={playlists}
-        playlist={playlist}
-        onPlaylistClick={onPlaylistClick}
-      />
+      <Grid item>
+        <PlaylistsList
+          playlists={playlists}
+          playlist={playlist}
+          onPlaylistClick={onPlaylistClick}
+        />
+      </Grid>
     </Grid>
   )
 }

@@ -120,7 +120,8 @@ export default function Lyrics({
     setModalOpen(false)
   }
 
-  return track ? (
+  track = track || new Track({})
+  return (
     <Grid container spacing={1} direction="column" alignItems="stretch">
       <Grid container item alignItems="center" spacing={1}>
         <Grid item>
@@ -266,7 +267,5 @@ export default function Lyrics({
         />
       </Grid>
     </Grid>
-  ) : (
-    <React.Fragment />
   )
 }
