@@ -23,6 +23,7 @@ function Playlists({ setPlaylist, setRadio, playlist, setTrackId }) {
     } else if (offset >= 0) {
       get(`playlists`, { params: { offset, limit: 50 } }).then(
         ({ data: { playlists: newPlaylists, hasMore } }) => {
+          if (!newPlaylists) return
           const items = [...playlists, ...newPlaylists]
           setPlaylists(items)
           setOffset(hasMore ? items.length : -1)

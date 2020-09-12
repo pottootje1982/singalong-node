@@ -74,9 +74,9 @@ function App() {
               trackFilters={trackFilters}
             ></Lyrics>
           </Grid>
-          <Grid item style={{ display: lyricsFullscreen && 'none' }}>
+          <Grid item>
             <Playlist
-              key={playlist}
+              lyricsFullscreen={lyricsFullscreen}
               playlist={playlist}
               radio={radio}
               token={token}
