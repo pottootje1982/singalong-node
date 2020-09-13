@@ -9,6 +9,7 @@ import {
   FormControl,
   Select,
   MenuItem,
+  useMediaQuery,
 } from '@material-ui/core'
 import CheckMenuItem from '../CheckMenuItem'
 import { GetApp as DownloadIcon, Menu as MenuIcon } from '@material-ui/icons'
@@ -30,12 +31,14 @@ export default function PlaylistToolbar({
   device,
   trackIdToDownload,
   setTrackIdToDownload,
+  lyricsFullscreen,
 }) {
   const [anchorEl, setAnchorEl] = useState()
   const [deviceOpen, setDeviceOpen] = useState(false)
   const [devices, setDevices] = useState([])
   const [isDownloading, setIsDownloading] = useState(false)
   const [tracksToDownload, setTracksToDownload] = useState([])
+  const mobile = !useMediaQuery('(min-width:600px)')
 
   const getDevices = () => {
     get('/player/devices').then(({ data: { devices } }) => {
@@ -94,64 +97,69 @@ export default function PlaylistToolbar({
     setTracksToDownload(tracks.filter((track) => !track.lyrics))
   }
 
+  const defaultMenuItemProps = {
+    setter: { setTrackFilters },
+    state: { trackFilters },
+    onClose: { closeMenu },
+  }
+
   useEffect(downloadTrack, [tracksToDownload])
 
   return (
     <Grid container item spacing={1} alignItems="center">
-      <Grid item>
-        <ToggleButton
-          value="check"
-          selected={isDownloading}
-          onClick={() => setIsDownloading(!isDownloading)}
-          style={{ width: 30, height: 30 }}
-        >
-          <DownloadIcon />
-        </ToggleButton>
-      </Grid>
+      {!lyricsFullscreen && (
+        <>
+          <Grid item>
+            <ToggleButton
+              value="check"
+              selected={isDownloading}
+              onClick={() => setIsDownloading(!isDownloading)}
+              style={{ width: 30, height: 30 }}
+            >
+              <DownloadIcon />
+            </ToggleButton>
+          </Grid>
 
-      <Grid item>
-        <IconButton
-          size="small"
-          onClick={(event) => setAnchorEl(event.currentTarget)}
-          label="label"
-        >
-          <MenuIcon />
-        </IconButton>
-        <Menu
-          id="simple-menu"
-          getContentAnchorEl={null}
-          anchorEl={anchorEl}
-          keepMounted
-          transformOrigin={{
-            vertical: 'top',
-            horizontal: 'center',
-          }}
-          open={!!anchorEl}
-          onClose={closeMenu}
-        >
-          <CheckMenuItem
-            setter={setTrackFilters}
-            state={trackFilters}
-            filterKey="minimalTitle"
-            name="Minimize title"
-            close={closeMenu}
-          />
-          <CheckMenuItem
-            setter={setTrackFilters}
-            state={trackFilters}
-            filterKey="isNotDownloaded"
-            name="Not downloaded"
-            close={closeMenu}
-          />
-          <CheckMenuItem
-            setter={setTrackFilters}
-            state={trackFilters}
-            filterKey="hideArtist"
-            name="Hide artist"
-            close={closeMenu}
-          />
-        </Menu>
-      </Grid>
+          <Grid item>
+            <IconButton
+              size="small"
+              onClick={(event) => setAnchorEl(event.currentTarget)}
+              label="label"
+            >
+              <MenuIcon />
+            </IconButton>
+            <Menu
+              id="simple-menu"
+              getContentAnchorEl={null}
+              anchorEl={anchorEl}
+              keepMounted
+              transformOrigin={{
+                vertical: 'top',
+                horizontal: 'center',
+              }}
+              open={!!anchorEl}
+              onClose={closeMenu}
+            >
+              <CheckMenuItem
+                {...defaultMenuItemProps}
+                filterKey="minimalTitle"
+                name="Minimize title"
+              />
+              <CheckMenuItem
+                {...defaultMenuItemProps}
+                filterKey="isNotDownloaded"
+                name="Not downloaded"
+              />
+              <CheckMenuItem
+                {...defaultMenuItemProps}
+                filterKey="hideArtist"
+                name="Hide artist"
+              />
+            </Menu>
+          </Grid>
+        </>
+      )}
+
       <Grid item>
         {track && trackId && (
           <Autocomplete
@@ -162,7 +170,8 @@ export default function PlaylistToolbar({
             options={tracks}
             getOptionLabel={(t) => t.toString(trackFilters)}
             getOptionSelected={(option, value) => option.id === trackId}
-            style={{ width: 300 }}
+            style={{ width: mobile ? 200 : 300 }}
+            size="small"
             renderInput={(params) => (
               <TextField {...params} label="Select track:" variant="outlined" />
             )}
@@ -171,16 +180,18 @@ export default function PlaylistToolbar({
       </Grid>
       {device && (
         <Grid item>
-          <FormControl>
-            <InputLabel>Device</InputLabel>
+          <FormControl variant="outlined" size="small">
+            <InputLabel id="device-select">Device:</InputLabel>
             <Select
+              labelId="device-select"
               open={deviceOpen}
+              label="Device:"
               onClose={() => setDeviceOpen(false)}
               onOpen={() => setDeviceOpen(true)}
               value={device}
               onChange={(e) => setDevice(e.target.value)}
               fullWidth
-              style={{ width: 200 }}
+              style={{ width: 150 }}
             >
               {devices.map((d, i) => (
                 <MenuItem key={i} value={d}>

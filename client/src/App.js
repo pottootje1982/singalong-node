@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react'
 import Playlists from './playlists'
 import Playlist from './playlist'
 import Lyrics from './lyrics'
-import { Grid } from '@material-ui/core'
+import { Grid, useMediaQuery } from '@material-ui/core'
 import { Redirect } from 'react-router-dom'
 import { getCookie, setCookie } from './cookie'
 import { get } from './server'
@@ -14,6 +14,7 @@ function App() {
   const [trackId, setTrackId] = useState('')
   const [lyricsFullscreen, setLyricsFullscreen] = useState(false)
   const [token, setToken] = useState(getCookie('accessToken'))
+  const mobile = !useMediaQuery('(min-width:600px)')
 
   const [trackFilters, setTrackFilters] = useState({
     minimalTitle: true,
@@ -49,10 +50,10 @@ function App() {
       spacing={1}
       style={{
         margin: 0,
-        width: '100%',
+        width: '98%',
       }}
     >
-      <Grid item xs={3} style={{ display: lyricsFullscreen && 'none' }}>
+      <Grid item xs style={{ display: lyricsFullscreen && 'none' }}>
         <Playlists
           setPlaylist={setPlaylist}
           setRadio={setRadio}
@@ -61,8 +62,13 @@ function App() {
           setTrackId={setTrackId}
         ></Playlists>
       </Grid>
-      <Grid item xs={lyricsFullscreen ? 12 : 8}>
-        <Grid container direction="column" spacing={1} alignItems="stretch">
+      <Grid item xs={lyricsFullscreen || mobile ? 12 : 8}>
+        <Grid
+          container
+          direction={mobile || lyricsFullscreen ? 'column-reverse' : 'column'}
+          spacing={1}
+          alignItems="stretch"
+        >
           <Grid item>
             <Lyrics
               track={track}

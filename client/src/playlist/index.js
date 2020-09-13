@@ -56,6 +56,7 @@ export default function Playlist({
           selectTrackId={selectTrackId}
           trackIdToDownload={trackIdToDownload}
           setTrackIdToDownload={setTrackIdToDownload}
+          lyricsFullscreen={lyricsFullscreen}
         />
       </Grid>
       <Grid item>

@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useRef } from 'react'
-import { Grid, TextField } from '@material-ui/core'
+import { Grid, TextField, useMediaQuery } from '@material-ui/core'
 import { Button } from '../Styled'
 import Autocomplete from '@material-ui/lab/Autocomplete'
 import { get } from '../server'
@@ -9,6 +9,7 @@ function Playlists({ setPlaylist, setRadio, playlist, setTrackId }) {
   const [playlists, setPlaylists] = useState([])
   const [offset, setOffset] = useState()
   const searchRef = useRef(null)
+  const mobile = !useMediaQuery('(min-width:600px)')
 
   function init() {
     setOffset(0)
@@ -52,9 +53,14 @@ function Playlists({ setPlaylist, setRadio, playlist, setTrackId }) {
   const selectedPlaylist = playlists.find((p) => p.uri === playlist)
 
   return (
-    <Grid container direction="column" alignItems="stretch" spacing={1}>
+    <Grid
+      container
+      direction={mobile ? 'row' : 'column'}
+      alignItems="stretch"
+      spacing={1}
+    >
       <Grid item>
-        <Button onClick={showFip}>Currently playing on FIP</Button>
+        <Button onClick={showFip}>FIP</Button>
       </Grid>
       <Grid item>
         {selectedPlaylist && (
@@ -64,6 +70,8 @@ function Playlists({ setPlaylist, setRadio, playlist, setTrackId }) {
             autoHighlight
             options={playlists}
             getOptionLabel={(option) => option.name}
+            style={{ width: mobile && 300 }}
+            size="small"
             renderInput={(params) => (
               <TextField
                 {...params}
@@ -75,13 +83,15 @@ function Playlists({ setPlaylist, setRadio, playlist, setTrackId }) {
           />
         )}
       </Grid>
-      <Grid item>
-        <PlaylistsList
-          playlists={playlists}
-          playlist={playlist}
-          onPlaylistClick={onPlaylistClick}
-        />
-      </Grid>
+      {!mobile && (
+        <Grid item>
+          <PlaylistsList
+            playlists={playlists}
+            playlist={playlist}
+            onPlaylistClick={onPlaylistClick}
+          />
+        </Grid>
+      )}
     </Grid>
   )
 }
