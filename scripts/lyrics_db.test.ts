@@ -135,6 +135,17 @@ describe('Lyrics DB', () => {
     assert.equal(playlist[0].lyrics, null)
   })
 
+  it('escape special chars artistTitleQuery', () => {
+    const query = lyricsDb.artistTitleQuery(
+      'Pink Floyd',
+      'Shine On You Crazy Diamond (Parts 1'
+    )
+    assert.deepEqual(query, {
+      title: /Shine\ On\ You\ Crazy\ Diamond\ \(Parts\ 1/i,
+      artist: /Pink\ Floyd/i,
+    })
+  })
+
   it('Query playlist', async () => {
     await insertTrack('Ray Charles', 'Georgia On My Mind', 'Georgia, Georgia')
     await insertTrack(

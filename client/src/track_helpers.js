@@ -2,7 +2,7 @@ function cleanString(str) {
   const regex = /([^[\]]+)/i
   var result = str.match(regex)
   result = result && result.length > 1 ? result[1] : str
-  result = result.replace(/(.+)(\(.*\))/, '$1')
+  result = result.replace(/(.+)(\(.*)/, '$1')
   return result.trim()
 }
 

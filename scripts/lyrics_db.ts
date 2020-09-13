@@ -1,5 +1,13 @@
 import { Track } from '../client/src/track'
 
+function escapeRegExp(text: string) {
+  return text.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, '\\$&')
+}
+
+function regExp(text: string) {
+  return new RegExp(escapeRegExp(text), 'i')
+}
+
 export default class LyricsDb {
   removeAll() {
     return this.lyricsTable.remove()
@@ -13,9 +21,9 @@ export default class LyricsDb {
 
   artistTitleQuery(artist: string, title: string) {
     const query: any = {
-      title: new RegExp(title, 'i'),
+      title: regExp(title),
     }
-    if (artist) query.artist = new RegExp(artist, 'i')
+    if (artist) query.artist = regExp(artist)
     return query
   }
 
@@ -54,7 +62,7 @@ export default class LyricsDb {
     if (playlist.length === 0) return results
     let orSection: any = playlist.map((track) => {
       const expression: Array<any> = [
-        { title: new RegExp(track.getMinimalTitle(), 'i') },
+        { title: regExp(track.getMinimalTitle()) },
       ]
       const id = track.id
       if (id) expression.push({ id })

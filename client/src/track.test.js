@@ -1,9 +1,7 @@
 const assert = require('assert')
-import { Track, simpleTrack } from './track'
+const { Track, simpleTrack } = require('./track')
 
 describe('Track', () => {
-  this.timeoutTimer = '25000'
-
   it('Get name of track', function () {
     var track = simpleTrack('', 'George Harrisson - Give me Love')
     assert.equal(track.toString(), 'George Harrisson - Give me Love')
@@ -59,6 +57,14 @@ describe('Track', () => {
       track.toString({ minimalTitle: true }),
       'Bee Gees - Massachusetts'
     )
+  })
+
+  it('get minimal title complex', () => {
+    const track = simpleTrack(
+      '',
+      'Shine On You Crazy Diamond (Parts 1 - 5) [Edit] (2011 Remastered Version)'
+    )
+    assert.equal(track.getMinimalTitle(), 'Shine On You Crazy Diamond')
   })
 
   it('Clean title', function () {
