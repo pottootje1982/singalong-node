@@ -25,8 +25,8 @@ export default function LyricsToolbar({
   function showCurrentlyPlayingTrack() {
     get('/player').then(({ data: { track, uri } }) => {
       if (track) {
-        setPlaylist(uri)
         setTrackId(track.id)
+        setPlaylist(uri)
         setPlayPosition(track.progress_ms / 1000)
       }
     })

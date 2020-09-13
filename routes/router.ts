@@ -12,7 +12,10 @@ class CatchRouter {
   wrapper = (fn) => (...args) =>
     fn(...args).catch((err) => {
       let res = args[1]
-      if (err.statusCode) res = res.status(err.statusCode)
+      console.log(err)
+      if (err.statusCode) {
+        res = res.status(err.statusCode)
+      }
       res.json(err)
     })
 

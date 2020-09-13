@@ -10,6 +10,10 @@ describe('Lyrics DB', () => {
     return lyricsDb.insert(new Track({ artist, title, id }), lyrics)
   }
 
+  function trackWithId(id, artist, title) {
+    return new Track({ id, artist, title })
+  }
+
   beforeEach(async () => {
     const { lyricTable } = await createTable('./mongo-client', 'testLyrics')
     lyricsDb = new LyricsDb(lyricTable)
@@ -53,31 +57,38 @@ describe('Lyrics DB', () => {
     assert(tracks[0].lyrics.indexOf('In the town where I was born') >= 0)
   })
 
-  it('Get Double lyrics', async () => {
+  it('Matches on id', async () => {
     await insertTrack(
       '',
       'Christmas Song',
-      'Chestnuts roasting on an open fire'
+      'Chestnuts roasting on an open fire',
+      '1'
     )
     await insertTrack(
       'Nat King Cole',
       'Christmas Song',
-      "Nat King Cole's version"
+      "Nat King Cole's version",
+      '2'
     )
     var track = await lyricsDb.queryTrack(
-      simpleTrack('Nils Landgren', 'Christmas Song')
+      trackWithId('1', 'Nils Landgren', 'Christmas Song')
     )
     assert(track.lyrics.indexOf('Chestnuts roasting on an open fire') >= 0)
+    var track = await lyricsDb.queryTrack(
+      simpleTrack('Nat King Cole', 'Christmas Song')
+    )
+    assert(track.lyrics.indexOf("Nat King Cole's version") >= 0)
   })
 
   it('Get lyrics for title track', async () => {
     await insertTrack(
       'Frommerman',
       'Es ist ein Ros entsprungen',
-      "Es ist ein Ros' entsprungen"
+      "Es ist ein Ros' entsprungen",
+      '1'
     )
     var track = await lyricsDb.queryTrack(
-      simpleTrack('', 'Es ist ein Ros entsprungen')
+      trackWithId('1', '', 'Es ist ein Ros entsprungen')
     )
     assert(track.lyrics.indexOf("Es ist ein Ros' entsprungen") >= 0)
   })
@@ -116,9 +127,9 @@ describe('Lyrics DB', () => {
         simpleTrack('Freddy Kruger', 'Nightmare on Elm Street'),
         simpleTrack('Beatles', 'Let t be'),
       ],
-      true
+      false
     )
-    assert.equal(1, playlist.length)
+    assert.equal(playlist.length, 1)
     assert.equal(playlist[0].artist, 'Freddy Kruger')
     assert.equal(playlist[0].title, 'Nightmare on Elm Street')
     assert.equal(playlist[0].lyrics, null)

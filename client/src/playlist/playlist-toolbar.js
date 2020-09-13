@@ -43,6 +43,7 @@ export default function PlaylistToolbar({
   const [isDownloading, setIsDownloading] = useState(false)
   const [tracksToDownload, setTracksToDownload] = useState([])
   const mobile = !useMediaQuery('(min-width:600px)')
+  const trackFound = tracks.find((t) => t.id === trackId)
 
   const getDevices = () => {
     get('/player/devices').then(({ data: { devices } }) => {
@@ -165,13 +166,14 @@ export default function PlaylistToolbar({
       )}
 
       <Grid item>
-        {track && trackId && (
+        {track && (
           <Autocomplete
             fullWidth
             value={track}
             onChange={(_, t) => selectTrackId(t)}
             autoHighlight
-            options={tracks}
+            options={trackFound ? tracks : []}
+            noOptionsText=""
             getOptionLabel={(t) => t.toString(trackFilters)}
             getOptionSelected={(option, value) => option.id === trackId}
             style={{ width: mobile ? 200 : 300 }}

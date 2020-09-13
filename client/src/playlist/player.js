@@ -65,7 +65,7 @@ export default function Player({
         </IconButton>
       </Grid>
       <Grid item>
-        <Typography>{valuetext(playPosition)}</Typography>
+        <Typography variant="caption">{valuetext(playPosition)}</Typography>
       </Grid>
       <Grid item>
         <Slider
@@ -79,7 +79,7 @@ export default function Player({
         />
       </Grid>
       <Grid item>
-        <Typography>{valuetext(duration)}</Typography>
+        <Typography variant="caption">{valuetext(duration)}</Typography>
       </Grid>
     </Grid>
   )

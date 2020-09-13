@@ -37,11 +37,7 @@ export default class LyricsDb {
         tracks = await this.query(track.cleanArtist(), track.cleanTitle())
       if (tracks == null) return null
       var result: Track
-      var filteredTracks = tracks.filter(
-        (t) =>
-          t.artist.toUpperCase() === track.artist.toUpperCase() &&
-          t.title.toUpperCase() === track.title.toUpperCase()
-      )
+      var filteredTracks = tracks.filter((t) => t.matchesArtistTitleOrId(track))
       result = filteredTracks[0]
       return result
     } catch (error) {
