@@ -1,19 +1,14 @@
-import React, { useState } from 'react'
+import React, { useContext } from 'react'
 import { IconButton } from '@material-ui/core'
 import { Grid, Slider, Typography } from '@material-ui/core'
 import { SkipPrevious, SkipNext, PlayArrow, Pause } from '@material-ui/icons'
 import { post } from '../server'
 import usePlayTrack from './play-track'
+import PlayerContext from './player-context'
 
-export default function Player({
-  track,
-  playPosition,
-  playlist,
-  radio,
-  tracks,
-  device,
-}) {
-  const [playing, setPlaying] = useState(false)
+export default function Player({ track, playlist, radio, tracks, device }) {
+  const { playPosition, isPlaying, setIsPlaying } = useContext(PlayerContext)
+
   const duration = track ? track.duration_ms / 1000 : 0
 
   const playTrack = usePlayTrack({ playlist, radio, tracks, device })
@@ -27,12 +22,12 @@ export default function Player({
   }
 
   function togglePlay() {
-    setPlaying(!playing)
-    if (playing) {
+    if (isPlaying === undefined) {
       playTrack(track.uri)
     } else {
-      playerCommand('pause')
+      playerCommand(isPlaying ? 'pause' : 'play')
     }
+    setIsPlaying(!isPlaying)
   }
 
   function pad(num, size) {
@@ -55,7 +50,7 @@ export default function Player({
       </Grid>
       <Grid item>
         <IconButton size="small" onClick={togglePlay}>
-          {playing ? <Pause /> : <PlayArrow />}
+          {isPlaying ? <Pause /> : <PlayArrow />}
         </IconButton>
       </Grid>
 

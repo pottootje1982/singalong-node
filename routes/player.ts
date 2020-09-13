@@ -15,6 +15,7 @@ router.post('/', async (req, res) => {
   else if (command === 'next') spotifyApi.api.skipToNext()
   else if (command === 'position') spotifyApi.api.seek(position)
   else if (command === 'pause') spotifyApi.api.pause()
+  else if (command === 'play') spotifyApi.api.play()
   res.status(200)
 })
 
@@ -25,10 +26,16 @@ router.put('/play', async (req, res) => {
     uris,
     context_uri,
     offset: { position, uri },
+    position_ms,
   } = req.body
   uris = uris && uris.filter((id) => id)
   if (deviceId) await spotifyApi.transferPlayback(deviceId)
-  await spotifyApi.api.play({ uris, context_uri, offset: { position, uri } })
+  await spotifyApi.api.play({
+    uris,
+    context_uri,
+    offset: { position, uri },
+    position_ms,
+  })
   res.sendStatus(200)
 })
 

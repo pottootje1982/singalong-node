@@ -12,7 +12,6 @@ export default function Lyrics({
   lyricsFullscreen,
   setLyricsFullscreen,
   trackFilters,
-  setPlayPosition,
 }) {
   const lyricsRef = useRef(null)
   const [lyrics, setLyrics] = useState()
@@ -34,7 +33,6 @@ export default function Lyrics({
           setLyricsFullscreen={setLyricsFullscreen}
           setLyrics={setLyrics}
           trackFilters={trackFilters}
-          setPlayPosition={setPlayPosition}
           lyricsRef={lyricsRef}
         />
       </Grid>

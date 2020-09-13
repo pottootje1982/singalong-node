@@ -33,7 +33,6 @@ export default function PlaylistToolbar({
   trackIdToDownload,
   setTrackIdToDownload,
   lyricsFullscreen,
-  playPosition,
   playlist,
   radio,
 }) {
@@ -210,7 +209,6 @@ export default function PlaylistToolbar({
       )}
       <Player
         track={track}
-        playPosition={playPosition}
         playlist={playlist}
         radio={radio}
         tracks={tracks}

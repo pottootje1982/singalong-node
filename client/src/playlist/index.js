@@ -15,7 +15,6 @@ export default function Playlist({
   trackFilters,
   setTrackFilters,
   lyricsFullscreen,
-  playPosition,
 }) {
   const [trackIdToDownload, setTrackIdToDownload] = useState()
   const [device, setDevice] = useState()
@@ -58,7 +57,6 @@ export default function Playlist({
           trackIdToDownload={trackIdToDownload}
           setTrackIdToDownload={setTrackIdToDownload}
           lyricsFullscreen={lyricsFullscreen}
-          playPosition={playPosition}
           playlist={playlist}
           radio={radio}
         />
