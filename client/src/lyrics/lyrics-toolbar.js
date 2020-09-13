@@ -1,10 +1,9 @@
-import React, { useState, useEffect } from 'react'
+import React, { useEffect } from 'react'
 import { IconButton, Tooltip } from '@material-ui/core'
 import { get, post } from '../server'
 import { Grid } from '@material-ui/core'
 import { Fullscreen, FullscreenExit, QueueMusic } from '@material-ui/icons'
 import { Track } from '../track'
-import Player from './player'
 import LyricsMenu from './lyrics-menu'
 
 export default function LyricsToolbar({
@@ -17,9 +16,8 @@ export default function LyricsToolbar({
   trackFilters,
   setLyrics,
   lyricsRef,
+  setPlayPosition,
 }) {
-  const [playPosition, setPlayPosition] = useState(0)
-
   useEffect(() => {
     if (track) setLyrics(track.lyrics)
   }, [track, setLyrics])
@@ -77,7 +75,6 @@ export default function LyricsToolbar({
           downloadLyrics={downloadLyrics}
         />
       </Grid>
-      <Player track={track} />
     </>
   )
 }

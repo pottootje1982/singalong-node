@@ -15,6 +15,7 @@ import CheckMenuItem from '../CheckMenuItem'
 import { GetApp as DownloadIcon, Menu as MenuIcon } from '@material-ui/icons'
 import ToggleButton from '@material-ui/lab/ToggleButton'
 import Autocomplete from '@material-ui/lab/Autocomplete'
+import Player from './player'
 import { Track } from '../track'
 
 const sleepTime = 3000
@@ -32,6 +33,9 @@ export default function PlaylistToolbar({
   trackIdToDownload,
   setTrackIdToDownload,
   lyricsFullscreen,
+  playPosition,
+  playlist,
+  radio,
 }) {
   const [anchorEl, setAnchorEl] = useState()
   const [deviceOpen, setDeviceOpen] = useState(false)
@@ -202,6 +206,14 @@ export default function PlaylistToolbar({
           </FormControl>
         </Grid>
       )}
+      <Player
+        track={track}
+        playPosition={playPosition}
+        playlist={playlist}
+        radio={radio}
+        tracks={tracks}
+        device={device}
+      />
     </Grid>
   )
 }

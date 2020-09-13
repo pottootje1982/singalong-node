@@ -23,7 +23,7 @@ export default function LyricsMenu({
   function setOrClearProbe() {
     closeMenu()
     if (showCurrentlyPlaying) {
-      const probe = setInterval(showCurrentlyPlayingTrack, 2000)
+      const probe = setInterval(showCurrentlyPlayingTrack, 1000)
       setCurrentlyPlayingProbe(probe)
     } else {
       clearInterval(currentlyPlayingProbe)

@@ -12,6 +12,7 @@ function App() {
   const [radio, setRadio] = useState()
   const [track, setTrack] = useState()
   const [trackId, setTrackId] = useState('')
+  const [playPosition, setPlayPosition] = useState(0)
   const [lyricsFullscreen, setLyricsFullscreen] = useState(false)
   const [token, setToken] = useState(getCookie('accessToken'))
   const mobile = !useMediaQuery('(min-width:600px)')
@@ -63,12 +64,7 @@ function App() {
         ></Playlists>
       </Grid>
       <Grid item xs={lyricsFullscreen || mobile ? 12 : 8}>
-        <Grid
-          container
-          direction={mobile || lyricsFullscreen ? 'column-reverse' : 'column'}
-          spacing={1}
-          alignItems="stretch"
-        >
+        <Grid container direction={'column'} spacing={1} alignItems="stretch">
           <Grid item>
             <Lyrics
               track={track}
@@ -78,6 +74,7 @@ function App() {
               lyricsFullscreen={lyricsFullscreen}
               setLyricsFullscreen={setLyricsFullscreen}
               trackFilters={trackFilters}
+              setPlayPosition={setPlayPosition}
             ></Lyrics>
           </Grid>
           <Grid item>
@@ -92,6 +89,7 @@ function App() {
               setTrack={setTrack}
               trackFilters={trackFilters}
               setTrackFilters={setTrackFilters}
+              playPosition={playPosition}
             ></Playlist>
           </Grid>
         </Grid>

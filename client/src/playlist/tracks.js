@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { get } from '../server'
-import { List } from '@material-ui/core'
+import { List, useMediaQuery } from '@material-ui/core'
 import PlaylistItem from './playlist-item'
 import isEquivalent from '../isEquivalent'
 import { Track } from '../track'
@@ -21,6 +21,7 @@ export default function Tracks({
   device,
 }) {
   const [offset, setOffset] = useState()
+  const mobile = !useMediaQuery('(min-width:600px)')
 
   useEffect(selectTrack, [trackId])
   useEffect(addTracks, [offset])
@@ -75,7 +76,7 @@ export default function Tracks({
       style={{
         maxHeight: '40vh',
         overflow: 'auto',
-        display: lyricsFullscreen && 'none',
+        display: (mobile || lyricsFullscreen) && 'none',
       }}
       dense
     >

@@ -14,6 +14,7 @@ router.post('/', async (req, res) => {
   if (command === 'previous') spotifyApi.api.skipToPrevious()
   else if (command === 'next') spotifyApi.api.skipToNext()
   else if (command === 'position') spotifyApi.api.seek(position)
+  else if (command === 'pause') spotifyApi.api.pause()
   res.status(200)
 })
 

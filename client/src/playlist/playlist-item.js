@@ -5,6 +5,7 @@ import red from '@material-ui/core/colors/red'
 import orange from '@material-ui/core/colors/orange'
 import { IconButton, ListItem, ListItemText } from '@material-ui/core'
 import { PlayArrow, PlaylistAdd } from '@material-ui/icons'
+import usePlayTrack from './play-track'
 
 export default function PlaylistItem({
   track,
@@ -17,26 +18,10 @@ export default function PlaylistItem({
   trackIdToDownload,
   device,
 }) {
+  const playTrack = usePlayTrack({ playlist, radio, tracks, device })
+
   function addTrackToPlaylist(uri) {
     server.post(`/playlists/${playlist}/tracks`, { uris: [uri] })
-  }
-
-  function playTrack(uri) {
-    let uris, context_uri, position
-    const playArtist = playlist.includes('artist')
-    if (playArtist || radio) {
-      uris = tracks.map((t) => t.uri).filter((uri) => uri)
-      position = uris.indexOf(uri)
-      uri = undefined
-    } else {
-      context_uri = playlist
-    }
-    server.put(`/player/play`, {
-      deviceId: device && device.id,
-      uris,
-      context_uri,
-      offset: { position, uri },
-    })
   }
 
   return (
