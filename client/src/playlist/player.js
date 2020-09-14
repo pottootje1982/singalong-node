@@ -5,8 +5,10 @@ import { SkipPrevious, SkipNext, PlayArrow, Pause } from '@material-ui/icons'
 import { post } from '../server'
 import usePlayTrack from './play-track'
 import PlayerContext from './player-context'
+import PlaylistContext from './playlist-context'
 
-export default function Player({ track, playlist, radio, tracks }) {
+export default function Player({ tracks }) {
+  const { track } = useContext(PlaylistContext)
   const {
     playPosition,
     setPlayPosition,
@@ -17,7 +19,7 @@ export default function Player({ track, playlist, radio, tracks }) {
 
   const duration = track ? track.duration_ms / 1000 : 0
 
-  const playTrack = usePlayTrack({ playlist, radio, tracks })
+  const playTrack = usePlayTrack({ tracks })
 
   function playerCommand(command, playPosition) {
     post('player', { command, position: playPosition || 0 })

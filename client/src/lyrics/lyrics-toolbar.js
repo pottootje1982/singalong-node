@@ -6,12 +6,9 @@ import { Fullscreen, FullscreenExit, QueueMusic } from '@material-ui/icons'
 import { Track } from '../track'
 import LyricsMenu from './lyrics-menu'
 import PlayerContext from '../playlist/player-context'
+import PlaylistContext from '../playlist/playlist-context'
 
 export default function LyricsToolbar({
-  track,
-  setPlaylist,
-  setTrack,
-  setTrackId,
   lyricsFullscreen,
   setLyricsFullscreen,
   trackFilters,
@@ -19,6 +16,9 @@ export default function LyricsToolbar({
   lyricsRef,
 }) {
   const { setPlayPosition, setIsPlaying } = useContext(PlayerContext)
+  const { track, setTrack, setTrackId, setPlaylist } = useContext(
+    PlaylistContext
+  )
 
   useEffect(() => {
     if (track) setLyrics(track.lyrics)
@@ -72,8 +72,6 @@ export default function LyricsToolbar({
       <Grid item>
         <LyricsMenu
           lyricsRef={lyricsRef}
-          track={track}
-          setTrack={setTrack}
           trackFilters={trackFilters}
           showCurrentlyPlayingTrack={showCurrentlyPlayingTrack}
           downloadLyrics={downloadLyrics}

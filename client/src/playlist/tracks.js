@@ -1,24 +1,22 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, useContext } from 'react'
 import { get } from '../server'
 import { List, useMediaQuery } from '@material-ui/core'
 import PlaylistItem from './playlist-item'
 import isEquivalent from '../isEquivalent'
 import { Track } from '../track'
+import PlaylistContext from './playlist-context'
 
 export default function Tracks({
   lyricsFullscreen,
-  trackId,
-  setTrackId,
   selectTrackId,
-  track,
-  setTrack,
-  playlist,
   tracks,
   setTracks,
   trackFilters,
   trackIdToDownload,
-  radio,
 }) {
+  const { track, setTrack, trackId, setTrackId, playlist } = useContext(
+    PlaylistContext
+  )
   const [offset, setOffset] = useState()
   const mobile = !useMediaQuery('(min-width:600px)')
 
@@ -85,12 +83,9 @@ export default function Tracks({
           <PlaylistItem
             key={index}
             track={t}
-            trackId={trackId}
             selectTrackId={selectTrackId}
             trackFilters={trackFilters}
             trackIdToDownload={trackIdToDownload}
-            playlist={playlist}
-            radio={radio}
             tracks={tracks}
           />
         ))}

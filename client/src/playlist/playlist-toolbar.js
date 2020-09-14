@@ -19,23 +19,21 @@ import Player from './player'
 import { Track } from '../track'
 import PlayerContext from './player-context'
 import { getCookie } from '../cookie'
+import PlaylistContext from './playlist-context'
 
 const sleepTime = 3000
 
 export default function PlaylistToolbar({
   trackFilters,
   setTrackFilters,
-  track,
-  setTrack,
-  trackId,
   selectTrackId,
   tracks,
   trackIdToDownload,
   setTrackIdToDownload,
   lyricsFullscreen,
-  playlist,
-  radio,
 }) {
+  const { track, setTrack, trackId } = useContext(PlaylistContext)
+
   const [anchorEl, setAnchorEl] = useState()
   const [deviceOpen, setDeviceOpen] = useState(false)
   const [devices, setDevices] = useState([])
@@ -49,7 +47,7 @@ export default function PlaylistToolbar({
     get('/player/devices').then(({ data: { devices } }) => {
       devices = devices || []
       setDevices(devices)
-      const lastSelectedDeviceId = getCookie('lastSelectedDevice')
+      const lastSelectedDeviceId = getCookie('lastPlayingDevice')
       const lastSelectedDevice = devices.find(
         (d) => d.id === lastSelectedDeviceId
       )
@@ -214,7 +212,7 @@ export default function PlaylistToolbar({
           </FormControl>
         </Grid>
       )}
-      <Player track={track} playlist={playlist} radio={radio} tracks={tracks} />
+      <Player tracks={tracks} />
     </Grid>
   )
 }

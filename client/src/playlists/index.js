@@ -1,15 +1,19 @@
-import React, { useEffect, useState, useRef } from 'react'
+import React, { useEffect, useState, useRef, useContext } from 'react'
 import { Grid, TextField, useMediaQuery } from '@material-ui/core'
 import { Button } from '../Styled'
 import Autocomplete from '@material-ui/lab/Autocomplete'
 import { get } from '../server'
 import PlaylistsList from './List'
+import PlaylistContext from '../playlist/playlist-context'
 
-function Playlists({ setPlaylist, setRadio, playlist, setTrackId }) {
+function Playlists() {
   const [playlists, setPlaylists] = useState([])
   const [offset, setOffset] = useState()
   const searchRef = useRef(null)
   const mobile = !useMediaQuery('(min-width:600px)')
+  const { setTrackId, playlist, setPlaylist, setRadio } = useContext(
+    PlaylistContext
+  )
 
   function init() {
     setOffset(0)
@@ -87,7 +91,6 @@ function Playlists({ setPlaylist, setRadio, playlist, setTrackId }) {
         <Grid item>
           <PlaylistsList
             playlists={playlists}
-            playlist={playlist}
             onPlaylistClick={onPlaylistClick}
           />
         </Grid>

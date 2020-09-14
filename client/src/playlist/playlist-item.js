@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useContext } from 'react'
 import server from '../server'
 import green from '@material-ui/core/colors/green'
 import red from '@material-ui/core/colors/red'
@@ -6,18 +6,17 @@ import orange from '@material-ui/core/colors/orange'
 import { IconButton, ListItem, ListItemText } from '@material-ui/core'
 import { PlayArrow, PlaylistAdd } from '@material-ui/icons'
 import usePlayTrack from './play-track'
+import PlaylistContext from './playlist-context'
 
 export default function PlaylistItem({
   track,
-  trackId,
   selectTrackId,
-  playlist,
-  radio,
   tracks,
   trackFilters,
   trackIdToDownload,
 }) {
-  const playTrack = usePlayTrack({ playlist, radio, tracks })
+  const { trackId, radio, playlist } = useContext(PlaylistContext)
+  const playTrack = usePlayTrack({ tracks })
 
   function addTrackToPlaylist(uri) {
     server.post(`/playlists/${playlist}/tracks`, { uris: [uri] })

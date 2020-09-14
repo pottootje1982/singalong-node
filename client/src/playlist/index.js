@@ -1,23 +1,19 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, useContext } from 'react'
 import { get, post } from '../server'
 import { Grid } from '@material-ui/core'
 import { Track } from '../track'
 import PlaylistToolbar from './playlist-toolbar'
 import Tracks from './tracks'
+import PlaylistContext from '../playlist/playlist-context'
 
 export default function Playlist({
-  playlist,
-  radio,
-  setTrack,
-  track,
-  trackId,
-  setTrackId,
   trackFilters,
   setTrackFilters,
   lyricsFullscreen,
 }) {
   const [trackIdToDownload, setTrackIdToDownload] = useState()
   const [tracks, setTracks] = useState([])
+  const { setTrackId, radio } = useContext(PlaylistContext)
 
   useEffect(showCurrentlyOnFip, [radio])
 
@@ -46,32 +42,21 @@ export default function Playlist({
       <Grid item>
         <PlaylistToolbar
           setTrackFilters={setTrackFilters}
-          track={track}
-          setTrack={setTrack}
-          trackId={trackId}
           tracks={tracks}
           selectTrackId={selectTrackId}
           trackIdToDownload={trackIdToDownload}
           setTrackIdToDownload={setTrackIdToDownload}
           lyricsFullscreen={lyricsFullscreen}
-          playlist={playlist}
-          radio={radio}
         />
       </Grid>
       <Grid item>
         <Tracks
           trackFilters={trackFilters}
           lyricsFullscreen={lyricsFullscreen}
-          trackId={trackId}
-          setTrackId={setTrackId}
           selectTrackId={selectTrackId}
-          track={track}
-          setTrack={setTrack}
-          playlist={playlist}
           tracks={tracks}
           setTracks={setTracks}
           trackIdToDownload={trackIdToDownload}
-          radio={radio}
         />
       </Grid>
     </>

@@ -1,5 +1,6 @@
-import React, { useRef, useState } from 'react'
+import React, { useRef, useState, useContext } from 'react'
 import { TextField } from '@material-ui/core'
+import { Track } from '../track'
 
 import {
   MenuItem,
@@ -13,16 +14,17 @@ import {
   Button,
 } from '@material-ui/core'
 import { Search } from '@material-ui/icons'
+import PlaylistContext from '../playlist/playlist-context'
 
 export default function CustomSearch({
   trackFilters,
-  track,
   downloadLyrics,
   closeMenu,
 }) {
   const [modalOpen, setModalOpen] = useState(false)
   const artistRef = useRef(null)
   const titleRef = useRef(null)
+  const { track } = useContext(PlaylistContext)
 
   function doCustomSearch(artist, title) {
     downloadLyrics({ ...track, artist, title }, false)
@@ -34,6 +36,7 @@ export default function CustomSearch({
     closeMenu()
   }
 
+  const trackToDisplay = track || new Track({})
   return (
     <>
       <MenuItem onClick={() => setModalOpen(true)}>
@@ -51,7 +54,7 @@ export default function CustomSearch({
                 label="Artist"
                 fullWidth
                 inputRef={artistRef}
-                defaultValue={!trackFilters.hideArtist && track.artist}
+                defaultValue={!trackFilters.hideArtist && trackToDisplay.artist}
               ></TextField>
             </Grid>
             <Grid item>
@@ -59,7 +62,9 @@ export default function CustomSearch({
                 label="Title"
                 fullWidth
                 inputRef={titleRef}
-                defaultValue={track.getTitle(trackFilters.minimalTitle)}
+                defaultValue={trackToDisplay.getTitle(
+                  trackFilters.minimalTitle
+                )}
               ></TextField>
             </Grid>
           </Grid>

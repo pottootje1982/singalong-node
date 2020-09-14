@@ -8,11 +8,10 @@ import { Track } from '../track'
 import CustomSearch from './custom-search'
 import IconMenuItem from './icon-menu-item'
 import PlayerContext from '../playlist/player-context'
+import PlaylistContext from '../playlist/playlist-context'
 
 export default function LyricsMenu({
   lyricsRef,
-  track,
-  setTrack,
   trackFilters,
   showCurrentlyPlayingTrack,
   downloadLyrics,
@@ -22,6 +21,7 @@ export default function LyricsMenu({
   const { showCurrentlyPlaying, setShowCurrentlyPlaying } = useContext(
     PlayerContext
   )
+  const { track, setTrack } = useContext(PlaylistContext)
 
   useEffect(setOrClearProbe, [showCurrentlyPlaying])
   useEffect(initMonitoring, [])
@@ -128,7 +128,6 @@ export default function LyricsMenu({
         ></IconMenuItem>
         <CustomSearch
           trackFilters={trackFilters}
-          track={track}
           downloadLyrics={downloadLyrics}
           closeMenu={closeMenu}
         />

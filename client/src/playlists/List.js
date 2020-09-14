@@ -1,11 +1,9 @@
-import React from 'react'
+import React, { useContext } from 'react'
 import { List, ListItem, ListItemText } from '@material-ui/core'
+import PlaylistContext from '../playlist/playlist-context'
 
-export default function PlaylistsList({
-  playlists,
-  playlist,
-  onPlaylistClick,
-}) {
+export default function PlaylistsList({ playlists, onPlaylistClick }) {
+  const { playlist } = useContext(PlaylistContext)
   return (
     <List dense style={{ maxHeight: '80vh', overflow: 'auto' }}>
       {playlists.map((p, index) => (

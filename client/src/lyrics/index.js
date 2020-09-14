@@ -1,18 +1,16 @@
-import React, { useState, useEffect, useRef } from 'react'
+import React, { useState, useEffect, useRef, useContext } from 'react'
 import { TextField } from '@material-ui/core'
 import { Grid } from '@material-ui/core'
 import { Track } from '../track'
 import LyricsToolbar from './lyrics-toolbar'
+import PlaylistContext from '../playlist/playlist-context'
 
 export default function Lyrics({
-  track,
-  setPlaylist,
-  setTrack,
-  setTrackId,
   lyricsFullscreen,
   setLyricsFullscreen,
   trackFilters,
 }) {
+  const { track } = useContext(PlaylistContext)
   const lyricsRef = useRef(null)
   const [lyrics, setLyrics] = useState()
 
@@ -20,15 +18,11 @@ export default function Lyrics({
     if (track) setLyrics(track.lyrics)
   }, [track])
 
-  track = track || new Track({})
+  const trackToDisplay = track || new Track({})
   return (
     <Grid container spacing={1} direction="column" alignItems="stretch">
       <Grid container item alignItems="center" spacing={1}>
         <LyricsToolbar
-          setPlaylist={setPlaylist}
-          track={track}
-          setTrack={setTrack}
-          setTrackId={setTrackId}
           lyricsFullscreen={lyricsFullscreen}
           setLyricsFullscreen={setLyricsFullscreen}
           setLyrics={setLyrics}
@@ -43,7 +37,7 @@ export default function Lyrics({
           inputRef={lyricsRef}
           id="outlined-multiline-static"
           filters={trackFilters}
-          label={`Lyrics ${track.toString(trackFilters)}`}
+          label={`Lyrics ${trackToDisplay.toString(trackFilters)}`}
           multiline
           rows={!lyricsFullscreen ? 18 : undefined}
           defaultValue={lyrics}
