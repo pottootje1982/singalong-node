@@ -6,19 +6,26 @@ import { post } from '../server'
 import usePlayTrack from './play-track'
 import PlayerContext from './player-context'
 
-export default function Player({ track, playlist, radio, tracks, device }) {
-  const { playPosition, isPlaying, setIsPlaying } = useContext(PlayerContext)
+export default function Player({ track, playlist, radio, tracks }) {
+  const {
+    playPosition,
+    setPlayPosition,
+    isPlaying,
+    setIsPlaying,
+    showCurrentlyPlaying,
+  } = useContext(PlayerContext)
 
   const duration = track ? track.duration_ms / 1000 : 0
 
-  const playTrack = usePlayTrack({ playlist, radio, tracks, device })
+  const playTrack = usePlayTrack({ playlist, radio, tracks })
 
   function playerCommand(command, playPosition) {
     post('player', { command, position: playPosition || 0 })
   }
 
-  function setPlayPosition(_, value) {
+  function onPlayPositionClick(_, value) {
     playerCommand('position', value * 1000)
+    if (!showCurrentlyPlaying) setPlayPosition(value)
   }
 
   function togglePlay() {
@@ -70,7 +77,7 @@ export default function Player({ track, playlist, radio, tracks, device }) {
           step={1}
           style={{ width: 150, marginLeft: 10, marginRight: 10 }}
           getAriaValueText={valuetext}
-          onChange={setPlayPosition}
+          onChange={onPlayPositionClick}
         />
       </Grid>
       <Grid item>

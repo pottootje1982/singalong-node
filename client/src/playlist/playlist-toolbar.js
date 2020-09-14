@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, useContext } from 'react'
 import { get, post } from '../server'
 import {
   Menu,
@@ -17,19 +17,19 @@ import ToggleButton from '@material-ui/lab/ToggleButton'
 import Autocomplete from '@material-ui/lab/Autocomplete'
 import Player from './player'
 import { Track } from '../track'
+import PlayerContext from './player-context'
+import { getCookie } from '../cookie'
 
 const sleepTime = 3000
 
 export default function PlaylistToolbar({
   trackFilters,
-  setDevice,
   setTrackFilters,
   track,
   setTrack,
   trackId,
   selectTrackId,
   tracks,
-  device,
   trackIdToDownload,
   setTrackIdToDownload,
   lyricsFullscreen,
@@ -43,12 +43,19 @@ export default function PlaylistToolbar({
   const [tracksToDownload, setTracksToDownload] = useState([])
   const mobile = !useMediaQuery('(min-width:600px)')
   const trackFound = tracks.find((t) => t.id === trackId)
+  const { device, setDevice } = useContext(PlayerContext)
 
   const getDevices = () => {
     get('/player/devices').then(({ data: { devices } }) => {
       devices = devices || []
       setDevices(devices)
-      setDevice(devices[0])
+      const lastSelectedDeviceId = getCookie('lastSelectedDevice')
+      const lastSelectedDevice = devices.find(
+        (d) => d.id === lastSelectedDeviceId
+      )
+      setDevice(
+        devices.find((d) => d.is_active) || lastSelectedDevice || devices[0]
+      )
     })
   }
 
@@ -207,13 +214,7 @@ export default function PlaylistToolbar({
           </FormControl>
         </Grid>
       )}
-      <Player
-        track={track}
-        playlist={playlist}
-        radio={radio}
-        tracks={tracks}
-        device={device}
-      />
+      <Player track={track} playlist={playlist} radio={radio} tracks={tracks} />
     </Grid>
   )
 }

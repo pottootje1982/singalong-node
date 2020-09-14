@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useContext } from 'react'
 import { IconButton } from '@material-ui/core'
 import { post, del } from '../server'
 import { Menu, Divider } from '@material-ui/core'
@@ -7,6 +7,7 @@ import CheckMenuItem from '../CheckMenuItem'
 import { Track } from '../track'
 import CustomSearch from './custom-search'
 import IconMenuItem from './icon-menu-item'
+import PlayerContext from '../playlist/player-context'
 
 export default function LyricsMenu({
   lyricsRef,
@@ -17,8 +18,22 @@ export default function LyricsMenu({
   downloadLyrics,
 }) {
   const [anchorEl, setAnchorEl] = useState()
-  const [showCurrentlyPlaying, setShowCurrentlyPlaying] = useState()
   const [currentlyPlayingProbe, setCurrentlyPlayingProbe] = useState()
+  const { showCurrentlyPlaying, setShowCurrentlyPlaying } = useContext(
+    PlayerContext
+  )
+
+  useEffect(setOrClearProbe, [showCurrentlyPlaying])
+  useEffect(initMonitoring, [])
+
+  // Start monitoring on startup if Spotify is already playing
+  function initMonitoring() {
+    showCurrentlyPlayingTrack().then((track) => {
+      if (track && track.is_playing) {
+        setShowCurrentlyPlaying(true)
+      }
+    })
+  }
 
   function setOrClearProbe() {
     closeMenu()
@@ -29,8 +44,6 @@ export default function LyricsMenu({
       clearInterval(currentlyPlayingProbe)
     }
   }
-
-  useEffect(setOrClearProbe, [showCurrentlyPlaying])
 
   function saveLyrics() {
     const lyrics = lyricsRef.current.value

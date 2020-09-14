@@ -25,12 +25,13 @@ export default function LyricsToolbar({
   }, [track, setLyrics])
 
   function showCurrentlyPlayingTrack() {
-    get('/player').then(({ data: { track, uri } }) => {
+    return get('/player').then(({ data: { track, uri } }) => {
       if (track) {
         setTrackId(track.id)
         setPlaylist(uri)
         setPlayPosition(track.progress_ms / 1000)
         setIsPlaying(track.is_playing)
+        return track
       }
     })
   }

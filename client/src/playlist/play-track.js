@@ -2,8 +2,8 @@ import { useContext } from 'react'
 import server from '../server'
 import PlayerContext from './player-context'
 
-export default function usePlayTrack({ playlist, radio, tracks, device }) {
-  const { setIsPlaying } = useContext(PlayerContext)
+export default function usePlayTrack({ playlist, radio, tracks }) {
+  const { setIsPlaying, device } = useContext(PlayerContext)
 
   return (uri, playPosition) => {
     let uris, context_uri, position

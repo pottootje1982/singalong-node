@@ -16,9 +16,8 @@ export default function PlaylistItem({
   tracks,
   trackFilters,
   trackIdToDownload,
-  device,
 }) {
-  const playTrack = usePlayTrack({ playlist, radio, tracks, device })
+  const playTrack = usePlayTrack({ playlist, radio, tracks })
 
   function addTrackToPlaylist(uri) {
     server.post(`/playlists/${playlist}/tracks`, { uris: [uri] })

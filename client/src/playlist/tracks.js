@@ -18,7 +18,6 @@ export default function Tracks({
   trackFilters,
   trackIdToDownload,
   radio,
-  device,
 }) {
   const [offset, setOffset] = useState()
   const mobile = !useMediaQuery('(min-width:600px)')
@@ -93,7 +92,6 @@ export default function Tracks({
             playlist={playlist}
             radio={radio}
             tracks={tracks}
-            device={device}
           />
         ))}
     </List>
