@@ -18,12 +18,17 @@ export default function LyricsMenu({
 }) {
   const [anchorEl, setAnchorEl] = useState()
   const [currentlyPlayingProbe, setCurrentlyPlayingProbe] = useState()
-  const { showCurrentlyPlaying, setShowCurrentlyPlaying } = useContext(
-    PlayerContext
-  )
+  const {
+    showCurrentlyPlaying,
+    setShowCurrentlyPlaying,
+    isPlaying,
+  } = useContext(PlayerContext)
   const { track, setTrack } = useContext(PlaylistContext)
 
   useEffect(setOrClearProbe, [showCurrentlyPlaying])
+  useEffect(() => {
+    setShowCurrentlyPlaying(isPlaying)
+  }, [isPlaying, setShowCurrentlyPlaying])
   useEffect(initMonitoring, [])
 
   // Start monitoring on startup if Spotify is already playing

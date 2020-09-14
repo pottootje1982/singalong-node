@@ -12,8 +12,7 @@ export default function Playlist({
   lyricsFullscreen,
 }) {
   const [trackIdToDownload, setTrackIdToDownload] = useState()
-  const [tracks, setTracks] = useState([])
-  const { setTrackId, radio } = useContext(PlaylistContext)
+  const { setTrackId, radio, setTracks } = useContext(PlaylistContext)
 
   useEffect(showCurrentlyOnFip, [radio])
 
@@ -42,7 +41,6 @@ export default function Playlist({
       <Grid item>
         <PlaylistToolbar
           setTrackFilters={setTrackFilters}
-          tracks={tracks}
           selectTrackId={selectTrackId}
           trackIdToDownload={trackIdToDownload}
           setTrackIdToDownload={setTrackIdToDownload}
@@ -54,8 +52,6 @@ export default function Playlist({
           trackFilters={trackFilters}
           lyricsFullscreen={lyricsFullscreen}
           selectTrackId={selectTrackId}
-          tracks={tracks}
-          setTracks={setTracks}
           trackIdToDownload={trackIdToDownload}
         />
       </Grid>

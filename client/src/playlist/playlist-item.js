@@ -11,11 +11,10 @@ import PlaylistContext from './playlist-context'
 export default function PlaylistItem({
   track,
   selectTrackId,
-  tracks,
   trackFilters,
   trackIdToDownload,
 }) {
-  const { trackId, radio, playlist } = useContext(PlaylistContext)
+  const { trackId, radio, playlist, tracks } = useContext(PlaylistContext)
   const playTrack = usePlayTrack({ tracks })
 
   function addTrackToPlaylist(uri) {

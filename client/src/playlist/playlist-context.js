@@ -9,6 +9,7 @@ export function PlaylistProvider(props) {
   const [radio, setRadio] = useState()
   const [track, setTrack] = useState()
   const [trackId, setTrackId] = useState('')
+  const [tracks, setTracks] = useState([])
 
   const values = {
     playlist,
@@ -19,6 +20,8 @@ export function PlaylistProvider(props) {
     setTrack,
     trackId,
     setTrackId,
+    tracks,
+    setTracks,
   }
 
   return (

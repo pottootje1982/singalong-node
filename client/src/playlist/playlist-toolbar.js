@@ -12,7 +12,12 @@ import {
   useMediaQuery,
 } from '@material-ui/core'
 import CheckMenuItem from '../CheckMenuItem'
-import { GetApp as DownloadIcon, Menu as MenuIcon } from '@material-ui/icons'
+import {
+  GetApp as DownloadIcon,
+  Menu as MenuIcon,
+  NavigateBefore,
+  NavigateNext,
+} from '@material-ui/icons'
 import ToggleButton from '@material-ui/lab/ToggleButton'
 import Autocomplete from '@material-ui/lab/Autocomplete'
 import Player from './player'
@@ -27,12 +32,13 @@ export default function PlaylistToolbar({
   trackFilters,
   setTrackFilters,
   selectTrackId,
-  tracks,
   trackIdToDownload,
   setTrackIdToDownload,
   lyricsFullscreen,
 }) {
-  const { track, setTrack, trackId } = useContext(PlaylistContext)
+  const { track, setTrack, trackId, setTrackId, tracks } = useContext(
+    PlaylistContext
+  )
 
   const [anchorEl, setAnchorEl] = useState()
   const [deviceOpen, setDeviceOpen] = useState(false)
@@ -106,6 +112,12 @@ export default function PlaylistToolbar({
     setTracksToDownload(tracks.filter((track) => !track.lyrics))
   }
 
+  function setAdjacentTrack(offset) {
+    const index = tracks.indexOf(track)
+    const adjacentTrack = tracks[index + offset]
+    if (adjacentTrack) setTrackId(adjacentTrack.id)
+  }
+
   const defaultMenuItemProps = {
     setter: { setTrackFilters },
     state: { trackFilters },
@@ -169,6 +181,14 @@ export default function PlaylistToolbar({
         </>
       )}
 
+      {mobile && (
+        <Grid item>
+          <IconButton size="small" onClick={() => setAdjacentTrack(-1)}>
+            <NavigateBefore />
+          </IconButton>
+        </Grid>
+      )}
+
       <Grid item>
         {track && (
           <Autocomplete
@@ -188,6 +208,13 @@ export default function PlaylistToolbar({
           />
         )}
       </Grid>
+      {mobile && (
+        <Grid item>
+          <IconButton size="small" onClick={() => setAdjacentTrack(1)}>
+            <NavigateNext />
+          </IconButton>
+        </Grid>
+      )}
       {device && (
         <Grid item>
           <FormControl variant="outlined" size="small">
@@ -212,7 +239,8 @@ export default function PlaylistToolbar({
           </FormControl>
         </Grid>
       )}
-      <Player tracks={tracks} />
+
+      <Player />
     </Grid>
   )
 }

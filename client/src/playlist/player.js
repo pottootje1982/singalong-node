@@ -7,7 +7,7 @@ import usePlayTrack from './play-track'
 import PlayerContext from './player-context'
 import PlaylistContext from './playlist-context'
 
-export default function Player({ tracks }) {
+export default function Player() {
   const { track } = useContext(PlaylistContext)
   const {
     playPosition,
@@ -15,6 +15,7 @@ export default function Player({ tracks }) {
     isPlaying,
     setIsPlaying,
     showCurrentlyPlaying,
+    tracks,
   } = useContext(PlayerContext)
 
   const duration = track ? track.duration_ms / 1000 : 0

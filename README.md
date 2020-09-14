@@ -7,7 +7,6 @@
 ## Features
 
 - add lyricfind for french lyrics 'mc solaar geopoetique lyrics'
-- next/previous button should select previous/next track in case not playing on spotify
 
 - custom playlists
 - sorting of playlist

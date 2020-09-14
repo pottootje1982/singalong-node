@@ -9,14 +9,18 @@ import PlaylistContext from './playlist-context'
 export default function Tracks({
   lyricsFullscreen,
   selectTrackId,
-  tracks,
-  setTracks,
   trackFilters,
   trackIdToDownload,
 }) {
-  const { track, setTrack, trackId, setTrackId, playlist } = useContext(
-    PlaylistContext
-  )
+  const {
+    track,
+    setTrack,
+    trackId,
+    setTrackId,
+    playlist,
+    tracks,
+    setTracks,
+  } = useContext(PlaylistContext)
   const [offset, setOffset] = useState()
   const mobile = !useMediaQuery('(min-width:600px)')
 
@@ -86,7 +90,6 @@ export default function Tracks({
             selectTrackId={selectTrackId}
             trackFilters={trackFilters}
             trackIdToDownload={trackIdToDownload}
-            tracks={tracks}
           />
         ))}
     </List>
