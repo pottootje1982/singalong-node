@@ -119,9 +119,9 @@ export default function PlaylistToolbar({
   }
 
   const defaultMenuItemProps = {
-    setter: { setTrackFilters },
-    state: { trackFilters },
-    onClose: { closeMenu },
+    setter: setTrackFilters,
+    state: trackFilters,
+    close: closeMenu,
   }
 
   useEffect(downloadTrack, [tracksToDownload])

@@ -40,6 +40,7 @@ export default function Playlist({
     <>
       <Grid item>
         <PlaylistToolbar
+          trackFilters={trackFilters}
           setTrackFilters={setTrackFilters}
           selectTrackId={selectTrackId}
           trackIdToDownload={trackIdToDownload}

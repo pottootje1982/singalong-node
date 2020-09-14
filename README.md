@@ -6,8 +6,6 @@
 
 ## Features
 
-- add lyricfind for french lyrics 'mc solaar geopoetique lyrics'
-
 - custom playlists
 - sorting of playlist
 

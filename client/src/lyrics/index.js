@@ -36,7 +36,6 @@ export default function Lyrics({
           fullWidth
           inputRef={lyricsRef}
           id="outlined-multiline-static"
-          filters={trackFilters}
           label={`Lyrics ${trackToDisplay.toString(trackFilters)}`}
           multiline
           rows={!lyricsFullscreen ? 18 : undefined}
