@@ -2,16 +2,15 @@
 
 ## Bugs
 
-- fix empty playlists when returning to app after hour (due to token expiration)
+- enable switching playlist switching when monitor mode is on (then you can also enable monitoring on startup)
 
 ## Features
 
 - custom playlists
 - sorting of playlist
+- put playlist in address bar
 
 ## Improvements
 
-- virtualization playlist
-
-- use useMemo for playlists
 - consider using material ui Alert for exception coming from server
+- virtualization playlist? tried react-window, doesn't work nicely

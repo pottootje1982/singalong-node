@@ -13,7 +13,7 @@ router.get('/token', async (req, res) => {
   const spotifyApi = new SpotifyApi(req.headers.origin)
   const tokens = await spotifyApi.getToken(req.query.code)
   if (!process.env.NODE_ENV) {
-    saveToken(tokens.body.access_token)
+    saveToken(tokens.access_token)
   }
   res.json(tokens)
 })
@@ -21,7 +21,7 @@ router.get('/token', async (req, res) => {
 router.get('/refresh', async (req, res) => {
   const spotifyApi = createApi(req)
   const tokens = await spotifyApi.refresh()
-  res.json({ accessToken: tokens.data.access_token })
+  res.json(tokens.data)
 })
 
 router.get('/me', async (req, res) => {

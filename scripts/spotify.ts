@@ -82,7 +82,7 @@ export class SpotifyApi {
           'Refreshed token. It now expires in ' + expireInterval + ' seconds!'
         )
 
-        return data
+        return data.body
       })
       .catch((ex) => {
         console.log('Spotify: something went wrong setting token!\n', ex)
@@ -178,12 +178,9 @@ export class SpotifyApi {
       currentTrack && currentTrack.body && currentTrack.body.item
         ? Track.fromSpotify(currentTrack.body.item)
         : {}
-    const uri =
-      (currentTrack &&
-        currentTrack.body &&
-        currentTrack.body.context &&
-        currentTrack.body.context.uri) ||
-      currentTrack.body.item.uri
+    const { body } = currentTrack || {}
+    const { context, item } = body || {}
+    const uri = (context && context.uri) || (item && item.uri)
     if (track) {
       track.progress_ms = currentTrack.body.progress_ms
       track.is_playing = currentTrack.body.is_playing

@@ -6,7 +6,7 @@ import { get } from '../server'
 import PlaylistsList from './List'
 import PlaylistContext from '../playlist/playlist-context'
 
-function Playlists() {
+function Playlists({ getFreshToken }) {
   const [playlists, setPlaylists] = useState([])
   const [offset, setOffset] = useState()
   const searchRef = useRef(null)
@@ -17,6 +17,9 @@ function Playlists() {
 
   function init() {
     setOffset(0)
+    setInterval(() => {
+      getFreshToken()
+    }, 3600 * 1000)
   }
 
   useEffect(getPlaylists, [offset])

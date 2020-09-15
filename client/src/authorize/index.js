@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import qs from 'qs'
-import { get } from '../server'
+import server, { get } from '../server'
 import { Redirect } from 'react-router-dom'
-import { setCookie } from '../cookie'
 
 function Authorize() {
   get('/authorize').then((res) => {
@@ -19,14 +18,10 @@ export function Authorized({ location }) {
 
   useEffect(() => {
     get(`/authorize/token?code=${code}`)
-      .then((res) => {
-        const body = res.data.body || {}
-        const { access_token, refresh_token } = body
-
-        if (access_token) {
-          setCookie('accessToken', access_token, 1)
-          setCookie('refreshToken', refresh_token)
-          setToken(access_token)
+      .then(({ data }) => {
+        if (data) {
+          server.setToken(data)
+          setToken(data)
         }
       })
       .catch((err) => console.log(err))

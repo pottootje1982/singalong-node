@@ -47,6 +47,7 @@ export default function Player() {
   }
 
   function valuetext(value) {
+    value = value || 0
     const minutes = value / 60
     return `${pad(minutes, 2)}:${pad(value % 60, 2)}`
   }

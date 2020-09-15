@@ -4,12 +4,13 @@ import Playlist from './playlist'
 import Lyrics from './lyrics'
 import { Grid, useMediaQuery } from '@material-ui/core'
 import { Redirect } from 'react-router-dom'
-import { getCookie, setCookie } from './cookie'
-import { get } from './server'
+import { getCookie } from './cookie'
+import server, { get } from './server'
 
 function App() {
   const [lyricsFullscreen, setLyricsFullscreen] = useState(false)
   const [token, setToken] = useState(getCookie('accessToken'))
+  const refreshToken = getCookie('refreshToken')
   const mobile = !useMediaQuery('(min-width:600px)')
 
   const [trackFilters, setTrackFilters] = useState({
@@ -18,24 +19,26 @@ function App() {
     hideArtist: false,
   })
 
-  function refreshToken() {
-    if (!token) {
-      get('/authorize/refresh', {
-        refreshToken: getCookie('refreshToken'),
-      }).then(({ data: { accessToken } }) => {
-        if (accessToken) {
-          setCookie('accessToken', accessToken, 1)
-          setToken(accessToken)
-        } else {
-          setToken('redirect')
-        }
-      })
-    }
+  function init() {
+    if (!token) getFreshToken()
+  }
+  useEffect(init, [])
+
+  function getFreshToken() {
+    get('/authorize/refresh', {
+      refreshToken: getCookie('refreshToken'),
+    }).then(({ data }) => {
+      if (data) {
+        console.log('Refreshed token to ', data)
+        server.setToken(data)
+        setToken(data.access_token)
+      } else {
+        setToken('redirect')
+      }
+    })
   }
 
-  useEffect(refreshToken, [])
-
-  if (token === 'redirect') {
+  if (token === 'redirect' || (!token && !refreshToken)) {
     return <Redirect to={'/authorize'} />
   }
 
@@ -50,12 +53,13 @@ function App() {
       }}
     >
       <Grid item xs style={{ display: lyricsFullscreen && 'none' }}>
-        <Playlists></Playlists>
+        <Playlists getFreshToken={getFreshToken}></Playlists>
       </Grid>
       <Grid item xs={lyricsFullscreen || mobile ? 12 : 8}>
         <Grid container direction={'column'} spacing={1} alignItems="stretch">
           <Grid item>
             <Lyrics
+              token={token}
               lyricsFullscreen={lyricsFullscreen}
               setLyricsFullscreen={setLyricsFullscreen}
               trackFilters={trackFilters}

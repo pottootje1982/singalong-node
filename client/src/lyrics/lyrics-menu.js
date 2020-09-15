@@ -18,11 +18,9 @@ export default function LyricsMenu({
 }) {
   const [anchorEl, setAnchorEl] = useState()
   const [currentlyPlayingProbe, setCurrentlyPlayingProbe] = useState()
-  const {
-    showCurrentlyPlaying,
-    setShowCurrentlyPlaying,
-    isPlaying,
-  } = useContext(PlayerContext)
+  const { showCurrentlyPlaying, setShowCurrentlyPlaying } = useContext(
+    PlayerContext
+  )
   const { track, setTrack } = useContext(PlaylistContext)
 
   useEffect(setOrClearProbe, [showCurrentlyPlaying])
