@@ -9,29 +9,22 @@ module.exports = class Table {
   }
 
   get(query) {
-    return query
-      ? this.table()
-          .find(query)
-          .value()
-      : this.table().value()
+    return query ? this.table().find(query).value() : this.table().value()
   }
 
   remove(query) {
-    return this.table()
-      .remove(query)
-      .write()
+    return this.table().remove(query).write()
   }
 
   store(item) {
-    return this.table()
-      .push(item)
-      .write()
+    return this.table().push(item).write()
   }
 
   update(query, item) {
-    return this.table()
-      .find(query)
-      .assign(item)
-      .write()
+    return this.table().find(query).assign(item).write()
+  }
+
+  close() {
+    this.db.close()
   }
 }

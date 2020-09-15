@@ -26,6 +26,7 @@
     "request": "^2.88.0",
     "request-promise": "^4.2.5",
     "spotify-web-api-node": "^4.0.0",
+    "uuid": "^8.3.0",
     "valid-url": "^1.0.9"
   },
   "devDependencies": {
@@ -38,7 +39,7 @@
     "jest": "^26.4.2",
     "mocha": "6.2.2",
     "ts-node": "^8.5.4",
-    "typescript": "^3.7.3"
+    "typescript": "^3.9.7"
   },
   "engines": {
     "node": "10.15.x"

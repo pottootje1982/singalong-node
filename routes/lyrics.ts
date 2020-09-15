@@ -1,18 +1,9 @@
 const router = require('./router')()
 import { Track } from '../client/src/track'
-import LyricsDownloader from '../scripts/download'
-import LyricsDb from '../scripts/lyrics_db'
-const createTable = require('../scripts/db/tables')
-
-let lyricsDb: LyricsDb
-let lyricsDownloader: LyricsDownloader
-
-createTable('./mongo-client', 'lyrics').then(({ lyricTable }) => {
-  lyricsDb = new LyricsDb(lyricTable)
-  lyricsDownloader = new LyricsDownloader(lyricsDb)
-})
+const db = require('../scripts/db/databases')
 
 router.get('/', async (req, res) => {
+  const { lyricsDb } = await db.lyrics()
   var { artist, title, id } = req.query
   var selectedTrack = new Track({ artist, title, id })
   let track = await lyricsDb.queryTrack(selectedTrack)
@@ -20,22 +11,26 @@ router.get('/', async (req, res) => {
 })
 
 router.post('/', async (req, res) => {
+  const { lyricsDb } = await db.lyrics()
   const track = Track.copy(req.body.track)
   lyricsDb.updateOrInsert(track, req.body.lyrics)
   res.status(200)
 })
 
 router.delete('/', async (req, res) => {
+  const { lyricsDb } = await db.lyrics()
   const track = req.body.track
   lyricsDb.remove(Track.copy(track))
   res.status(204)
 })
 
 router.get('/sites', async (req, res) => {
+  const { lyricsDownloader } = await db.lyrics()
   res.json({ sites: lyricsDownloader.engines })
 })
 
 router.post('/download', async (req, res) => {
+  const { lyricsDownloader } = await db.lyrics()
   const { track, sleepTime, getCached, site, save } = req.body
   let lyrics
   if (site) {

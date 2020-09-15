@@ -1,17 +1,9 @@
 const router = require('./router')()
 
-import { SpotifyApi, limit, createApi } from '../scripts/spotify'
-import LyricsDownloader from '../scripts/download'
-import LyricsDb from '../scripts/lyrics_db'
-const createTable = require('../scripts/db/tables')
-
-let lyricsDb: LyricsDb
-let lyricsDownloader: LyricsDownloader
-
-createTable('./mongo-client', 'lyrics').then(({ lyricTable }) => {
-  lyricsDb = new LyricsDb(lyricTable)
-  lyricsDownloader = new LyricsDownloader(lyricsDb)
-})
+import { SpotifyApi, createApi } from '../scripts/spotify'
+import { Track } from '../client/src/track'
+const { v4: uuid } = require('uuid')
+const db = require('../scripts/db/databases')
 
 router.get('/', async (req, res) => {
   var spotifyApi: SpotifyApi = createApi(req)
@@ -20,6 +12,36 @@ router.get('/', async (req, res) => {
   offset = offset && parseInt(offset)
   let playlists = await spotifyApi.getUserPlaylists({ limit, offset })
   res.json(playlists)
+})
+
+router.post('/', async (req, res) => {
+  const playlistText = req.body.playlist
+  const name = req.body.name
+  const lines = playlistText.match(/[^\r\n]+/g)
+  const tracks = lines.map((l) => ({ ...Track.parse(l), id: uuid() }))
+  const playlist = {
+    id: uuid(),
+    name,
+    tracks,
+  }
+  const { playlistsDb } = await db.playlists()
+  await playlistsDb.insert(playlist)
+  res.json({ playlist })
+})
+
+router.get('/custom', async (req, res) => {
+  const { playlistsDb } = await db.playlists()
+  const playlists = await playlistsDb.get()
+  res.json({ playlists })
+})
+
+router.get('/:id/custom', async (req, res) => {
+  const { playlistsDb } = await db.playlists()
+  const playlists = (await playlistsDb.get(req.params.id)) || []
+  let { tracks } = playlists[0] || {}
+  const { lyricsDb } = await db.lyrics()
+  tracks = await lyricsDb.queryPlaylist((tracks || []).map(Track.copy))
+  res.json({ tracks })
 })
 
 router.get('/currently-playing', async (req, res) => {
@@ -37,6 +59,7 @@ router.get('/currently-playing', async (req, res) => {
 })
 
 router.get('/:uri', async (req, res) => {
+  const { lyricsDb } = await db.lyrics()
   var spotifyApi: SpotifyApi = createApi(req)
   const { uri } = req.params
   let { offset } = req.query

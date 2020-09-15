@@ -3,6 +3,7 @@ import { Track, createTrack } from '../client/src/track'
 const fs = require('fs')
 const { get, post, put } = require('axios')
 const qs = require('qs')
+const config = require('../config')
 
 const scopes = [
   'user-read-currently-playing',
@@ -31,10 +32,10 @@ export class SpotifyApi {
     host: string,
     tokens?: { accessToken?: string; refreshToken?: string }
   ) {
-    host = host || process.env.ENDPOINT
+    host = host || config.endpoint
     this.api = new SpotifyWebApi({
-      clientId: process.env.SPOTIFY_KEY,
-      clientSecret: process.env.SPOTIFY_SECRET,
+      clientId: config.spotifyKey,
+      clientSecret: config.spotifySecret,
       redirectUri: host + '/authorized',
     })
     tokens = tokens || {}

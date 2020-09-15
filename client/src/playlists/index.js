@@ -8,18 +8,30 @@ import PlaylistContext from '../playlist/playlist-context'
 
 function Playlists({ getFreshToken }) {
   const [playlists, setPlaylists] = useState([])
+  const [customPlaylists, setCustomPlaylists] = useState([])
   const [offset, setOffset] = useState()
   const searchRef = useRef(null)
   const mobile = !useMediaQuery('(min-width:600px)')
-  const { setTrackId, playlist, setPlaylist, setRadio } = useContext(
-    PlaylistContext
-  )
+  const {
+    setTrackId,
+    playlist,
+    setPlaylist,
+    setRadio,
+    setCustomPlaylist,
+  } = useContext(PlaylistContext)
 
   function init() {
     setOffset(0)
+    getCustomPlaylists()
     setInterval(() => {
       getFreshToken()
     }, 3600 * 1000)
+  }
+
+  function getCustomPlaylists() {
+    get('playlists/custom').then(({ data: { playlists } }) => {
+      setCustomPlaylists(playlists)
+    })
   }
 
   useEffect(getPlaylists, [offset])
@@ -48,8 +60,14 @@ function Playlists({ getFreshToken }) {
   function onPlaylistClick(playlist) {
     if (playlist) {
       setTrackId(null)
-      setPlaylist(playlist.uri)
       setRadio(null)
+      if (playlist.uri) {
+        setCustomPlaylist(null)
+        setPlaylist(playlist.uri)
+      } else if (playlist.id) {
+        setPlaylist(null)
+        setCustomPlaylist(playlist.id)
+      }
     }
   }
 
@@ -93,7 +111,7 @@ function Playlists({ getFreshToken }) {
       {!mobile && (
         <Grid item>
           <PlaylistsList
-            playlists={playlists}
+            playlists={[...customPlaylists, ...playlists]}
             onPlaylistClick={onPlaylistClick}
           />
         </Grid>

@@ -7,6 +7,7 @@ export default PlaylistContext
 export function PlaylistProvider(props) {
   const [playlist, setPlaylist] = useState()
   const [radio, setRadio] = useState()
+  const [customPlaylist, setCustomPlaylist] = useState()
   const [track, setTrack] = useState()
   const [trackId, setTrackId] = useState('')
   const [tracks, setTracks] = useState([])
@@ -16,6 +17,8 @@ export function PlaylistProvider(props) {
     setPlaylist,
     radio,
     setRadio,
+    customPlaylist,
+    setCustomPlaylist,
     track,
     setTrack,
     trackId,

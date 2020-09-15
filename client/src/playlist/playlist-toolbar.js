@@ -9,6 +9,7 @@ import {
   FormControl,
   Select,
   MenuItem,
+  Divider,
   useMediaQuery,
 } from '@material-ui/core'
 import CheckMenuItem from '../CheckMenuItem'
@@ -25,6 +26,7 @@ import { Track } from '../track'
 import PlayerContext from './player-context'
 import { getCookie } from '../cookie'
 import PlaylistContext from './playlist-context'
+import CustomPlaylist from './custom-playlist'
 
 const sleepTime = 3000
 
@@ -176,6 +178,8 @@ export default function PlaylistToolbar({
                 filterKey="hideArtist"
                 name="Hide artist"
               />
+              <Divider></Divider>
+              <CustomPlaylist closeMenu={closeMenu}></CustomPlaylist>
             </Menu>
           </Grid>
         </>

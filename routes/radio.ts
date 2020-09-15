@@ -1,16 +1,10 @@
 const router = require('./router')()
 const { get } = require('axios')
-import LyricsDb from '../scripts/lyrics_db'
-const createTable = require('../scripts/db/tables')
 import { Track } from '../client/src/track'
-
-let lyricsDb: LyricsDb
-
-createTable('./mongo-client', 'lyrics').then(({ lyricTable }) => {
-  lyricsDb = new LyricsDb(lyricTable)
-})
+const db = require('../scripts/db/databases')
 
 router.get('/fip', async (req, res) => {
+  const { lyricsDb } = await db.lyrics()
   const { data } = await get('https://api.radiofrance.fr/livemeta/pull/7')
   const { steps, levels } = data
   const { items, position } = levels[0]

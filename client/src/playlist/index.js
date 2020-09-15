@@ -12,7 +12,29 @@ export default function Playlist({
   lyricsFullscreen,
 }) {
   const [trackIdToDownload, setTrackIdToDownload] = useState()
-  const { setTrackId, radio, setTracks } = useContext(PlaylistContext)
+  const { setTrackId, radio, customPlaylist, setTracks } = useContext(
+    PlaylistContext
+  )
+
+  useEffect(showCustomPlaylist, [customPlaylist])
+
+  function showCustomPlaylist() {
+    if (customPlaylist) {
+      setTracks([])
+      get(`/playlists/${customPlaylist}/custom`).then(
+        ({ data: { tracks } }) => {
+          if (!tracks) return
+          setTracks(tracks.map(Track.copy))
+          setTrackId(tracks[0].id)
+          post('/spotify/search', { tracks }).then(
+            ({ data: { tracks: foundTracks } }) => {
+              setTracks((foundTracks || []).map(Track.copy))
+            }
+          )
+        }
+      )
+    }
+  }
 
   useEffect(showCurrentlyOnFip, [radio])
 
