@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react'
+import React, { useRef, useState, useContext } from 'react'
 import { TextField } from '@material-ui/core'
 
 import {
@@ -13,15 +13,41 @@ import {
   Button,
 } from '@material-ui/core'
 import { List } from '@material-ui/icons'
-import { post } from '../server'
+import { post, put } from '../server'
+import PlaylistContext from './playlist-context'
+import LibraryContext from '../library/library-context'
 
-export default function CustomPlaylist({ closeMenu }) {
+export default function CustomPlaylist({ closeMenu, edit }) {
   const [modalOpen, setModalOpen] = useState(false)
+  const [isValid, setIsValid] = useState(false)
   const nameref = useRef(null)
   const playlistref = useRef(null)
+  const { tracks, setTracks, customPlaylist: id } = useContext(PlaylistContext)
+  const { customPlaylists, setCustomPlaylists } = useContext(LibraryContext)
+  const customPlaylist = customPlaylists.find((p) => p.id === id)
 
-  function sendCustomPlaylist(playlist, name) {
-    post('/playlists', { playlist, name })
+  async function addOrEditCustomPlaylist(tracksString, name) {
+    let playlist
+    if (edit) {
+      const { data } = await put('/playlists/custom', {
+        id: id,
+        tracksString,
+        name,
+      })
+      playlist = data.playlist
+      customPlaylist.name = playlist.name
+      customPlaylist.tracks = playlist.tracks
+      setCustomPlaylists([...customPlaylists])
+    } else {
+      const { data } = await post('/playlists/custom', {
+        tracksString,
+        name,
+      })
+      playlist = data.playlist
+      setCustomPlaylists([...customPlaylists, playlist])
+    }
+    setTracks(playlist.tracks)
+
     closeDialog()
   }
 
@@ -30,23 +56,34 @@ export default function CustomPlaylist({ closeMenu }) {
     closeMenu()
   }
 
-  return (
+  function validateInputs() {
+    setIsValid(
+      nameref.current.value.trim() !== '' &&
+        playlistref.current.value.trim() !== ''
+    )
+  }
+
+  const title = `${edit ? 'Edit' : 'Add'} Custom playlist`
+
+  return !edit || id ? (
     <>
       <MenuItem onClick={() => setModalOpen(true)}>
         <ListItemIcon>
           <List fontSize="small" />
         </ListItemIcon>
-        <ListItemText primary="Custom playlist" />
+        <ListItemText primary={title} />
       </MenuItem>
       <Dialog open={modalOpen} onClose={closeDialog} fullWidth>
-        <DialogTitle>Add custom playlist</DialogTitle>
+        <DialogTitle>{title}</DialogTitle>
         <DialogContent>
           <Grid container direction="column" alignItems="stretch">
             <Grid item>
               <TextField
                 label="Playlist name"
                 fullWidth
+                onChange={validateInputs}
                 inputRef={nameref}
+                defaultValue={customPlaylist && customPlaylist.name}
               ></TextField>
             </Grid>
             <Grid item>
@@ -55,6 +92,10 @@ export default function CustomPlaylist({ closeMenu }) {
                 fullWidth
                 multiline
                 rows={18}
+                onChange={validateInputs}
+                defaultValue={
+                  edit && tracks.map((t) => t.toString()).join('\n')
+                }
                 inputRef={playlistref}
               ></TextField>
             </Grid>
@@ -64,8 +105,9 @@ export default function CustomPlaylist({ closeMenu }) {
           <Button onClick={closeDialog}>Cancel</Button>
           <Button
             autoFocus
+            disabled={!isValid}
             onClick={() =>
-              sendCustomPlaylist(
+              addOrEditCustomPlaylist(
                 playlistref.current.value,
                 nameref.current.value
               )
@@ -76,5 +118,7 @@ export default function CustomPlaylist({ closeMenu }) {
         </DialogActions>
       </Dialog>
     </>
+  ) : (
+    <></>
   )
 }

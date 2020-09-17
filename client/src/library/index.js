@@ -5,10 +5,9 @@ import Autocomplete from '@material-ui/lab/Autocomplete'
 import { get } from '../server'
 import PlaylistsList from './List'
 import PlaylistContext from '../playlist/playlist-context'
+import LibraryContext from './library-context'
 
-function Playlists({ getFreshToken }) {
-  const [playlists, setPlaylists] = useState([])
-  const [customPlaylists, setCustomPlaylists] = useState([])
+export default function Library({ getFreshToken }) {
   const [offset, setOffset] = useState()
   const searchRef = useRef(null)
   const mobile = !useMediaQuery('(min-width:600px)')
@@ -19,6 +18,12 @@ function Playlists({ getFreshToken }) {
     setRadio,
     setCustomPlaylist,
   } = useContext(PlaylistContext)
+  const {
+    playlists,
+    setPlaylists,
+    customPlaylists,
+    setCustomPlaylists,
+  } = useContext(LibraryContext)
 
   function init() {
     setOffset(0)
@@ -119,5 +124,3 @@ function Playlists({ getFreshToken }) {
     </Grid>
   )
 }
-
-export default Playlists

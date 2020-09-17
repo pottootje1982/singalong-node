@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import Playlists from './playlists'
+import Library from './library'
 import Playlist from './playlist'
 import Lyrics from './lyrics'
 import { Grid, useMediaQuery } from '@material-ui/core'
@@ -53,7 +53,7 @@ function App() {
       }}
     >
       <Grid item xs style={{ display: lyricsFullscreen && 'none' }}>
-        <Playlists getFreshToken={getFreshToken}></Playlists>
+        <Library getFreshToken={getFreshToken}></Library>
       </Grid>
       <Grid item xs={lyricsFullscreen || mobile ? 12 : 8}>
         <Grid

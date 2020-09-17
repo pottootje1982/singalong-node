@@ -207,6 +207,12 @@ export class SpotifyApi {
   transferPlayback(id: string) {
     return this.put(`${base}/me/player`, { device_ids: [id] })
   }
+
+  async owner() {
+    const { body } = await this.api.getMe()
+    const { id: owner } = body || {}
+    return owner
+  }
 }
 
 let cachedFileToken

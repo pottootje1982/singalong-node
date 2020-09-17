@@ -40,6 +40,12 @@ export function del(...params) {
   })
 }
 
+export function put(...params) {
+  return axios.put(...params).catch(({ response }) => {
+    if (response && response.status === 401) window.location = '/'
+  })
+}
+
 axios.setToken = setToken
 
 export default axios

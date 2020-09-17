@@ -179,6 +179,10 @@ export default function PlaylistToolbar({
               />
               <Divider></Divider>
               <CustomPlaylist closeMenu={closeMenu}></CustomPlaylist>
+              <CustomPlaylist
+                closeMenu={closeMenu}
+                edit={true}
+              ></CustomPlaylist>
             </Menu>
           </Grid>
         </>
