@@ -3,13 +3,12 @@
 ## Bugs
 
 - enable switching playlist switching when monitor mode is on (then you can also enable monitoring on startup)
-- Playlist autocomplete hiding mobile
 - Cannot start selected song mobile
 - Playlist autocomplete hiding mobile
+- cancel getting tracks when switching playlists
 
 ## Improvements
 
-- Player on top
 - get playlists without lyrics first to improve responsiveness
 - consider using material ui Alert for exception coming from server
 - virtualization playlist? tried react-window, doesn't work nicely

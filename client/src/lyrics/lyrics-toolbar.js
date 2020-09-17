@@ -3,10 +3,12 @@ import { IconButton, Tooltip } from '@material-ui/core'
 import { get, post } from '../server'
 import { Grid } from '@material-ui/core'
 import { Fullscreen, FullscreenExit, QueueMusic } from '@material-ui/icons'
+
 import { Track } from '../track'
 import LyricsMenu from './lyrics-menu'
-import PlayerContext from '../playlist/player-context'
+import PlayerContext from './player-context'
 import PlaylistContext from '../playlist/playlist-context'
+import Player from './player'
 
 export default function LyricsToolbar({
   lyricsFullscreen,
@@ -77,6 +79,7 @@ export default function LyricsToolbar({
           downloadLyrics={downloadLyrics}
         />
       </Grid>
+      <Player />
     </>
   )
 }

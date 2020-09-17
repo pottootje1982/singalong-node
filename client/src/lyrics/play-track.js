@@ -1,7 +1,7 @@
 import { useContext } from 'react'
 import server from '../server'
 import PlayerContext from './player-context'
-import PlaylistContext from './playlist-context'
+import PlaylistContext from '../playlist/playlist-context'
 
 export default function usePlayTrack({ tracks }) {
   const { playlist, radio } = useContext(PlaylistContext)

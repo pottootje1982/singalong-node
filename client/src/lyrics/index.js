@@ -20,7 +20,7 @@ export default function Lyrics({
 
   const trackToDisplay = track || new Track({})
   return (
-    <Grid container spacing={1} direction="column" alignItems="stretch">
+    <Grid container item spacing={1} direction="column" alignItems="stretch">
       <Grid container item alignItems="center" spacing={1}>
         <LyricsToolbar
           lyricsFullscreen={lyricsFullscreen}

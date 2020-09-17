@@ -75,9 +75,9 @@ export default function Tracks({
     <List
       key={playlist}
       style={{
-        maxHeight: '40vh',
-        overflow: 'auto',
-        display: (mobile || lyricsFullscreen) && 'none',
+        maxHeight: !mobile && '40vh',
+        overflow: !mobile && 'auto',
+        display: lyricsFullscreen && 'none',
       }}
       dense
     >

@@ -7,7 +7,7 @@ import CheckMenuItem from '../CheckMenuItem'
 import { Track } from '../track'
 import CustomSearch from './custom-search'
 import IconMenuItem from './icon-menu-item'
-import PlayerContext from '../playlist/player-context'
+import PlayerContext from './player-context'
 import PlaylistContext from '../playlist/playlist-context'
 
 export default function LyricsMenu({

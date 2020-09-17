@@ -56,23 +56,25 @@ function App() {
         <Playlists getFreshToken={getFreshToken}></Playlists>
       </Grid>
       <Grid item xs={lyricsFullscreen || mobile ? 12 : 8}>
-        <Grid container direction={'column'} spacing={1} alignItems="stretch">
-          <Grid item>
-            <Lyrics
-              token={token}
-              lyricsFullscreen={lyricsFullscreen}
-              setLyricsFullscreen={setLyricsFullscreen}
-              trackFilters={trackFilters}
-            ></Lyrics>
-          </Grid>
-          <Grid item>
-            <Playlist
-              lyricsFullscreen={lyricsFullscreen}
-              token={token}
-              trackFilters={trackFilters}
-              setTrackFilters={setTrackFilters}
-            ></Playlist>
-          </Grid>
+        <Grid
+          container
+          direction={lyricsFullscreen ? 'column-reverse' : 'column'}
+          justify={lyricsFullscreen ? 'flex-end' : 'flex-start'}
+          spacing={1}
+          alignItems="stretch"
+        >
+          <Lyrics
+            token={token}
+            lyricsFullscreen={lyricsFullscreen}
+            setLyricsFullscreen={setLyricsFullscreen}
+            trackFilters={trackFilters}
+          ></Lyrics>
+          <Playlist
+            lyricsFullscreen={lyricsFullscreen}
+            token={token}
+            trackFilters={trackFilters}
+            setTrackFilters={setTrackFilters}
+          ></Playlist>
         </Grid>
       </Grid>
     </Grid>

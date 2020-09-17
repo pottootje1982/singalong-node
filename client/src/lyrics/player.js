@@ -5,7 +5,7 @@ import { SkipPrevious, SkipNext, PlayArrow, Pause } from '@material-ui/icons'
 import { post } from '../server'
 import usePlayTrack from './play-track'
 import PlayerContext from './player-context'
-import PlaylistContext from './playlist-context'
+import PlaylistContext from '../playlist/playlist-context'
 
 export default function Player() {
   const { track } = useContext(PlaylistContext)
@@ -53,7 +53,7 @@ export default function Player() {
   }
 
   return (
-    <Grid container alignItems="center">
+    <>
       <Grid item>
         <IconButton size="small" onClick={() => playerCommand('previous')}>
           <SkipPrevious />
@@ -87,6 +87,6 @@ export default function Player() {
       <Grid item>
         <Typography variant="caption">{valuetext(duration)}</Typography>
       </Grid>
-    </Grid>
+    </>
   )
 }

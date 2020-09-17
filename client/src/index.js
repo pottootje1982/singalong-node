@@ -5,7 +5,7 @@ import App from './App'
 import Authorize, { Authorized } from './authorize'
 import * as serviceWorker from './serviceWorker'
 import { BrowserRouter as Router, Route, Redirect } from 'react-router-dom'
-import { PlayerProvider } from './playlist/player-context'
+import { PlayerProvider } from './lyrics/player-context'
 import { PlaylistProvider } from './playlist/playlist-context'
 
 ReactDOM.render(

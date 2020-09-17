@@ -5,7 +5,7 @@ import red from '@material-ui/core/colors/red'
 import orange from '@material-ui/core/colors/orange'
 import { IconButton, ListItem, ListItemText } from '@material-ui/core'
 import { PlayArrow, PlaylistAdd } from '@material-ui/icons'
-import usePlayTrack from './play-track'
+import usePlayTrack from '../lyrics/play-track'
 import PlaylistContext from './playlist-context'
 
 export default function PlaylistItem({

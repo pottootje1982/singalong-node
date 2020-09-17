@@ -21,9 +21,8 @@ import {
 } from '@material-ui/icons'
 import ToggleButton from '@material-ui/lab/ToggleButton'
 import Autocomplete from '@material-ui/lab/Autocomplete'
-import Player from './player'
 import { Track } from '../track'
-import PlayerContext from './player-context'
+import PlayerContext from '../lyrics/player-context'
 import { getCookie } from '../cookie'
 import PlaylistContext from './playlist-context'
 import CustomPlaylist from './custom-playlist'
@@ -243,8 +242,6 @@ export default function PlaylistToolbar({
           </FormControl>
         </Grid>
       )}
-
-      <Player />
     </Grid>
   )
 }
