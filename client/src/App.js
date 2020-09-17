@@ -6,6 +6,7 @@ import { Grid, useMediaQuery } from '@material-ui/core'
 import { Redirect } from 'react-router-dom'
 import { getCookie } from './cookie'
 import server, { get } from './server'
+import CssBaseline from '@material-ui/core/CssBaseline'
 
 function App() {
   const [lyricsFullscreen, setLyricsFullscreen] = useState(false)
@@ -44,40 +45,43 @@ function App() {
 
   window.history.pushState('', '', '/main')
   return token ? (
-    <Grid
-      container
-      spacing={1}
-      style={{
-        margin: 0,
-        width: '98%',
-      }}
-    >
-      <Grid item xs style={{ display: lyricsFullscreen && 'none' }}>
-        <Library getFreshToken={getFreshToken}></Library>
-      </Grid>
-      <Grid item xs={lyricsFullscreen || mobile ? 12 : 8}>
-        <Grid
-          container
-          direction={lyricsFullscreen ? 'column-reverse' : 'column'}
-          justify={lyricsFullscreen ? 'flex-end' : 'flex-start'}
-          spacing={1}
-          alignItems="stretch"
-        >
-          <Lyrics
-            token={token}
-            lyricsFullscreen={lyricsFullscreen}
-            setLyricsFullscreen={setLyricsFullscreen}
-            trackFilters={trackFilters}
-          ></Lyrics>
-          <Playlist
-            lyricsFullscreen={lyricsFullscreen}
-            token={token}
-            trackFilters={trackFilters}
-            setTrackFilters={setTrackFilters}
-          ></Playlist>
+    <>
+      <CssBaseline />
+      <Grid
+        container
+        spacing={1}
+        style={{
+          margin: 0,
+          width: '98%',
+        }}
+      >
+        <Grid item xs style={{ display: lyricsFullscreen && 'none' }}>
+          <Library getFreshToken={getFreshToken}></Library>
+        </Grid>
+        <Grid item xs={lyricsFullscreen || mobile ? 12 : 8}>
+          <Grid
+            container
+            direction={lyricsFullscreen ? 'column-reverse' : 'column'}
+            justify={lyricsFullscreen ? 'flex-end' : 'flex-start'}
+            spacing={1}
+            alignItems="stretch"
+          >
+            <Lyrics
+              token={token}
+              lyricsFullscreen={lyricsFullscreen}
+              setLyricsFullscreen={setLyricsFullscreen}
+              trackFilters={trackFilters}
+            ></Lyrics>
+            <Playlist
+              lyricsFullscreen={lyricsFullscreen}
+              token={token}
+              trackFilters={trackFilters}
+              setTrackFilters={setTrackFilters}
+            ></Playlist>
+          </Grid>
         </Grid>
       </Grid>
-    </Grid>
+    </>
   ) : (
     <React.Fragment />
   )

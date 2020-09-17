@@ -9,6 +9,7 @@ import CustomSearch from './custom-search'
 import IconMenuItem from './icon-menu-item'
 import PlayerContext from './player-context'
 import PlaylistContext from '../playlist/playlist-context'
+import ThemeContext from '../theme-context'
 
 export default function LyricsMenu({
   lyricsRef,
@@ -18,10 +19,14 @@ export default function LyricsMenu({
 }) {
   const [anchorEl, setAnchorEl] = useState()
   const [currentlyPlayingProbe, setCurrentlyPlayingProbe] = useState()
+  const [darkMode, setDarkMode] = useState(
+    window.localStorage.getItem('dark-or-light') === 'dark'
+  )
   const { showCurrentlyPlaying, setShowCurrentlyPlaying } = useContext(
     PlayerContext
   )
   const { track, setTrack } = useContext(PlaylistContext)
+  const { setThemeName } = useContext(ThemeContext)
 
   useEffect(setOrClearProbe, [showCurrentlyPlaying])
   useEffect(initMonitoring, [])
@@ -77,6 +82,12 @@ export default function LyricsMenu({
     downloadLyrics(track)
   }
 
+  function saveDarkMode() {
+    setThemeName(darkMode ? 'dark' : 'light')
+  }
+
+  useEffect(saveDarkMode, [darkMode])
+
   return (
     <>
       <IconButton
@@ -130,6 +141,13 @@ export default function LyricsMenu({
           trackFilters={trackFilters}
           downloadLyrics={downloadLyrics}
           closeMenu={closeMenu}
+        />
+        <Divider />
+        <CheckMenuItem
+          setter={setDarkMode}
+          checked={darkMode}
+          name="Dark mode"
+          close={closeMenu}
         />
       </Menu>
     </>

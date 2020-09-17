@@ -8,21 +8,24 @@ import { BrowserRouter as Router, Route, Redirect } from 'react-router-dom'
 import { PlayerProvider } from './lyrics/player-context'
 import { PlaylistProvider } from './playlist/playlist-context'
 import { LibraryProvider } from './library/library-context'
+import { ThemeProvider } from './theme-context'
 
 ReactDOM.render(
   <LibraryProvider>
-    <PlaylistProvider>
-      <PlayerProvider>
-        <Router>
-          <Route exact path="/">
-            <Redirect to="/authorize"></Redirect>
-          </Route>
-          <Route path="/authorized" component={Authorized}></Route>
-          <Route path="/authorize" component={Authorize}></Route>
-          <Route path="/main" component={App}></Route>
-        </Router>{' '}
-      </PlayerProvider>
-    </PlaylistProvider>
+    <ThemeProvider>
+      <PlaylistProvider>
+        <PlayerProvider>
+          <Router>
+            <Route exact path="/">
+              <Redirect to="/authorize"></Redirect>
+            </Route>
+            <Route path="/authorized" component={Authorized}></Route>
+            <Route path="/authorize" component={Authorize}></Route>
+            <Route path="/main" component={App}></Route>
+          </Router>{' '}
+        </PlayerProvider>
+      </PlaylistProvider>
+    </ThemeProvider>
   </LibraryProvider>,
   document.getElementById('root')
 )

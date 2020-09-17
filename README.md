@@ -4,8 +4,8 @@
 
 - enable switching playlist switching when monitor mode is on (then you can also enable monitoring on startup)
 - Cannot start selected song mobile
-- Playlist autocomplete hiding mobile
 - cancel getting tracks when switching playlists
+- Playlist autocomplete hiding mobile
 
 ## Improvements
 
@@ -15,7 +15,5 @@
 
 ## Features
 
-- custom playlists
 - sorting of playlist
 - put playlist in address bar
-- dark mode
