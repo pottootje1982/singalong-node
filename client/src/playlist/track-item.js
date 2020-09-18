@@ -3,12 +3,17 @@ import server from '../server'
 import green from '@material-ui/core/colors/green'
 import red from '@material-ui/core/colors/red'
 import orange from '@material-ui/core/colors/orange'
-import { IconButton, ListItem, ListItemText } from '@material-ui/core'
+import {
+  IconButton,
+  ListItem,
+  ListItemText,
+  useMediaQuery,
+} from '@material-ui/core'
 import { PlayArrow, PlaylistAdd } from '@material-ui/icons'
 import usePlayTrack from '../lyrics/play-track'
 import PlaylistContext from './playlist-context'
 
-export default function PlaylistItem({
+export default function TrackItem({
   track,
   selectTrackId,
   trackFilters,
@@ -16,6 +21,8 @@ export default function PlaylistItem({
 }) {
   const { trackId, radio, playlist, tracks } = useContext(PlaylistContext)
   const playTrack = usePlayTrack({ tracks })
+
+  const mobile = !useMediaQuery('(min-width:600px)')
 
   function addTrackToPlaylist(uri) {
     server.post(`/playlists/${playlist}/tracks`, { uris: [uri] })
@@ -25,7 +32,7 @@ export default function PlaylistItem({
     <ListItem
       button
       selected={track.id === trackId}
-      autoFocus={track.id === trackId}
+      autoFocus={!mobile && track.id === trackId}
       onClick={() => selectTrackId(track)}
     >
       <div style={{ display: 'flex', flexDirection: 'row' }}>

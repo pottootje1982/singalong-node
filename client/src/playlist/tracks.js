@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useContext } from 'react'
 import { get } from '../server'
 import { List, useMediaQuery } from '@material-ui/core'
-import PlaylistItem from './playlist-item'
+import TrackItem from './track-item'
 import isEquivalent from '../isEquivalent'
 import { Track } from '../track'
 import PlaylistContext from './playlist-context'
@@ -91,7 +91,7 @@ export default function Tracks({
       {tracks
         .filter((t) => !trackFilters.isNotDownloaded || !t.lyrics)
         .map((t, index) => (
-          <PlaylistItem
+          <TrackItem
             key={index}
             track={t}
             selectTrackId={selectTrackId}
