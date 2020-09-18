@@ -1,7 +1,7 @@
 import LyricsDb from './lyrics_db'
 var assert = require('assert')
 import { Track, simpleTrack } from '../client/src/track'
-const createTable = require('./db/tables')
+const db = require('./db/databases')
 
 describe('Lyrics DB', () => {
   let lyricsDb: LyricsDb
@@ -15,9 +15,13 @@ describe('Lyrics DB', () => {
   }
 
   beforeEach(async () => {
-    const { lyricTable } = await createTable('./mongo-client', 'testLyrics')
-    lyricsDb = new LyricsDb(lyricTable)
+    const dbs = await db.lyrics('./mongo-client', 'testLyrics')
+    lyricsDb = dbs.lyricsDb
     await lyricsDb.removeAll()
+  })
+
+  afterEach(async () => {
+    return lyricsDb.close()
   })
 
   it('Insert and get Beatles lyrics', async () => {

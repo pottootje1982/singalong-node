@@ -6,7 +6,6 @@
 - Cannot start selected song mobile
 - cancel getting tracks when switching playlists
 - Playlist autocomplete hiding mobile
-- close databases after use in node
 - show also custom playlists in autocomplete
 
 ## Improvements

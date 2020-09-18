@@ -46,7 +46,7 @@ var defaultConnector = './mongo-client';
 function createDb(connector) {
     return require(connector || defaultConnector)();
 }
-function lyrics(connector) {
+function lyrics(connector, tableName) {
     return __awaiter(this, void 0, void 0, function () {
         var db, lyricTable, lyricsDb, lyricsDownloader;
         return __generator(this, function (_a) {
@@ -54,7 +54,7 @@ function lyrics(connector) {
                 case 0: return [4 /*yield*/, createDb(connector)];
                 case 1:
                     db = _a.sent();
-                    lyricTable = new LyricsTable(db);
+                    lyricTable = new LyricsTable(db, tableName);
                     lyricsDb = new lyrics_db_1.default(lyricTable);
                     lyricsDownloader = new download_1.default(lyricsDb);
                     return [2 /*return*/, { lyricsDb: lyricsDb, lyricsDownloader: lyricsDownloader }];

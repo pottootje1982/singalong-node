@@ -12,9 +12,9 @@ function createDb(connector) {
   return require(connector || defaultConnector)()
 }
 
-async function lyrics(connector) {
+async function lyrics(connector, tableName) {
   const db = await createDb(connector)
-  const lyricTable = new LyricsTable(db)
+  const lyricTable = new LyricsTable(db, tableName)
   const lyricsDb = new LyricsDb(lyricTable)
   const lyricsDownloader = new LyricsDownloader(lyricsDb)
   return { lyricsDb, lyricsDownloader }

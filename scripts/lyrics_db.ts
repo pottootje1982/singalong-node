@@ -9,6 +9,7 @@ function regExp(text: string) {
 }
 
 export default class LyricsDb {
+  [x: string]: any
   removeAll() {
     return this.lyricsTable.remove()
   }
@@ -125,5 +126,9 @@ export default class LyricsDb {
         title: foundTrack.title,
       })
     }
+  }
+
+  close() {
+    return this.lyricsTable.close()
   }
 }

@@ -114,4 +114,8 @@ export default class LyricsDownloader {
     }
     return track
   }
+
+  close() {
+    return this.lyricsDb.close()
+  }
 }
