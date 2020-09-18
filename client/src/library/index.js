@@ -9,6 +9,7 @@ import LibraryContext from './library-context'
 
 export default function Library({ getFreshToken }) {
   const [offset, setOffset] = useState()
+  const [allPlaylists, setAllPlaylists] = useState()
   const searchRef = useRef(null)
   const mobile = !useMediaQuery('(min-width:600px)')
   const {
@@ -80,6 +81,10 @@ export default function Library({ getFreshToken }) {
     setPlaylist(playlists[0] && playlists[0].uri)
   }, [playlists, setPlaylist])
 
+  useEffect(() => {
+    setAllPlaylists([...customPlaylists, ...playlists])
+  }, [playlists, customPlaylists])
+
   const selectedPlaylist = playlists.find((p) => p.uri === playlist)
 
   return (
@@ -98,7 +103,7 @@ export default function Library({ getFreshToken }) {
             value={selectedPlaylist}
             onChange={(_, p) => onPlaylistClick(p)}
             autoHighlight
-            options={playlists}
+            options={allPlaylists}
             getOptionLabel={(option) => option.name}
             style={{ width: mobile && 300 }}
             size="small"
@@ -116,7 +121,7 @@ export default function Library({ getFreshToken }) {
       {!mobile && (
         <Grid item>
           <LibraryList
-            playlists={[...customPlaylists, ...playlists]}
+            playlists={allPlaylists}
             onPlaylistClick={onPlaylistClick}
           />
         </Grid>

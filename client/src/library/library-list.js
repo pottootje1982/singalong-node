@@ -10,16 +10,15 @@ import ConfirmationDialog from './confirmation-dialog'
 
 function PlaylistItem({
   item,
-  index,
   playlist,
   onClick,
   showConfirmation,
   customPlaylist,
 }) {
   const isCustom = !item.uri
+
   return (
     <ListItem
-      key={index}
       button
       style={{ color: !item.uri && purple[300] }}
       selected={playlist === item.uri || customPlaylist === item.id}
@@ -69,8 +68,8 @@ export default function LibraryList({ playlists, onPlaylistClick }) {
       <List dense style={{ maxHeight: '80vh', overflow: 'auto' }}>
         {playlists.map((p, index) => (
           <PlaylistItem
+            key={index}
             item={p}
-            index={index}
             playlist={playlist}
             onClick={onPlaylistClick}
             customPlaylist={customPlaylist}

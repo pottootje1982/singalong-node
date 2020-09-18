@@ -12,7 +12,7 @@ export default function Playlist({
   lyricsFullscreen,
 }) {
   const [trackIdToDownload, setTrackIdToDownload] = useState()
-  const { setTrackId, radio, customPlaylist, setTracks } = useContext(
+  const { setTrackId, radio, customPlaylist, setTracks, playlist } = useContext(
     PlaylistContext
   )
 
@@ -72,6 +72,7 @@ export default function Playlist({
       </Grid>
       <Grid item>
         <Tracks
+          key={playlist}
           trackFilters={trackFilters}
           lyricsFullscreen={lyricsFullscreen}
           selectTrackId={selectTrackId}

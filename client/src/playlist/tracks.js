@@ -22,12 +22,20 @@ export default function Tracks({
     setTracks,
   } = useContext(PlaylistContext)
   const [offset, setOffset] = useState()
+  const [unmounted, setUnmounted] = useState(false)
   const mobile = !useMediaQuery('(min-width:600px)')
 
   useEffect(selectTrack, [trackId])
   useEffect(addTracks, [offset])
   useEffect(refreshPlaylist, [track])
   useEffect(showPlaylist, [playlist])
+  useEffect(() => {
+    return unmount
+  }, [])
+
+  function unmount() {
+    setUnmounted(true)
+  }
 
   function showPlaylist() {
     if (playlist) {
@@ -60,7 +68,7 @@ export default function Tracks({
     } else if (playlist && offset >= 0) {
       get(`playlists/${playlist}`, { params: { offset } })
         .then(({ data: { tracks: newTracks, hasMore } }) => {
-          if (!newTracks || newTracks.length === 0) return
+          if (!newTracks || newTracks.length === 0 || unmounted) return
           newTracks = [...tracks, ...newTracks]
           setTracks(newTracks.map(Track.copy))
           if (!trackId && offset === 0 && newTracks[0])
@@ -73,7 +81,6 @@ export default function Tracks({
 
   return (
     <List
-      key={playlist}
       style={{
         maxHeight: !mobile && '40vh',
         overflow: !mobile && 'auto',
