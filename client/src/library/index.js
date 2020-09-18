@@ -3,7 +3,7 @@ import { Grid, TextField, useMediaQuery } from '@material-ui/core'
 import { Button } from '../Styled'
 import Autocomplete from '@material-ui/lab/Autocomplete'
 import { get } from '../server'
-import PlaylistsList from './List'
+import LibraryList from './library-list'
 import PlaylistContext from '../playlist/playlist-context'
 import LibraryContext from './library-context'
 
@@ -115,7 +115,7 @@ export default function Library({ getFreshToken }) {
       </Grid>
       {!mobile && (
         <Grid item>
-          <PlaylistsList
+          <LibraryList
             playlists={[...customPlaylists, ...playlists]}
             onPlaylistClick={onPlaylistClick}
           />

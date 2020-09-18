@@ -48,6 +48,13 @@ router.get('/:id/custom', async (req, res) => {
   res.json({ tracks })
 })
 
+router.delete('/:id/custom', async (req, res) => {
+  const { playlistsDb } = await db.playlists()
+  await playlistsDb.remove(req.params.id)
+  db.close()
+  res.status(204)
+})
+
 router.get('/currently-playing', async (req, res) => {
   var spotifyApi: SpotifyApi = createApi(req)
   const playing = await spotifyApi.api.getMyCurrentPlayingTrack()

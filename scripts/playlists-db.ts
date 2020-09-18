@@ -41,4 +41,12 @@ export default class PlaylistsDb {
     await this.playlistsTable.update({ id }, playlist)
     return playlist
   }
+
+  remove(id: string): Promise<any> {
+    return this.playlistsTable.remove({ id })
+  }
+
+  close() {
+    this.playlistsTable.close()
+  }
 }
