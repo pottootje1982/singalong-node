@@ -12,10 +12,11 @@ import {
   DialogActions,
   Button,
 } from '@material-ui/core'
-import { List } from '@material-ui/icons'
+import { List, Edit } from '@material-ui/icons'
 import { post, put } from '../server'
 import PlaylistContext from './playlist-context'
 import LibraryContext from '../library/library-context'
+import { Track } from '../track'
 
 export default function CustomPlaylist({ closeMenu, edit }) {
   const [modalOpen, setModalOpen] = useState(false)
@@ -46,7 +47,7 @@ export default function CustomPlaylist({ closeMenu, edit }) {
       playlist = data.playlist
       setCustomPlaylists([...customPlaylists, playlist])
     }
-    setTracks(playlist.tracks)
+    setTracks(playlist.tracks.map(Track.copy))
 
     closeDialog()
   }
@@ -69,7 +70,7 @@ export default function CustomPlaylist({ closeMenu, edit }) {
     <>
       <MenuItem onClick={() => setModalOpen(true)}>
         <ListItemIcon>
-          <List fontSize="small" />
+          {edit ? <Edit fontSize="small" /> : <List fontSize="small" />}
         </ListItemIcon>
         <ListItemText primary={title} />
       </MenuItem>

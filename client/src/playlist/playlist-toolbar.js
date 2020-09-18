@@ -114,7 +114,7 @@ export default function PlaylistToolbar({
   }
 
   function setAdjacentTrack(offset) {
-    const index = tracks.indexOf(track)
+    const index = tracks.indexOf(tracks.find((t) => t.id === trackId))
     const adjacentTrack = tracks[index + offset]
     if (adjacentTrack) setTrackId(adjacentTrack.id)
   }

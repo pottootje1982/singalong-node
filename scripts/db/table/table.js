@@ -25,6 +25,7 @@ module.exports = class Table {
   }
 
   close() {
+    this.db.client.close()
     this.db.close()
   }
 }
