@@ -188,13 +188,11 @@ export default function PlaylistToolbar({
         </>
       )}
 
-      {mobile && (
-        <Grid item>
-          <IconButton size="small" onClick={() => setAdjacentTrack(-1)}>
-            <NavigateBefore />
-          </IconButton>
-        </Grid>
-      )}
+      <Grid item>
+        <IconButton size="small" onClick={() => setAdjacentTrack(-1)}>
+          <NavigateBefore />
+        </IconButton>
+      </Grid>
 
       <Grid item>
         {track && (
@@ -215,14 +213,14 @@ export default function PlaylistToolbar({
           />
         )}
       </Grid>
-      {mobile && (
-        <Grid item>
-          <IconButton size="small" onClick={() => setAdjacentTrack(1)}>
-            <NavigateNext />
-          </IconButton>
-        </Grid>
-      )}
-      {device && (
+
+      <Grid item>
+        <IconButton size="small" onClick={() => setAdjacentTrack(1)}>
+          <NavigateNext />
+        </IconButton>
+      </Grid>
+
+      {!(mobile && lyricsFullscreen) && device && (
         <Grid item>
           <FormControl variant="outlined" size="small">
             <InputLabel id="device-select">Device:</InputLabel>

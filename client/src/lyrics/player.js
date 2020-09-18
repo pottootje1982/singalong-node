@@ -73,13 +73,12 @@ export default function Player() {
       <Grid item>
         <Typography variant="caption">{valuetext(playPosition)}</Typography>
       </Grid>
-      <Grid item>
+      <Grid item xs>
         <Slider
           min={0}
           value={playPosition}
           max={duration}
           step={1}
-          style={{ width: 150, marginLeft: 10, marginRight: 10 }}
           getAriaValueText={valuetext}
           onChange={onPlayPositionClick}
         />
