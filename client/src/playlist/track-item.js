@@ -10,8 +10,9 @@ import {
   useMediaQuery,
 } from '@material-ui/core'
 import { PlayArrow, PlaylistAdd } from '@material-ui/icons'
-import usePlayTrack from '../lyrics/play-track'
+import usePlayTrack from '../lyrics/player-hooks'
 import PlaylistContext from './playlist-context'
+import PlayerContext from '../lyrics/player-context'
 
 export default function TrackItem({
   track,
@@ -19,8 +20,9 @@ export default function TrackItem({
   trackFilters,
   trackIdToDownload,
 }) {
-  const { trackId, radio, playlist, tracks } = useContext(PlaylistContext)
-  const playTrack = usePlayTrack({ tracks })
+  const { trackId, radio, playlist } = useContext(PlaylistContext)
+  const { setMonitorCurrentlyPlaying } = useContext(PlayerContext)
+  const playTrack = usePlayTrack()
 
   const mobile = !useMediaQuery('(min-width:600px)')
 
@@ -28,12 +30,17 @@ export default function TrackItem({
     server.post(`/playlists/${playlist}/tracks`, { uris: [uri] })
   }
 
+  function onClickTrack(track) {
+    setMonitorCurrentlyPlaying(false)
+    selectTrackId(track)
+  }
+
   return (
     <ListItem
       button
       selected={track.id === trackId}
       autoFocus={!mobile && track.id === trackId}
-      onClick={() => selectTrackId(track)}
+      onClick={() => onClickTrack(track)}
     >
       <div style={{ display: 'flex', flexDirection: 'row' }}>
         {track.uri && (

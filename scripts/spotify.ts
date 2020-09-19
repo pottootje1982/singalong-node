@@ -6,12 +6,15 @@ const qs = require('qs')
 const config = require('../config')
 
 const scopes = [
+  'user-read-email',
+  'user-read-private',
   'user-read-currently-playing',
   'user-read-playback-state',
   'playlist-read-private',
   'user-modify-playback-state',
   'playlist-modify-public',
   'playlist-modify-private',
+  'streaming',
 ]
 const state = 'some-state-of-my-choice'
 const base = 'https://api.spotify.com/v1'

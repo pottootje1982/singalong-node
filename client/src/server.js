@@ -6,42 +6,62 @@ axios.defaults.baseURL =
     ? 'http://local.host:5000'
     : 'https://singalongify.herokuapp.com'
 axios.defaults.headers.post['Content-Type'] = 'application/json;charset=utf-8'
-axios.defaults.headers.post['Access-Control-Allow-Origin'] = '*'
-axios.defaults.headers.post['X-Requested-With'] = 'XMLHttpRequest'
+//axios.defaults.headers.post['Access-Control-Allow-Origin'] = '*'
+//axios.defaults.headers.post['X-Requested-With'] = 'XMLHttpRequest'
 //axios.defaults.withCredentials = true
-axios.defaults.headers.common['accessToken'] = getCookie('accessToken')
-axios.defaults.headers.common['refreshToken'] = getCookie('refreshToken')
+
+let defaultAxios = createDefault()
+export let spotifyAxios = createSpotifyAxios()
+
+function createDefault() {
+  return axios.create({
+    baseURL: axios.defaults.baseURL,
+    headers: {
+      accessToken: getCookie('accessToken'),
+      refreshToken: getCookie('refreshToken'),
+    },
+  })
+}
+
+function createSpotifyAxios() {
+  return axios.create({
+    baseURL: 'https://api.spotify.com/v1',
+    headers: {
+      Authorization: `Bearer ${getCookie('accessToken')}`,
+    },
+  })
+}
 
 export function setToken(tokens) {
   const { access_token, refresh_token, expires_in } = tokens
-  axios.defaults.headers.common['accessToken'] = access_token
   setCookie('accessToken', access_token, expires_in / 3600)
   if (refresh_token) {
-    axios.defaults.headers.common['refreshToken'] = refresh_token
     setCookie('refreshToken', refresh_token)
   }
+  defaultAxios = createDefault()
+  spotifyAxios = createSpotifyAxios()
 }
 
 export function get(...params) {
-  return axios.get(...params).catch(({ response }) => {
+  return defaultAxios.get(...params).catch(({ response }) => {
     if (response && response.status === 401) window.location = '/'
   })
 }
 
 export function post(...params) {
-  return axios.post(...params).catch(({ response }) => {
+  return defaultAxios.post(...params).catch(({ response }) => {
     if (response && response.status === 401) window.location = '/'
   })
 }
 
 export function del(...params) {
-  return axios.delete(...params).catch(({ response }) => {
+  return defaultAxios.delete(...params).catch(({ response }) => {
     if (response && response.status === 401) window.location = '/'
   })
 }
 
 export function put(...params) {
-  return axios.put(...params).catch(({ response }) => {
+  return defaultAxios.put(...params).catch(({ response }) => {
     if (response && response.status === 401) window.location = '/'
   })
 }

@@ -6,6 +6,7 @@ import { get } from '../server'
 import LibraryList from './library-list'
 import PlaylistContext from '../playlist/playlist-context'
 import LibraryContext from './library-context'
+import PlayerContext from '../lyrics/player-context'
 
 export default function Library({ getFreshToken }) {
   const [offset, setOffset] = useState()
@@ -25,6 +26,7 @@ export default function Library({ getFreshToken }) {
     customPlaylists,
     setCustomPlaylists,
   } = useContext(LibraryContext)
+  const { setMonitorCurrentlyPlaying, player } = useContext(PlayerContext)
 
   function init() {
     setOffset(0)
@@ -65,6 +67,7 @@ export default function Library({ getFreshToken }) {
 
   function onPlaylistClick(playlist) {
     if (playlist) {
+      setMonitorCurrentlyPlaying(false)
       setTrackId(null)
       setRadio(null)
       if (playlist.uri) {
@@ -78,14 +81,15 @@ export default function Library({ getFreshToken }) {
   }
 
   useEffect(() => {
-    setPlaylist(playlists[0] && playlists[0].uri)
-  }, [playlists, setPlaylist])
+    if (player) setPlaylist(playlists[0] && playlists[0].uri)
+  }, [playlists, setPlaylist, player])
 
   useEffect(() => {
     setAllPlaylists([...customPlaylists, ...playlists])
   }, [playlists, customPlaylists])
 
-  const selectedPlaylist = playlists.find((p) => p.uri === playlist)
+  const selectedPlaylist =
+    playlists.find((p) => p.uri === playlist) || playlists[0]
 
   return (
     <Grid
@@ -103,7 +107,7 @@ export default function Library({ getFreshToken }) {
             value={selectedPlaylist}
             onChange={(_, p) => onPlaylistClick(p)}
             autoHighlight
-            options={allPlaylists}
+            options={selectedPlaylist ? allPlaylists : []}
             getOptionLabel={(option) => option.name}
             style={{ width: mobile && 300 }}
             size="small"

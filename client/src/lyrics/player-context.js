@@ -1,31 +1,39 @@
 import React, { useState, useEffect, createContext } from 'react'
-import { setCookie } from '../cookie'
 
 const PlayerContext = createContext()
 
 export default PlayerContext
 
 export function PlayerProvider(props) {
-  const [playPosition, setPlayPosition] = useState(0)
+  const [player, setPlayer] = useState()
   const [isPlaying, setIsPlaying] = useState()
-  const [showCurrentlyPlaying, setShowCurrentlyPlaying] = useState()
+  const [monitorCurrentlyPlaying, setMonitorCurrentlyPlaying] = useState(true)
   const [device, setDevice] = useState()
+  const [currentlyPlaying, setCurrentlyPlaying] = useState()
+  const [playPosition, setPlayPosition] = useState(0)
+  const [duration, setDuration] = useState(0)
 
   function storeDevice() {
-    if (device) setCookie('lastPlayingDevice', device.id)
+    if (device) localStorage.setItem('lastPlayingDevice', device.id)
   }
 
   useEffect(storeDevice, [device])
 
   const values = {
-    playPosition,
-    setPlayPosition,
     isPlaying,
     setIsPlaying,
-    showCurrentlyPlaying,
-    setShowCurrentlyPlaying,
+    monitorCurrentlyPlaying,
+    setMonitorCurrentlyPlaying,
     device,
     setDevice,
+    currentlyPlaying,
+    setCurrentlyPlaying,
+    player,
+    setPlayer,
+    playPosition,
+    setPlayPosition,
+    duration,
+    setDuration,
   }
 
   return (

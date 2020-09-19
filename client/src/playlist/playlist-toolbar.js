@@ -23,7 +23,6 @@ import ToggleButton from '@material-ui/lab/ToggleButton'
 import Autocomplete from '@material-ui/lab/Autocomplete'
 import { Track } from '../track'
 import PlayerContext from '../lyrics/player-context'
-import { getCookie } from '../cookie'
 import PlaylistContext from './playlist-context'
 import CustomPlaylist from './custom-playlist'
 
@@ -40,6 +39,7 @@ export default function PlaylistToolbar({
   const { track, setTrack, trackId, setTrackId, tracks } = useContext(
     PlaylistContext
   )
+  const { device, setDevice, player } = useContext(PlayerContext)
 
   const [anchorEl, setAnchorEl] = useState()
   const [deviceOpen, setDeviceOpen] = useState(false)
@@ -48,23 +48,29 @@ export default function PlaylistToolbar({
   const [tracksToDownload, setTracksToDownload] = useState([])
   const mobile = !useMediaQuery('(min-width:600px)')
   const trackFound = tracks.find((t) => t.id === trackId)
-  const { device, setDevice } = useContext(PlayerContext)
 
   const getDevices = () => {
-    get('/player/devices').then(({ data: { devices } }) => {
-      devices = devices || []
-      setDevices(devices)
-      const lastSelectedDeviceId = getCookie('lastPlayingDevice')
-      const lastSelectedDevice = devices.find(
-        (d) => d.id === lastSelectedDeviceId
-      )
-      setDevice(
-        devices.find((d) => d.is_active) || lastSelectedDevice || devices[0]
-      )
-    })
+    if (player) {
+      get('/player/devices').then(({ data: { devices } }) => {
+        devices = devices || []
+        setDevices([{ id: player._options.id, name: 'Web player' }, ...devices])
+      })
+    }
   }
 
-  useEffect(getDevices, [])
+  useEffect(getDevices, [player])
+
+  function selectDevice() {
+    const lastSelectedDeviceId = localStorage.getItem('lastPlayingDevice')
+    const lastSelectedDevice = devices.find(
+      (d) => d.id === lastSelectedDeviceId
+    )
+    setDevice(
+      devices.find((d) => d.is_active) || lastSelectedDevice || devices[0]
+    )
+  }
+
+  useEffect(selectDevice, [devices])
 
   function closeMenu() {
     setAnchorEl(null)
@@ -201,7 +207,7 @@ export default function PlaylistToolbar({
             value={track}
             onChange={(_, t) => selectTrackId(t)}
             autoHighlight
-            options={trackFound ? tracks : []}
+            options={track && trackFound ? tracks : []}
             noOptionsText=""
             getOptionLabel={(t) => t.toString(trackFilters)}
             getOptionSelected={(option, value) => option.id === trackId}

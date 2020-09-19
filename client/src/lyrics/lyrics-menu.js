@@ -14,41 +14,17 @@ import ThemeContext from '../theme-context'
 export default function LyricsMenu({
   lyricsRef,
   trackFilters,
-  showCurrentlyPlayingTrack,
   downloadLyrics,
 }) {
   const [anchorEl, setAnchorEl] = useState()
-  const [currentlyPlayingProbe, setCurrentlyPlayingProbe] = useState()
   const [darkMode, setDarkMode] = useState(
     window.localStorage.getItem('dark-or-light') === 'dark'
   )
-  const { showCurrentlyPlaying, setShowCurrentlyPlaying } = useContext(
+  const { monitorCurrentlyPlaying, setMonitorCurrentlyPlaying } = useContext(
     PlayerContext
   )
   const { track, setTrack } = useContext(PlaylistContext)
   const { setThemeName } = useContext(ThemeContext)
-
-  useEffect(setOrClearProbe, [showCurrentlyPlaying])
-  useEffect(initMonitoring, [])
-
-  // Start monitoring on startup if Spotify is already playing
-  function initMonitoring() {
-    showCurrentlyPlayingTrack().then((track) => {
-      if (track && track.is_playing) {
-        setShowCurrentlyPlaying(true)
-      }
-    })
-  }
-
-  function setOrClearProbe() {
-    closeMenu()
-    if (showCurrentlyPlaying) {
-      const probe = setInterval(showCurrentlyPlayingTrack, 1000)
-      setCurrentlyPlayingProbe(probe)
-    } else {
-      clearInterval(currentlyPlayingProbe)
-    }
-  }
 
   function saveLyrics() {
     const lyrics = lyricsRef.current.value
@@ -110,8 +86,8 @@ export default function LyricsMenu({
         onClose={closeMenu}
       >
         <CheckMenuItem
-          setter={setShowCurrentlyPlaying}
-          checked={showCurrentlyPlaying}
+          setter={setMonitorCurrentlyPlaying}
+          checked={monitorCurrentlyPlaying}
           name="Monitor currently playing track"
           close={closeMenu}
         />
