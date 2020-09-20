@@ -2,6 +2,7 @@ import React, { useContext, useEffect, useState } from 'react'
 import { IconButton } from '@material-ui/core'
 import { Grid, Slider, Typography } from '@material-ui/core'
 import { SkipPrevious, SkipNext, PlayArrow, Pause } from '@material-ui/icons'
+
 import { spotifyAxios } from '../server'
 import usePlayTrack, { useUpdatePlayingTrack } from './player-hooks'
 import PlayerContext from './player-context'
@@ -17,6 +18,7 @@ export default function Player() {
     setIsPlaying,
     currentlyPlaying,
     monitorCurrentlyPlaying,
+    setMonitorCurrentlyPlaying,
     playPosition,
     setPlayPosition,
     duration,
@@ -134,6 +136,7 @@ export default function Player() {
     }
     setSeeking(false)
     setIsPlaying(!isPlaying)
+    setMonitorCurrentlyPlaying(true)
   }
 
   async function spotifyCommand(command) {

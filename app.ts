@@ -5,7 +5,6 @@ import path = require('path')
 import authorize from './routes/authorize'
 import playlists from './routes/playlists'
 import lyrics from './routes/lyrics'
-import player from './routes/player'
 import radio from './routes/radio'
 import spotify from './routes/spotify'
 var bodyParser = require('body-parser')
@@ -31,7 +30,6 @@ app.use(cors())
 app.use('/authorize', authorize)
 app.use('/playlists', playlists)
 app.use('/lyrics', lyrics)
-app.use('/player', player)
 app.use('/radio', radio)
 app.use('/spotify', spotify)
 

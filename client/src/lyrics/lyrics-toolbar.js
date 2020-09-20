@@ -1,14 +1,13 @@
 import React, { useEffect, useContext } from 'react'
-import { IconButton, Tooltip } from '@material-ui/core'
+import { IconButton } from '@material-ui/core'
 import { post } from '../server'
 import { Grid } from '@material-ui/core'
-import { Fullscreen, FullscreenExit, QueueMusic } from '@material-ui/icons'
+import { Fullscreen, FullscreenExit } from '@material-ui/icons'
 
 import { Track } from '../track'
 import LyricsMenu from './lyrics-menu'
 import PlaylistContext from '../playlist/playlist-context'
 import Player from './player'
-import { useUpdatePlayingTrack } from './player-hooks'
 
 export default function LyricsToolbar({
   lyricsFullscreen,
@@ -18,11 +17,6 @@ export default function LyricsToolbar({
   lyricsRef,
 }) {
   const { track, setTrack } = useContext(PlaylistContext)
-  const updateCurrentlyPlaying = useUpdatePlayingTrack()
-
-  function showCurrentlyPlayingTrack() {
-    updateCurrentlyPlaying()
-  }
 
   useEffect(() => {
     if (track) setLyrics(track.lyrics)
@@ -50,16 +44,6 @@ export default function LyricsToolbar({
         >
           {lyricsFullscreen ? <FullscreenExit /> : <Fullscreen />}
         </IconButton>
-      </Grid>
-      <Grid item>
-        <Tooltip
-          title="Show currently playing track on Spotify"
-          aria-label="add"
-        >
-          <IconButton size="small" onClick={() => showCurrentlyPlayingTrack()}>
-            <QueueMusic />
-          </IconButton>
-        </Tooltip>
       </Grid>
       <Grid item>
         <LyricsMenu

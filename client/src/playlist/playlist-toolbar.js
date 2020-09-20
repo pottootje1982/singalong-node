@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useContext } from 'react'
-import { get, post } from '../server'
+import { post } from '../server'
 import {
   Menu,
   IconButton,
@@ -21,10 +21,12 @@ import {
 } from '@material-ui/icons'
 import ToggleButton from '@material-ui/lab/ToggleButton'
 import Autocomplete from '@material-ui/lab/Autocomplete'
+
 import { Track } from '../track'
 import PlayerContext from '../lyrics/player-context'
 import PlaylistContext from './playlist-context'
 import CustomPlaylist from './custom-playlist'
+import { spotifyAxios } from '../server'
 
 const sleepTime = 3000
 
@@ -39,7 +41,9 @@ export default function PlaylistToolbar({
   const { track, setTrack, trackId, setTrackId, tracks } = useContext(
     PlaylistContext
   )
-  const { device, setDevice, player } = useContext(PlayerContext)
+  const { device, setDevice, player, setMonitorCurrentlyPlaying } = useContext(
+    PlayerContext
+  )
 
   const [anchorEl, setAnchorEl] = useState()
   const [deviceOpen, setDeviceOpen] = useState(false)
@@ -51,9 +55,9 @@ export default function PlaylistToolbar({
 
   const getDevices = () => {
     if (player) {
-      get('/player/devices').then(({ data: { devices } }) => {
+      spotifyAxios.get('/me/player/devices').then(({ data: { devices } }) => {
         devices = devices || []
-        setDevices([{ id: player._options.id, name: 'Web player' }, ...devices])
+        setDevices(devices)
       })
     }
   }
@@ -120,6 +124,7 @@ export default function PlaylistToolbar({
   }
 
   function setAdjacentTrack(offset) {
+    setMonitorCurrentlyPlaying(false)
     const index = tracks.indexOf(tracks.find((t) => t.id === trackId))
     const adjacentTrack = tracks[index + offset]
     if (adjacentTrack) setTrackId(adjacentTrack.id)

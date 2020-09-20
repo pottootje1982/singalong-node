@@ -26,7 +26,12 @@ export default function Library({ getFreshToken }) {
     customPlaylists,
     setCustomPlaylists,
   } = useContext(LibraryContext)
-  const { setMonitorCurrentlyPlaying, player } = useContext(PlayerContext)
+  const {
+    monitorCurrentlyPlaying,
+    setMonitorCurrentlyPlaying,
+    player,
+    isPlaying,
+  } = useContext(PlayerContext)
 
   function init() {
     setOffset(0)
@@ -80,9 +85,12 @@ export default function Library({ getFreshToken }) {
     }
   }
 
-  useEffect(() => {
-    if (player) setPlaylist(playlists[0] && playlists[0].uri)
-  }, [playlists, setPlaylist, player])
+  function selectFirstPlaylist() {
+    if (player && !(isPlaying && monitorCurrentlyPlaying))
+      setPlaylist(playlists[0] && playlists[0].uri)
+  }
+
+  useEffect(selectFirstPlaylist, [playlists, setPlaylist, player])
 
   useEffect(() => {
     setAllPlaylists([...customPlaylists, ...playlists])

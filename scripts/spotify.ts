@@ -176,22 +176,6 @@ export class SpotifyApi {
     )
   }
 
-  async getCurrentlyPlayingTrack() {
-    const currentTrack = await this.api.getMyCurrentPlayingTrack()
-    const track: any =
-      currentTrack && currentTrack.body && currentTrack.body.item
-        ? Track.fromSpotify(currentTrack.body.item)
-        : {}
-    const { body } = currentTrack || {}
-    const { context, item } = body || {}
-    const uri = (context && context.uri) || (item && item.uri)
-    if (track) {
-      track.progress_ms = currentTrack.body.progress_ms
-      track.is_playing = currentTrack.body.is_playing
-    }
-    return { track, uri: this.reformatUri(uri) }
-  }
-
   async getUserPlaylists(options: {
     limit: number
     offset: number
@@ -201,14 +185,6 @@ export class SpotifyApi {
       options
     )
     return { playlists, hasMore }
-  }
-
-  devices() {
-    return this.get(`${base}/me/player/devices`)
-  }
-
-  transferPlayback(id: string) {
-    return this.put(`${base}/me/player`, { device_ids: [id] })
   }
 
   async owner() {
