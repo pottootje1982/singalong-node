@@ -44,6 +44,7 @@ export abstract class LyricsSearchEngine {
     var lyrics = this.replaceInLyrics($)
     if (lyrics == null) return null
     var result = lyrics.text().trim()
+    if (result === '') return null
     this.textReplacements.forEach((replacement) => {
       result = result.replace(replacement[0], replacement[1])
     })

@@ -86,7 +86,7 @@ export default class LyricsDownloader {
       var searchEngine = this.engines[key]
       try {
         lyrics = await this.engines[key].searchLyrics(track.artist, track.title)
-        if (lyrics && lyrics !== '') {
+        if (lyrics) {
           searchEngineName = searchEngine.name
           console.log(
             'Found lyrics:\n' +
@@ -110,7 +110,7 @@ export default class LyricsDownloader {
     track.lyrics = lyrics
     if (lyrics && searchEngineName && save !== false) {
       console.log(`Saving ${track.toString()} to db`)
-      this.lyricsDb.updateOrInsert(track, lyrics)
+      await this.lyricsDb.updateOrInsert(track, lyrics)
     }
     return track
   }

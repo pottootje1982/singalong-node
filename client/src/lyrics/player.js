@@ -113,10 +113,7 @@ export default function Player() {
   }
 
   useEffect(monitorUpdated, [monitorCurrentlyPlaying])
-
   useEffect(deviceUpdated, [device, currentlyPlayingDevice])
-
-  useEffect(updateCurrentlyPlaying, [track])
 
   function onPlayPositionClick(_, value) {
     setPlayPosition(value)
