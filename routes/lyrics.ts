@@ -14,7 +14,7 @@ router.get('/', async (req, res) => {
 router.post('/', async (req, res) => {
   const { lyricsDb } = await db.lyrics()
   const track = Track.copy(req.body.track)
-  lyricsDb.updateOrInsert(track, req.body.lyrics)
+  await lyricsDb.updateOrInsert(track, req.body.lyrics)
   lyricsDb.close()
   res.status(200)
 })

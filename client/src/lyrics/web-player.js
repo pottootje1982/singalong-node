@@ -34,15 +34,19 @@ export default function WebPlayer({ setPlayerState }) {
     // Error handling
     player.addListener('initialization_error', ({ message }) => {
       console.error(message)
+      setPlayer('initialization_error')
     })
     player.addListener('authentication_error', ({ message }) => {
       console.error(message)
+      setPlayer('authentication_error')
     })
     player.addListener('account_error', ({ message }) => {
       console.error(message)
+      setPlayer('account_error')
     })
     player.addListener('playback_error', ({ message }) => {
       console.error(message)
+      setPlayer('playback_error')
     })
 
     // Playback status updates

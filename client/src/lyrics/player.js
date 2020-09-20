@@ -136,10 +136,17 @@ export default function Player() {
     setMonitorCurrentlyPlaying(true)
   }
 
+  function sleep(ms) {
+    return new Promise((resolve) => setTimeout(resolve, ms))
+  }
+
   async function spotifyCommand(command) {
     setSeeking(true)
     await spotifyAxios.post(`/me/player/${command}`)
     setSeeking(false)
+    await update()
+    await sleep(1000)
+    // repeat to make sure new track is displayed
     update()
   }
 
@@ -150,12 +157,13 @@ export default function Player() {
   }
 
   function isWebPlayback() {
-    return (device && device.id) === (player && player._options.id)
+    const { _options } = player || {}
+    return (device && device.id) === (_options && _options.id)
   }
 
   function update() {
     if (!isWebPlayback()) {
-      updateCurrentlyPlaying()
+      return updateCurrentlyPlaying()
     }
   }
 
