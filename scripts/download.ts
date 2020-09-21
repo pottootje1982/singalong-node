@@ -17,7 +17,7 @@ const snooze = (ms: number, deviation: number = 0, offset: number = 0) => {
 }
 
 export default class LyricsDownloader {
-  engines: { [engineKey: string]: LyricsSearchEngine }
+  public engines: { [engineKey: string]: LyricsSearchEngine }
   lyricsDb: LyricsDb
 
   constructor(lyricsDb: LyricsDb) {
@@ -88,13 +88,6 @@ export default class LyricsDownloader {
         lyrics = await this.engines[key].searchLyrics(track.artist, track.title)
         if (lyrics) {
           searchEngineName = searchEngine.name
-          console.log(
-            'Found lyrics:\n' +
-              lyrics.substr(0, 100) +
-              '\nwith: ' +
-              searchEngineName +
-              '\n'
-          )
           engineIndex = index
         } else {
           console.log(
@@ -105,11 +98,9 @@ export default class LyricsDownloader {
         console.log(error)
       }
     }
-    console.log('\n')
     track.site = searchEngineName
     track.lyrics = lyrics
     if (lyrics && searchEngineName && save !== false) {
-      console.log(`Saving ${track.toString()} to db`)
       await this.lyricsDb.updateOrInsert(track, lyrics)
     }
     return track

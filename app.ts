@@ -1,6 +1,7 @@
 ﻿import debug = require('debug')
 import express = require('express')
 import path = require('path')
+import { AddressInfo } from 'net'
 
 import authorize from './routes/authorize'
 import playlists from './routes/playlists'
@@ -51,5 +52,7 @@ app.use((err: any, req, res, next) => {
 app.set('port', process.env.PORT || 5000)
 
 var server = app.listen(app.get('port'), function () {
-  debug('Express server listening on port ' + server.address().port)
+  debug(
+    'Express server listening on port ' + (server.address() as AddressInfo).port
+  )
 })

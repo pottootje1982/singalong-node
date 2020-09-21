@@ -8,7 +8,8 @@
       "type": "node",
       "request": "launch",
       "name": "NodeJS",
-      "program": "${workspaceFolder}/app.js"
+      "program": "${workspaceFolder}/app.js",
+      "console": "integratedTerminal"
     },
     {
       "type": "chrome",

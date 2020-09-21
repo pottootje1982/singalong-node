@@ -1,41 +1,37 @@
-﻿import assert = require('assert')
+﻿const assert = require('assert')
 import LyricsDownloader from './download'
-import { LyricsSearchEngine } from './LyricsEngines/LyricsSearchEngine'
+import { MusixMatchEngine } from './LyricsEngines/MusixMatchEngine'
 import { Track, simpleTrack } from '../client/src/track'
 import { MetroLyricsEngine } from './LyricsEngines/MetroLyricsEngine'
+const createDb = require('./db/mongo-client')
+const LyricsTable = require('./db/table/lyrics')
 
 import LyricsDb from './lyrics_db'
-const createTable = require('./db/tables')
 
 describe('Downloading lyrics', () => {
   let lyricsDb: LyricsDb
   let lyricsDownloader: LyricsDownloader
-  var engine: LyricsSearchEngine
+  let engine: MusixMatchEngine
 
   function insertTrack(artist, title, lyrics, site?: string) {
     return lyricsDb.insert(new Track({ artist, title, site }), lyrics)
   }
 
-  before(async () => {
-    const { lyricTable } = await createTable('./mongo-client', 'testLyrics')
-    lyricsDb = new LyricsDb(lyricTable)
-    await lyricsDb.removeAll()
+  beforeEach(async () => {
+    engine = new MusixMatchEngine()
+    const client = await createDb(global.__MONGO_URI__)
+    const table = new LyricsTable(client)
+    lyricsDb = new LyricsDb(table)
     lyricsDownloader = new LyricsDownloader(lyricsDb)
-    engine = lyricsDownloader.engines['MusixMatch']
+  })
+
+  afterEach(async () => {
+    await lyricsDb.close()
   })
 
   it('Search Euson - Leon', async () => {
     var content = await engine.searchLyrics('Euson', 'Leon')
     assert.equal(content, null)
-  })
-
-  it('Search Beatles Genius', async function () {
-    this.timeout(5000)
-    var content = await lyricsDownloader.engines['Genius'].searchLyrics(
-      'beatles',
-      'yellow submarine'
-    )
-    assert(content.indexOf('In the town where I was born') >= 0, content)
   })
 
   it('Search Beatles MusixMatch', async () => {
@@ -44,22 +40,6 @@ describe('Downloading lyrics', () => {
       'yellow submarine'
     )
     assert(content.indexOf('In the town where I was born') >= 0, content)
-  })
-
-  it('Search Beatles AZ', async () => {
-    var content = await lyricsDownloader.engines['AzLyrics'].searchLyrics(
-      'beatles',
-      'yellow submarine'
-    )
-    assert(content.indexOf('In the town where I was born') >= 0, content)
-  })
-
-  it('Search with LyricsFreak', async () => {
-    var content = await lyricsDownloader.engines['LyricsFreak'].searchLyrics(
-      'Bonnie Raitt',
-      'Angel from Montgomery'
-    )
-    assert(content.indexOf('I am an old woman\n') > -1)
   })
 
   it('Search unexisting lyrics', async () => {
@@ -130,12 +110,12 @@ describe('Downloading lyrics', () => {
       playlist[1].lyrics.indexOf('In the town where I was born') >= 0,
       "Yellow submarine wasn't found"
     )
-    assert.equal('MusixMatch', playlist[1].site)
+    assert.equal(playlist[1].site, 'AzLyrics')
 
     assert(
       playlist[2].lyrics.indexOf("Imagine there's no heaven") >= 0,
       "Imagine there's no heaven wasn't found"
     )
-    assert.equal('MusixMatch', playlist[2].site)
+    assert.equal(playlist[2].site, 'MusixMatch')
   })
 })

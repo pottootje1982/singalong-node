@@ -6,8 +6,8 @@
 /routes/*.map
 /scripts/LyricsEngines/*.js
 /scripts/LyricsEngines/*.map
-/scripts/*.js
-/scripts/*.map
+/scripts/**/*.js
+/scripts/**/*.map
 /*.js
 /*.map
 .npmrc

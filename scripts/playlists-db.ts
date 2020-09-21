@@ -10,8 +10,8 @@ export default class PlaylistsDb {
 
   async get(owner: string, id?: string): Promise<any> {
     const playlists = await (id
-      ? this.playlistsTable.get({ id, owner })
-      : this.playlistsTable.get({ owner }))
+      ? this.playlistsTable.find({ id, owner })
+      : this.playlistsTable.find({ owner }))
     return playlists.map((p) => ({ ...p, tracks: p.tracks.map(Track.copy) }))
   }
 
@@ -32,18 +32,18 @@ export default class PlaylistsDb {
   ): Promise<any> {
     const playlist = this.parse(uuid(), tracksString, name)
     playlist.owner = owner
-    await this.playlistsTable.store(playlist)
+    await this.playlistsTable.insertOne(playlist)
     return playlist
   }
 
   async update(id: string, tracksString: string, name: string): Promise<any> {
     const playlist = this.parse(id, tracksString, name)
-    await this.playlistsTable.update({ id }, playlist)
+    await this.playlistsTable.findOneAndUpdate({ id }, playlist)
     return playlist
   }
 
   remove(id: string): Promise<any> {
-    return this.playlistsTable.remove({ id })
+    return this.playlistsTable.delete({ id })
   }
 
   close() {

@@ -1,10 +1,10 @@
 {
   "files.exclude": {
-    //"**/*.js": true,
-    "scripts/LyricsEngines/*.js": true,
+    "scripts/**/*.js": true,
+    "*.js": true,
     "routes/*.js": true,
     "scripts/*.js": true,
     "**/*.js.map": true
   },
-  "mocha.parallelTests": 1
+  "jestrunner.disableCodeLens": true
 }

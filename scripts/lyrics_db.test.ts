@@ -1,10 +1,10 @@
-import LyricsDb from './lyrics_db'
-var assert = require('assert')
 import { Track, simpleTrack } from '../client/src/track'
-const db = require('./db/databases')
+import createDb from './db/mongo-client'
+import LyricsTable from './db/table/lyrics'
+import LyricsDb from './lyrics_db'
 
 describe('Lyrics DB', () => {
-  let lyricsDb: LyricsDb
+  let lyricsDb
 
   function insertTrack(artist, title, lyrics, id?) {
     return lyricsDb.insert(new Track({ artist, title, id }), lyrics)
@@ -14,14 +14,18 @@ describe('Lyrics DB', () => {
     return new Track({ id, artist, title })
   }
 
-  beforeEach(async () => {
-    const dbs = await db.lyrics('./mongo-client', 'testLyrics')
-    lyricsDb = dbs.lyricsDb
-    await lyricsDb.removeAll()
+  beforeAll(async () => {
+    const client = await createDb(global.__MONGO_URI__)
+    const table = new LyricsTable(client)
+    lyricsDb = new LyricsDb(table)
   })
 
-  afterEach(async () => {
-    return lyricsDb.close()
+  beforeEach(async () => {
+    await lyricsDb.lyricsTable.deleteAll()
+  })
+
+  afterAll(async () => {
+    await lyricsDb.close()
   })
 
   it('Insert and get Beatles lyrics', async () => {
@@ -32,7 +36,7 @@ describe('Lyrics DB', () => {
       '1234'
     )
     var tracks = await lyricsDb.query('The Beatles', 'Yellow Submarine')
-    assert(tracks[0].lyrics.indexOf('In the town where I was born') >= 0)
+    expect(tracks[0].lyrics).toEqual('In the town where I was born')
   })
 
   it('Get Beatles lyrics like', async () => {
@@ -51,14 +55,14 @@ describe('Lyrics DB', () => {
 
     var tracks = await lyricsDb.query('The Beatles 2', 'Submarine')
 
-    assert.equal(tracks[0].artist, 'The Beatles 2')
-    assert.equal(tracks[0].id, '5678')
-    assert(tracks[0].lyrics.indexOf('In the town where I was born') >= 0)
+    expect(tracks[0].artist).toEqual('The Beatles 2')
+    expect(tracks[0].id).toEqual('5678')
+    expect(tracks[0].lyrics).toEqual('In the town where I was born')
 
     tracks = await lyricsDb.query('The Beatles', 'Submarine', '1234')
-    assert.equal(tracks[0].artist, 'The Beatles')
-    assert.equal(tracks[0].id, '1234')
-    assert(tracks[0].lyrics.indexOf('In the town where I was born') >= 0)
+    expect(tracks[0].artist).toEqual('The Beatles')
+    expect(tracks[0].id).toEqual('1234')
+    expect(tracks[0].lyrics).toEqual('In the town where I was born')
   })
 
   it('Matches on id', async () => {
@@ -77,11 +81,11 @@ describe('Lyrics DB', () => {
     var track = await lyricsDb.queryTrack(
       trackWithId('1', 'Nils Landgren', 'Christmas Song')
     )
-    assert(track.lyrics.indexOf('Chestnuts roasting on an open fire') >= 0)
+    expect(track.lyrics).toEqual('Chestnuts roasting on an open fire')
     var track = await lyricsDb.queryTrack(
       simpleTrack('Nat King Cole', 'Christmas Song')
     )
-    assert(track.lyrics.indexOf("Nat King Cole's version") >= 0)
+    expect(track.lyrics).toEqual("Nat King Cole's version")
   })
 
   it('Get lyrics for title track', async () => {
@@ -89,35 +93,35 @@ describe('Lyrics DB', () => {
       'Frommerman',
       'Es ist ein Ros entsprungen',
       "Es ist ein Ros' entsprungen",
-      '1'
+      '3'
     )
     var track = await lyricsDb.queryTrack(
-      trackWithId('1', '', 'Es ist ein Ros entsprungen')
+      trackWithId('3', '', 'Es ist ein Ros entsprungen')
     )
-    assert(track.lyrics.indexOf("Es ist ein Ros' entsprungen") >= 0)
+    expect(track.lyrics).toEqual("Es ist ein Ros' entsprungen")
   })
 
   it('Search for empty title', async () => {
-    var track = await lyricsDb.queryTrack(simpleTrack('Beatles', ''))
-    assert.equal(track, null)
+    const track = await lyricsDb.queryTrack(simpleTrack('Beatles', ''))
+    expect(track).toBeNull()
   })
 
   it('Get unexisting lyrics', async () => {
-    var tracks = await lyricsDb.query(
+    const tracks = await lyricsDb.query(
       'Freddy Kruger',
       'Nightmare on Elm Street'
     )
-    assert.equal(tracks, null)
+    expect(tracks).toBeNull()
   })
 
   it('Query unexisting playlist pushAllTracks', async () => {
-    var playlist = await lyricsDb.queryPlaylist([
+    const playlist = await lyricsDb.queryPlaylist([
       simpleTrack('Freddy Kruger', 'Nightmare on Elm Street'),
     ])
-    assert.equal(1, playlist.length)
-    assert.equal(playlist[0].artist, 'Freddy Kruger')
-    assert.equal(playlist[0].title, 'Nightmare on Elm Street')
-    assert.equal(playlist[0].lyrics, null)
+    expect(playlist.length).toBe(1)
+    expect(playlist[0].artist).toEqual('Freddy Kruger')
+    expect(playlist[0].title).toEqual('Nightmare on Elm Street')
+    expect(playlist[0].lyrics).toBeUndefined()
   })
 
   it('Query playlist notDownloaded', async () => {
@@ -126,17 +130,17 @@ describe('Lyrics DB', () => {
       'Let t be',
       'Desmond has a barrow in the market place'
     )
-    var playlist = await lyricsDb.queryPlaylist(
+    const playlist = await lyricsDb.queryPlaylist(
       [
         simpleTrack('Freddy Kruger', 'Nightmare on Elm Street'),
         simpleTrack('Beatles', 'Let t be'),
       ],
       false
     )
-    assert.equal(playlist.length, 1)
-    assert.equal(playlist[0].artist, 'Freddy Kruger')
-    assert.equal(playlist[0].title, 'Nightmare on Elm Street')
-    assert.equal(playlist[0].lyrics, null)
+    expect(playlist.length).toBe(1)
+    expect(playlist[0].artist).toEqual('Freddy Kruger')
+    expect(playlist[0].title).toEqual('Nightmare on Elm Street')
+    expect(playlist[0].lyrics).toBeUndefined()
   })
 
   it('escape special chars artistTitleQuery', () => {
@@ -144,7 +148,7 @@ describe('Lyrics DB', () => {
       'Pink Floyd',
       'Shine On You Crazy Diamond (Parts 1'
     )
-    assert.deepEqual(query, {
+    expect(query).toEqual({
       title: /Shine\ On\ You\ Crazy\ Diamond\ \(Parts\ 1/i,
       artist: /Pink\ Floyd/i,
     })
@@ -179,41 +183,42 @@ describe('Lyrics DB', () => {
     // There is an entry present in DB with Artist = 'John Lennon' AND Title = 'Imagine',
     // and one with Artist = '' AND Title = 'Imagine',
     // We only want the result with the Artist field present
-    assert.equal(5, playlist.length)
-    assert.equal(playlist[4].artist, 'John Lennon')
-    assert.equal(playlist[4].title, 'Imagine')
-    assert.equal(
-      null,
-      playlist.find((track) => track.title === '' || track.title == null)
-    )
-    assert(playlist[4].lyrics.indexOf("Imagine there's no heaven") >= 0)
+    expect(playlist.length).toBe(5)
+    expect(playlist[4].artist).toEqual('John Lennon')
+    expect(playlist[4].title).toBe('Imagine')
+    expect(
+      playlist.some((track) => track.title === '' || track.title == null)
+    ).toBeFalsy()
+    expect(playlist[4].lyrics).toBe("Imagine there's no heaven")
   })
 
   it('Remove lyrics', async function () {
-    let track = simpleTrack('fake artist', 'fake title', 'MusixMatch')
+    let track: any = simpleTrack('fake artist', 'fake title', 'MusixMatch')
     await lyricsDb.insert(track, 'fake lyrics')
     track = await lyricsDb.queryTrack(track)
-    assert.equal('fake artist', track.artist)
-    assert.equal('fake title', track.title)
-    assert.equal('fake lyrics', track.lyrics)
+    expect(track.artist).toEqual('fake artist')
+    expect(track.title).toEqual('fake title')
+    expect(track.lyrics).toEqual('fake lyrics')
     await lyricsDb.remove(track)
     track = await lyricsDb.queryTrack(track)
-    assert.equal(track, null)
+    expect(track).toBeNull()
   })
 
-  it('Update John Lennon lyrics', async function () {
-    await insertTrack('Calexico', 'Sunken Waltz', '')
-    var track = await lyricsDb.queryTrack(
+  it('Update existing lyrics', async function () {
+    await insertTrack('Calexico', 'Sunken Waltz', '', 1)
+    let track: any = await lyricsDb.queryTrack(
       simpleTrack('Calexico', 'Sunken Waltz')
     )
-    assert.equal('', track.lyrics)
-    var res,
-      error = await lyricsDb.updateOrInsert(
-        track,
-        'Washed my face in the rivers of empire'
-      )
-    assert.equal(error, null)
+    expect(track.lyrics).toEqual('')
+    await lyricsDb.updateOrInsert(
+      track,
+      'Washed my face in the rivers of empire'
+    )
+
     track = await lyricsDb.queryTrack(simpleTrack('Calexico', 'Sunken Waltz'))
-    assert.equal('Washed my face in the rivers of empire', track.lyrics)
+    expect(track.lyrics).toEqual('Washed my face in the rivers of empire')
+
+    const tracks = await lyricsDb.lyricsTable.find({ artist: 'Calexico' })
+    expect(tracks.length).toBe(1)
   })
 })

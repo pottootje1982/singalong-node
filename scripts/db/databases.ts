@@ -1,28 +1,21 @@
-const LyricsTable = require('./table/lyrics')
-const PlaylistsTable = require('./table/playlists')
+import LyricsTable from './table/lyrics'
+import PlaylistsTable from './table/playlists'
 import LyricsDownloader from '../download'
 import LyricsDb from '../lyrics_db'
 import PlaylistsDb from '../playlists-db'
+import createDb from './mongo-client'
 
-module.exports = { lyrics, playlists }
-
-const defaultConnector = './mongo-client'
-
-function createDb(connector) {
-  return require(connector || defaultConnector)()
-}
-
-async function lyrics(connector, tableName) {
-  const db = await createDb(connector)
-  const lyricTable = new LyricsTable(db, tableName)
+export async function lyrics() {
+  const client = await createDb()
+  const lyricTable = new LyricsTable(client)
   const lyricsDb = new LyricsDb(lyricTable)
   const lyricsDownloader = new LyricsDownloader(lyricsDb)
   return { lyricsDb, lyricsDownloader }
 }
 
-async function playlists(connector) {
-  const db = await createDb(connector)
-  const playlistsTable = new PlaylistsTable(db)
+export async function playlists() {
+  const client = await createDb()
+  const playlistsTable = new PlaylistsTable(client)
   const playlistsDb = new PlaylistsDb(playlistsTable)
   return { playlistsDb }
 }

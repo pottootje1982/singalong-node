@@ -34,7 +34,7 @@ export default class LyricsDb {
     if (id) {
       query = { $or: [query, { id }] }
     }
-    const results = await this.lyricsTable.get(query)
+    const results = await this.lyricsTable.find(query)
     if (results.length === 0) return null
     return results.map(Track.copy)
   }
@@ -73,7 +73,7 @@ export default class LyricsDb {
     var query = {
       $or: orSection,
     }
-    let queryResults: any[] = (await this.lyricsTable.get(query)) || []
+    let queryResults: any[] = (await this.lyricsTable.find(query)) || []
     for (let track of playlist) {
       var matches = queryResults.filter((match) =>
         track.matchesTitleOrId(match)
@@ -93,7 +93,7 @@ export default class LyricsDb {
   }
 
   insert(track: Track, lyrics: string) {
-    return this.lyricsTable.store({
+    return this.lyricsTable.insertOne({
       artist: track.artist,
       title: track.title,
       site: track.site || null,
@@ -104,12 +104,13 @@ export default class LyricsDb {
 
   updateId(track: Track) {
     var query = this.artistTitleQuery(track.artist, track.title)
-    if (track.id) return this.lyricsTable.update(query, { id: track.id })
+    if (track.id)
+      return this.lyricsTable.findOneAndUpdate(query, { id: track.id })
   }
 
   update(track: Track, lyrics: string) {
     var query = this.artistTitleQuery(track.artist, track.title)
-    return this.lyricsTable.update(query, { lyrics })
+    return this.lyricsTable.findOneAndUpdate(query, { lyrics })
   }
 
   async updateOrInsert(track: Track, lyrics: string) {
@@ -121,7 +122,7 @@ export default class LyricsDb {
   async remove(track: Track) {
     var foundTrack = await this.queryTrack(track)
     if (foundTrack) {
-      return this.lyricsTable.remove({
+      return this.lyricsTable.deleteOne({
         artist: foundTrack.artist,
         title: foundTrack.title,
       })
