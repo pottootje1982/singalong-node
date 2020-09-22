@@ -16,3 +16,4 @@ token.txt
 client/src/react-app-env.d.ts
 client/src/track.js
 client/src/track.js.map
+globalConfig.json

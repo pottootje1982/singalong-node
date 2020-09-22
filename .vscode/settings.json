@@ -6,5 +6,6 @@
     "scripts/*.js": true,
     "**/*.js.map": true
   },
-  "jestrunner.disableCodeLens": true
+  "jestrunner.disableCodeLens": true,
+  "jest.autoEnable": false
 }

@@ -42,6 +42,6 @@ export default class Table {
   }
 
   close() {
-    this.client.close()
+    return this.client.close()
   }
 }

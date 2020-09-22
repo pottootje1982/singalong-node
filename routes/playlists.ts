@@ -19,7 +19,7 @@ router.post('/custom', async (req, res) => {
   const { tracksString, name } = req.body
   const { playlistsDb } = await db.playlists()
   const playlist = await playlistsDb.insert(owner, tracksString, name)
-  playlistsDb.close()
+  await playlistsDb.close()
   res.json({ playlist })
 })
 
@@ -27,7 +27,7 @@ router.put('/custom', async (req, res) => {
   const { tracksString, name, id } = req.body
   const { playlistsDb } = await db.playlists()
   const playlist = await playlistsDb.update(id, tracksString, name)
-  playlistsDb.close()
+  await playlistsDb.close()
   res.json({ playlist })
 })
 
@@ -36,7 +36,7 @@ router.get('/custom', async (req, res) => {
   const owner = await spotifyApi.owner()
   const { playlistsDb } = await db.playlists()
   const playlists = await playlistsDb.get(owner)
-  playlistsDb.close()
+  await playlistsDb.close()
   res.json({ playlists })
 })
 
@@ -48,15 +48,15 @@ router.get('/:id/custom', async (req, res) => {
   let { tracks } = playlists[0] || {}
   const { lyricsDb } = await db.lyrics()
   tracks = await lyricsDb.queryPlaylist((tracks || []).map(Track.copy))
-  lyricsDb.close()
-  playlistsDb.close()
+  await lyricsDb.close()
+  await playlistsDb.close()
   res.json({ tracks })
 })
 
 router.delete('/:id/custom', async (req, res) => {
   const { playlistsDb } = await db.playlists()
   await playlistsDb.remove(req.params.id)
-  playlistsDb.close()
+  await playlistsDb.close()
   res.status(204)
 })
 
@@ -82,7 +82,7 @@ router.get('/:uri', async (req, res) => {
   offset = offset && parseInt(offset)
   let { tracks, hasMore } = await spotifyApi.getPlaylistFromUri(uri, { offset })
   tracks = await lyricsDb.queryPlaylist(tracks)
-  lyricsDb.close()
+  await lyricsDb.close()
   res.json({ tracks, hasMore })
 })
 

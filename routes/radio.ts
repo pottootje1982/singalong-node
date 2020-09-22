@@ -14,7 +14,7 @@ router.get('/fip', async (req, res) => {
       Track.copy({ id, artist, title })
     )
   tracks = await lyricsDb.queryPlaylist(tracks)
-  lyricsDb.close()
+  await lyricsDb.close()
   res.json({ tracks, position })
 })
 

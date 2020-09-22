@@ -1,4 +1,4 @@
-import createDb from '../mongo-client'
+import createDb from '../mongo-client-fake'
 import LyricsTable from './lyrics'
 
 const { lyrics } = require('../data/db.test.json')
@@ -6,16 +6,19 @@ describe('get', () => {
   let client
   let table
 
-  beforeEach(async () => {
-    client = await createDb(global.__MONGO_URI__)
+  beforeAll(async () => {
+    client = await createDb()
     table = new LyricsTable(client)
+  })
+
+  beforeEach(async () => {
     await table.deleteAll()
     for (const lyric of lyrics) {
       await table.insertOne(lyric)
     }
   })
 
-  afterEach(async () => {
+  afterAll(async () => {
     await table.close()
   })
 

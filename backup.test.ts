@@ -23,7 +23,7 @@ xdescribe('database queries', () => {
       //await lyricsDb.remove(track)
       console.log(track.toString())
     }
-    lyricsDb.close()
+    await lyricsDb.close()
   })
 
   it('deletes track', async () => {
@@ -34,6 +34,6 @@ xdescribe('database queries', () => {
       title: '',
       site: 'Genius',
     })
-    lyricsDb.close()
+    await lyricsDb.close()
   })
 })

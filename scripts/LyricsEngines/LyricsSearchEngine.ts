@@ -37,9 +37,13 @@ export abstract class LyricsSearchEngine {
     this.textReplacements = textReplacements || []
   }
 
+  protected request(url: string): Promise<string> {
+    return request(url)
+  }
+
   // Download a file form a url.
   protected async downloadUrl(url: string): Promise<string> {
-    var res = await request(url)
+    var res = await this.request(url)
     var $ = cheerio.load(res)
     var lyrics = this.replaceInLyrics($)
     if (lyrics == null) return null
@@ -60,7 +64,9 @@ export abstract class LyricsSearchEngine {
     artist: string,
     title: string
   ) {
-    return request(searchQuery + this.encode(artist) + '+' + this.encode(title))
+    return this.request(
+      searchQuery + this.encode(artist) + '+' + this.encode(title)
+    )
   }
 
   protected getSearchQuery(): string {

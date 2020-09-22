@@ -1,4 +1,5 @@
 import { Track } from '../client/src/track'
+import Table from './db/table/table'
 
 function escapeRegExp(text: string) {
   return text.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, '\\$&')
@@ -9,14 +10,9 @@ function regExp(text: string) {
 }
 
 export default class LyricsDb {
-  [x: string]: any
-  removeAll() {
-    return this.lyricsTable.remove()
-  }
+  lyricsTable: Table
 
-  lyricsTable: any
-
-  constructor(lyricsTable) {
+  constructor(lyricsTable: Table) {
     this.lyricsTable = lyricsTable
   }
 

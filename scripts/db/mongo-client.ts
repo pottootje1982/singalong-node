@@ -2,14 +2,10 @@ const { dbConnectionString } = require('../../config')
 
 import { MongoClient } from 'mongodb'
 
-export default async function createDb(connectionString?: string) {
-  const client = await MongoClient.connect(
-    connectionString || dbConnectionString,
-    {
-      useNewUrlParser: true,
-      useUnifiedTopology: true,
-    }
-  ).catch((err) => {
+export default async function createDb() {
+  const client = await MongoClient.connect(dbConnectionString, {
+    useUnifiedTopology: true,
+  }).catch((err) => {
     console.log(err)
   })
 

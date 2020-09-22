@@ -1,6 +1,6 @@
 import { Track, simpleTrack } from '../client/src/track'
-import createDb from './db/mongo-client'
-import LyricsTable from './db/table/lyrics'
+import createDb from './db/mongo-client-fake'
+import Table from './db/table/table'
 import LyricsDb from './lyrics_db'
 
 describe('Lyrics DB', () => {
@@ -15,8 +15,8 @@ describe('Lyrics DB', () => {
   }
 
   beforeAll(async () => {
-    const client = await createDb(global.__MONGO_URI__)
-    const table = new LyricsTable(client)
+    const client = await createDb()
+    const table = new Table(client, 'lyrics_db')
     lyricsDb = new LyricsDb(table)
   })
 

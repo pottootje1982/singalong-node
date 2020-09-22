@@ -7,7 +7,7 @@ router.get('/', async (req, res) => {
   var { artist, title, id } = req.query
   var selectedTrack = new Track({ artist, title, id })
   let track = await lyricsDb.queryTrack(selectedTrack)
-  lyricsDb.close()
+  await lyricsDb.close()
   res.json({ lyrics: track.lyrics })
 })
 
@@ -15,7 +15,7 @@ router.post('/', async (req, res) => {
   const { lyricsDb } = await db.lyrics()
   const track = Track.copy(req.body.track)
   await lyricsDb.updateOrInsert(track, req.body.lyrics)
-  lyricsDb.close()
+  await lyricsDb.close()
   res.status(200)
 })
 
@@ -23,14 +23,14 @@ router.delete('/', async (req, res) => {
   const { lyricsDb } = await db.lyrics()
   const track = req.body.track
   lyricsDb.remove(Track.copy(track))
-  lyricsDb.close()
+  await lyricsDb.close()
   res.status(204)
 })
 
 router.get('/sites', async (req, res) => {
   const { lyricsDownloader } = await db.lyrics()
   res.json({ sites: lyricsDownloader.engines })
-  lyricsDownloader.close()
+  await lyricsDownloader.close()
 })
 
 router.post('/download', async (req, res) => {
@@ -50,7 +50,7 @@ router.post('/download', async (req, res) => {
     )
     lyrics = downloadedTrack.lyrics
   }
-  lyricsDownloader.close()
+  await lyricsDownloader.close()
   res.json({ lyrics })
 })
 
