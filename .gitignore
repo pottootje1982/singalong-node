@@ -10,7 +10,6 @@
 /scripts/**/*.map
 /*.js
 /*.map
-.npmrc
 .env
 token.txt
 client/src/react-app-env.d.ts

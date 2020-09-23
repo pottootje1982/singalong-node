@@ -1,8 +1,9 @@
 import { Track } from '../client/src/track'
 const { v4: uuid } = require('uuid')
+import PlaylistTable from './db/table/playlists'
 
 export default class PlaylistsDb {
-  playlistsTable: any
+  playlistsTable: PlaylistTable
 
   constructor(playlistsTable) {
     this.playlistsTable = playlistsTable
@@ -43,7 +44,7 @@ export default class PlaylistsDb {
   }
 
   remove(id: string): Promise<any> {
-    return this.playlistsTable.delete({ id })
+    return this.playlistsTable.deleteOne({ id })
   }
 
   close() {

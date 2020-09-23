@@ -24,12 +24,17 @@ export default class LyricsDb {
     return query
   }
 
-  async query(artist: string, title: string, id?: string): Promise<Track[]> {
-    if (title === '' || !title) return null
+  private artistTitleIdQuery(artist: string, title: string, id: string) {
     let query = this.artistTitleQuery(artist, title)
     if (id) {
       query = { $or: [query, { id }] }
     }
+    return query
+  }
+
+  async query(artist: string, title: string, id?: string): Promise<Track[]> {
+    if (title === '' || !title) return null
+    let query = this.artistTitleIdQuery(artist, title, id)
     const results = await this.lyricsTable.find(query)
     if (results.length === 0) return null
     return results.map(Track.copy)
@@ -116,13 +121,9 @@ export default class LyricsDb {
   }
 
   async remove(track: Track) {
-    var foundTrack = await this.queryTrack(track)
-    if (foundTrack) {
-      return this.lyricsTable.deleteOne({
-        artist: foundTrack.artist,
-        title: foundTrack.title,
-      })
-    }
+    const { artist, title, id } = track
+    const query = this.artistTitleIdQuery(artist, title, id)
+    return this.lyricsTable.deleteOne(query)
   }
 
   close() {

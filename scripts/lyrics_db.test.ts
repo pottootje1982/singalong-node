@@ -4,7 +4,7 @@ import Table from './db/table/table'
 import LyricsDb from './lyrics_db'
 
 describe('Lyrics DB', () => {
-  let lyricsDb
+  let lyricsDb: LyricsDb
 
   function insertTrack(artist, title, lyrics, id?) {
     return lyricsDb.insert(new Track({ artist, title, id }), lyrics)
@@ -112,6 +112,21 @@ describe('Lyrics DB', () => {
       'Nightmare on Elm Street'
     )
     expect(tracks).toBeNull()
+  })
+
+  it('deletes track', async () => {
+    await insertTrack(
+      'Dire Straits',
+      'News',
+      '[Chorus]\nHe sticks to his guns',
+      '4s6p0rVzSaWqaJRsp0HBDI'
+    )
+    const track = simpleTrack('dire Straits', 'News')
+    let tracks = await lyricsDb.lyricsTable.find()
+    expect(tracks.length).toBe(1)
+    await lyricsDb.remove(track)
+    tracks = await lyricsDb.lyricsTable.find()
+    expect(tracks.length).toBe(0)
   })
 
   it('Query unexisting playlist pushAllTracks', async () => {

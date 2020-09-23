@@ -1,7 +1,16 @@
-import { Track } from './client/src/track'
+import { Track, simpleTrack } from './client/src/track'
 import { lyrics } from './scripts/db/databases'
 
 xdescribe('database queries', () => {
+  let lyricsDb
+  beforeAll(async () => {
+    ;({ lyricsDb } = await lyrics())
+  })
+
+  afterAll(async () => {
+    await lyricsDb.close()
+  })
+
   it('find duplicates', () => {
     const tracks = require('./backup.json').map((t) => Track.copy(t))
     for (const track of tracks) {
@@ -15,7 +24,6 @@ xdescribe('database queries', () => {
   })
 
   it('finds wrong ids', async () => {
-    const { lyricsDb } = await lyrics()
     const tracks = (
       await lyricsDb.lyricsTable.find({ id: { $regex: /^"/ } })
     ).map(Track.copy)
@@ -23,17 +31,21 @@ xdescribe('database queries', () => {
       //await lyricsDb.remove(track)
       console.log(track.toString())
     }
-    await lyricsDb.close()
+  })
+
+  it('removes dire straits - news', async () => {
+    let track = await lyricsDb.queryTrack(simpleTrack('Dire Straits', 'News'))
+    await lyricsDb.remove(track)
+    track = await lyricsDb.queryTrack(simpleTrack('Dire Straits', 'News'))
+    console.log(track)
   })
 
   it('deletes track', async () => {
-    const { lyricsDb } = await lyrics()
     await lyricsDb.lyricsTable.deleteOne({
       id: '3zBhihYUHBmGd2bcQIobrF',
       artist: 'Otis Redding',
       title: '',
       site: 'Genius',
     })
-    await lyricsDb.close()
   })
 })

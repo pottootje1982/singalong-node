@@ -38,6 +38,7 @@
     "@types/express-serve-static-core": "^4.17.0",
     "@types/mime": "^2.0.1",
     "@types/serve-static": "^1.13.3",
+    "husky": "^4.3.0",
     "jest": "^26.4.2",
     "ts-jest": "^26.4.0",
     "ts-node": "^8.10.2",
@@ -45,5 +46,10 @@
   },
   "engines": {
     "node": "10.15.x"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "npm test"
+    }
   }
 }

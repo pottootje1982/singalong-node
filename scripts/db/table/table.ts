@@ -15,7 +15,7 @@ export default class Table {
     return this.db.collection(this.tableName)
   }
 
-  find(query) {
+  find(query?: any) {
     return this.table().find(query).toArray()
   }
 

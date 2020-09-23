@@ -73,6 +73,12 @@ describe('Downloading lyrics', () => {
     assert.equal(lyrics, null)
   })
 
+  it('Search with AzLyrics', async () => {
+    const engine = new AzLyricsEngineMock()
+    var lyrics = await engine.searchLyrics('dire straits', 'news')
+    assert.equal(lyrics.substring(0, 21), 'He sticks to his guns')
+  })
+
   it('Download track', async () => {
     var track = await downloader.downloadTrack(
       simpleTrack('The Beatles', 'A day in life')
