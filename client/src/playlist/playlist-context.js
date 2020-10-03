@@ -5,8 +5,10 @@ const PlaylistContext = createContext()
 export default PlaylistContext
 
 export function PlaylistProvider(props) {
-  const [playlist, setPlaylist] = useState()
-  const [radio, setRadio] = useState()
+  const [, urlRadio] = window.location.pathname.match(/radio\/(.*)/) || []
+  const [, urlPlaylist] = window.location.pathname.match(/playlist\/(.*)/) || []
+  const [playlist, setPlaylist] = useState(urlPlaylist)
+  const [radio, setRadio] = useState(urlRadio)
   const [customPlaylist, setCustomPlaylist] = useState()
   const [track, setTrack] = useState()
   const [trackId, setTrackId] = useState('')

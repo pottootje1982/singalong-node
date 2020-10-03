@@ -42,7 +42,7 @@ export default function LyricsMenu({
   }
 
   function searchLyrics() {
-    const artist = trackFilters.hideArtist ? '' : `${track.artist}+`
+    const artist = trackFilters.hideArtist ? '' : `${track.cleanArtist()}+`
     const title = track.getTitle(trackFilters)
     const query = `${artist}${title}`.replace('&', '')
     window.open(`https://www.google.com/search?q=${query}+lyrics`, '_blank')

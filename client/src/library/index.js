@@ -7,16 +7,18 @@ import LibraryList from './library-list'
 import PlaylistContext from '../playlist/playlist-context'
 import LibraryContext from './library-context'
 import PlayerContext from '../lyrics/player-context'
+import { useHistory } from 'react-router-dom'
 
 export default function Library({ getFreshToken }) {
   const [offset, setOffset] = useState()
-  const [allPlaylists, setAllPlaylists] = useState()
+  const [allPlaylists, setAllPlaylists] = useState([])
   const searchRef = useRef(null)
   const mobile = !useMediaQuery('(min-width:600px)')
   const {
     setTrackId,
     playlist,
     setPlaylist,
+    radio,
     setRadio,
     setCustomPlaylist,
   } = useContext(PlaylistContext)
@@ -32,6 +34,7 @@ export default function Library({ getFreshToken }) {
     player,
     isPlaying,
   } = useContext(PlayerContext)
+  const history = useHistory()
 
   function init() {
     setOffset(0)
@@ -68,6 +71,7 @@ export default function Library({ getFreshToken }) {
   function showFip() {
     setTrackId(null)
     setRadio(`FIP_${Date.now()}`)
+    history.push('/radio/fip')
   }
 
   function onPlaylistClick(playlist) {
@@ -82,12 +86,17 @@ export default function Library({ getFreshToken }) {
         setPlaylist(null)
         setCustomPlaylist(playlist.id)
       }
+      history.push(`/playlist/${playlist.uri}`)
     }
   }
 
   function selectFirstPlaylist() {
-    if (player && !(isPlaying && monitorCurrentlyPlaying))
-      setPlaylist(playlists[0] && playlists[0].uri)
+    if (player && !(isPlaying && monitorCurrentlyPlaying) && !radio) {
+      const firstPlaylist = playlists[0] && playlists[0].uri
+      setPlaylist(playlist || firstPlaylist)
+    } else if (radio) {
+      setRadio(radio)
+    }
   }
 
   useEffect(selectFirstPlaylist, [playlists, setPlaylist, player])

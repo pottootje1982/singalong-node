@@ -3,16 +3,16 @@ import Library from './library'
 import Playlist from './playlist'
 import Lyrics from './lyrics'
 import { Grid, useMediaQuery } from '@material-ui/core'
-import { Redirect } from 'react-router-dom'
 import { getCookie } from './cookie'
 import server, { get } from './server'
 import CssBaseline from '@material-ui/core/CssBaseline'
+import { useHistory } from 'react-router-dom'
 
 function App() {
   const [lyricsFullscreen, setLyricsFullscreen] = useState(false)
   const [token, setToken] = useState(getCookie('accessToken'))
-  const refreshToken = getCookie('refreshToken')
   const mobile = !useMediaQuery('(min-width:600px)')
+  const history = useHistory()
 
   const [trackFilters, setTrackFilters] = useState({
     minimalTitle: true,
@@ -34,16 +34,11 @@ function App() {
         server.setToken(data)
         setToken(data.access_token)
       } else {
-        setToken('redirect')
+        history.push('/authorize')
       }
     })
   }
 
-  if (token === 'redirect' || (!token && !refreshToken)) {
-    return <Redirect to={'/authorize'} />
-  }
-
-  window.history.pushState('', '', '/main')
   return token ? (
     <>
       <CssBaseline />
