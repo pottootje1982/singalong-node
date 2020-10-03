@@ -86,12 +86,4 @@ router.get('/:uri', async (req, res) => {
   res.json({ tracks, hasMore })
 })
 
-router.post('/:uri/tracks', async (req, res) => {
-  var spotifyApi: SpotifyApi = createApi(req)
-  const { uri } = req.params
-  const { uris } = req.body
-  spotifyApi.addToPlaylist(uri, uris)
-  res.status(200)
-})
-
 export default router.express()

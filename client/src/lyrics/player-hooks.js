@@ -12,7 +12,7 @@ export default function usePlayTrack() {
 
   return (uri, playPosition) => {
     let uris, context_uri, position
-    const playArtist = playlist.includes('artist')
+    const playArtist = playlist && playlist.includes('artist')
     if (playArtist || radio) {
       uris = tracks.map((t) => t.uri).filter((uri) => uri)
       position = uris.indexOf(uri)
@@ -37,7 +37,9 @@ export default function usePlayTrack() {
 }
 
 export function useUpdatePlayingTrack() {
-  const { setPlaylist, setTrackId, setTracks } = useContext(PlaylistContext)
+  const { setPlaylist, setTrackId, setTracks, radio } = useContext(
+    PlaylistContext
+  )
   const {
     setIsPlaying,
     setPlayPosition,
@@ -49,7 +51,7 @@ export function useUpdatePlayingTrack() {
     spotifyAxios.get(`/me/player/currently-playing`).then(({ data }) => {
       if (data) {
         const { is_playing, progress_ms, item, context } = data
-        if (monitorCurrentlyPlaying && item) {
+        if (monitorCurrentlyPlaying && item && !radio) {
           const { uri } = context || {}
           if (uri) setPlaylist(context.uri)
           else setTracks([Track.fromSpotify(item)])

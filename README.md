@@ -2,9 +2,7 @@
 
 ## Bugs
 
-- Selecting different device doesnt work
 - play counter should use timestamp of last update to calculate exact play position
-- adding to playlist doesn't work
 - artist page doesn't show currently playing correctly
 
 ## Improvements
@@ -16,8 +14,6 @@
 - consider using material ui Alert for exception coming from server
 
 ## Features
-
-- add to queue
 
 - sorting of playlist
 - Different radio stations (and configure which show up for a user)

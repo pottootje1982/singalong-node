@@ -127,13 +127,6 @@ export class SpotifyApi {
     )
   }
 
-  addToPlaylist(uri, uris) {
-    const [, , id] = uri.split(':')
-    return this.post(`${base}/playlists/${id}/tracks`, {
-      uris,
-    })
-  }
-
   async getPlaylistFromUri(uri: string, options: any) {
     uri = this.reformatUri(uri)
     const [, type, id] = uri.split(':')

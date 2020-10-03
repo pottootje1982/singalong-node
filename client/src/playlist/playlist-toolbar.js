@@ -64,7 +64,7 @@ export default function PlaylistToolbar({
 
   useEffect(getDevices, [player])
 
-  function selectDevice() {
+  function selectLastPlayingDevice() {
     const lastSelectedDeviceId = localStorage.getItem('lastPlayingDevice')
     const lastSelectedDevice = devices.find(
       (d) => d.id === lastSelectedDeviceId
@@ -74,7 +74,13 @@ export default function PlaylistToolbar({
     )
   }
 
-  useEffect(selectDevice, [devices])
+  useEffect(selectLastPlayingDevice, [devices])
+
+  function selectDevice() {
+    if (device) spotifyAxios.put('/me/player', { device_ids: [device.id] })
+  }
+
+  useEffect(selectDevice, [device])
 
   function closeMenu() {
     setAnchorEl(null)

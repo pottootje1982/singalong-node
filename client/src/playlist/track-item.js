@@ -1,5 +1,5 @@
 import React, { useContext } from 'react'
-import server from '../server'
+import { spotifyAxios } from '../server'
 import green from '@material-ui/core/colors/green'
 import red from '@material-ui/core/colors/red'
 import orange from '@material-ui/core/colors/orange'
@@ -9,7 +9,7 @@ import {
   ListItemText,
   useMediaQuery,
 } from '@material-ui/core'
-import { PlayArrow, PlaylistAdd } from '@material-ui/icons'
+import { PlayArrow, QueueMusic, Add } from '@material-ui/icons'
 import usePlayTrack from '../lyrics/player-hooks'
 import PlaylistContext from './playlist-context'
 import PlayerContext from '../lyrics/player-context'
@@ -27,12 +27,22 @@ export default function TrackItem({
   const mobile = !useMediaQuery('(min-width:600px)')
 
   function addTrackToPlaylist(uri) {
-    server.post(`/playlists/${playlist}/tracks`, { uris: [uri] })
+    const [, , id] = playlist.split(':')
+    console.log(uri)
+    spotifyAxios
+      .post(`/playlists/${id}/tracks`, {
+        uris: [uri],
+      })
+      .then(console.log)
   }
 
   function onClickTrack(track) {
     setMonitorCurrentlyPlaying(false)
     selectTrackId(track)
+  }
+
+  function queueTrack(uri) {
+    spotifyAxios.post(`/me/player/queue?uri=${uri}`)
   }
 
   return (
@@ -52,13 +62,22 @@ export default function TrackItem({
             <PlayArrow></PlayArrow>
           </IconButton>
         )}
+        {track.uri && (
+          <IconButton
+            size="small"
+            style={{ width: 25, height: 25 }}
+            onClick={() => queueTrack(track.uri)}
+          >
+            <QueueMusic></QueueMusic>
+          </IconButton>
+        )}
         {track.uri && radio && (
           <IconButton
             size="small"
             style={{ width: 25, height: 25 }}
             onClick={() => addTrackToPlaylist(track.uri)}
           >
-            <PlaylistAdd></PlaylistAdd>
+            <Add></Add>
           </IconButton>
         )}
         <ListItemText
