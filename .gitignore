@@ -16,3 +16,5 @@ client/src/react-app-env.d.ts
 client/src/track.js
 client/src/track.js.map
 globalConfig.json
+client/src/track.test.js
+client/src/track.test.js.map

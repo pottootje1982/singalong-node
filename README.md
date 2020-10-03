@@ -2,7 +2,6 @@
 
 ## Bugs
 
-- play counter should use timestamp of last update to calculate exact play position
 - artist page doesn't show currently playing correctly
 
 ## Improvements

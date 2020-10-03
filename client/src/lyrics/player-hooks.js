@@ -48,7 +48,7 @@ export function useUpdatePlayingTrack() {
   } = useContext(PlayerContext)
 
   return () => {
-    spotifyAxios.get(`/me/player/currently-playing`).then(({ data }) => {
+    return spotifyAxios.get(`/me/player/currently-playing`).then(({ data }) => {
       if (data) {
         const { is_playing, progress_ms, item, context } = data
         if (monitorCurrentlyPlaying && item && !radio) {
@@ -58,10 +58,12 @@ export function useUpdatePlayingTrack() {
           setTrackId(item.id)
         }
         setIsPlaying(is_playing)
-        setPlayPosition(progress_ms / 1000)
+        const playPosition = progress_ms / 1000
+        setPlayPosition(playPosition)
         if (item) {
           setDuration(item.duration_ms / 1000)
         }
+        return playPosition
       }
     })
   }

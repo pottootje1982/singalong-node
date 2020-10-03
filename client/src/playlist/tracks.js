@@ -7,6 +7,7 @@ import isEquivalent from '../isEquivalent'
 import { Track } from '../track'
 import PlaylistContext from './playlist-context'
 import PlayerContext from '../lyrics/player-context'
+import { useHistory } from 'react-router-dom'
 
 export default function Tracks({
   lyricsFullscreen,
@@ -27,6 +28,7 @@ export default function Tracks({
   const [offset, setOffset] = useState()
   const [unmounted, setUnmounted] = useState(false)
   const mobile = !useMediaQuery('(min-width:600px)')
+  const history = useHistory()
 
   useEffect(selectTrack, [trackId])
   useEffect(addTracks, [offset])
@@ -44,6 +46,7 @@ export default function Tracks({
     if (playlist && player) {
       setTracks([])
       setOffset(0)
+      history.push(`/playlist/${playlist}`)
     }
   }
 

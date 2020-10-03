@@ -86,7 +86,6 @@ export default function Library({ getFreshToken }) {
         setPlaylist(null)
         setCustomPlaylist(playlist.id)
       }
-      history.push(`/playlist/${playlist.uri}`)
     }
   }
 

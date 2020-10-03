@@ -32,6 +32,8 @@ export default function Player() {
   const playTrack = usePlayTrack()
   const updateCurrentlyPlaying = useUpdatePlayingTrack()
   const [playerState, setPlayerState] = useState()
+  const [lastUpdateTime, setLastUpdateTime] = useState()
+  const [lastPlayPosition, setLastPlayPosition] = useState()
 
   function init() {
     spotifyAxios.get('/me/player').then(({ data }) => {
@@ -45,8 +47,12 @@ export default function Player() {
 
   function updatePlayingPosition() {
     if (!seeking) {
-      setPlayPosition((playPosition) => playPosition + 1)
-      if (playPosition >= duration) {
+      const newPosition =
+        lastUpdateTime && lastPlayPosition
+          ? lastPlayPosition + (timestamp - lastUpdateTime) / 1000
+          : 0
+      setPlayPosition(newPosition)
+      if (newPosition >= duration) {
         update()
       }
     }
@@ -55,11 +61,11 @@ export default function Player() {
   useEffect(updatePlayingPosition, [timestamp])
 
   function updateTimestamp() {
-    setTimestamp(new Date().getTime())
+    setTimestamp(new Date())
   }
 
   function isPlayingChanged() {
-    if (isPlaying) setUpdateInterval(setInterval(updateTimestamp, 1000))
+    if (isPlaying) setUpdateInterval(setInterval(updateTimestamp, 200))
     else clearInterval(updateInterval)
   }
 
@@ -163,7 +169,10 @@ export default function Player() {
 
   function update() {
     if (!isWebPlayback()) {
-      return updateCurrentlyPlaying()
+      return updateCurrentlyPlaying().then((playPosition) => {
+        setLastUpdateTime(new Date())
+        setLastPlayPosition(playPosition)
+      })
     }
   }
 
