@@ -217,37 +217,48 @@ export default function PlaylistToolbar({
         </>
       )}
 
-      <Grid item>
-        <IconButton size="small" onClick={() => setAdjacentTrack(-1)}>
-          <NavigateBefore />
-        </IconButton>
-      </Grid>
+      {track && (
+        <Grid
+          item
+          container
+          xs
+          style={{ minWidth: mobile ? 200 : 300 }}
+          spacing={1}
+        >
+          <Grid item>
+            <IconButton size="small" onClick={() => setAdjacentTrack(-1)}>
+              <NavigateBefore />
+            </IconButton>
+          </Grid>
 
-      <Grid item>
-        {track && (
-          <Autocomplete
-            fullWidth
-            value={track}
-            onChange={onSelectTrack}
-            autoHighlight
-            options={track && trackFound ? tracks : []}
-            noOptionsText=""
-            getOptionLabel={(t) => t.toString(trackFilters)}
-            getOptionSelected={(option, value) => option.id === trackId}
-            style={{ width: mobile ? 200 : 300 }}
-            size="small"
-            renderInput={(params) => (
-              <TextField {...params} label="Select track:" variant="outlined" />
-            )}
-          />
-        )}
-      </Grid>
+          <Grid item xs>
+            <Autocomplete
+              fullWidth
+              value={track}
+              onChange={onSelectTrack}
+              autoHighlight
+              options={track && trackFound ? tracks : []}
+              noOptionsText=""
+              getOptionLabel={(t) => t.toString(trackFilters)}
+              getOptionSelected={(option, value) => option.id === trackId}
+              size="small"
+              renderInput={(params) => (
+                <TextField
+                  {...params}
+                  label="Select track:"
+                  variant="outlined"
+                />
+              )}
+            />
+          </Grid>
 
-      <Grid item>
-        <IconButton size="small" onClick={() => setAdjacentTrack(1)}>
-          <NavigateNext />
-        </IconButton>
-      </Grid>
+          <Grid item>
+            <IconButton size="small" onClick={() => setAdjacentTrack(1)}>
+              <NavigateNext />
+            </IconButton>
+          </Grid>
+        </Grid>
+      )}
 
       {!(mobile && lyricsFullscreen) && device && (
         <Grid item>

@@ -1,5 +1,5 @@
 import { useContext } from 'react'
-import { spotifyAxios } from '../server'
+import { get, spotifyAxios } from '../server'
 import PlayerContext from './player-context'
 import PlaylistContext from '../playlist/playlist-context'
 import { Track } from '../track'
@@ -43,7 +43,7 @@ export default function usePlayTrack() {
 }
 
 export function useUpdatePlayingTrack() {
-  const { setPlaylist, setTrackId, setTracks, radio } = useContext(
+  const { setPlaylist, setTrackId, tracks, setTracks, radio } = useContext(
     PlaylistContext
   )
   const {
@@ -53,13 +53,30 @@ export function useUpdatePlayingTrack() {
     monitorCurrentlyPlaying,
   } = useContext(PlayerContext)
 
+  function setPlaylistFromContext(uri, item) {
+    console.log(uri)
+    if (uri.includes(':artist:')) {
+      get(`/playlists/${uri}`).then(({ data }) => {
+        let { tracks: artistTracks } = data || {}
+        artistTracks = artistTracks || []
+        const found = artistTracks.find((t) => t.uri === item.uri)
+        if (found) setPlaylist(uri)
+        else setPlaylist(item.album.uri)
+      })
+    } else {
+      setPlaylist(uri)
+    }
+  }
+
   return () => {
     return spotifyAxios.get(`/me/player/currently-playing`).then(({ data }) => {
       if (data) {
         const { is_playing, progress_ms, item, context } = data
-        if (monitorCurrentlyPlaying && item && !radio) {
+        const { id, uri: trackUri } = item
+        const found = tracks.find((t) => trackUri === t.uri)
+        if (monitorCurrentlyPlaying && id && !radio && !found) {
           const { uri } = context || {}
-          if (uri) setPlaylist(context.uri)
+          if (uri) setPlaylistFromContext(uri, item)
           else setTracks([Track.fromSpotify(item)])
           setTrackId(item.id)
         }
