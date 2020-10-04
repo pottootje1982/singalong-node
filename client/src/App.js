@@ -4,7 +4,7 @@ import Playlist from './playlist'
 import Lyrics from './lyrics'
 import { Grid, useMediaQuery } from '@material-ui/core'
 import { getCookie } from './cookie'
-import server, { get } from './server'
+import { getFreshToken } from './server'
 import CssBaseline from '@material-ui/core/CssBaseline'
 import { useHistory } from 'react-router-dom'
 
@@ -21,23 +21,13 @@ function App() {
   })
 
   function init() {
-    if (!token) getFreshToken()
+    if (!token)
+      getFreshToken().then((t) => {
+        if (t) setToken(t)
+        else history.push('/authorize')
+      })
   }
   useEffect(init, [])
-
-  function getFreshToken() {
-    get('/authorize/refresh', {
-      refreshToken: getCookie('refreshToken'),
-    }).then(({ data }) => {
-      if (data) {
-        console.log('Refreshed token to ', data)
-        server.setToken(data)
-        setToken(data.access_token)
-      } else {
-        history.push('/authorize')
-      }
-    })
-  }
 
   return token ? (
     <>
@@ -51,7 +41,7 @@ function App() {
         }}
       >
         <Grid item xs style={{ display: lyricsFullscreen && 'none' }}>
-          <Library getFreshToken={getFreshToken}></Library>
+          <Library></Library>
         </Grid>
         <Grid item xs={lyricsFullscreen || mobile ? 12 : 8}>
           <Grid

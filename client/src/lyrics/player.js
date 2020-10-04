@@ -65,7 +65,7 @@ export default function Player() {
   }
 
   function isPlayingChanged() {
-    if (isPlaying) setUpdateInterval(setInterval(updateTimestamp, 200))
+    if (isPlaying) setUpdateInterval(setInterval(updateTimestamp, 1000))
     else clearInterval(updateInterval)
   }
 
@@ -126,7 +126,7 @@ export default function Player() {
     setSeeking(true)
     spotifyAxios.put(`me/player/seek?position_ms=${value * 1000}`).then(() => {
       setSeeking(false)
-      update()
+      setPlayPosition(value)
     })
   }
 
@@ -168,13 +168,13 @@ export default function Player() {
   }
 
   function update() {
-    if (!isWebPlayback()) {
-      return updateCurrentlyPlaying().then((playPosition) => {
-        setLastUpdateTime(new Date())
-        setLastPlayPosition(playPosition)
-      })
-    }
+    if (!isWebPlayback()) return updateCurrentlyPlaying()
   }
+
+  useEffect(() => {
+    setLastUpdateTime(new Date())
+    setLastPlayPosition(playPosition)
+  }, [playPosition, setLastUpdateTime, setLastPlayPosition])
 
   function valuetext(value) {
     value = value || 0

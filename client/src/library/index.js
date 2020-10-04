@@ -9,7 +9,7 @@ import LibraryContext from './library-context'
 import PlayerContext from '../lyrics/player-context'
 import { useHistory } from 'react-router-dom'
 
-export default function Library({ getFreshToken }) {
+export default function Library() {
   const [offset, setOffset] = useState()
   const [allPlaylists, setAllPlaylists] = useState([])
   const searchRef = useRef(null)
@@ -39,14 +39,11 @@ export default function Library({ getFreshToken }) {
   function init() {
     setOffset(0)
     getCustomPlaylists()
-    setInterval(() => {
-      getFreshToken()
-    }, 3600 * 1000)
   }
 
   function getCustomPlaylists() {
     get('playlists/custom').then(({ data: { playlists } }) => {
-      setCustomPlaylists(playlists)
+      if (playlists) setCustomPlaylists(playlists)
     })
   }
 

@@ -51,9 +51,10 @@ export default function TrackItem({
       selected={track.id === trackId}
       autoFocus={!mobile && track.id === trackId}
       onClick={() => onClickTrack(track)}
+      onDoubleClick={() => playTrack(track.uri)}
     >
       <div style={{ display: 'flex', flexDirection: 'row' }}>
-        {track.uri && (
+        {mobile && track.uri && (
           <IconButton
             size="small"
             style={{ width: 25, height: 25 }}

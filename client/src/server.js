@@ -32,14 +32,36 @@ function createSpotifyAxios() {
   })
 }
 
+export function getFreshToken() {
+  get('/authorize/refresh', {
+    refreshToken: getCookie('refreshToken'),
+  }).then(({ data }) => {
+    if (data) {
+      console.log('Refreshed token to ', data)
+      setToken(data)
+      return data.access_token
+    }
+  })
+}
+
+let tokenUpdater
+
 export function setToken(tokens) {
   const { access_token, refresh_token, expires_in } = tokens
-  setCookie('accessToken', access_token, expires_in / 3600)
-  if (refresh_token) {
-    setCookie('refreshToken', refresh_token)
+  if (access_token) {
+    setCookie('accessToken', access_token, expires_in / 3600)
+
+    clearInterval(tokenUpdater)
+    tokenUpdater = setInterval(() => {
+      getFreshToken()
+    }, 3600 * 1000)
+
+    if (refresh_token) {
+      setCookie('refreshToken', refresh_token)
+    }
+    defaultAxios = createDefault()
+    spotifyAxios = createSpotifyAxios()
   }
-  defaultAxios = createDefault()
-  spotifyAxios = createSpotifyAxios()
 }
 
 export function get(...params) {

@@ -27,6 +27,7 @@ import PlayerContext from '../lyrics/player-context'
 import PlaylistContext from './playlist-context'
 import CustomPlaylist from './custom-playlist'
 import { spotifyAxios } from '../server'
+import usePlayTrack from '../lyrics/player-hooks'
 
 const sleepTime = 3000
 
@@ -41,9 +42,13 @@ export default function PlaylistToolbar({
   const { track, setTrack, trackId, setTrackId, tracks } = useContext(
     PlaylistContext
   )
-  const { device, setDevice, player, setMonitorCurrentlyPlaying } = useContext(
-    PlayerContext
-  )
+  const {
+    device,
+    setDevice,
+    player,
+    setMonitorCurrentlyPlaying,
+    isPlaying,
+  } = useContext(PlayerContext)
 
   const [anchorEl, setAnchorEl] = useState()
   const [deviceOpen, setDeviceOpen] = useState(false)
@@ -52,6 +57,7 @@ export default function PlaylistToolbar({
   const [tracksToDownload, setTracksToDownload] = useState([])
   const mobile = !useMediaQuery('(min-width:600px)')
   const trackFound = tracks.find((t) => t.id === trackId)
+  const playTrack = usePlayTrack()
 
   const getDevices = () => {
     if (player) {
@@ -136,6 +142,12 @@ export default function PlaylistToolbar({
     if (adjacentTrack) setTrackId(adjacentTrack.id)
   }
 
+  function onSelectTrack(_event, track) {
+    selectTrackId(track)
+    if (mobile && isPlaying && lyricsFullscreen && track.uri)
+      playTrack(track.uri)
+  }
+
   const defaultMenuItemProps = {
     setter: setTrackFilters,
     state: trackFilters,
@@ -216,7 +228,7 @@ export default function PlaylistToolbar({
           <Autocomplete
             fullWidth
             value={track}
-            onChange={(_, t) => selectTrackId(t)}
+            onChange={onSelectTrack}
             autoHighlight
             options={track && trackFound ? tracks : []}
             noOptionsText=""

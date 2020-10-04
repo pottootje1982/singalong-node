@@ -6,9 +6,12 @@ import { Track } from '../track'
 
 export default function usePlayTrack() {
   const { playlist, radio, tracks } = useContext(PlaylistContext)
-  const { setIsPlaying, device, setMonitorCurrentlyPlaying } = useContext(
-    PlayerContext
-  )
+  const {
+    setIsPlaying,
+    device,
+    setMonitorCurrentlyPlaying,
+    setPlayPosition,
+  } = useContext(PlayerContext)
 
   return (uri, playPosition) => {
     let uris, context_uri, position
@@ -22,15 +25,18 @@ export default function usePlayTrack() {
     }
     setIsPlaying(true)
     let id = device && device.id
+    const position_ms = playPosition || 0
+    setPlayPosition(position_ms)
 
     return spotifyAxios
       .put(`/me/player/play?device_id=${id}`, {
         uris,
         context_uri,
         offset: { position, uri },
-        position_ms: playPosition || 0,
+        position_ms,
       })
       .then(() => {
+        setPlayPosition(position_ms)
         setMonitorCurrentlyPlaying(true)
       })
   }
