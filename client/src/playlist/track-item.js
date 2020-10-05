@@ -19,22 +19,13 @@ export default function TrackItem({
   selectTrackId,
   trackFilters,
   trackIdToDownload,
+  setState,
 }) {
-  const { trackId, radio, playlist } = useContext(PlaylistContext)
+  const { trackId, radio } = useContext(PlaylistContext)
   const { setMonitorCurrentlyPlaying } = useContext(PlayerContext)
   const playTrack = usePlayTrack()
 
   const mobile = !useMediaQuery('(min-width:600px)')
-
-  function addTrackToPlaylist(uri) {
-    const [, , id] = playlist.split(':')
-    console.log(uri)
-    spotifyAxios
-      .post(`/playlists/${id}/tracks`, {
-        uris: [uri],
-      })
-      .then(console.log)
-  }
 
   function onClickTrack(track) {
     setMonitorCurrentlyPlaying(false)
@@ -42,7 +33,16 @@ export default function TrackItem({
   }
 
   function queueTrack(uri) {
-    spotifyAxios.post(`/me/player/queue?uri=${uri}`)
+    spotifyAxios.post(`/me/player/queue?uri=${uri}`).then(console.log)
+  }
+
+  const handleClick = (event, uri) => {
+    event.preventDefault()
+    setState({
+      mouseX: event.clientX - 2,
+      mouseY: event.clientY - 4,
+      uri,
+    })
   }
 
   return (
@@ -67,7 +67,7 @@ export default function TrackItem({
           <IconButton
             size="small"
             style={{ width: 25, height: 25 }}
-            onClick={() => queueTrack(track.uri)}
+            onClick={(event) => queueTrack(track.uri)}
           >
             <QueueMusic></QueueMusic>
           </IconButton>
@@ -76,7 +76,7 @@ export default function TrackItem({
           <IconButton
             size="small"
             style={{ width: 25, height: 25 }}
-            onClick={() => addTrackToPlaylist(track.uri)}
+            onClick={(event) => handleClick(event, track.uri)}
           >
             <Add></Add>
           </IconButton>

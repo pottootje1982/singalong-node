@@ -56,7 +56,6 @@ export function useUpdatePlayingTrack() {
   } = useContext(PlayerContext)
 
   function setPlaylistFromContext(uri, item) {
-    console.log(uri)
     if (uri.includes(':artist:')) {
       get(`/playlists/${uri}`).then(({ data }) => {
         let { tracks: artistTracks } = data || {}

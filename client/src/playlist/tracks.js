@@ -8,6 +8,12 @@ import { Track } from '../track'
 import PlaylistContext from './playlist-context'
 import PlayerContext from '../lyrics/player-context'
 import { useHistory } from 'react-router-dom'
+import AddToPlaylistMenu from './add-to-playlist-menu'
+
+const initialState = {
+  mouseX: null,
+  mouseY: null,
+}
 
 export default function Tracks({
   lyricsFullscreen,
@@ -29,6 +35,7 @@ export default function Tracks({
   const [unmounted, setUnmounted] = useState(false)
   const mobile = !useMediaQuery('(min-width:600px)')
   const history = useHistory()
+  const [state, setState] = useState(initialState)
 
   useEffect(selectTrack, [trackId])
   useEffect(addTracks, [offset])
@@ -86,25 +93,33 @@ export default function Tracks({
   }
 
   return (
-    <List
-      style={{
-        maxHeight: !mobile && '40vh',
-        overflow: !mobile && 'auto',
-        display: lyricsFullscreen && 'none',
-      }}
-      dense
-    >
-      {tracks
-        .filter((t) => !trackFilters.isNotDownloaded || !t.lyrics)
-        .map((t, index) => (
-          <TrackItem
-            key={index}
-            track={t}
-            selectTrackId={selectTrackId}
-            trackFilters={trackFilters}
-            trackIdToDownload={trackIdToDownload}
-          />
-        ))}
-    </List>
+    <>
+      <List
+        style={{
+          maxHeight: !mobile && '40vh',
+          overflow: !mobile && 'auto',
+          display: lyricsFullscreen && 'none',
+        }}
+        dense
+      >
+        {tracks
+          .filter((t) => !trackFilters.isNotDownloaded || !t.lyrics)
+          .map((t, index) => (
+            <TrackItem
+              key={index}
+              track={t}
+              selectTrackId={selectTrackId}
+              trackFilters={trackFilters}
+              trackIdToDownload={trackIdToDownload}
+              setState={setState}
+            />
+          ))}
+      </List>
+      <AddToPlaylistMenu
+        state={state}
+        setState={setState}
+        initialState={initialState}
+      ></AddToPlaylistMenu>
+    </>
   )
 }

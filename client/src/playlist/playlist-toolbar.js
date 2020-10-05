@@ -1,7 +1,6 @@
 import React, { useEffect, useState, useContext } from 'react'
 import { post } from '../server'
 import {
-  Menu,
   IconButton,
   Grid,
   TextField,
@@ -9,13 +8,10 @@ import {
   FormControl,
   Select,
   MenuItem,
-  Divider,
   useMediaQuery,
 } from '@material-ui/core'
-import CheckMenuItem from '../CheckMenuItem'
 import {
   GetApp as DownloadIcon,
-  Menu as MenuIcon,
   NavigateBefore,
   NavigateNext,
 } from '@material-ui/icons'
@@ -25,9 +21,9 @@ import Autocomplete from '@material-ui/lab/Autocomplete'
 import { Track } from '../track'
 import PlayerContext from '../lyrics/player-context'
 import PlaylistContext from './playlist-context'
-import CustomPlaylist from './custom-playlist'
 import { spotifyAxios } from '../server'
 import usePlayTrack from '../lyrics/player-hooks'
+import FilterContextMenu from './filter-context-menu'
 
 const sleepTime = 3000
 
@@ -50,7 +46,6 @@ export default function PlaylistToolbar({
     isPlaying,
   } = useContext(PlayerContext)
 
-  const [anchorEl, setAnchorEl] = useState()
   const [deviceOpen, setDeviceOpen] = useState(false)
   const [devices, setDevices] = useState([])
   const [isDownloading, setIsDownloading] = useState(false)
@@ -87,10 +82,6 @@ export default function PlaylistToolbar({
   }
 
   useEffect(selectDevice, [device])
-
-  function closeMenu() {
-    setAnchorEl(null)
-  }
 
   function downloadTrack() {
     const toDownload = tracksToDownload[0]
@@ -148,12 +139,6 @@ export default function PlaylistToolbar({
       playTrack(track.uri)
   }
 
-  const defaultMenuItemProps = {
-    setter: setTrackFilters,
-    state: trackFilters,
-    close: closeMenu,
-  }
-
   useEffect(downloadTrack, [tracksToDownload])
 
   return (
@@ -172,47 +157,10 @@ export default function PlaylistToolbar({
           </Grid>
 
           <Grid item>
-            <IconButton
-              size="small"
-              onClick={(event) => setAnchorEl(event.currentTarget)}
-              label="label"
-            >
-              <MenuIcon />
-            </IconButton>
-            <Menu
-              id="simple-menu"
-              getContentAnchorEl={null}
-              anchorEl={anchorEl}
-              keepMounted
-              transformOrigin={{
-                vertical: 'top',
-                horizontal: 'center',
-              }}
-              open={!!anchorEl}
-              onClose={closeMenu}
-            >
-              <CheckMenuItem
-                {...defaultMenuItemProps}
-                filterKey="minimalTitle"
-                name="Minimize title"
-              />
-              <CheckMenuItem
-                {...defaultMenuItemProps}
-                filterKey="isNotDownloaded"
-                name="Not downloaded"
-              />
-              <CheckMenuItem
-                {...defaultMenuItemProps}
-                filterKey="hideArtist"
-                name="Hide artist"
-              />
-              <Divider></Divider>
-              <CustomPlaylist closeMenu={closeMenu}></CustomPlaylist>
-              <CustomPlaylist
-                closeMenu={closeMenu}
-                edit={true}
-              ></CustomPlaylist>
-            </Menu>
+            <FilterContextMenu
+              setTrackFilters={setTrackFilters}
+              trackFilters={trackFilters}
+            />
           </Grid>
         </>
       )}
