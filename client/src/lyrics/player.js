@@ -23,6 +23,8 @@ export default function Player() {
     setPlayPosition,
     duration,
     setDuration,
+    lastUpdateTime,
+    lastPlayPosition,
   } = useContext(PlayerContext)
 
   const [updateInterval, setUpdateInterval] = useState()
@@ -32,8 +34,6 @@ export default function Player() {
   const playTrack = usePlayTrack()
   const updateCurrentlyPlaying = useUpdatePlayingTrack()
   const [playerState, setPlayerState] = useState()
-  const [lastUpdateTime, setLastUpdateTime] = useState()
-  const [lastPlayPosition, setLastPlayPosition] = useState()
 
   function init() {
     spotifyAxios.get('/me/player').then(({ data }) => {
@@ -61,7 +61,7 @@ export default function Player() {
   useEffect(updatePlayingPosition, [timestamp])
 
   function updateTimestamp() {
-    setTimestamp(new Date())
+    setTimestamp(Date.now())
   }
 
   function isPlayingChanged() {
@@ -121,13 +121,13 @@ export default function Player() {
   useEffect(monitorUpdated, [monitorCurrentlyPlaying])
   useEffect(deviceUpdated, [device, currentlyPlayingDevice])
 
-  function onPlayPositionClick(_, value) {
+  async function onPlayPositionClick(_, value) {
     setPlayPosition(value)
     setSeeking(true)
-    spotifyAxios.put(`me/player/seek?position_ms=${value * 1000}`).then(() => {
-      setSeeking(false)
-      setPlayPosition(value)
-    })
+    await spotifyAxios.put(`me/player/seek?position_ms=${value * 1000}`)
+    await update()
+    setSeeking(false)
+    setPlayPosition(value)
   }
 
   async function togglePlay() {
@@ -137,6 +137,7 @@ export default function Player() {
     } else {
       await spotifyAxios.put(`/me/player/${isPlaying ? 'pause' : 'play'}`)
     }
+    await update()
     setSeeking(false)
     setIsPlaying(!isPlaying)
     setMonitorCurrentlyPlaying(true)
@@ -170,11 +171,6 @@ export default function Player() {
   function update() {
     if (!isWebPlayback()) return updateCurrentlyPlaying()
   }
-
-  useEffect(() => {
-    setLastUpdateTime(new Date())
-    setLastPlayPosition(playPosition)
-  }, [playPosition, setLastUpdateTime, setLastPlayPosition])
 
   function valuetext(value) {
     value = value || 0

@@ -12,6 +12,8 @@ export function PlayerProvider(props) {
   const [currentlyPlaying, setCurrentlyPlaying] = useState()
   const [playPosition, setPlayPosition] = useState(0)
   const [duration, setDuration] = useState(0)
+  const [lastUpdateTime, setLastUpdateTime] = useState()
+  const [lastPlayPosition, setLastPlayPosition] = useState()
 
   function storeDevice() {
     if (device) localStorage.setItem('lastPlayingDevice', device.id)
@@ -34,6 +36,10 @@ export function PlayerProvider(props) {
     setPlayPosition,
     duration,
     setDuration,
+    lastUpdateTime,
+    setLastUpdateTime,
+    lastPlayPosition,
+    setLastPlayPosition,
   }
 
   return (

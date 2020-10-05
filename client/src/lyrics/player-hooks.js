@@ -43,7 +43,7 @@ export default function usePlayTrack() {
 }
 
 export function useUpdatePlayingTrack() {
-  const { setPlaylist, setTrackId, tracks, setTracks, radio } = useContext(
+  const { setPlaylist, setTrackId, tracks, setTracks } = useContext(
     PlaylistContext
   )
   const {
@@ -51,6 +51,8 @@ export function useUpdatePlayingTrack() {
     setPlayPosition,
     setDuration,
     monitorCurrentlyPlaying,
+    setLastUpdateTime,
+    setLastPlayPosition,
   } = useContext(PlayerContext)
 
   function setPlaylistFromContext(uri, item) {
@@ -74,7 +76,7 @@ export function useUpdatePlayingTrack() {
         const { is_playing, progress_ms, item, context } = data
         const { id, uri: trackUri } = item
         const found = tracks.find((t) => trackUri === t.uri)
-        if (monitorCurrentlyPlaying && id && !radio && !found) {
+        if (monitorCurrentlyPlaying && id && !found) {
           const { uri } = context || {}
           if (uri) setPlaylistFromContext(uri, item)
           else setTracks([Track.fromSpotify(item)])
@@ -83,10 +85,12 @@ export function useUpdatePlayingTrack() {
         setIsPlaying(is_playing)
         const playPosition = progress_ms / 1000
         setPlayPosition(playPosition)
+        setLastUpdateTime(Date.now())
+        setLastPlayPosition(playPosition)
+
         if (item) {
           setDuration(item.duration_ms / 1000)
         }
-        return playPosition
       }
     })
   }
