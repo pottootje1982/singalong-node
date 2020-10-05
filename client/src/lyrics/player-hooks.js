@@ -75,7 +75,7 @@ export function useUpdatePlayingTrack() {
         const { is_playing, progress_ms, item, context } = data
         const { id, uri: trackUri } = item
         const found = tracks.find((t) => trackUri === t.uri)
-        if (monitorCurrentlyPlaying && id && !found) {
+        if (monitorCurrentlyPlaying && id && !found && is_playing) {
           const { uri } = context || {}
           if (uri) setPlaylistFromContext(uri, item)
           else setTracks([Track.fromSpotify(item)])

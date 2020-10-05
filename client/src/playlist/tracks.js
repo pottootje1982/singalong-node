@@ -5,7 +5,7 @@ import { List, useMediaQuery } from '@material-ui/core'
 import TrackItem from './track-item'
 import isEquivalent from '../isEquivalent'
 import { Track } from '../track'
-import PlaylistContext from './playlist-context'
+import PlaylistContext, { getPlaylist } from './playlist-context'
 import PlayerContext from '../lyrics/player-context'
 import { useHistory } from 'react-router-dom'
 import AddToPlaylistMenu from './add-to-playlist-menu'
@@ -27,10 +27,13 @@ export default function Tracks({
     trackId,
     setTrackId,
     playlist,
+    setPlaylist,
     tracks,
     setTracks,
+    setRadio,
+    setCustomPlaylist,
   } = useContext(PlaylistContext)
-  const { player } = useContext(PlayerContext)
+  const { player, setMonitorCurrentlyPlaying } = useContext(PlayerContext)
   const [offset, setOffset] = useState()
   const [unmounted, setUnmounted] = useState(false)
   const mobile = !useMediaQuery('(min-width:600px)')
@@ -41,9 +44,24 @@ export default function Tracks({
   useEffect(addTracks, [offset])
   useEffect(refreshPlaylist, [track])
   useEffect(showPlaylist, [playlist, player])
+  useEffect(init, [])
   useEffect(() => {
     return unmount
   }, [])
+
+  function init() {
+    history.listen(() => {
+      const { urlRadio, urlPlaylist, urlCustomPlaylist } = getPlaylist()
+      setMonitorCurrentlyPlaying(false)
+      setPlaylist(null)
+      setCustomPlaylist(null)
+      setRadio(null)
+      setTrackId(null)
+      if (urlRadio) setRadio(`FIP_${Date.now()}`)
+      else if (urlCustomPlaylist) setCustomPlaylist(urlCustomPlaylist)
+      else setPlaylist(urlPlaylist)
+    })
+  }
 
   function unmount() {
     setUnmounted(true)
@@ -53,7 +71,6 @@ export default function Tracks({
     if (playlist && player) {
       setTracks([])
       setOffset(0)
-      history.push(`/playlist/${playlist}`)
     }
   }
 

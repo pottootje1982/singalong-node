@@ -4,12 +4,19 @@ const PlaylistContext = createContext()
 
 export default PlaylistContext
 
-export function PlaylistProvider(props) {
+export function getPlaylist() {
   const [, urlRadio] = window.location.pathname.match(/radio\/(.*)/) || []
   const [, urlPlaylist] = window.location.pathname.match(/playlist\/(.*)/) || []
+  const [, urlCustomPlaylist] =
+    window.location.pathname.match(/custom-playlist\/(.*)/) || []
+  return { urlRadio, urlPlaylist, urlCustomPlaylist }
+}
+
+export function PlaylistProvider(props) {
+  const { urlPlaylist, urlRadio, urlCustomPlaylist } = getPlaylist()
   const [playlist, setPlaylist] = useState(urlPlaylist)
   const [radio, setRadio] = useState(urlRadio)
-  const [customPlaylist, setCustomPlaylist] = useState()
+  const [customPlaylist, setCustomPlaylist] = useState(urlCustomPlaylist)
   const [track, setTrack] = useState()
   const [trackId, setTrackId] = useState('')
   const [tracks, setTracks] = useState([])

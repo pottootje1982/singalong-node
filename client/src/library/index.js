@@ -14,26 +14,16 @@ export default function Library() {
   const [allPlaylists, setAllPlaylists] = useState([])
   const searchRef = useRef(null)
   const mobile = !useMediaQuery('(min-width:600px)')
-  const {
-    setTrackId,
-    playlist,
-    setPlaylist,
-    radio,
-    setRadio,
-    setCustomPlaylist,
-  } = useContext(PlaylistContext)
+  const { playlist, setPlaylist, radio, setRadio } = useContext(PlaylistContext)
   const {
     playlists,
     setPlaylists,
     customPlaylists,
     setCustomPlaylists,
   } = useContext(LibraryContext)
-  const {
-    monitorCurrentlyPlaying,
-    setMonitorCurrentlyPlaying,
-    player,
-    isPlaying,
-  } = useContext(PlayerContext)
+  const { monitorCurrentlyPlaying, player, isPlaying } = useContext(
+    PlayerContext
+  )
   const history = useHistory()
 
   function init() {
@@ -66,22 +56,15 @@ export default function Library() {
   }
 
   function showFip() {
-    setTrackId(null)
-    setRadio(`FIP_${Date.now()}`)
     history.push('/radio/fip')
   }
 
   function onPlaylistClick(playlist) {
     if (playlist) {
-      setMonitorCurrentlyPlaying(false)
-      setTrackId(null)
-      setRadio(null)
       if (playlist.uri) {
-        setCustomPlaylist(null)
-        setPlaylist(playlist.uri)
+        history.push(`/playlist/${playlist}`)
       } else if (playlist.id) {
-        setPlaylist(null)
-        setCustomPlaylist(playlist.id)
+        history.push(`/custom-playlist/${playlist.id}`)
       }
     }
   }
