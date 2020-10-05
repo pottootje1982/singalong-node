@@ -4,7 +4,7 @@
 
 ## Improvements
 
-- do update get currently playing track in playlist rather than player
+- show playlists quicker by using spotifyAxios
 - show currently playing device
 - consider using material ui Alert for exception coming from server
 
@@ -12,6 +12,3 @@
 
 - sorting of playlist
 - Different radio stations (and configure which show up for a user)
-
-- youtube ?
-- meta data ?

@@ -42,10 +42,8 @@ export default function usePlayTrack() {
   }
 }
 
-export function useUpdatePlayingTrack() {
-  const { setPlaylist, setTrackId, tracks, setTracks } = useContext(
-    PlaylistContext
-  )
+export function useUpdatePlayingTrack(navigateToPlaylist) {
+  const { setTrackId, tracks, setTracks } = useContext(PlaylistContext)
   const {
     setIsPlaying,
     setPlayPosition,
@@ -61,22 +59,22 @@ export function useUpdatePlayingTrack() {
         let { tracks: artistTracks } = data || {}
         artistTracks = artistTracks || []
         const found = artistTracks.find((t) => t.uri === item.uri)
-        if (found) setPlaylist(uri)
-        else setPlaylist(item.album.uri)
+        if (found) navigateToPlaylist(uri)
+        else navigateToPlaylist(item.album.uri)
       })
     } else {
-      setPlaylist(uri)
+      navigateToPlaylist(uri)
     }
   }
 
   return () => {
     return spotifyAxios.get(`/me/player/currently-playing`).then(({ data }) => {
-      if (data) {
-        const { is_playing, progress_ms, item, context } = data
+      const { is_playing, progress_ms, item, context } = data || {}
+      if (item) {
         const { id, uri: trackUri } = item
         const found = tracks.find((t) => trackUri === t.uri)
+        const { uri } = context || {}
         if (monitorCurrentlyPlaying && id && !found && is_playing) {
-          const { uri } = context || {}
           if (uri) setPlaylistFromContext(uri, item)
           else setTracks([Track.fromSpotify(item)])
           setTrackId(item.id)
@@ -90,7 +88,9 @@ export function useUpdatePlayingTrack() {
         if (item) {
           setDuration(item.duration_ms / 1000)
         }
+        return { uri, is_playing }
       }
+      return {}
     })
   }
 }

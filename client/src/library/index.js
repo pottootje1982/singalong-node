@@ -6,27 +6,30 @@ import { get } from '../server'
 import LibraryList from './library-list'
 import PlaylistContext from '../playlist/playlist-context'
 import LibraryContext from './library-context'
-import PlayerContext from '../lyrics/player-context'
 import { useHistory } from 'react-router-dom'
+import { useUpdatePlayingTrack } from '../lyrics/player-hooks'
 
 export default function Library() {
   const [offset, setOffset] = useState()
   const [allPlaylists, setAllPlaylists] = useState([])
+  const [currentlyPlaying, setCurrentlyPlaying] = useState()
   const searchRef = useRef(null)
   const mobile = !useMediaQuery('(min-width:600px)')
-  const { playlist, setPlaylist, radio, setRadio } = useContext(PlaylistContext)
+  const { playlist, radio, customPlaylist } = useContext(PlaylistContext)
   const {
     playlists,
     setPlaylists,
     customPlaylists,
     setCustomPlaylists,
   } = useContext(LibraryContext)
-  const { monitorCurrentlyPlaying, player, isPlaying } = useContext(
-    PlayerContext
-  )
   const history = useHistory()
+  const updateCurrentlyPlaying = useUpdatePlayingTrack(navigateToPlaylist)
 
   function init() {
+    updateCurrentlyPlaying().then(({ uri, is_playing }) => {
+      if (is_playing) setCurrentlyPlaying(uri)
+    })
+
     setOffset(0)
     getCustomPlaylists()
   }
@@ -37,8 +40,21 @@ export default function Library() {
     })
   }
 
+  function selectFirstPlaylist() {
+    if (
+      !currentlyPlaying &&
+      !playlist &&
+      !radio &&
+      !customPlaylist &&
+      playlists.length
+    ) {
+      navigateToPlaylist(playlists[0].uri)
+    }
+  }
+
   useEffect(getPlaylists, [offset])
   useEffect(init, [])
+  useEffect(selectFirstPlaylist, [playlists, currentlyPlaying])
 
   function getPlaylists() {
     if (offset === -1) {
@@ -62,27 +78,20 @@ export default function Library() {
   function onPlaylistClick(playlist) {
     if (playlist) {
       if (playlist.uri) {
-        history.push(`/playlist/${playlist}`)
+        navigateToPlaylist(playlist.uri)
       } else if (playlist.id) {
         history.push(`/custom-playlist/${playlist.id}`)
       }
     }
   }
 
-  function selectFirstPlaylist() {
-    if (player && !(isPlaying && monitorCurrentlyPlaying) && !radio) {
-      const firstPlaylist = playlists[0] && playlists[0].uri
-      setPlaylist(playlist || firstPlaylist)
-    } else if (radio) {
-      setRadio(radio)
-    }
-  }
-
-  useEffect(selectFirstPlaylist, [playlists, setPlaylist, player])
-
   useEffect(() => {
     setAllPlaylists([...customPlaylists, ...playlists])
   }, [playlists, customPlaylists])
+
+  function navigateToPlaylist(uri) {
+    history.push(`/playlist/${uri}`)
+  }
 
   const selectedPlaylist =
     playlists.find((p) => p.uri === playlist) || playlists[0]

@@ -9,7 +9,12 @@ export function getPlaylist() {
   const [, urlPlaylist] = window.location.pathname.match(/playlist\/(.*)/) || []
   const [, urlCustomPlaylist] =
     window.location.pathname.match(/custom-playlist\/(.*)/) || []
-  return { urlRadio, urlPlaylist, urlCustomPlaylist }
+  return {
+    urlRadio,
+    urlPlaylist:
+      urlPlaylist && urlPlaylist.replace(/spotify:user:\d+/, 'spotify'),
+    urlCustomPlaylist,
+  }
 }
 
 export function PlaylistProvider(props) {

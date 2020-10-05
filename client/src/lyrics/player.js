@@ -8,9 +8,10 @@ import usePlayTrack, { useUpdatePlayingTrack } from './player-hooks'
 import PlayerContext from './player-context'
 import PlaylistContext from '../playlist/playlist-context'
 import WebPlayer from './web-player'
+import { useHistory } from 'react-router-dom'
 
 export default function Player() {
-  const { track, setTrackId, setPlaylist } = useContext(PlaylistContext)
+  const { track, setTrackId } = useContext(PlaylistContext)
   const {
     device,
     player,
@@ -32,8 +33,9 @@ export default function Player() {
   const [timestamp, setTimestamp] = useState()
   const [seeking, setSeeking] = useState(false)
   const playTrack = usePlayTrack()
-  const updateCurrentlyPlaying = useUpdatePlayingTrack()
+  const updateCurrentlyPlaying = useUpdatePlayingTrack(navigateToPlaylist)
   const [playerState, setPlayerState] = useState()
+  const history = useHistory()
 
   function init() {
     spotifyAxios.get('/me/player').then(({ data }) => {
@@ -74,7 +76,7 @@ export default function Player() {
   function showCurrentlyPlayingTrack() {
     if (currentlyPlaying) {
       setTrackId(currentlyPlaying.item.id)
-      setPlaylist(currentlyPlaying.context.uri)
+      navigateToPlaylist(currentlyPlaying.context.uri)
     }
   }
 
@@ -91,7 +93,7 @@ export default function Player() {
       setPlayPosition(position / 1000)
       setDuration(duration / 1000)
       if (monitorCurrentlyPlaying) {
-        setPlaylist(context.uri)
+        navigateToPlaylist(context.uri)
         setTrackId(current_track.linked_from.id || current_track.id)
       }
     }
@@ -176,6 +178,10 @@ export default function Player() {
     value = value || 0
     const minutes = value / 60
     return `${pad(minutes, 2)}:${pad(value % 60, 2)}`
+  }
+
+  function navigateToPlaylist(uri) {
+    history.push(`/playlist/${uri}`)
   }
 
   return (

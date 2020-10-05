@@ -172,6 +172,7 @@ export default function PlaylistToolbar({
           xs
           style={{ minWidth: mobile ? 200 : 300 }}
           spacing={1}
+          alignItems="center"
         >
           <Grid item>
             <IconButton size="small" onClick={() => setAdjacentTrack(-1)}>

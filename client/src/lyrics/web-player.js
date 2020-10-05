@@ -3,11 +3,9 @@ import Script from 'react-load-script'
 import { getCookie } from '../cookie'
 
 import PlayerContext from './player-context'
-import { useUpdatePlayingTrack } from './player-hooks'
 
 export default function WebPlayer({ setPlayerState }) {
   const { setPlayer } = useContext(PlayerContext)
-  const updateCurrentlyPlaying = useUpdatePlayingTrack()
 
   function init() {
     window.onSpotifyWebPlaybackSDKReady = () => {
@@ -58,7 +56,6 @@ export default function WebPlayer({ setPlayerState }) {
     player.addListener('ready', ({ device_id }) => {
       console.log('Ready with Device ID', device_id)
 
-      updateCurrentlyPlaying()
       setPlayer(player)
     })
 
