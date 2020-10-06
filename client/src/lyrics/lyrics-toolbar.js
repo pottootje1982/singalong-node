@@ -7,7 +7,7 @@ import { Fullscreen, FullscreenExit } from '@material-ui/icons'
 import { Track } from '../track'
 import LyricsMenu from './lyrics-menu'
 import PlaylistContext from '../playlist/playlist-context'
-import Player from './player'
+import Player from '../player'
 
 export default function LyricsToolbar({
   lyricsFullscreen,

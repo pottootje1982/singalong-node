@@ -126,6 +126,7 @@ export default function Player() {
   async function onPlayPositionClick(_, value) {
     setPlayPosition(value)
     setSeeking(true)
+    console.trace()
     await spotifyAxios.put(`me/player/seek?position_ms=${value * 1000}`)
     await update()
     setSeeking(false)

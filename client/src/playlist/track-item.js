@@ -10,9 +10,9 @@ import {
   useMediaQuery,
 } from '@material-ui/core'
 import { PlayArrow, QueueMusic, Add } from '@material-ui/icons'
-import usePlayTrack from '../lyrics/player-hooks'
+import usePlayTrack from '../player/player-hooks'
 import PlaylistContext from './playlist-context'
-import PlayerContext from '../lyrics/player-context'
+import PlayerContext from '../player/player-context'
 
 export default function TrackItem({
   track,

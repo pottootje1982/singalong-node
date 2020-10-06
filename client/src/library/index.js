@@ -7,7 +7,7 @@ import LibraryList from './library-list'
 import PlaylistContext from '../playlist/playlist-context'
 import LibraryContext from './library-context'
 import { useHistory } from 'react-router-dom'
-import { useUpdatePlayingTrack } from '../lyrics/player-hooks'
+import { useUpdatePlayingTrack } from '../player/player-hooks'
 
 export default function Library() {
   const [offset, setOffset] = useState()
@@ -93,8 +93,7 @@ export default function Library() {
     history.push(`/playlist/${uri}`)
   }
 
-  const selectedPlaylist =
-    playlists.find((p) => p.uri === playlist) || playlists[0]
+  const selectedPlaylist = allPlaylists.find((p) => p.uri === playlist)
 
   return (
     <Grid
@@ -112,8 +111,13 @@ export default function Library() {
             value={selectedPlaylist}
             onChange={(_, p) => onPlaylistClick(p)}
             autoHighlight
-            options={selectedPlaylist ? allPlaylists : []}
+            options={allPlaylists}
             getOptionLabel={(option) => option.name}
+            getOptionSelected={(option) =>
+              selectedPlaylist
+                ? option.uri === playlist
+                : allPlaylists.indexOf(option) === 0
+            }
             style={{ width: mobile && 300 }}
             size="small"
             renderInput={(params) => (

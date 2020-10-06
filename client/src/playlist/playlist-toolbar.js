@@ -19,10 +19,10 @@ import ToggleButton from '@material-ui/lab/ToggleButton'
 import Autocomplete from '@material-ui/lab/Autocomplete'
 
 import { Track } from '../track'
-import PlayerContext from '../lyrics/player-context'
+import PlayerContext from '../player/player-context'
 import PlaylistContext from './playlist-context'
 import { spotifyAxios } from '../server'
-import usePlayTrack from '../lyrics/player-hooks'
+import usePlayTrack from '../player/player-hooks'
 import FilterContextMenu from './filter-context-menu'
 
 const sleepTime = 3000

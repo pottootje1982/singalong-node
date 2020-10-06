@@ -6,7 +6,7 @@ import TrackItem from './track-item'
 import isEquivalent from '../isEquivalent'
 import { Track } from '../track'
 import PlaylistContext, { getPlaylist } from './playlist-context'
-import PlayerContext from '../lyrics/player-context'
+import PlayerContext from '../player/player-context'
 import { useHistory } from 'react-router-dom'
 import AddToPlaylistMenu from './add-to-playlist-menu'
 

@@ -14,6 +14,7 @@ export default function usePlayTrack() {
   } = useContext(PlayerContext)
 
   return (uri, playPosition) => {
+    console.trace()
     let uris, context_uri, position
     const playArtist = playlist && playlist.includes('artist')
     if (playArtist || radio) {
