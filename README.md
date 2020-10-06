@@ -5,7 +5,6 @@
 ## Improvements
 
 - show playlists quicker by using spotifyAxios
-- show currently playing device
 - consider using material ui Alert for exception coming from server
 
 ## Features

@@ -8,7 +8,9 @@ export function PlayerProvider(props) {
   const [player, setPlayer] = useState()
   const [isPlaying, setIsPlaying] = useState()
   const [monitorCurrentlyPlaying, setMonitorCurrentlyPlaying] = useState(true)
-  const [device, setDevice] = useState()
+  const [device, setDevice] = useState(
+    localStorage.getItem('lastPlayingDevice')
+  )
   const [currentlyPlaying, setCurrentlyPlaying] = useState()
   const [playPosition, setPlayPosition] = useState(0)
   const [duration, setDuration] = useState(0)
@@ -16,7 +18,7 @@ export function PlayerProvider(props) {
   const [lastPlayPosition, setLastPlayPosition] = useState()
 
   function storeDevice() {
-    if (device) localStorage.setItem('lastPlayingDevice', device.id)
+    if (device) localStorage.setItem('lastPlayingDevice', device)
   }
 
   useEffect(storeDevice, [device])

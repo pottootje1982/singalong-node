@@ -29,23 +29,12 @@ export default function Player() {
   } = useContext(PlayerContext)
 
   const [updateInterval, setUpdateInterval] = useState()
-  const [currentlyPlayingDevice, setCurrentlyPlayingDevice] = useState()
   const [timestamp, setTimestamp] = useState()
   const [seeking, setSeeking] = useState(false)
   const playTrack = usePlayTrack()
   const updateCurrentlyPlaying = useUpdatePlayingTrack(navigateToPlaylist)
   const [playerState, setPlayerState] = useState()
   const history = useHistory()
-
-  function init() {
-    spotifyAxios.get('/me/player').then(({ data }) => {
-      const { device } = data || {}
-      if (device) {
-        setCurrentlyPlayingDevice(device)
-      }
-    })
-  }
-  useEffect(init, [])
 
   function updatePlayingPosition() {
     if (!seeking) {
@@ -102,18 +91,7 @@ export default function Player() {
   useEffect(updatePlayerState, [playerState])
 
   function deviceUpdated() {
-    if (currentlyPlayingDevice) {
-      update()
-    }
-    // To prevent playback being set again on startup
-    if (
-      currentlyPlayingDevice &&
-      device &&
-      device.id !== currentlyPlayingDevice.id
-    ) {
-      spotifyAxios.put(`/me/player`, { device_ids: [device.id] })
-      setCurrentlyPlayingDevice(device)
-    }
+    if (device) update()
   }
 
   function monitorUpdated() {
@@ -121,12 +99,11 @@ export default function Player() {
   }
 
   useEffect(monitorUpdated, [monitorCurrentlyPlaying])
-  useEffect(deviceUpdated, [device, currentlyPlayingDevice])
+  useEffect(deviceUpdated, [device])
 
   async function onPlayPositionClick(_, value) {
     setPlayPosition(value)
     setSeeking(true)
-    console.trace()
     await spotifyAxios.put(`me/player/seek?position_ms=${value * 1000}`)
     await update()
     setSeeking(false)
@@ -168,7 +145,7 @@ export default function Player() {
 
   function isWebPlayback() {
     const { _options } = player || {}
-    return (device && device.id) === (_options && _options.id)
+    return device === (_options && _options.id)
   }
 
   function update() {

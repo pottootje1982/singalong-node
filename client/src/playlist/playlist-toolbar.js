@@ -41,13 +41,13 @@ export default function PlaylistToolbar({
   const {
     device,
     setDevice,
-    player,
     setMonitorCurrentlyPlaying,
     isPlaying,
+    player,
   } = useContext(PlayerContext)
 
   const [deviceOpen, setDeviceOpen] = useState(false)
-  const [devices, setDevices] = useState([])
+  const [devices, setDevices] = useState()
   const [isDownloading, setIsDownloading] = useState(false)
   const [tracksToDownload, setTracksToDownload] = useState([])
   const mobile = !useMediaQuery('(min-width:600px)')
@@ -58,6 +58,11 @@ export default function PlaylistToolbar({
     if (player) {
       spotifyAxios.get('/me/player/devices').then(({ data: { devices } }) => {
         devices = devices || []
+        const deviceToSelect =
+          devices.find((d) => d.is_active) ||
+          devices.find((d) => d.id === device) ||
+          devices[0]
+        if (deviceToSelect) setDevice(deviceToSelect.id)
         setDevices(devices)
       })
     }
@@ -65,20 +70,10 @@ export default function PlaylistToolbar({
 
   useEffect(getDevices, [player])
 
-  function selectLastPlayingDevice() {
-    const lastSelectedDeviceId = localStorage.getItem('lastPlayingDevice')
-    const lastSelectedDevice = devices.find(
-      (d) => d.id === lastSelectedDeviceId
-    )
-    setDevice(
-      devices.find((d) => d.is_active) || lastSelectedDevice || devices[0]
-    )
-  }
-
-  useEffect(selectLastPlayingDevice, [devices])
-
   function selectDevice() {
-    if (device) spotifyAxios.put('/me/player', { device_ids: [device.id] })
+    if (devices) {
+      spotifyAxios.put('/me/player', { device_ids: [device] })
+    }
   }
 
   useEffect(selectDevice, [device])
@@ -186,10 +181,14 @@ export default function PlaylistToolbar({
               value={track}
               onChange={onSelectTrack}
               autoHighlight
-              options={track && trackFound ? tracks : []}
+              options={tracks}
               noOptionsText=""
               getOptionLabel={(t) => t.toString(trackFilters)}
-              getOptionSelected={(option, value) => option.id === trackId}
+              getOptionSelected={(option, value) =>
+                trackFound
+                  ? option.id === value.id
+                  : tracks.indexOf(option) === 0
+              }
               size="small"
               renderInput={(params) => (
                 <TextField
@@ -209,7 +208,7 @@ export default function PlaylistToolbar({
         </Grid>
       )}
 
-      {!(mobile && lyricsFullscreen) && device && (
+      {!(mobile && lyricsFullscreen) && devices && device && (
         <Grid item>
           <FormControl variant="outlined" size="small">
             <InputLabel id="device-select">Device:</InputLabel>
@@ -219,12 +218,12 @@ export default function PlaylistToolbar({
               label="Device:"
               onClose={() => setDeviceOpen(false)}
               onOpen={() => setDeviceOpen(true)}
-              value={device}
-              onChange={(e) => setDevice(e.target.value)}
+              value={(devices || []).find((d) => d.id === device)}
+              onChange={(e) => setDevice(e.target.value.id)}
               fullWidth
               style={{ width: 150 }}
             >
-              {devices.map((d, i) => (
+              {(devices || []).map((d, i) => (
                 <MenuItem key={i} value={d}>
                   {d.name}
                 </MenuItem>
