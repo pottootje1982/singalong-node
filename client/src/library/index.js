@@ -58,7 +58,7 @@ export default function Library() {
 
   function getPlaylists() {
     if (offset === -1) {
-      searchRef.current.focus()
+      if (searchRef.current) searchRef.current.focus()
     } else if (offset >= 0) {
       get(`playlists`, { params: { offset, limit: 50 } }).then(
         ({ data: { playlists: newPlaylists, hasMore } }) => {

@@ -5,7 +5,8 @@ import { useHistory } from 'react-router-dom'
 
 function Authorize() {
   get('/authorize').then((res) => {
-    window.location = res.data
+    const { data } = res || {}
+    if (data) window.location = res.data
   })
   return <React.Fragment />
 }
@@ -17,7 +18,8 @@ export function Authorized({ location }) {
 
   useEffect(() => {
     get(`/authorize/token?code=${code}`)
-      .then(({ data }) => {
+      .then((res) => {
+        const { data } = res || {}
         if (data) {
           server.setToken(data)
           history.push('/playlist')

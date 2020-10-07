@@ -2,6 +2,8 @@
 
 ## Bugs
 
+- authorize without nodeJS server
+
 ## Improvements
 
 - show playlists quicker by using spotifyAxios

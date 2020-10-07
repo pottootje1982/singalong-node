@@ -35,13 +35,16 @@ function createSpotifyAxios() {
 export function getFreshToken() {
   return get('/authorize/refresh', {
     refreshToken: getCookie('refreshToken'),
-  }).then(({ data }) => {
-    if (data) {
-      console.log('Refreshed token to ', data)
-      setToken(data)
-      return data.access_token
-    }
   })
+    .then((res) => {
+      const { data } = res || {}
+      if (data) {
+        console.log('Refreshed token to ', data)
+        setToken(data)
+        return data.access_token
+      }
+    })
+    .catch(console.log)
 }
 
 let tokenUpdater
@@ -66,25 +69,25 @@ export function setToken(tokens) {
 
 export function get(...params) {
   return defaultAxios.get(...params).catch(({ response }) => {
-    if (response && response.status === 401) window.location = '/'
+    if (response && response.status === 401) window.location = '/authorize'
   })
 }
 
 export function post(...params) {
   return defaultAxios.post(...params).catch(({ response }) => {
-    if (response && response.status === 401) window.location = '/'
+    if (response && response.status === 401) window.location = '/authorize'
   })
 }
 
 export function del(...params) {
   return defaultAxios.delete(...params).catch(({ response }) => {
-    if (response && response.status === 401) window.location = '/'
+    if (response && response.status === 401) window.location = '/authorize'
   })
 }
 
 export function put(...params) {
   return defaultAxios.put(...params).catch(({ response }) => {
-    if (response && response.status === 401) window.location = '/'
+    if (response && response.status === 401) window.location = '/authorize'
   })
 }
 
