@@ -35,7 +35,7 @@ export default function Library() {
   }
 
   function getCustomPlaylists() {
-    get('playlists/custom').then(({ data: { playlists } }) => {
+    get('/api/playlists/custom').then(({ data: { playlists } }) => {
       if (playlists) setCustomPlaylists(playlists)
     })
   }
@@ -60,7 +60,7 @@ export default function Library() {
     if (offset === -1) {
       if (searchRef.current) searchRef.current.focus()
     } else if (offset >= 0) {
-      get(`playlists`, { params: { offset, limit: 50 } }).then(
+      get('/api/playlists', { params: { offset, limit: 50 } }).then(
         ({ data: { playlists: newPlaylists, hasMore } }) => {
           if (!newPlaylists) return
           const items = [...playlists, ...newPlaylists]

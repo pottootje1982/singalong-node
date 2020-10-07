@@ -4,7 +4,7 @@ import server, { get } from '../server'
 import { useHistory } from 'react-router-dom'
 
 function Authorize() {
-  get('/authorize').then((res) => {
+  get('/api/authorize').then((res) => {
     const { data } = res || {}
     if (data) window.location = res.data
   })
@@ -17,7 +17,7 @@ export function Authorized({ location }) {
   const history = useHistory()
 
   useEffect(() => {
-    get(`/authorize/token?code=${code}`)
+    get(`/api/authorize/token?code=${code}`)
       .then((res) => {
         const { data } = res || {}
         if (data) {

@@ -33,7 +33,7 @@ function createSpotifyAxios() {
 }
 
 export function getFreshToken() {
-  return get('/authorize/refresh', {
+  return get('/api/authorize/refresh', {
     refreshToken: getCookie('refreshToken'),
   })
     .then((res) => {

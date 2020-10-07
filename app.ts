@@ -28,11 +28,11 @@ process.on('unhandledRejection', (reason, p) => {
 const cors = require('cors')
 app.use(cors())
 
-app.use('/authorize', authorize)
-app.use('/playlists', playlists)
-app.use('/lyrics', lyrics)
-app.use('/radio', radio)
-app.use('/spotify', spotify)
+app.use('/api/authorize', authorize)
+app.use('/api/playlists', playlists)
+app.use('/api/lyrics', lyrics)
+app.use('/api/radio', radio)
+app.use('/api/spotify', spotify)
 
 // The "catchall" handler: for any request that doesn't
 // match one above, send back React's index.html file.

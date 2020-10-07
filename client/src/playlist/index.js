@@ -21,12 +21,12 @@ export default function Playlist({
   function showCustomPlaylist() {
     if (customPlaylist) {
       setTracks([])
-      get(`/playlists/${customPlaylist}/custom`).then(
+      get(`/api/playlists/${customPlaylist}/custom`).then(
         ({ data: { tracks } }) => {
           if (!tracks) return
           setTracks(tracks.map(Track.copy))
           setTrackId(tracks[0].id)
-          post('/spotify/search', { tracks }).then(
+          post('/api/spotify/search', { tracks }).then(
             ({ data: { tracks: foundTracks } }) => {
               setTracks((foundTracks || []).map(Track.copy))
             }
@@ -41,11 +41,11 @@ export default function Playlist({
   function showCurrentlyOnFip() {
     if (radio) {
       setTracks([])
-      get('/radio/fip').then(({ data: { tracks, position } }) => {
+      get('/api/radio/fip').then(({ data: { tracks, position } }) => {
         if (!tracks) return alert('Cannot retrieve playing status radio')
         setTracks(tracks.map(Track.copy))
         setTrackId(tracks[position].id)
-        post('/spotify/search', { tracks }).then(
+        post('/api/spotify/search', { tracks }).then(
           ({ data: { tracks: foundTracks } }) => {
             setTracks((foundTracks || []).map(Track.copy))
           }

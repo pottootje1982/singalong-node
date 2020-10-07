@@ -96,7 +96,7 @@ export default function Tracks({
       // end of playlist
       selectTrack()
     } else if (playlist && offset >= 0) {
-      get(`playlists/${playlist}`, { params: { offset } })
+      get(`/api/playlists/${playlist}`, { params: { offset } })
         .then(({ data: { tracks: newTracks, hasMore } }) => {
           if (!newTracks || newTracks.length === 0 || unmounted) return
           newTracks = [...tracks, ...newTracks]
