@@ -11,7 +11,7 @@ import WebPlayer from './web-player'
 import { useHistory } from 'react-router-dom'
 
 export default function Player() {
-  const { track, setTrackId } = useContext(PlaylistContext)
+  const { track, setTrackId, tracks } = useContext(PlaylistContext)
   const {
     device,
     player,
@@ -81,9 +81,13 @@ export default function Player() {
       } = playerState
       setPlayPosition(position / 1000)
       setDuration(duration / 1000)
-      if (monitorCurrentlyPlaying) {
+      const { linked_from_uri, uri, linked_from, id } = current_track || {}
+      const uriPlaying = linked_from_uri || uri
+      const trackPlaying = tracks.find((t) => t.uri === uriPlaying)
+      const idToSelect = linked_from.id || id
+      if (monitorCurrentlyPlaying && !trackPlaying) {
         navigateToPlaylist(context.uri)
-        setTrackId(current_track.linked_from.id || current_track.id)
+        setTrackId(idToSelect)
       }
     }
   }
