@@ -1,18 +1,16 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState } from 'react'
 import Library from './library'
 import Playlist from './playlist'
 import Lyrics from './lyrics'
 import { Grid, useMediaQuery } from '@material-ui/core'
 import { getCookie } from './cookie'
-import { getFreshToken } from './server'
 import CssBaseline from '@material-ui/core/CssBaseline'
-import { useHistory } from 'react-router-dom'
+import IdleTimer from 'react-idle-timer'
+import { getFreshToken } from './server'
 
 function App() {
   const [lyricsFullscreen, setLyricsFullscreen] = useState(false)
-  const [token, setToken] = useState(getCookie('accessToken'))
   const mobile = !useMediaQuery('(min-width:600px)')
-  const history = useHistory()
 
   const [trackFilters, setTrackFilters] = useState({
     minimalTitle: true,
@@ -20,17 +18,15 @@ function App() {
     hideArtist: false,
   })
 
-  function init() {
-    if (!token)
-      getFreshToken().then((t) => {
-        if (t) setToken(t)
-        else history.push('/authorize')
-      })
+  function onAction() {
+    if (!getCookie('accessToken')) {
+      getFreshToken()
+    }
   }
-  useEffect(init, [])
 
-  return token ? (
+  return (
     <>
+      <IdleTimer element={document} onAction={onAction} debounce={500} />
       <CssBaseline />
       <Grid
         container
@@ -52,14 +48,12 @@ function App() {
             alignItems="stretch"
           >
             <Lyrics
-              token={token}
               lyricsFullscreen={lyricsFullscreen}
               setLyricsFullscreen={setLyricsFullscreen}
               trackFilters={trackFilters}
             ></Lyrics>
             <Playlist
               lyricsFullscreen={lyricsFullscreen}
-              token={token}
               trackFilters={trackFilters}
               setTrackFilters={setTrackFilters}
             ></Playlist>
@@ -67,8 +61,6 @@ function App() {
         </Grid>
       </Grid>
     </>
-  ) : (
-    <React.Fragment />
   )
 }
 

@@ -33,9 +33,10 @@ function createSpotifyAxios() {
 }
 
 export function getFreshToken() {
-  return get('/api/authorize/refresh', {
-    refreshToken: getCookie('refreshToken'),
-  })
+  return defaultAxios
+    .get('/api/authorize/refresh', {
+      refreshToken: getCookie('refreshToken'),
+    })
     .then((res) => {
       const { data } = res || {}
       if (data) {
@@ -67,30 +68,6 @@ export function setToken(tokens) {
   }
 }
 
-export function get(...params) {
-  return defaultAxios.get(...params).catch(({ response }) => {
-    if (response && response.status === 401) window.location = '/authorize'
-  })
-}
+defaultAxios.setToken = setToken
 
-export function post(...params) {
-  return defaultAxios.post(...params).catch(({ response }) => {
-    if (response && response.status === 401) window.location = '/authorize'
-  })
-}
-
-export function del(...params) {
-  return defaultAxios.delete(...params).catch(({ response }) => {
-    if (response && response.status === 401) window.location = '/authorize'
-  })
-}
-
-export function put(...params) {
-  return defaultAxios.put(...params).catch(({ response }) => {
-    if (response && response.status === 401) window.location = '/authorize'
-  })
-}
-
-axios.setToken = setToken
-
-export default axios
+export default defaultAxios

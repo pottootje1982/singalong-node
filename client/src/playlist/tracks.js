@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useContext } from 'react'
-import { get } from '../server'
+import server from '../server'
 import { List, useMediaQuery } from '@material-ui/core'
 
 import TrackItem from './track-item'
@@ -96,7 +96,8 @@ export default function Tracks({
       // end of playlist
       selectTrack()
     } else if (playlist && offset >= 0) {
-      get(`/api/playlists/${playlist}`, { params: { offset } })
+      server
+        .get(`/api/playlists/${playlist}`, { params: { offset } })
         .then(({ data: { tracks: newTracks, hasMore } }) => {
           if (!newTracks || newTracks.length === 0 || unmounted) return
           newTracks = [...tracks, ...newTracks]

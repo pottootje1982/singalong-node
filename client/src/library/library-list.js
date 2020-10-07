@@ -3,7 +3,7 @@ import { List, ListItem, ListItemText, IconButton } from '@material-ui/core'
 import purple from '@material-ui/core/colors/purple'
 import { Delete } from '@material-ui/icons'
 
-import { del } from '../server'
+import server from '../server'
 import PlaylistContext from '../playlist/playlist-context'
 import LibraryContext from './library-context'
 import ConfirmationDialog from './confirmation-dialog'
@@ -52,7 +52,7 @@ export default function LibraryList({ playlists, onPlaylistClick }) {
   }
 
   function onPlaylistDelete() {
-    del(`/api/playlists/${pIdToDelete}/custom`)
+    server.delete(`/api/playlists/${pIdToDelete}/custom`)
     setCustomPlaylists(customPlaylists.filter((p) => p.id !== pIdToDelete))
   }
 

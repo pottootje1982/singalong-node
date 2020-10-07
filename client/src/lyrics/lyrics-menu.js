@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useContext } from 'react'
 import { IconButton } from '@material-ui/core'
-import { post, del } from '../server'
+import server from '../server'
 import { Menu, Divider } from '@material-ui/core'
 import { Menu as MenuIcon } from '@material-ui/icons'
 import CheckMenuItem from '../CheckMenuItem'
@@ -28,7 +28,7 @@ export default function LyricsMenu({
 
   function saveLyrics() {
     const lyrics = lyricsRef.current.value
-    post('/api/lyrics', { track, lyrics })
+    server.post('/api/lyrics', { track, lyrics })
     track.lyrics = lyrics
     setTrack(Track.copy({ ...track }))
     closeMenu()
@@ -36,7 +36,7 @@ export default function LyricsMenu({
 
   function removeLyrics() {
     track.lyrics = null
-    del('/api/lyrics', { data: { track } })
+    server.delete('/api/lyrics', { data: { track } })
     setTrack(Track.copy({ ...track }))
     closeMenu()
   }

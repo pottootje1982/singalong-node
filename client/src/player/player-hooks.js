@@ -1,5 +1,5 @@
 import { useContext } from 'react'
-import { get, spotifyAxios } from '../server'
+import server, { spotifyAxios } from '../server'
 import PlayerContext from './player-context'
 import PlaylistContext from '../playlist/playlist-context'
 import { Track } from '../track'
@@ -54,7 +54,7 @@ export function useUpdatePlayingTrack(navigateToPlaylist) {
 
   function setPlaylistFromContext(uri, item) {
     if (uri.includes(':artist:')) {
-      get(`/api/playlists/${uri}`).then(({ data }) => {
+      server.get(`/api/playlists/${uri}`).then(({ data }) => {
         let { tracks: artistTracks } = data || {}
         artistTracks = artistTracks || []
         const found = artistTracks.find((t) => t.uri === item.uri)

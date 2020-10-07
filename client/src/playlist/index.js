@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useContext } from 'react'
-import { get, post } from '../server'
+import server from '../server'
 import { Grid } from '@material-ui/core'
 import { Track } from '../track'
 import PlaylistToolbar from './playlist-toolbar'
@@ -16,40 +16,35 @@ export default function Playlist({
     PlaylistContext
   )
 
-  useEffect(showCustomPlaylist, [customPlaylist])
+  function showAndSearchPlaylist(url) {
+    setTracks([])
+    return server.get(url).then(({ data }) => {
+      const { tracks } = data || {}
+      if (!tracks) return
+      setTracks(tracks.map(Track.copy))
+      setTrackId(tracks[0].id)
+      server
+        .post('/api/spotify/search', { tracks })
+        .then(({ data: { tracks: foundTracks } }) => {
+          setTracks((foundTracks || []).map(Track.copy))
+        })
+      return data
+    })
+  }
 
+  useEffect(showCustomPlaylist, [customPlaylist])
   function showCustomPlaylist() {
     if (customPlaylist) {
-      setTracks([])
-      get(`/api/playlists/${customPlaylist}/custom`).then(
-        ({ data: { tracks } }) => {
-          if (!tracks) return
-          setTracks(tracks.map(Track.copy))
-          setTrackId(tracks[0].id)
-          post('/api/spotify/search', { tracks }).then(
-            ({ data: { tracks: foundTracks } }) => {
-              setTracks((foundTracks || []).map(Track.copy))
-            }
-          )
-        }
-      )
+      showAndSearchPlaylist(`/api/playlists/${customPlaylist}/custom`)
     }
   }
 
   useEffect(showCurrentlyOnFip, [radio])
-
   function showCurrentlyOnFip() {
     if (radio) {
-      setTracks([])
-      get('/api/radio/fip').then(({ data: { tracks, position } }) => {
-        if (!tracks) return alert('Cannot retrieve playing status radio')
-        setTracks(tracks.map(Track.copy))
+      showAndSearchPlaylist('/api/radio/fip').then((data) => {
+        const { position, tracks } = data || {}
         setTrackId(tracks[position].id)
-        post('/api/spotify/search', { tracks }).then(
-          ({ data: { tracks: foundTracks } }) => {
-            setTracks((foundTracks || []).map(Track.copy))
-          }
-        )
       })
     }
   }

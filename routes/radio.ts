@@ -3,7 +3,7 @@ const { get } = require('axios')
 import { Track } from '../client/src/track'
 const db = require('../scripts/db/databases')
 
-router.get('/fip', async (req, res) => {
+router.get('/fip', async (_req, res) => {
   const { lyricsDb } = await db.lyrics()
   const { data } = await get('https://api.radiofrance.fr/livemeta/pull/7')
   const { steps, levels } = data

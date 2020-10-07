@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useContext } from 'react'
-import { post } from '../server'
+import server from '../server'
 import {
   IconButton,
   Grid,
@@ -85,17 +85,19 @@ export default function PlaylistToolbar({
     sleep(trackIdToDownload ? sleepTime : 0).then(() => {
       if (isCancelled()) return
       const tail = tracksToDownload.slice(1)
-      post('lyrics/download', {
-        track: toDownload,
-        sleepTime,
-      }).then(({ data: { lyrics } }) => {
-        if (lyrics) {
-          setTrack(Track.copy({ ...toDownload, lyrics }))
-        }
-        if (isCancelled()) return
-        if (isDownloading && tail.length > 0) setTracksToDownload(tail)
-        else setTrackIdToDownload(null)
-      })
+      server
+        .post('lyrics/download', {
+          track: toDownload,
+          sleepTime,
+        })
+        .then(({ data: { lyrics } }) => {
+          if (lyrics) {
+            setTrack(Track.copy({ ...toDownload, lyrics }))
+          }
+          if (isCancelled()) return
+          if (isDownloading && tail.length > 0) setTracksToDownload(tail)
+          else setTrackIdToDownload(null)
+        })
     })
   }
 

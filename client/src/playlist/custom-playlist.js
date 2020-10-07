@@ -13,7 +13,7 @@ import {
   Button,
 } from '@material-ui/core'
 import { List, Edit } from '@material-ui/icons'
-import { post, put } from '../server'
+import server from '../server'
 import PlaylistContext from './playlist-context'
 import LibraryContext from '../library/library-context'
 import { Track } from '../track'
@@ -30,7 +30,7 @@ export default function CustomPlaylist({ closeMenu, edit }) {
   async function addOrEditCustomPlaylist(tracksString, name) {
     let playlist
     if (edit) {
-      const { data } = await put('/api/playlists/custom', {
+      const { data } = await server.put('/api/playlists/custom', {
         id: id,
         tracksString,
         name,
@@ -40,7 +40,7 @@ export default function CustomPlaylist({ closeMenu, edit }) {
       customPlaylist.tracks = playlist.tracks
       setCustomPlaylists([...customPlaylists])
     } else {
-      const { data } = await post('/api/playlists/custom', {
+      const { data } = await server.post('/api/playlists/custom', {
         tracksString,
         name,
       })

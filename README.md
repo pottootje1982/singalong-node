@@ -3,6 +3,8 @@
 ## Bugs
 
 - authorize without nodeJS server
+- playlists autocomplete missing
+- fix warning track autocomplete
 
 ## Improvements
 

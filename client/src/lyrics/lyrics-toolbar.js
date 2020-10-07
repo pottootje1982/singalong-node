@@ -1,6 +1,6 @@
 import React, { useEffect, useContext } from 'react'
 import { IconButton } from '@material-ui/core'
-import { post } from '../server'
+import server from '../server'
 import { Grid } from '@material-ui/core'
 import { Fullscreen, FullscreenExit } from '@material-ui/icons'
 
@@ -23,14 +23,14 @@ export default function LyricsToolbar({
   }, [track, setLyrics])
 
   function downloadLyrics(track, save) {
-    post('lyrics/download', { track, getCached: false, save }).then(
-      ({ data: { lyrics } }) => {
+    server
+      .post('lyrics/download', { track, getCached: false, save })
+      .then(({ data: { lyrics } }) => {
         if (lyrics) {
           track.lyrics = lyrics
           setTrack(Track.copy({ ...track, lyrics }))
         }
-      }
-    )
+      })
   }
 
   return (

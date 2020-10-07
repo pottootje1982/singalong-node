@@ -2,7 +2,7 @@ import React, { useEffect, useState, useRef, useContext } from 'react'
 import { Grid, TextField, useMediaQuery } from '@material-ui/core'
 import { Button } from '../Styled'
 import Autocomplete from '@material-ui/lab/Autocomplete'
-import { get } from '../server'
+import server from '../server'
 import LibraryList from './library-list'
 import PlaylistContext from '../playlist/playlist-context'
 import LibraryContext from './library-context'
@@ -35,7 +35,8 @@ export default function Library() {
   }
 
   function getCustomPlaylists() {
-    get('/api/playlists/custom').then(({ data: { playlists } }) => {
+    server.get('/api/playlists/custom').then(({ data }) => {
+      const { playlists } = data || {}
       if (playlists) setCustomPlaylists(playlists)
     })
   }
@@ -60,14 +61,14 @@ export default function Library() {
     if (offset === -1) {
       if (searchRef.current) searchRef.current.focus()
     } else if (offset >= 0) {
-      get('/api/playlists', { params: { offset, limit: 50 } }).then(
-        ({ data: { playlists: newPlaylists, hasMore } }) => {
+      server
+        .get('/api/playlists', { params: { offset, limit: 50 } })
+        .then(({ data: { playlists: newPlaylists, hasMore } }) => {
           if (!newPlaylists) return
           const items = [...playlists, ...newPlaylists]
           setPlaylists(items)
           setOffset(hasMore ? items.length : -1)
-        }
-      )
+        })
     }
   }
 
