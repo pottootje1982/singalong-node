@@ -14,22 +14,30 @@ let defaultAxios = createDefault()
 export let spotifyAxios = createSpotifyAxios()
 
 function createDefault() {
-  return axios.create({
+  const result = axios.create({
     baseURL: axios.defaults.baseURL,
-    headers: {
-      accessToken: getCookie('accessToken'),
-      refreshToken: getCookie('refreshToken'),
-    },
   })
+  result.interceptors.request.use((config) => {
+    const accessToken = getCookie('accessToken')
+    const refreshToken = getCookie('refreshToken')
+    if (accessToken) config.headers.accessToken = accessToken
+    if (refreshToken) config.headers.refreshToken = refreshToken
+    return config
+  })
+  return result
 }
 
 function createSpotifyAxios() {
-  return axios.create({
+  const result = axios.create({
     baseURL: 'https://api.spotify.com/v1',
-    headers: {
-      Authorization: `Bearer ${getCookie('accessToken')}`,
-    },
   })
+  result.interceptors.request.use((config) => {
+    const accessToken = getCookie('accessToken')
+    if (accessToken)
+      config.headers.Authorization = `Bearer ${getCookie('accessToken')}`
+    return config
+  })
+  return result
 }
 
 export function getFreshToken() {
@@ -37,28 +45,20 @@ export function getFreshToken() {
     .get('/api/authorize/refresh', {
       refreshToken: getCookie('refreshToken'),
     })
-    .then((res) => {
-      const { data } = res || {}
-      if (data) {
-        console.log('Refreshed token to ', data)
+    .then(({ data }) => {
+      const { access_token } = data || {}
+      if (access_token) {
         setToken(data)
-        return data.access_token
+        return access_token
       }
     })
     .catch(console.log)
 }
 
-let tokenUpdater
-
 export function setToken(tokens) {
   const { access_token, refresh_token, expires_in } = tokens
   if (access_token) {
     setCookie('accessToken', access_token, expires_in / 3600)
-
-    clearInterval(tokenUpdater)
-    tokenUpdater = setInterval(() => {
-      getFreshToken()
-    }, 3600 * 1000)
 
     if (refresh_token) {
       setCookie('refreshToken', refresh_token)

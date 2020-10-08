@@ -4,10 +4,14 @@ import server from '../server'
 import { useHistory } from 'react-router-dom'
 
 function Authorize() {
-  server.get('/api/authorize').then((res) => {
-    const { data } = res || {}
-    if (data) window.location = res.data
-  })
+  function init() {
+    server.get('/api/authorize').then(({ data }) => {
+      if (data) {
+        window.location = data
+      }
+    })
+  }
+  useEffect(init, [])
   return <React.Fragment />
 }
 
@@ -16,7 +20,7 @@ export function Authorized({ location }) {
   const { code } = qs.parse(query, { ignoreQueryPrefix: true })
   const history = useHistory()
 
-  useEffect(() => {
+  function init() {
     server
       .get(`/api/authorize/token?code=${code}`)
       .then((res) => {
@@ -27,7 +31,9 @@ export function Authorized({ location }) {
         }
       })
       .catch((err) => console.log(err))
-  }, [code, history])
+  }
+
+  useEffect(init, [])
   return <React.Fragment />
 }
 

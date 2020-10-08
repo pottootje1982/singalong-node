@@ -17,8 +17,11 @@ ReactDOM.render(
         <PlayerProvider>
           <Router>
             <Route path="/authorized" component={Authorized}></Route>
-            <Route exact path="/authorize" component={Authorize}></Route>
-            <Route path="/" component={App}></Route>
+            <Route exact path={['/login', '/']} component={Authorize}></Route>
+            <Route
+              path={['/playlist', '/custom-playlist', '/radio']}
+              component={App}
+            ></Route>
           </Router>
         </PlayerProvider>
       </PlaylistProvider>
