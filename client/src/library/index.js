@@ -1,4 +1,10 @@
-import React, { useEffect, useState, useRef, useContext } from 'react'
+import React, {
+  useEffect,
+  useState,
+  useRef,
+  useContext,
+  createRef,
+} from 'react'
 import { Grid, TextField, useMediaQuery } from '@material-ui/core'
 import { Button } from '../Styled'
 import Autocomplete from '@material-ui/lab/Autocomplete'
@@ -24,6 +30,7 @@ export default function Library() {
   } = useContext(LibraryContext)
   const history = useHistory()
   const updateCurrentlyPlaying = useUpdatePlayingTrack(navigateToPlaylist)
+  const audioRef = createRef()
 
   function init() {
     updateCurrentlyPlaying().then(({ uri, is_playing }) => {
@@ -73,11 +80,13 @@ export default function Library() {
   }
 
   function showFip() {
+    audioRef.current.play()
     history.push('/radio/fip')
   }
 
   function onPlaylistClick(playlist) {
     if (playlist) {
+      audioRef.current.pause()
       if (playlist.uri) {
         navigateToPlaylist(playlist.uri)
       } else if (playlist.id) {
@@ -105,6 +114,10 @@ export default function Library() {
     >
       <Grid item>
         <Button onClick={showFip}>FIP</Button>
+        <audio
+          ref={audioRef}
+          src="https://direct.fipradio.fr/live/fip-midfi.mp3"
+        ></audio>
       </Grid>
       <Grid item>
         {selectedPlaylist && (
