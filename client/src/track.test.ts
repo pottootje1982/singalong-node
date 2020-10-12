@@ -6,6 +6,16 @@ describe('Track', () => {
     expect(track.toString()).toBe('George Harrisson - Give me Love')
   })
 
+  it('Cleans artist with ampersand', function () {
+    var track = simpleTrack(
+      'Christopher Paul Stelling & Julia Christgau & Kieran Ledwidge & Michael Harlen & Jordan Rose',
+      'The cost of doing business'
+    )
+    expect(track.cleanArtist()).toBe(
+      'Christopher Paul Stelling Julia Christgau Kieran Ledwidge Michael Harlen Jordan Rose'
+    )
+  })
+
   it('Track without artist', function () {
     var track = Track.parse('Es ist ein Ros entsprungen')
     expect(track.artist).toBe('')
@@ -94,7 +104,7 @@ describe('Track', () => {
       'Onfa nkosi hwee'
     )
     expect(track.getQuery()).toBe(
-      'Pat Thomas  Kwashibu Area Band Onfa nkosi hwee'
+      'Pat Thomas Kwashibu Area Band Onfa nkosi hwee'
     )
   })
 

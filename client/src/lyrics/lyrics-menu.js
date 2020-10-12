@@ -43,7 +43,7 @@ export default function LyricsMenu({
 
   function searchLyrics() {
     const artist = trackFilters.hideArtist ? '' : `${track.cleanArtist()}+`
-    const title = track.getTitle(trackFilters)
+    const title = track.getTitle(trackFilters.minimalTitle)
     const query = `${artist}${title}`.replace('&', '')
     window.open(`https://www.google.com/search?q=${query}+lyrics`, '_blank')
     closeMenu()

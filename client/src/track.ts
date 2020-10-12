@@ -39,7 +39,7 @@ export class Track {
   }
 
   cleanArtist(): string {
-    return track_helpers.cleanString(this.artist).replace('&', '')
+    return track_helpers.cleanString(this.artist).replace(/&\s*/g, '')
   }
 
   cleanTitle(): string {
