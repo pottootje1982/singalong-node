@@ -3,7 +3,7 @@ import { List, ListItem, ListItemText, IconButton } from '@material-ui/core'
 import purple from '@material-ui/core/colors/purple'
 import { Delete } from '@material-ui/icons'
 
-import server from '../server'
+import ServerContext from '../server-context'
 import PlaylistContext from '../playlist/playlist-context'
 import LibraryContext from './library-context'
 import ConfirmationDialog from './confirmation-dialog'
@@ -37,6 +37,7 @@ function PlaylistItem({
 }
 
 export default function LibraryList({ playlists, onPlaylistClick }) {
+  const { server } = useContext(ServerContext)
   const { customPlaylists, setCustomPlaylists } = useContext(LibraryContext)
   const { playlist, customPlaylist } = useContext(PlaylistContext)
   const [dialogOpen, setDialogOpen] = useState(false)

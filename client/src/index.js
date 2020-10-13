@@ -9,24 +9,27 @@ import { PlayerProvider } from './player/player-context'
 import { PlaylistProvider } from './playlist/playlist-context'
 import { LibraryProvider } from './library/library-context'
 import { ThemeProvider } from './theme-context'
+import { ServerProvider } from './server-context'
 
 ReactDOM.render(
-  <LibraryProvider>
-    <ThemeProvider>
-      <PlaylistProvider>
-        <PlayerProvider>
-          <Router>
-            <Route path="/authorized" component={Authorized}></Route>
-            <Route exact path={['/login', '/']} component={Authorize}></Route>
-            <Route
-              path={['/playlist', '/custom-playlist', '/radio']}
-              component={App}
-            ></Route>
-          </Router>
-        </PlayerProvider>
-      </PlaylistProvider>
-    </ThemeProvider>
-  </LibraryProvider>,
+  <ServerProvider>
+    <LibraryProvider>
+      <ThemeProvider>
+        <PlaylistProvider>
+          <PlayerProvider>
+            <Router>
+              <Route path="/authorized" component={Authorized}></Route>
+              <Route exact path={['/login', '/']} component={Authorize}></Route>
+              <Route
+                path={['/playlist', '/custom-playlist', '/radio']}
+                component={App}
+              ></Route>
+            </Router>
+          </PlayerProvider>
+        </PlaylistProvider>
+      </ThemeProvider>
+    </LibraryProvider>
+  </ServerProvider>,
   document.getElementById('root')
 )
 

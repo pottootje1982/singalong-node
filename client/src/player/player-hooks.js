@@ -1,10 +1,11 @@
 import { useContext } from 'react'
-import server, { spotifyAxios } from '../server'
+import ServerContext from '../server-context'
 import PlayerContext from './player-context'
 import PlaylistContext from '../playlist/playlist-context'
 import { Track } from '../track'
 
 export default function usePlayTrack() {
+  const { spotifyAxios } = useContext(ServerContext)
   const { playlist, radio, tracks } = useContext(PlaylistContext)
   const {
     setIsPlaying,
@@ -42,6 +43,7 @@ export default function usePlayTrack() {
 }
 
 export function useUpdatePlayingTrack(navigateToPlaylist) {
+  const { server, spotifyAxios } = useContext(ServerContext)
   const { setTrackId, tracks, setTracks } = useContext(PlaylistContext)
   const {
     setIsPlaying,

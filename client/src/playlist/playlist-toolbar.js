@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useContext } from 'react'
-import server from '../server'
+import ServerContext from '../server-context'
 import {
   IconButton,
   Grid,
@@ -21,7 +21,6 @@ import Autocomplete from '@material-ui/lab/Autocomplete'
 import { Track } from '../track'
 import PlayerContext from '../player/player-context'
 import PlaylistContext from './playlist-context'
-import { spotifyAxios } from '../server'
 import usePlayTrack from '../player/player-hooks'
 import FilterContextMenu from './filter-context-menu'
 
@@ -35,6 +34,7 @@ export default function PlaylistToolbar({
   setTrackIdToDownload,
   lyricsFullscreen,
 }) {
+  const { server, spotifyAxios } = useContext(ServerContext)
   const { track, setTrack, trackId, setTrackId, tracks } = useContext(
     PlaylistContext
   )

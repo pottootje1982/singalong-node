@@ -3,7 +3,7 @@ import { IconButton } from '@material-ui/core'
 import { Grid, Slider, Typography } from '@material-ui/core'
 import { SkipPrevious, SkipNext, PlayArrow, Pause } from '@material-ui/icons'
 
-import { spotifyAxios } from '../server'
+import ServerContext from '../server-context'
 import usePlayTrack, { useUpdatePlayingTrack } from './player-hooks'
 import PlayerContext from './player-context'
 import PlaylistContext from '../playlist/playlist-context'
@@ -11,6 +11,7 @@ import WebPlayer from './web-player'
 import { useHistory } from 'react-router-dom'
 
 export default function Player() {
+  const { spotifyAxios } = useContext(ServerContext)
   const { track, setTrackId, tracks } = useContext(PlaylistContext)
   const {
     device,

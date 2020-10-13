@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useContext } from 'react'
 import Library from './library'
 import Playlist from './playlist'
 import Lyrics from './lyrics'
@@ -6,11 +6,12 @@ import { Grid, useMediaQuery } from '@material-ui/core'
 import { getCookie } from './cookie'
 import CssBaseline from '@material-ui/core/CssBaseline'
 import IdleTimer from 'react-idle-timer'
-import { getFreshToken } from './server'
+import ServerContext from './server-context'
 
 function App() {
   const [lyricsFullscreen, setLyricsFullscreen] = useState(false)
   const mobile = !useMediaQuery('(min-width:600px)')
+  const { getFreshToken } = useContext(ServerContext)
 
   const [trackFilters, setTrackFilters] = useState({
     minimalTitle: true,

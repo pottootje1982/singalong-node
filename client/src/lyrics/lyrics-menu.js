@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useContext } from 'react'
 import { IconButton } from '@material-ui/core'
-import server from '../server'
+import ServerContext from '../server-context'
 import { Menu, Divider } from '@material-ui/core'
 import { Menu as MenuIcon } from '@material-ui/icons'
 import CheckMenuItem from '../CheckMenuItem'
@@ -16,6 +16,7 @@ export default function LyricsMenu({
   trackFilters,
   downloadLyrics,
 }) {
+  const { server } = useContext(ServerContext)
   const [anchorEl, setAnchorEl] = useState()
   const [darkMode, setDarkMode] = useState(
     window.localStorage.getItem('dark-or-light') === 'dark'

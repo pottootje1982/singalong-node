@@ -1,5 +1,5 @@
 import React, { useContext } from 'react'
-import { spotifyAxios } from '../server'
+import ServerContext from '../server-context'
 import green from '@material-ui/core/colors/green'
 import red from '@material-ui/core/colors/red'
 import orange from '@material-ui/core/colors/orange'
@@ -21,6 +21,7 @@ export default function TrackItem({
   trackIdToDownload,
   setState,
 }) {
+  const { spotifyAxios } = useContext(ServerContext)
   const { trackId, radio } = useContext(PlaylistContext)
   const { setMonitorCurrentlyPlaying } = useContext(PlayerContext)
   const playTrack = usePlayTrack()

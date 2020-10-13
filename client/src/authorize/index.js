@@ -1,9 +1,11 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useContext } from 'react'
 import qs from 'qs'
-import server from '../server'
+import ServerContext from '../server-context'
 import { useHistory } from 'react-router-dom'
 
 function Authorize() {
+  const { server } = useContext(ServerContext)
+
   function init() {
     server.get('/api/authorize').then(({ data }) => {
       if (data) {
@@ -19,6 +21,7 @@ export function Authorized({ location }) {
   const query = location.search
   const { code } = qs.parse(query, { ignoreQueryPrefix: true })
   const history = useHistory()
+  const { server, setTokens } = useContext(ServerContext)
 
   function init() {
     server
@@ -26,7 +29,7 @@ export function Authorized({ location }) {
       .then((res) => {
         const { data } = res || {}
         if (data) {
-          server.setToken(data)
+          setTokens(data)
           history.push('/playlist')
         }
       })

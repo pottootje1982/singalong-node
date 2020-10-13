@@ -1,10 +1,11 @@
 import React, { useContext } from 'react'
 import { Menu, MenuItem } from '@material-ui/core'
 import LibraryContext from '../library/library-context'
-import { spotifyAxios } from '../server'
+import ServerContext from '../server-context'
 
 export default function AddToPlaylistMenu({ state, setState, initialState }) {
   const { playlists } = useContext(LibraryContext)
+  const { spotifyAxios } = useContext(ServerContext)
 
   const handleClose = () => {
     setState(initialState)

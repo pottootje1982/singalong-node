@@ -8,7 +8,7 @@ import React, {
 import { Grid, TextField, useMediaQuery } from '@material-ui/core'
 import { Button } from '../Styled'
 import Autocomplete from '@material-ui/lab/Autocomplete'
-import server from '../server'
+import ServerContext from '../server-context'
 import LibraryList from './library-list'
 import PlaylistContext from '../playlist/playlist-context'
 import LibraryContext from './library-context'
@@ -16,6 +16,7 @@ import { useHistory } from 'react-router-dom'
 import { useUpdatePlayingTrack } from '../player/player-hooks'
 
 export default function Library() {
+  const { server } = useContext(ServerContext)
   const [offset, setOffset] = useState()
   const [allPlaylists, setAllPlaylists] = useState([])
   const [currentlyPlaying, setCurrentlyPlaying] = useState()

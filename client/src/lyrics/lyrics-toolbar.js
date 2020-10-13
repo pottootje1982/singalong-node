@@ -1,6 +1,6 @@
 import React, { useEffect, useContext } from 'react'
 import { IconButton } from '@material-ui/core'
-import server from '../server'
+import ServerContext from '../server-context'
 import { Grid } from '@material-ui/core'
 import { Fullscreen, FullscreenExit } from '@material-ui/icons'
 
@@ -16,6 +16,7 @@ export default function LyricsToolbar({
   setLyrics,
   lyricsRef,
 }) {
+  const { server } = useContext(ServerContext)
   const { track, setTrack } = useContext(PlaylistContext)
 
   useEffect(() => {

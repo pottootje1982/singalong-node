@@ -13,12 +13,13 @@ import {
   Button,
 } from '@material-ui/core'
 import { List, Edit } from '@material-ui/icons'
-import server from '../server'
+import ServerContext from '../server-context'
 import PlaylistContext from './playlist-context'
 import LibraryContext from '../library/library-context'
 import { Track } from '../track'
 
 export default function CustomPlaylist({ closeMenu, edit }) {
+  const { server } = useContext(ServerContext)
   const [modalOpen, setModalOpen] = useState(false)
   const [isValid, setIsValid] = useState(false)
   const nameref = useRef(null)

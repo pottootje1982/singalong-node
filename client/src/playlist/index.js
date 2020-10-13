@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useContext } from 'react'
-import server from '../server'
+import ServerContext from '../server-context'
 import { Grid } from '@material-ui/core'
 import { Track } from '../track'
 import PlaylistToolbar from './playlist-toolbar'
@@ -11,6 +11,7 @@ export default function Playlist({
   setTrackFilters,
   lyricsFullscreen,
 }) {
+  const { server } = useContext(ServerContext)
   const [trackIdToDownload, setTrackIdToDownload] = useState()
   const { setTrackId, radio, customPlaylist, setTracks, playlist } = useContext(
     PlaylistContext

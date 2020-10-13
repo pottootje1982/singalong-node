@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useContext } from 'react'
-import server from '../server'
+import ServerContext from '../server-context'
 import { List, useMediaQuery } from '@material-ui/core'
 
 import TrackItem from './track-item'
@@ -21,6 +21,7 @@ export default function Tracks({
   trackFilters,
   trackIdToDownload,
 }) {
+  const { server } = useContext(ServerContext)
   const {
     track,
     setTrack,
