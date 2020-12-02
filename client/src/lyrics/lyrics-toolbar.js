@@ -25,11 +25,13 @@ export default function LyricsToolbar({
 
   function downloadLyrics(track, save) {
     server
-      .post('lyrics/download', { track, getCached: false, save })
+      .post('api/lyrics/download', { track, getCached: false, save })
       .then(({ data: { lyrics } }) => {
         if (lyrics) {
           track.lyrics = lyrics
           setTrack(Track.copy({ ...track, lyrics }))
+        } else {
+          alert(`Could not find lyrics for ${track.toString()}`)
         }
       })
   }
