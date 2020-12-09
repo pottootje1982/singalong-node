@@ -1,4 +1,4 @@
-import { useContext } from 'react'
+import { useContext, useEffect } from 'react'
 import ServerContext from '../server-context'
 import PlayerContext from './player-context'
 import PlaylistContext from '../playlist/playlist-context'
@@ -52,6 +52,7 @@ export function useUpdatePlayingTrack(navigateToPlaylist) {
     monitorCurrentlyPlaying,
     setLastUpdateTime,
     setLastPlayPosition,
+    playerState,
   } = useContext(PlayerContext)
 
   function setPlaylistFromContext(uri, item) {
@@ -67,6 +68,31 @@ export function useUpdatePlayingTrack(navigateToPlaylist) {
       navigateToPlaylist(uri)
     }
   }
+
+  function updatePlayerState() {
+    if (playerState) {
+      const {
+        position,
+        duration,
+        context,
+        track_window: { current_track },
+      } = playerState
+      setPlayPosition(position / 1000)
+      setLastUpdateTime(Date.now())
+      setLastPlayPosition(position / 1000)
+      setDuration(duration / 1000)
+      const { linked_from_uri, uri, linked_from, id } = current_track || {}
+      const uriPlaying = linked_from_uri || uri
+      const trackPlaying = tracks.find((t) => t.uri === uriPlaying)
+      const idToSelect = linked_from.id || id
+      if (monitorCurrentlyPlaying && !trackPlaying) {
+        navigateToPlaylist(context.uri)
+        setTrackId(idToSelect)
+      }
+    }
+  }
+
+  useEffect(updatePlayerState, [playerState])
 
   return () => {
     return spotifyAxios.get(`/me/player/currently-playing`).then(({ data }) => {
