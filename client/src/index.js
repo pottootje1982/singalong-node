@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom'
 import './index.css'
 import App from './App'
 import Authorize, { Authorized } from './authorize'
+import Booking from './booking'
 import * as serviceWorker from './serviceWorker'
 import { BrowserRouter as Router, Route } from 'react-router-dom'
 import { PlayerProvider } from './player/player-context'
@@ -18,6 +19,7 @@ ReactDOM.render(
         <PlaylistProvider>
           <PlayerProvider>
             <Router>
+              <Route path="/booking" component={Booking}></Route>
               <Route path="/authorized" component={Authorized}></Route>
               <Route exact path={['/login', '/']} component={Authorize}></Route>
               <Route

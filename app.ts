@@ -33,6 +33,7 @@ app.use('/api/playlists', playlists)
 app.use('/api/lyrics', lyrics)
 app.use('/api/radio', radio)
 app.use('/api/spotify', spotify)
+app.use('/api/misc', spotify)
 
 // The "catchall" handler: for any request that doesn't
 // match one above, send back React's index.html file.

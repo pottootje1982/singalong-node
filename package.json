@@ -4,6 +4,7 @@
   "private": true,
   "scripts": {
     "start": "node app",
+    "test:watch": "jest --watch --notify",
     "test": "jest",
     "heroku-postbuild": "tsc && cd client && npm install && npm run build"
   },

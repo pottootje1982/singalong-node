@@ -2,6 +2,9 @@
 
 ## Bugs
 
+- first going to /radio/fip doesn't show playlists
+- jumping slider when seeking spotify web player
+
 - authorize without nodeJS server
 - playlists autocomplete missing
 - fix warning track autocomplete
