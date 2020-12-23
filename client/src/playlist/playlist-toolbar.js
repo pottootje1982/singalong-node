@@ -1,5 +1,5 @@
-import React, { useEffect, useState, useContext } from 'react'
-import ServerContext from '../server-context'
+import React, { useEffect, useState, useContext } from "react"
+import ServerContext from "../server-context"
 import {
   IconButton,
   Grid,
@@ -9,20 +9,20 @@ import {
   Select,
   MenuItem,
   useMediaQuery,
-} from '@material-ui/core'
+} from "@material-ui/core"
 import {
   GetApp as DownloadIcon,
   NavigateBefore,
   NavigateNext,
-} from '@material-ui/icons'
-import ToggleButton from '@material-ui/lab/ToggleButton'
-import Autocomplete from '@material-ui/lab/Autocomplete'
+} from "@material-ui/icons"
+import ToggleButton from "@material-ui/lab/ToggleButton"
+import Autocomplete from "@material-ui/lab/Autocomplete"
 
-import { Track } from '../track'
-import PlayerContext from '../player/player-context'
-import PlaylistContext from './playlist-context'
-import usePlayTrack from '../player/player-hooks'
-import FilterContextMenu from './filter-context-menu'
+import { Track } from "../track"
+import PlayerContext from "../player/player-context"
+import PlaylistContext from "./playlist-context"
+import usePlayTrack from "../player/player-hooks"
+import FilterContextMenu from "./filter-context-menu"
 
 const sleepTime = 3000
 
@@ -50,13 +50,13 @@ export default function PlaylistToolbar({
   const [devices, setDevices] = useState()
   const [isDownloading, setIsDownloading] = useState(false)
   const [tracksToDownload, setTracksToDownload] = useState([])
-  const mobile = !useMediaQuery('(min-width:600px)')
+  const mobile = !useMediaQuery("(min-width:600px)")
   const trackFound = tracks.find((t) => t.id === trackId)
   const playTrack = usePlayTrack()
 
   const getDevices = () => {
     if (player) {
-      spotifyAxios.get('/me/player/devices').then(({ data: { devices } }) => {
+      spotifyAxios.get("/me/player/devices").then(({ data: { devices } }) => {
         devices = devices || []
         const deviceToSelect =
           devices.find((d) => d.is_active) ||
@@ -72,7 +72,7 @@ export default function PlaylistToolbar({
 
   function selectDevice() {
     if (devices) {
-      spotifyAxios.put('/me/player', { device_ids: [device] })
+      spotifyAxios.put("/me/player", { device_ids: [device] })
     }
   }
 
@@ -86,7 +86,7 @@ export default function PlaylistToolbar({
       if (isCancelled()) return
       const tail = tracksToDownload.slice(1)
       server
-        .post('lyrics/download', {
+        .post("api/lyrics/download", {
           track: toDownload,
           sleepTime,
         })
