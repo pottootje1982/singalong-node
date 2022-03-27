@@ -4,7 +4,8 @@
     "target": "es5",
     "lib": ["es2015"],
     "sourceMap": true,
-    "noImplicitUseStrict": true
+    "noImplicitUseStrict": true,
+    "skipLibCheck": true
   },
   "include": ["./**/*", "./typings/*"],
   "exclude": ["node_modules"]

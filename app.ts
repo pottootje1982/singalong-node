@@ -43,7 +43,7 @@ app.get('*', (req, res) => {
 // error handlers
 app.use((err: any, req, res, next) => {
   res.status(err['status'] || 500)
-  res.render('error', {
+  res.json({
     message: err.message,
     error: app.get('env') === 'development' ? err : {},
   })
