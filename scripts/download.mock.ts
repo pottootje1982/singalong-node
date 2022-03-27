@@ -11,7 +11,8 @@ const request = require('request-promise')
 const writeTestData = false
 
 async function doRequest(url: string) {
-  const fn = `${url.match(/[^\/]+$/)}.html`
+  let fn = `${url.match(/[^\/]+$/)}.html`
+  fn = fn.replace(/[/\\?*:|"<>]/g, '_');
   const fullFile = `./scripts/LyricsEngines/testdata/${fn}`
   if (writeTestData) {
     const result = await request(url)
