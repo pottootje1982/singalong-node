@@ -44,7 +44,7 @@ function App() {
           <Grid
             container
             direction={lyricsFullscreen ? 'column-reverse' : 'column'}
-            justify={lyricsFullscreen ? 'flex-end' : 'flex-start'}
+            justifyContent={lyricsFullscreen ? 'flex-end' : 'flex-start'}
             spacing={1}
             alignItems="stretch"
           >

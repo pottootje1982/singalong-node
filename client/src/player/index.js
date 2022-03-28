@@ -37,15 +37,14 @@ export default function Player() {
   const history = useHistory()
 
   function updatePlayingPosition() {
+    
     if (!seeking) {
       const newPosition =
         lastUpdateTime && lastPlayPosition
           ? lastPlayPosition + (timestamp - lastUpdateTime) / 1000
           : 0
       setPlayPosition(newPosition)
-      if (newPosition >= duration) {
-        update()
-      }
+      update()
     }
   }
 

@@ -4,7 +4,7 @@ import React, { createContext, useEffect, useState } from 'react'
 
 axios.defaults.baseURL =
   process.env.NODE_ENV !== 'production'
-    ? 'http://local.host:5000'
+    ? 'http://localhost:5000'
     : 'https://singalongify.herokuapp.com'
 axios.defaults.headers.post['Content-Type'] = 'application/json;charset=utf-8'
 //axios.defaults.headers.post['Access-Control-Allow-Origin'] = '*'
