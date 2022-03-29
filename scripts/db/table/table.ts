@@ -24,7 +24,7 @@ export default class Table {
   }
 
   deleteAll() {
-    return this.table().deleteMany()
+    return this.table().deleteMany(() => true)
   }
 
   insertOne(item) {
@@ -36,7 +36,7 @@ export default class Table {
       query,
       { $set: item },
       {
-        upsert: false,
+        upsert,
       }
     )
   }

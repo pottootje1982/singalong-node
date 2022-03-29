@@ -65,6 +65,8 @@ export default function Library() {
   useEffect(init, [])
   useEffect(selectFirstPlaylist, [playlists, currentlyPlaying])
 
+  const comparePlaylists = (a, b) => a.favourite && b.favourite ? 0 : a.favourite ? -1 : 0
+
   function getPlaylists() {
     if (offset === -1) {
       if (searchRef.current) searchRef.current.focus()
@@ -74,6 +76,7 @@ export default function Library() {
         .then(({ data: { playlists: newPlaylists, hasMore } }) => {
           if (!newPlaylists) return
           const items = [...playlists, ...newPlaylists]
+          items.sort(comparePlaylists)
           setPlaylists(items)
           setOffset(hasMore ? items.length : -1)
         })

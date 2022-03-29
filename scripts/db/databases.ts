@@ -1,7 +1,9 @@
 import LyricsTable from './table/lyrics'
-import PlaylistsTable from './table/playlists'
+import CustomPlaylistTable from './table/custom-playlists'
+import PlaylistTable from './table/playlists'
 import LyricsDownloader from '../download'
 import LyricsDb from '../lyrics_db'
+import CustomPlaylistsDb from '../custom-playlists-db'
 import PlaylistsDb from '../playlists-db'
 import createDb from './mongo-client'
 
@@ -13,9 +15,14 @@ export async function lyrics() {
   return { lyricsDb, lyricsDownloader }
 }
 
+export async function customPlaylists() {
+  const client = await createDb()
+  const playlistsTable = new CustomPlaylistTable(client)
+  return new CustomPlaylistsDb(playlistsTable)
+}
+
 export async function playlists() {
   const client = await createDb()
-  const playlistsTable = new PlaylistsTable(client)
-  const playlistsDb = new PlaylistsDb(playlistsTable)
-  return { playlistsDb }
+  const playlistsTable = new PlaylistTable(client)
+  return new PlaylistsDb(playlistsTable)
 }

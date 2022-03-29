@@ -8,6 +8,8 @@ import playlists from './routes/playlists'
 import lyrics from './routes/lyrics'
 import radio from './routes/radio'
 import spotify from './routes/spotify'
+import logger = require('morgan')
+
 var bodyParser = require('body-parser')
 
 var app = express()
@@ -15,6 +17,7 @@ var app = express()
 // Serve static files from the React app
 app.use(express.static(path.join(__dirname, 'client/build')))
 
+app.use(logger('dev'))
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: false }))
 
@@ -42,11 +45,11 @@ app.get('*', (req, res) => {
 
 // error handlers
 app.use((err: any, req, res, next) => {
-  res.status(err['status'] || 500)
-  res.json({
-    message: err.message,
-    error: app.get('env') === 'development' ? err : {},
-  })
+  if (res.headersSent) {
+    return next(err)
+  }
+  res.status(500)
+  res.render('error', { error: err })
 })
 
 app.set('port', process.env.PORT || 5000)
