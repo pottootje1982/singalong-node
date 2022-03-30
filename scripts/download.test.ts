@@ -1,9 +1,7 @@
 ﻿const assert = require('assert')
 import LyricsDownloader from './download'
 import { Track, simpleTrack } from '../client/src/track'
-import createDb from './db/mongo-client-fake'
-import Table from './db/table/table'
-import LyricsDb from './lyrics_db'
+import LyricsTable from './db/table/lyrics'
 import {
   MusixMatchEngineMock,
   AzLyricsEngineMock,
@@ -13,34 +11,24 @@ import {
 } from './download.mock'
 
 describe('Downloading lyrics', () => {
-  let lyricsDb: LyricsDb
+  let lyricsTab: LyricsTable
   let downloader: LyricsDownloader
   let musixMatchMock: MusixMatchEngineMock
 
   function insertTrack(artist, title, lyrics, site?: string) {
-    return lyricsDb.insert(new Track({ artist, title, site }), lyrics)
+    return lyricsTab.insert(new Track({ artist, title, site }), lyrics)
   }
 
   beforeAll(async () => {
     musixMatchMock = new MusixMatchEngineMock()
-    const client = await createDb()
-    const table = new Table(client, 'downloaded-lyrics')
-    lyricsDb = new LyricsDb(table)
-  })
-
-  beforeEach(async () => {
-    await lyricsDb.lyricsTable.deleteAll()
-    downloader = new LyricsDownloader(lyricsDb)
+    lyricsTab = global.lyrics
+    downloader = global.lyricsDownloader
     downloader.engines = {
       AzLyrics: new AzLyricsEngineMock(),
       Genius: new GeniusEngineMock(),
       MusixMatch: new MusixMatchEngineMock(),
       LyricsFreak: new LyricsFreakEngineMock(),
     }
-  })
-
-  afterAll(async () => {
-    await lyricsDb.close()
   })
 
   it('Search Euson - Leon', async () => {

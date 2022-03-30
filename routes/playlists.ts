@@ -2,7 +2,7 @@ const router = require('./router')()
 
 import { SpotifyApi, createApi } from '../scripts/spotify'
 import { Track } from '../client/src/track'
-const db = require('../scripts/db/databases')
+import createDb from '../scripts/db/databases'
 
 router.get('/', async (req, res) => {
   var spotifyApi: SpotifyApi = createApi(req)
@@ -10,8 +10,8 @@ router.get('/', async (req, res) => {
   limit = limit && parseInt(limit)
   offset = offset && parseInt(offset)
   const { playlists, hasMore } = await spotifyApi.getUserPlaylists({ limit, offset })
-  const playlistsMetaDb = await db.playlists()
-  const result = await playlistsMetaDb.hydrate(playlists)
+  const { playlists: table } = await res.locals.createDb()
+  const result = await table.hydrate(playlists)
   res.json({ playlists: result, hasMore })
 })
 
@@ -19,46 +19,39 @@ router.post('/custom', async (req, res) => {
   const spotifyApi = createApi(req)
   const owner = await spotifyApi.owner()
   const { tracksString, name } = req.body
-  const customPlaylistsDb = await db.customPlaylists()
-  const playlist = await customPlaylistsDb.insert(owner, tracksString, name)
-  await customPlaylistsDb.close()
+  const { customPlaylists } = await res.locals.createDb()
+  const playlist = await customPlaylists.insert(owner, tracksString, name)
   res.json({ playlist })
 })
 
 router.put('/custom', async (req, res) => {
   const { tracksString, name, id } = req.body
-  const customPlaylistsDb = await db.customPlaylists()
-  const playlist = await customPlaylistsDb.update(id, tracksString, name)
-  await customPlaylistsDb.close()
+  const { customPlaylists } = await res.locals.createDb()
+  const playlist = await customPlaylists.update(id, tracksString, name)
   res.json({ playlist })
 })
 
 router.get('/custom', async (req, res) => {
   const spotifyApi = createApi(req)
   const owner = await spotifyApi.owner()
-  const customPlaylistsDb = await db.customPlaylists()
-  const playlists = await customPlaylistsDb.get(owner)
-  await customPlaylistsDb.close()
+  const { customPlaylists } = await res.locals.createDb()
+  const playlists = await customPlaylists.get(owner)
   res.json({ playlists })
 })
 
 router.get('/:id/custom', async (req, res) => {
   const spotifyApi = createApi(req)
-  const customPlaylistsDb = await db.customPlaylists()
+  const { customPlaylists, lyrics } = await res.locals.createDb()
   const owner = await spotifyApi.owner()
-  const playlists = (await customPlaylistsDb.get(owner, req.params.id)) || []
+  const playlists = (await customPlaylists.get(owner, req.params.id)) || []
   let { tracks } = playlists[0] || {}
-  const { lyricsDb } = await db.lyrics()
-  tracks = await lyricsDb.queryPlaylist((tracks || []).map(Track.copy))
-  await lyricsDb.close()
-  await customPlaylistsDb.close()
+  tracks = await lyrics.queryPlaylist((tracks || []).map(Track.copy))
   res.json({ tracks })
 })
 
 router.delete('/:id/custom', async (req, res) => {
-  const customPlaylistsDb = await db.customPlaylists()
-  const found = await customPlaylistsDb.remove(req.params.id)
-  await customPlaylistsDb.close()
+  const { customPlaylists } = await res.locals.createDb()
+  const found = await customPlaylists.remove(req.params.id)
   res.sendStatus(found.deletedCount > 1 ? 204 : 404)
 })
 
@@ -77,22 +70,20 @@ router.get('/currently-playing', async (req, res) => {
 })
 
 router.get('/:uri', async (req, res) => {
-  const { lyricsDb } = await db.lyrics()
+  const { lyrics } = await res.locals.createDb()
   var spotifyApi: SpotifyApi = createApi(req)
   const { uri } = req.params
   let { offset } = req.query
   offset = offset && parseInt(offset)
   let { tracks, hasMore } = await spotifyApi.getPlaylistFromUri(uri, { offset })
-  tracks = await lyricsDb.queryPlaylist(tracks)
-  await lyricsDb.close()
+  tracks = await lyrics.queryPlaylist(tracks)
   res.json({ tracks, hasMore })
 })
 
 router.post('/:uri', async (req, res) => {
-  const playlists = await db.playlists()
+  const { playlists } = await res.locals.createDb()
   const { uri } = req.params
   await playlists.update(uri, req.body)
-  playlists.close()
   res.json({})
 })
 

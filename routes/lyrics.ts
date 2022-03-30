@@ -1,40 +1,36 @@
 const router = require('./router')()
 import { Track } from '../client/src/track'
-const db = require('../scripts/db/databases')
+const createDb = require('../scripts/db/databases')
 
 router.get('/', async (req, res) => {
-  const { lyricsDb } = await db.lyrics()
+  const { lyrics } = await res.locals.createDb()
   var { artist, title, id } = req.query
   var selectedTrack = new Track({ artist, title, id })
-  let track = await lyricsDb.queryTrack(selectedTrack)
-  await lyricsDb.close()
+  let track = await lyrics.queryTrack(selectedTrack)
   res.json({ lyrics: track.lyrics })
 })
 
 router.post('/', async (req, res) => {
-  const { lyricsDb } = await db.lyrics()
+  const { lyrics } = await res.locals.createDb()
   const track = Track.copy(req.body.track)
-  await lyricsDb.updateOrInsert(track, req.body.lyrics)
-  await lyricsDb.close()
+  await lyrics.updateOrInsert(track, req.body.lyrics)
   res.status(200)
 })
 
 router.delete('/', async (req, res) => {
-  const { lyricsDb } = await db.lyrics()
+  const { lyrics } = await res.locals.createDb()
   const track = req.body.track
-  lyricsDb.remove(Track.copy(track))
-  await lyricsDb.close()
+  lyrics.remove(Track.copy(track))
   res.status(204)
 })
 
 router.get('/sites', async (req, res) => {
-  const { lyricsDownloader } = await db.lyrics()
+  const { lyricsDownloader } = await res.locals.createDb()
   res.json({ sites: lyricsDownloader.engines })
-  await lyricsDownloader.close()
 })
 
 router.post('/download', async (req, res) => {
-  const { lyricsDownloader } = await db.lyrics()
+  const { lyricsDownloader } = await res.locals.createDb()
   const { track, sleepTime, getCached, site, save } = req.body
   let lyrics
   if (site) {
@@ -50,7 +46,6 @@ router.post('/download', async (req, res) => {
     )
     lyrics = downloadedTrack.lyrics
   }
-  await lyricsDownloader.close()
   res.json({ lyrics })
 })
 

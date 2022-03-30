@@ -18,3 +18,5 @@ client/src/track.js.map
 globalConfig.json
 client/src/track.test.js
 client/src/track.test.js.map
+.jest/*.js
+.jest/*.js.map

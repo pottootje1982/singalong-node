@@ -4,6 +4,7 @@
     "*.js": true,
     "routes/*.js": true,
     "scripts/*.js": true,
+    ".jest/*.js": true,
     "**/*.js.map": true
   },
   "jestrunner.disableCodeLens": true,

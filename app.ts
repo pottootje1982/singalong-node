@@ -9,6 +9,7 @@ import lyrics from './routes/lyrics'
 import radio from './routes/radio'
 import spotify from './routes/spotify'
 import logger = require('morgan')
+import createDb from './scripts/db/databases'
 
 var bodyParser = require('body-parser')
 
@@ -28,6 +29,26 @@ process.on('unhandledRejection', (reason, p) => {
   // application specific logging, throwing an error, or other logic here
 })
 
+// error handlers
+app.use((err: any, req, res, next) => {
+  if (res.headersSent) {
+    return next(err)
+  }
+  res.status(500)
+  res.render('error', { error: err })
+})
+
+app.use(async (req, res, next) => {
+  let client
+  res.locals.createDb = async () => {
+    const dbs = await createDb()
+    client = dbs.client
+    return dbs
+  }
+  next()
+  await client?.close()
+})
+
 const cors = require('cors')
 app.use(cors())
 
@@ -43,14 +64,6 @@ app.get('*', (req, res) => {
   res.sendFile(path.join(__dirname + '/client/build/index.html'))
 })
 
-// error handlers
-app.use((err: any, req, res, next) => {
-  if (res.headersSent) {
-    return next(err)
-  }
-  res.status(500)
-  res.render('error', { error: err })
-})
 
 app.set('port', process.env.PORT || 5000)
 

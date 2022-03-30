@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from 'react'
+import React, { useContext, useState } from 'react'
 import { ListItem, ListItemText, IconButton } from '@material-ui/core'
 import purple from '@material-ui/core/colors/purple'
 import { Delete } from '@material-ui/icons'

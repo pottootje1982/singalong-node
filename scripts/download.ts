@@ -1,4 +1,4 @@
-﻿import LyricsDb from './lyrics_db'
+﻿import LyricsTable from './db/table/lyrics'
 import { Track } from '../client/src/track'
 import { LyricsSearchEngine } from './LyricsEngines/LyricsSearchEngine'
 import { AzLyricsEngine } from './LyricsEngines/AzLyricsEngine'
@@ -18,9 +18,9 @@ const snooze = (ms: number, deviation: number = 0, offset: number = 0) => {
 
 export default class LyricsDownloader {
   public engines: { [engineKey: string]: LyricsSearchEngine }
-  lyricsDb: LyricsDb
+  lyricsDb: LyricsTable
 
-  constructor(lyricsDb: LyricsDb) {
+  constructor(lyricsDb: LyricsTable) {
     this.lyricsDb = lyricsDb
     this.engines = {
       AzLyrics: new AzLyricsEngine(),
@@ -104,9 +104,5 @@ export default class LyricsDownloader {
       await this.lyricsDb.updateOrInsert(track, lyrics)
     }
     return track
-  }
-
-  close() {
-    return this.lyricsDb.close()
   }
 }

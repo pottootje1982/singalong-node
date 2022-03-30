@@ -1,14 +1,14 @@
 import { Track, simpleTrack } from './client/src/track'
-import { lyrics } from './scripts/db/databases'
 
 xdescribe('database queries', () => {
-  let lyricsDb
+  let lyrics
+
   beforeAll(async () => {
-    ;({ lyricsDb } = await lyrics())
+    lyrics = global.lyricsTable
   })
 
   afterAll(async () => {
-    await lyricsDb.close()
+    await lyrics.close()
   })
 
   it('find duplicates', () => {
@@ -25,7 +25,7 @@ xdescribe('database queries', () => {
 
   it('finds wrong ids', async () => {
     const tracks = (
-      await lyricsDb.lyricsTable.find({ id: { $regex: /^"/ } })
+      await lyrics.lyricsTable.find({ id: { $regex: /^"/ } })
     ).map(Track.copy)
     for (const track of tracks) {
       //await lyricsDb.remove(track)
@@ -34,14 +34,14 @@ xdescribe('database queries', () => {
   })
 
   it('removes dire straits - news', async () => {
-    let track = await lyricsDb.queryTrack(simpleTrack('Dire Straits', 'News'))
-    await lyricsDb.remove(track)
-    track = await lyricsDb.queryTrack(simpleTrack('Dire Straits', 'News'))
+    let track = await lyrics.queryTrack(simpleTrack('Dire Straits', 'News'))
+    await lyrics.remove(track)
+    track = await lyrics.queryTrack(simpleTrack('Dire Straits', 'News'))
     console.log(track)
   })
 
   it('deletes track', async () => {
-    await lyricsDb.lyricsTable.deleteOne({
+    await lyrics.lyricsTable.deleteOne({
       id: '3zBhihYUHBmGd2bcQIobrF',
       artist: 'Otis Redding',
       title: '',

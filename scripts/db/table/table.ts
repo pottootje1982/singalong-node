@@ -1,34 +1,24 @@
-import { Db, MongoClient } from 'mongodb'
+import { Db } from "mongodb"
 
 export default class Table {
   db: Db
   tableName: string
-  client: MongoClient
 
-  constructor(client: MongoClient, tableName: string) {
-    this.client = client
-    this.db = client.db()
+  constructor(db: Db, tableName: string) {
+    this.db = db
     this.tableName = tableName
   }
 
-  table() {
+  public table() {
     return this.db.collection(this.tableName)
   }
 
-  find(query?: any) {
-    return this.table().find(query).toArray()
-  }
-
-  deleteOne(query) {
+  remove(query) {
     return this.table().deleteOne(query)
   }
 
-  deleteAll() {
-    return this.table().deleteMany(() => true)
-  }
-
-  insertOne(item) {
-    return this.table().insertOne(item)
+  find(query = null) {
+    return this.table().find(query).toArray()
   }
 
   findOneAndUpdate(query, item, upsert = false) {
@@ -41,7 +31,7 @@ export default class Table {
     )
   }
 
-  close() {
-    return this.client.close()
+  all() {
+    return this.table().find().toArray()
   }
 }
