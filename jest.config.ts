@@ -1,5 +1,9 @@
-process.env.PUBLIC_KEY = 'TEST'
-process.env.INIT_VECTOR = 'TEST'
+import { assert } from "console"
+
+require('dotenv').config()
+
+assert(process.env.DB_TEST_CONNECTION_STRING, "Please define DB_TEST_CONNECTION_STRING")
+process.env.DB_CONNECTION_STRING = process.env.DB_TEST_CONNECTION_STRING
 
 module.exports = {
   preset: '@shelf/jest-mongodb',

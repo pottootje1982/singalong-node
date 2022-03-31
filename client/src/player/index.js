@@ -15,7 +15,6 @@ export default function Player() {
   const { track, setTrackId } = useContext(PlaylistContext)
   const {
     device,
-    player,
     isPlaying,
     setIsPlaying,
     currentlyPlaying,
