@@ -19,12 +19,12 @@ export default function Playlist({
 
   function showAndSearchPlaylist(url) {
     setTracks([])
-    return server.get(url).then(({ data }) => {
+    return server().get(url).then(({ data }) => {
       const { tracks } = data || {}
       if (!tracks) return
       setTracks(tracks.map(Track.copy))
       setTrackId(tracks[0].id)
-      server
+      server()
         .post('/api/spotify/search', { tracks })
         .then(({ data: { tracks: foundTracks } }) => {
           setTracks((foundTracks || []).map(Track.copy))

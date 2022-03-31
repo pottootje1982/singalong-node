@@ -24,7 +24,7 @@ export default function LibraryList({ playlists, onPlaylistClick }) {
   }
 
   function onPlaylistDelete() {
-    server.delete(`/api/playlists/${pIdToDelete}/custom`)
+    server().delete(`/api/playlists/${pIdToDelete}/custom`)
     setCustomPlaylists(customPlaylists.filter((p) => p.id !== pIdToDelete))
   }
 

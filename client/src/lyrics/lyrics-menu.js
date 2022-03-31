@@ -29,7 +29,7 @@ export default function LyricsMenu({
 
   function saveLyrics() {
     const lyrics = lyricsRef.current.value
-    server.post('/api/lyrics', { track, lyrics })
+    server().post('/api/lyrics', { track, lyrics })
     track.lyrics = lyrics
     setTrack(Track.copy({ ...track }))
     closeMenu()
@@ -37,7 +37,7 @@ export default function LyricsMenu({
 
   function removeLyrics() {
     track.lyrics = null
-    server.delete('/api/lyrics', { data: { track } })
+    server().delete('/api/lyrics', { data: { track } })
     setTrack(Track.copy({ ...track }))
     closeMenu()
   }

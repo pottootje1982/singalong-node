@@ -1,6 +1,6 @@
 import axios from 'axios'
 import { getCookie, setCookie } from './cookie'
-import React, { createContext, useEffect, useState } from 'react'
+import React, { createContext } from 'react'
 
 axios.defaults.baseURL =
   process.env.NODE_ENV !== 'production'
@@ -16,58 +16,43 @@ const ServerContext = createContext()
 export default ServerContext
 
 export function ServerProvider(props) {
-  const [tokens, setTokens] = useState({
-    access_token: getCookie('accessToken'),
-    refresh_token: getCookie('refreshToken'),
-    expires_in: 3600,
-  })
-  const [server, setServer] = useState(createDefault)
-  const [spotifyAxios, setSpotifyAxios] = useState(createSpotifyAxios)
+  function server() {
+    const accessToken = getCookie('accessToken')
+    const refreshToken = getCookie('refreshToken')
 
-  function createDefault() {
     return axios.create({
       baseURL: axios.defaults.baseURL,
       headers: {
-        accessToken: tokens.access_token,
-        refreshToken: tokens.refresh_token,
+        accessToken: accessToken,
+        refreshToken: refreshToken,
       },
     })
   }
 
-  function createSpotifyAxios() {
+  function spotifyAxios() {
+    const accessToken = getCookie('accessToken')
     return axios.create({
       baseURL: 'https://api.spotify.com/v1',
       headers: {
-        Authorization: `Bearer ${tokens.access_token}`,
+        Authorization: `Bearer ${accessToken}`,
       },
     })
   }
 
-  function onTokensUpdate() {
-    const { access_token, refresh_token, expires_in } = tokens || {}
-    if (access_token) {
-      setCookie('accessToken', access_token, expires_in / 3600)
-
-      if (refresh_token) {
-        setCookie('refreshToken', refresh_token)
-      }
-      setServer(createDefault)
-      setSpotifyAxios(createSpotifyAxios)
-    }
-  }
-  useEffect(onTokensUpdate, [tokens])
-
   function getFreshToken() {
-    return server
+    return server()
       .get('/api/authorize/refresh', {
         refreshToken: getCookie('refreshToken'),
       })
       .then(({ data }) => {
         console.log('Refreshing token', data)
-        const { access_token } = data || {}
+        const { access_token, refresh_token, expires_in } = data || {}
         if (access_token) {
-          setTokens(data)
+          setCookie('accessToken', access_token, expires_in / 3600)
           return access_token
+        }
+        if (refresh_token) {
+          setCookie('refreshToken', refresh_token)
         }
       })
       .catch(console.log)
@@ -77,7 +62,6 @@ export function ServerProvider(props) {
     server,
     spotifyAxios,
     getFreshToken,
-    setTokens,
   }
 
   return (

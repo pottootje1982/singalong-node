@@ -39,7 +39,7 @@ export default function Library() {
       if (is_playing)
         history.push(`/currently-playing/${uri}`)
 
-      setCurrentlyPlaying(is_playing)
+      setCurrentlyPlaying(!!is_playing)
     })
 
     setOffset(0)
@@ -47,7 +47,7 @@ export default function Library() {
   }
 
   function getCustomPlaylists() {
-    server.get('/api/playlists/custom').then(({ data }) => {
+    server().get('/api/playlists/custom').then(({ data }) => {
       const { playlists } = data || {}
       if (playlists) setCustomPlaylists(playlists)
     })
@@ -75,7 +75,7 @@ export default function Library() {
     if (offset === -1) {
       if (searchRef.current) searchRef.current.focus()
     } else if (offset >= 0) {
-      server
+      server()
         .get('/api/playlists', { params: { offset, limit: 50 } })
         .then(({ data: { playlists: newPlaylists, hasMore } }) => {
           if (!newPlaylists) return

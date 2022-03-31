@@ -31,7 +31,7 @@ export default function CustomPlaylist({ closeMenu, edit }) {
   async function addOrEditCustomPlaylist(tracksString, name) {
     let playlist
     if (edit) {
-      const { data } = await server.put('/api/playlists/custom', {
+      const { data } = await server().put('/api/playlists/custom', {
         id: id,
         tracksString,
         name,
@@ -41,7 +41,7 @@ export default function CustomPlaylist({ closeMenu, edit }) {
       customPlaylist.tracks = playlist.tracks
       setCustomPlaylists([...customPlaylists])
     } else {
-      const { data } = await server.post('/api/playlists/custom', {
+      const { data } = await server().post('/api/playlists/custom', {
         tracksString,
         name,
       })
@@ -61,7 +61,7 @@ export default function CustomPlaylist({ closeMenu, edit }) {
   function validateInputs() {
     setIsValid(
       nameref.current.value.trim() !== '' &&
-        playlistref.current.value.trim() !== ''
+      playlistref.current.value.trim() !== ''
     )
   }
 

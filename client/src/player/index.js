@@ -84,7 +84,7 @@ export default function Player() {
   async function onPlayPositionClick(_, value) {
     setPlayPosition(value)
     setSeeking(true)
-    await spotifyAxios.put(`me/player/seek?position_ms=${value * 1000}`)
+    await spotifyAxios().put(`me/player/seek?position_ms=${value * 1000}`)
     await update()
     setSeeking(false)
     setPlayPosition(value)
@@ -95,7 +95,7 @@ export default function Player() {
     if (isPlaying === undefined) {
       await playTrack(track.uri, 0)
     } else {
-      await spotifyAxios.put(`/me/player/${isPlaying ? 'pause' : 'play'}`)
+      await spotifyAxios().put(`/me/player/${isPlaying ? 'pause' : 'play'}`)
     }
     await update()
     setSeeking(false)
@@ -109,7 +109,7 @@ export default function Player() {
 
   async function spotifyCommand(command) {
     setSeeking(true)
-    await spotifyAxios.post(`/me/player/${command}`)
+    await spotifyAxios().post(`/me/player/${command}`)
     setSeeking(false)
     await update()
     await sleep(1000)

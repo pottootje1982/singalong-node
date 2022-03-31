@@ -13,7 +13,7 @@ export default function AddToPlaylistMenu({ state, setState, initialState }) {
 
   function addTrackToPlaylist(playlistUri) {
     const [, , id] = playlistUri.split(':')
-    spotifyAxios
+    spotifyAxios()
       .post(`/playlists/${id}/tracks`, {
         uris: [state.uri],
       })

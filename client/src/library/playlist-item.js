@@ -17,7 +17,7 @@ export default function PlaylistItem({
     const [favourite] = useState(item.favourite)
 
     const onCheck = (_e, checked) => {
-        server.post(`/api/playlists/${item.uri}`, { favourite: checked })
+        server().post(`/api/playlists/${item.uri}`, { favourite: checked })
     }
 
     return (

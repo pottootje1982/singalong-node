@@ -75,6 +75,7 @@ export default function Tracks({
 
   function showPlaylist() {
     if (playlist && player) {
+      setTrack() // To fix error 'Material-UI: The value provided to Autocomplete is invalid. None of the options match with ...'
       setTracks([])
       setOffset(0)
     }
@@ -102,7 +103,7 @@ export default function Tracks({
       // end of playlist
       selectTrack()
     } else if (playlist && offset >= 0) {
-      server
+      server()
         .get(`/api/playlists/${playlist}`, { params: { offset } })
         .then(({ data: { tracks: newTracks, hasMore } }) => {
           if (!newTracks || newTracks.length === 0 || unmounted) return

@@ -24,7 +24,7 @@ export default function LyricsToolbar({
   }, [track, setLyrics])
 
   function downloadLyrics(track, save) {
-    server
+    server()
       .post('api/lyrics/download', { track, getCached: false, save })
       .then(({ data: { lyrics } }) => {
         if (lyrics) {

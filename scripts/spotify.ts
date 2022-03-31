@@ -1,5 +1,5 @@
 ﻿import SpotifyWebApi = require('spotify-web-api-node')
-import { Track, createTrack } from '../client/src/track'
+import { createTrack } from '../client/src/track'
 const fs = require('fs')
 const { get, post, put } = require('axios')
 const qs = require('qs')
@@ -48,21 +48,6 @@ export class SpotifyApi {
     this.api.setAccessToken(tokens.accessToken)
     this.api.setRefreshToken(tokens.refreshToken)
     this.tokens = tokens
-  }
-
-  playlistToText(playlist: Track[]) {
-    var textualPlaylist = ''
-    for (let track of playlist) {
-      textualPlaylist += track.toString() + '\n'
-    }
-    return textualPlaylist
-  }
-
-  getDownloadedLyrics(playlist: Track[], downloaded: boolean = false) {
-    var filtered = playlist.filter((track) =>
-      downloaded ? track.lyrics == null : track.lyrics != null
-    )
-    return this.playlistToText(filtered)
   }
 
   getAuthorizeUrl() {

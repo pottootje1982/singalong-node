@@ -34,7 +34,7 @@ export default function TrackItem({
   }
 
   function queueTrack(uri) {
-    spotifyAxios.post(`/me/player/queue?uri=${uri}`).then(console.log)
+    spotifyAxios().post(`/me/player/queue?uri=${uri}`).then(console.log)
   }
 
   const handleClick = (event, uri) => {

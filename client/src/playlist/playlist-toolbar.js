@@ -56,7 +56,7 @@ export default function PlaylistToolbar({
 
   const getDevices = () => {
     if (player) {
-      spotifyAxios.get("/me/player/devices").then(({ data: { devices } }) => {
+      spotifyAxios().get("/me/player/devices").then(({ data: { devices } }) => {
         devices = devices || []
         const deviceToSelect =
           devices.find((d) => d.is_active) ||
@@ -72,7 +72,7 @@ export default function PlaylistToolbar({
 
   function selectDevice() {
     if (devices) {
-      spotifyAxios.put("/me/player", { device_ids: [device] })
+      spotifyAxios().put("/me/player", { device_ids: [device] })
     }
   }
 
@@ -85,7 +85,7 @@ export default function PlaylistToolbar({
     sleep(trackIdToDownload ? sleepTime : 0).then(() => {
       if (isCancelled()) return
       const tail = tracksToDownload.slice(1)
-      server
+      server()
         .post("api/lyrics/download", {
           track: toDownload,
           sleepTime,

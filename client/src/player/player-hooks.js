@@ -28,7 +28,7 @@ export default function usePlayTrack() {
     const position_ms = playPosition || 0
     setPlayPosition(position_ms)
 
-    return spotifyAxios
+    return spotifyAxios()
       .put(`/me/player/play?device_id=${device}`, {
         uris,
         context_uri,
@@ -57,7 +57,7 @@ export function useUpdatePlayingTrack(navigateToPlaylist) {
 
   function setPlaylistFromContext(uri, item) {
     if (uri.includes(':artist:')) {
-      server.get(`/api/playlists/${uri}`).then(({ data }) => {
+      server().get(`/api/playlists/${uri}`).then(({ data }) => {
         let { tracks: artistTracks } = data || {}
         artistTracks = artistTracks || []
         const found = artistTracks.find((t) => t.uri === item.uri)
@@ -95,7 +95,7 @@ export function useUpdatePlayingTrack(navigateToPlaylist) {
   useEffect(updatePlayerState, [playerState])
 
   return () => {
-    return spotifyAxios.get(`/me/player/currently-playing`).then(({ data }) => {
+    return spotifyAxios().get(`/me/player/currently-playing`).then(({ data }) => {
       const { is_playing, progress_ms, item, context } = data || {}
       if (item) {
         const { id, uri: trackUri } = item
