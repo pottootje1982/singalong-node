@@ -55,7 +55,7 @@ export abstract class LyricsSearchEngine {
     return result
   }
 
-  private encode(str) {
+  protected encode(str) {
     return encodeURIComponent(str.replace('&', '').replace(',', ''))
   }
 

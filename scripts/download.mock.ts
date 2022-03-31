@@ -4,6 +4,7 @@ import {
   MetroLyricsEngine,
   AzLyricsEngine,
   LyricsFreakEngine,
+  ChartLyricsEngine
 } from './LyricsEngines'
 const fs = require('fs')
 const request = require('request-promise')
@@ -46,6 +47,12 @@ export class AzLyricsEngineMock extends AzLyricsEngine {
 }
 
 export class LyricsFreakEngineMock extends LyricsFreakEngine {
+  protected request(url: string): Promise<string> {
+    return doRequest(url)
+  }
+}
+
+export class ChartLyricsEngineMock extends ChartLyricsEngine {
   protected request(url: string): Promise<string> {
     return doRequest(url)
   }

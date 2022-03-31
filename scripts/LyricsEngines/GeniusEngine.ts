@@ -1,7 +1,7 @@
-﻿import {LyricsSearchEngine} from "./LyricsSearchEngine";
+﻿import { LyricsSearchEngine } from "./LyricsSearchEngine";
 
 export class GeniusEngine extends LyricsSearchEngine {
-    getHit(i: number) {}
+    getHit(i: number) { }
 
     constructor() {
         super('Genius', 'https://www.genius.com', 'https://genius.com/api/search/multi?per_page=5&q=', '.lyrics');

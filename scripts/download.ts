@@ -1,12 +1,8 @@
 ﻿import LyricsTable from './db/table/lyrics'
 import { Track } from '../client/src/track'
-import { LyricsSearchEngine } from './LyricsEngines/LyricsSearchEngine'
-import { AzLyricsEngine } from './LyricsEngines/AzLyricsEngine'
+import { LyricsSearchEngine, AzLyricsEngine, GeniusEngine, MusixMatchEngine, LyricsFreakEngine, ChartLyricsEngine } from './LyricsEngines'
 //import { MetroLyricsEngine } from "./LyricsEngines/MetroLyricsEngine";
-import { GeniusEngine } from './LyricsEngines/GeniusEngine'
-import { MusixMatchEngine } from './LyricsEngines/MusixMatchEngine'
 //import { SongtekstenEngine } from "./LyricsEngines/SongtekstenEngine";
-import { LyricsFreakEngine } from './LyricsEngines/LyricsFreakEngine'
 
 let engineIndex = -1
 
@@ -31,6 +27,7 @@ export default class LyricsDownloader {
       // Says 'do not have rights to display lyrics'. However pasting the same URL in a browser does work
       //'Songteksten': new SongtekstenEngine(),
       LyricsFreak: new LyricsFreakEngine(),
+      ChartLyrics: new ChartLyricsEngine()
     }
   }
 
