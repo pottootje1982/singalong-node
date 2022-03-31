@@ -26,6 +26,7 @@ export default function Player() {
     duration,
     lastUpdateTime,
     lastPlayPosition,
+    playerState,
     setPlayerState,
   } = useContext(PlayerContext)
 
@@ -123,13 +124,10 @@ export default function Player() {
     return s
   }
 
-  function isWebPlayback() {
-    const { _options } = player || {}
-    return device === (_options && _options.id)
-  }
-
   function update() {
-    if (!isWebPlayback()) return updateCurrentlyPlaying()
+    if (!playerState?.paused) {
+      return updateCurrentlyPlaying()
+    }
   }
 
   function valuetext(value) {

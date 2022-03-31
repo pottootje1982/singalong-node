@@ -105,7 +105,9 @@ export function useUpdatePlayingTrack(navigateToPlaylist) {
           if (uri) setPlaylistFromContext(uri, item)
           else setTracks([Track.fromSpotify(item)])
         }
-        if (id) setTrackId(id)
+        if (monitorCurrentlyPlaying && id) {
+          setTrackId(id)
+        }
         setIsPlaying(is_playing)
         const playPosition = progress_ms / 1000
         setPlayPosition(playPosition)
