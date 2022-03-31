@@ -1,10 +1,10 @@
 const { dbConnectionString } = require('../../config')
 
-import { MongoClient } from 'mongodb'
+import { MongoClient, MongoClientOptions } from 'mongodb'
+const connectionOptions: MongoClientOptions = { maxPoolSize: 5 };
 
 export default async function createDb(): Promise<MongoClient> {
-  console.log(dbConnectionString)
-  const client = await MongoClient.connect(dbConnectionString).catch((err) => {
+  const client = await MongoClient.connect(dbConnectionString, connectionOptions).catch((err) => {
     console.log(err)
   })
 

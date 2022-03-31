@@ -7,6 +7,7 @@ export default PlaylistContext
 export function getPlaylist() {
   const [, urlRadio] = window.location.pathname.match(/radio\/(.*)/) || []
   const [, urlPlaylist] = window.location.pathname.match(/playlist\/(.*)/) || []
+  const [, urlCurrentlyPlaying] = window.location.pathname.match(/currently-playing\/(.*)/) || []
   const [, urlCustomPlaylist] =
     window.location.pathname.match(/custom-playlist\/(.*)/) || []
   return {
@@ -14,6 +15,8 @@ export function getPlaylist() {
     urlPlaylist:
       urlPlaylist && urlPlaylist.replace(/spotify:user:\d+/, 'spotify'),
     urlCustomPlaylist,
+    urlCurrentlyPlaying:
+      urlCurrentlyPlaying && urlCurrentlyPlaying.replace(/spotify:user:\d+/, 'spotify'),
   }
 }
 

@@ -45,23 +45,28 @@ export default function Tracks({
   useEffect(addTracks, [offset])
   useEffect(refreshPlaylist, [track])
   useEffect(showPlaylist, [playlist, player])
-  useEffect(init, [])
+  useEffect(init, [player])
   useEffect(() => {
     return unmount
   }, [])
 
   function init() {
-    history.listen(() => {
-      const { urlRadio, urlPlaylist, urlCustomPlaylist } = getPlaylist()
-      setMonitorCurrentlyPlaying(false)
-      setPlaylist(null)
-      setCustomPlaylist(null)
-      setRadio(null)
-      setTrackId(null)
-      if (urlRadio) setRadio(`FIP_${Date.now()}`)
-      else if (urlCustomPlaylist) setCustomPlaylist(urlCustomPlaylist)
-      else setPlaylist(urlPlaylist)
-    })
+    if (player) {
+      history.listen(() => {
+        const { urlRadio, urlPlaylist, urlCustomPlaylist, urlCurrentlyPlaying } = getPlaylist()
+        if (urlRadio || urlPlaylist || urlCustomPlaylist || urlCurrentlyPlaying) {
+          setMonitorCurrentlyPlaying(false)
+        }
+        setPlaylist(null)
+        setCustomPlaylist(null)
+        setRadio(null)
+        setTrackId(null)
+        if (urlRadio) setRadio(`FIP_${Date.now()}`)
+        else if (urlCustomPlaylist) setCustomPlaylist(urlCustomPlaylist)
+        else setPlaylist(urlCurrentlyPlaying || urlPlaylist)
+      })
+
+    }
   }
 
   function unmount() {

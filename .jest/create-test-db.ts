@@ -3,12 +3,13 @@ const {
     lyrics: testLyrics,
 } = require('../scripts/db/data/db.test.json')
 
+import createMongoClient from '../scripts/db/mongo-client'
 let client
 
 beforeAll(async () => {
-    const dbs = await createDb()
+    client = await createMongoClient()
+    const dbs = await createDb(client)
     const { lyrics, customPlaylists, playlists, lyricsDownloader } = dbs
-    client = dbs.client
     await lyrics.table().insertMany(testLyrics)
     global.lyrics = lyrics
     global.customPlaylists = customPlaylists

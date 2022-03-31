@@ -21,7 +21,7 @@ ReactDOM.render(
               <Route path="/authorized" component={Authorized}></Route>
               <Route exact path={['/login', '/']} component={Authorize}></Route>
               <Route
-                path={['/playlist', '/custom-playlist', '/radio']}
+                path={['/playlist', '/custom-playlist', '/radio', '/currently-playing']}
                 component={App}
               ></Route>
             </Router>

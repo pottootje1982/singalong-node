@@ -2,10 +2,9 @@ import LyricsTable from './table/lyrics'
 import CustomPlaylistTable from './table/custom-playlists'
 import PlaylistTable from './table/playlists'
 import LyricsDownloader from '../download'
-import createMongoClient from './mongo-client'
+import { MongoClient } from 'mongodb'
 
-export default async function createDb() {
-  const client = await createMongoClient()
+export default async function createDb(client: MongoClient) {
   const db = client.db()
   const lyrics = new LyricsTable(db)
   const lyricsDownloader = new LyricsDownloader(lyrics)

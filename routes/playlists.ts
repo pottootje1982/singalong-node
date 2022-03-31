@@ -2,7 +2,6 @@ const router = require('./router')()
 
 import { SpotifyApi, createApi } from '../scripts/spotify'
 import { Track } from '../client/src/track'
-import createDb from '../scripts/db/databases'
 
 router.get('/', async (req, res) => {
   var spotifyApi: SpotifyApi = createApi(req)

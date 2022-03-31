@@ -37,7 +37,6 @@ export default function Player() {
   const history = useHistory()
 
   function updatePlayingPosition() {
-    
     if (!seeking) {
       const newPosition =
         lastUpdateTime && lastPlayPosition
@@ -64,6 +63,7 @@ export default function Player() {
   function showCurrentlyPlayingTrack() {
     if (currentlyPlaying) {
       setTrackId(currentlyPlaying.item.id)
+
       navigateToPlaylist(currentlyPlaying.context.uri)
     }
   }
@@ -139,7 +139,7 @@ export default function Player() {
   }
 
   function navigateToPlaylist(uri) {
-    history.push(`/playlist/${uri}`)
+    history.push(`/currently-playing/${uri}`)
   }
 
   return (

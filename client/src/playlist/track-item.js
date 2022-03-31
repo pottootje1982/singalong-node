@@ -89,8 +89,8 @@ export default function TrackItem({
               track.id === trackIdToDownload && track.id
                 ? orange[500]
                 : track.lyrics
-                ? green[500]
-                : red[500],
+                  ? green[500]
+                  : red[500],
           }}
         />
       </div>

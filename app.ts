@@ -10,6 +10,7 @@ import radio from './routes/radio'
 import spotify from './routes/spotify'
 import logger = require('morgan')
 import createDb from './scripts/db/databases'
+import createMongoClient from './scripts/db/mongo-client'
 
 var bodyParser = require('body-parser')
 
@@ -38,15 +39,15 @@ app.use((err: any, req, res, next) => {
   res.render('error', { error: err })
 })
 
+let client
+createMongoClient().then(c => client = c)
+
 app.use(async (req, res, next) => {
-  let client
   res.locals.createDb = async () => {
-    const dbs = await createDb()
-    client = dbs.client
+    const dbs = await createDb(client)
     return dbs
   }
   next()
-  await client?.close()
 })
 
 const cors = require('cors')

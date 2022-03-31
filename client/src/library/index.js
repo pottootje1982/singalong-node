@@ -22,6 +22,7 @@ export default function Library() {
   const [currentlyPlaying, setCurrentlyPlaying] = useState()
   const searchRef = useRef(null)
   const mobile = !useMediaQuery('(min-width:600px)')
+
   const { playlist, radio, customPlaylist } = useContext(PlaylistContext)
   const {
     playlists,
@@ -35,7 +36,10 @@ export default function Library() {
 
   function init() {
     updateCurrentlyPlaying().then(({ uri, is_playing }) => {
-      if (is_playing) setCurrentlyPlaying(uri)
+      if (is_playing)
+        history.push(`/currently-playing/${uri}`)
+
+      setCurrentlyPlaying(is_playing)
     })
 
     setOffset(0)
@@ -51,7 +55,7 @@ export default function Library() {
 
   function selectFirstPlaylist() {
     if (
-      !currentlyPlaying &&
+      currentlyPlaying === false &&
       !playlist &&
       !radio &&
       !customPlaylist &&

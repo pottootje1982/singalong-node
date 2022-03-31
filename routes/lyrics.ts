@@ -1,6 +1,5 @@
 const router = require('./router')()
 import { Track } from '../client/src/track'
-const createDb = require('../scripts/db/databases')
 
 router.get('/', async (req, res) => {
   const { lyrics } = await res.locals.createDb()
