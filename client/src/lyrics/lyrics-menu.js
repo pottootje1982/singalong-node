@@ -10,23 +10,25 @@ import IconMenuItem from './icon-menu-item'
 import PlayerContext from '../player/player-context'
 import PlaylistContext from '../playlist/playlist-context'
 import ThemeContext from '../theme-context'
+import DownloadContext from './download-context'
 
 export default function LyricsMenu({
   lyricsRef,
   trackFilters,
-  downloadLyrics,
 }) {
   const { server } = useContext(ServerContext)
+  const { downloadTrack } = useContext(DownloadContext)
+
   const [anchorEl, setAnchorEl] = useState()
   const [darkMode, setDarkMode] = useState(
     window.localStorage.getItem('dark-or-light') === 'dark'
   )
-  const [sites, setSites] = useState(JSON.parse(window.localStorage.getItem('sites')) || [])
   const { monitorCurrentlyPlaying, setMonitorCurrentlyPlaying } = useContext(
     PlayerContext
   )
   const { track, setTrack } = useContext(PlaylistContext)
   const { setThemeName } = useContext(ThemeContext)
+  const { sites, setSites } = useContext(DownloadContext)
 
   function saveLyrics() {
     const lyrics = lyricsRef.current.value
@@ -57,7 +59,7 @@ export default function LyricsMenu({
 
   function downloadAndClose() {
     closeMenu()
-    downloadLyrics(track)
+    downloadTrack(track).then(lyrics => { if (!lyrics) alert(`Could not find lyrics for ${track.toString()}`) })
   }
 
   function saveDarkMode() {
@@ -70,13 +72,6 @@ export default function LyricsMenu({
   }
 
   useEffect(saveDarkMode, [darkMode])
-  useEffect(() => window.localStorage.setItem('sites', JSON.stringify(sites)), [sites])
-
-  const mergeSites = (oldSites, sites) => sites.map(s => ({ ...s, disabled: oldSites.find(os => os.name === s.name)?.disabled }))
-
-  useEffect(() => {
-    server().get('api/lyrics/sites').then(({ data: { sites = [] } = {} }) => setSites(oldSites => mergeSites(oldSites, sites)))
-  }, [server])
 
   return (
     <>
@@ -117,6 +112,7 @@ export default function LyricsMenu({
             checked={!s.disabled}
             setter={checked => onSiteActiveClick(s, checked)}
             name={s.name}
+            close={closeMenu}
           />
         ))}
         <Divider />
@@ -138,7 +134,6 @@ export default function LyricsMenu({
         />
         <CustomSearch
           trackFilters={trackFilters}
-          downloadLyrics={downloadLyrics}
           closeMenu={closeMenu}
         />
         <Divider />

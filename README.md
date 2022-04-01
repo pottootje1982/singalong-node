@@ -1,10 +1,7 @@
 ﻿# Singalongify
 
 ## Bugs
-
-- authorize without nodeJS server
 - playlists autocomplete missing
-- fix warning track autocomplete
 
 ## Improvements
 
@@ -15,3 +12,8 @@
 
 - sorting of playlist
 - Different radio stations (and configure which show up for a user)
+
+- (de)select search engines
+- lagging performance when playing tracks
+- when in other playlist, enabling 'monitor currently playing track' does jump to correct playlist, but then fails to jump to correct track (also 'monitor currently playing track' is automatically deselected)
+- two tracks are selected in case there are double occurrences in playlist

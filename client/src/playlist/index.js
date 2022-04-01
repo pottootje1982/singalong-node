@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useContext } from 'react'
+import React, { useEffect, useContext } from 'react'
 import ServerContext from '../server-context'
 import { Grid } from '@material-ui/core'
 import { Track } from '../track'
@@ -12,7 +12,6 @@ export default function Playlist({
   lyricsFullscreen,
 }) {
   const { server } = useContext(ServerContext)
-  const [trackIdToDownload, setTrackIdToDownload] = useState()
   const { setTrackId, radio, customPlaylist, setTracks, playlist } = useContext(
     PlaylistContext
   )
@@ -61,8 +60,6 @@ export default function Playlist({
           trackFilters={trackFilters}
           setTrackFilters={setTrackFilters}
           selectTrackId={selectTrackId}
-          trackIdToDownload={trackIdToDownload}
-          setTrackIdToDownload={setTrackIdToDownload}
           lyricsFullscreen={lyricsFullscreen}
         />
       </Grid>
@@ -72,7 +69,6 @@ export default function Playlist({
           trackFilters={trackFilters}
           lyricsFullscreen={lyricsFullscreen}
           selectTrackId={selectTrackId}
-          trackIdToDownload={trackIdToDownload}
         />
       </Grid>
     </>

@@ -15,19 +15,20 @@ import {
 } from '@material-ui/core'
 import { Search } from '@material-ui/icons'
 import PlaylistContext from '../playlist/playlist-context'
+import DownloadContext from './download-context'
 
 export default function CustomSearch({
   trackFilters,
-  downloadLyrics,
   closeMenu,
 }) {
   const [modalOpen, setModalOpen] = useState(false)
   const artistRef = useRef(null)
   const titleRef = useRef(null)
   const { track } = useContext(PlaylistContext)
+  const { downloadTrack } = useContext(DownloadContext)
 
   function doCustomSearch(artist, title) {
-    downloadLyrics({ ...track, artist, title }, false)
+    downloadTrack({ ...track, artist, title }, { save: false }).then(lyrics => { if (!lyrics) alert(`Could not find lyrics for ${track.toString()}`) })
     closeDialog()
   }
 

@@ -9,6 +9,7 @@ import PlaylistContext, { getPlaylist } from './playlist-context'
 import PlayerContext from '../player/player-context'
 import { useHistory } from 'react-router-dom'
 import AddToPlaylistMenu from './add-to-playlist-menu'
+import DownloadContext from '../lyrics/download-context'
 
 const initialState = {
   mouseX: null,
@@ -19,7 +20,6 @@ export default function Tracks({
   lyricsFullscreen,
   selectTrackId,
   trackFilters,
-  trackIdToDownload,
 }) {
   const { server } = useContext(ServerContext)
   const {
@@ -34,6 +34,7 @@ export default function Tracks({
     setRadio,
     setCustomPlaylist,
   } = useContext(PlaylistContext)
+  const { trackIdToDownload } = useContext(DownloadContext)
   const { player, setMonitorCurrentlyPlaying } = useContext(PlayerContext)
   const [offset, setOffset] = useState()
   const [unmounted, setUnmounted] = useState(false)
