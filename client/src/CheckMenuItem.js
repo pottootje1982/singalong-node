@@ -15,7 +15,7 @@ const CheckMenuItem = React.forwardRef(
       } else {
         setter(!checked)
       }
-      close()
+      close && close()
     }
 
     return (

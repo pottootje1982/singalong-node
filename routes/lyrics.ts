@@ -25,7 +25,7 @@ router.delete('/', async (req, res) => {
 
 router.get('/sites', async (req, res) => {
   const { lyricsDownloader } = await res.locals.createDb()
-  res.json({ sites: lyricsDownloader.engines })
+  res.json({ sites: Object.values(lyricsDownloader.engines) })
 })
 
 router.post('/download', async (req, res) => {
@@ -40,7 +40,7 @@ router.post('/download', async (req, res) => {
   } else {
     const downloadedTrack = await lyricsDownloader.downloadTrack(
       trackToDownload,
-      parseInt(sleepTime || 3000),
+      parseInt(sleepTime || 0),
       getCached,
       save
     )

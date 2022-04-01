@@ -24,7 +24,7 @@ import PlaylistContext from "./playlist-context"
 import usePlayTrack from "../player/player-hooks"
 import FilterContextMenu from "./filter-context-menu"
 
-const sleepTime = 3000
+const sleepTime = 7000
 
 export default function PlaylistToolbar({
   trackFilters,

@@ -21,6 +21,7 @@ export default function LyricsMenu({
   const [darkMode, setDarkMode] = useState(
     window.localStorage.getItem('dark-or-light') === 'dark'
   )
+  const [sites, setSites] = useState(JSON.parse(window.localStorage.getItem('sites')) || [])
   const { monitorCurrentlyPlaying, setMonitorCurrentlyPlaying } = useContext(
     PlayerContext
   )
@@ -63,7 +64,19 @@ export default function LyricsMenu({
     setThemeName(darkMode ? 'dark' : 'light')
   }
 
+  function onSiteActiveClick(site, active) {
+    site.disabled = !active
+    setSites([...sites])
+  }
+
   useEffect(saveDarkMode, [darkMode])
+  useEffect(() => window.localStorage.setItem('sites', JSON.stringify(sites)), [sites])
+
+  const mergeSites = (oldSites, sites) => sites.map(s => ({ ...s, disabled: oldSites.find(os => os.name === s.name)?.disabled }))
+
+  useEffect(() => {
+    server().get('api/lyrics/sites').then(({ data: { sites = [] } = {} }) => setSites(oldSites => mergeSites(oldSites, sites)))
+  }, [server])
 
   return (
     <>
@@ -96,24 +109,33 @@ export default function LyricsMenu({
           onClick={downloadAndClose}
           icon="DownloadIcon"
           text="Download lyrics"
-        ></IconMenuItem>
+        />
+        <Divider />
+        {sites.map(s => (
+          <CheckMenuItem
+            key={s.name}
+            checked={!s.disabled}
+            setter={checked => onSiteActiveClick(s, checked)}
+            name={s.name}
+          />
+        ))}
         <Divider />
         <IconMenuItem
           onClick={saveLyrics}
           icon="Save"
           text="Save"
-        ></IconMenuItem>
+        />
         <IconMenuItem
           onClick={removeLyrics}
           icon="Delete"
           text="Remove"
-        ></IconMenuItem>
+        />
         <Divider />
         <IconMenuItem
           onClick={searchLyrics}
           icon="Search"
           text="Search with Google"
-        ></IconMenuItem>
+        />
         <CustomSearch
           trackFilters={trackFilters}
           downloadLyrics={downloadLyrics}
