@@ -59,7 +59,8 @@ describe('Downloading lyrics', () => {
   it('Search beatles dig a pony with Genius', async () => {
     const geniusMock = new GeniusEngineMock()
     var lyrics = await geniusMock.searchLyrics('beatles', 'dig a pony')
-    assert.equal(lyrics.substring(0, 22), '[Verse 1]\nI dig a pony')
+    expect(lyrics).toContain('[Verse 1]\nI dig a pony')
+    expect(lyrics).toContain('[Outro]\nYou')
   })
 
   it('Search unexisting lyrics Metro', async () => {
@@ -71,20 +72,20 @@ describe('Downloading lyrics', () => {
   it('Search with AzLyrics', async () => {
     const engine = new AzLyricsEngineMock()
     var lyrics = await engine.searchLyrics('dire straits', 'news')
-    assert.equal(lyrics.substring(0, 21), 'He sticks to his guns')
+    expect(lyrics).toContain('He sticks to his guns')
   })
 
   it('Download track', async () => {
     var track = await downloader.downloadTrack(
       simpleTrack('The Beatles', 'A day in life')
     )
-    expect(track.lyrics.substring(0, 21)).toEqual('I read the news today')
+    expect(track.lyrics).toContain('I read the news today')
   })
 
   it('Search with chart lyrics', async () => {
     const engine = new ChartLyricsEngineMock()
     var lyrics = await engine.searchLyrics('michael jackson', 'bad')
-    expect(lyrics.substring(0, 21)).toEqual('Your butt is mine... ')
+    expect(lyrics).toContain('Your butt is mine... ')
   })
 
   it('Get lyrics from database', async () => {

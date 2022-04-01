@@ -4,7 +4,7 @@ export class GeniusEngine extends LyricsSearchEngine {
     getHit(i: number) { }
 
     constructor() {
-        super('Genius', 'https://www.genius.com', 'https://genius.com/api/search/multi?per_page=5&q=', '#lyrics-root > div:nth-child(2)');
+        super('Genius', 'https://www.genius.com', 'https://genius.com/api/search/multi?per_page=5&q=', '#lyrics-root');
         this.convertHtml = true
     }
 
@@ -20,6 +20,7 @@ export class GeniusEngine extends LyricsSearchEngine {
 
     protected replaceInLyrics($) {
         $('a').removeAttr('href')
+        $('#lyrics-root > [data-lyrics-container!=true]').remove()
         var lyrics = super.replaceInLyrics($)
         return lyrics
     }
