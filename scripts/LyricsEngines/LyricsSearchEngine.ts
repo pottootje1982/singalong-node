@@ -1,6 +1,7 @@
 ﻿import request = require('request-promise')
 import cheerio = require('cheerio')
 var validUrl = require('valid-url')
+const { convert } = require('html-to-text');
 
 export function getQueryVariable(query, variable): string {
   query = query.match(/^[^\?]+\?(.*)/i)
@@ -22,6 +23,7 @@ export abstract class LyricsSearchEngine {
   private domain: string
   name: string
   textReplacements: Array<Array<any>>
+  protected convertHtml: boolean = false
 
   constructor(
     name: string,
@@ -47,7 +49,13 @@ export abstract class LyricsSearchEngine {
     var $ = cheerio.load(res)
     var lyrics = this.replaceInLyrics($)
     if (lyrics == null) return null
-    var result = lyrics.text().trim()
+    let result
+    if (this.convertHtml)
+      result = convert(lyrics.html(), {
+        wordwrap: 130
+      }).trim();
+    else
+      result = lyrics.text().trim()
     if (result === '') return null
     this.textReplacements.forEach((replacement) => {
       result = result.replace(replacement[0], replacement[1])

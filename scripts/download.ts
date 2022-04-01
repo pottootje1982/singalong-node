@@ -82,7 +82,7 @@ export default class LyricsDownloader {
       let key = keys[index]
       var searchEngine = this.engines[key]
       try {
-        lyrics = await this.engines[key].searchLyrics(track.artist, track.title)
+        lyrics = await this.engines[key].searchLyrics(track.cleanArtist(), track.getMinimalTitle())
         if (lyrics) {
           searchEngineName = searchEngine.name
           engineIndex = index

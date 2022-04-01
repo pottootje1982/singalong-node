@@ -12,9 +12,10 @@ const request = require('request-promise')
 const writeTestData = false
 
 async function doRequest(url: string) {
-  let fn = `${url.match(/[^\/]+$/)}.html`
+  let fn = `${url.match(/[^\/]+$/)}`
   fn = fn.replace(/[/\\?*:|"<>]/g, '_');
-  const fullFile = `./scripts/LyricsEngines/testdata/${fn}`
+  let fullFile = `./scripts/LyricsEngines/testdata/${fn}`
+  fullFile = fs.existsSync(`${fullFile}.json`) ? `${fullFile}.json` : `${fullFile}.html`
   if (writeTestData) {
     const result = await request(url)
     fs.writeFileSync(fullFile, result)

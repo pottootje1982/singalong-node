@@ -56,6 +56,12 @@ describe('Downloading lyrics', () => {
     assert.equal(lyrics, null)
   })
 
+  it('Search beatles dig a pony with Genius', async () => {
+    const geniusMock = new GeniusEngineMock()
+    var lyrics = await geniusMock.searchLyrics('beatles', 'dig a pony')
+    assert.equal(lyrics.substring(0, 22), '[Verse 1]\nI dig a pony')
+  })
+
   it('Search unexisting lyrics Metro', async () => {
     const engine = new MetroLyricsEngineMock()
     var lyrics = await engine.searchLyrics('bladiebla-metrolyrics', '')

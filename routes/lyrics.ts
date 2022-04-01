@@ -32,11 +32,12 @@ router.post('/download', async (req, res) => {
   const { lyricsDownloader } = await res.locals.createDb()
   const { track, sleepTime, getCached, site, save } = req.body
   let lyrics
+  const trackToDownload = Track.copy(track)
   if (site) {
-    const { artist, title } = track
+    const artist = trackToDownload.cleanArtist()
+    const title = trackToDownload.cleanTitle()
     lyrics = await lyricsDownloader.engines[site].searchLyrics(artist, title)
   } else {
-    const trackToDownload = Track.copy(track)
     const downloadedTrack = await lyricsDownloader.downloadTrack(
       trackToDownload,
       parseInt(sleepTime || 3000),

@@ -4,7 +4,8 @@ export class GeniusEngine extends LyricsSearchEngine {
     getHit(i: number) { }
 
     constructor() {
-        super('Genius', 'https://www.genius.com', 'https://genius.com/api/search/multi?per_page=5&q=', '.lyrics');
+        super('Genius', 'https://www.genius.com', 'https://genius.com/api/search/multi?per_page=5&q=', '#lyrics-root > div:nth-child(2)');
+        this.convertHtml = true
     }
 
     public async searchLyrics(artist, title) {
@@ -15,5 +16,11 @@ export class GeniusEngine extends LyricsSearchEngine {
         if (hits.length === 0) return null;
         var url = hits[0].result.path;
         return await super.downloadUrl('https://www.genius.com' + url);
+    }
+
+    protected replaceInLyrics($) {
+        $('a').removeAttr('href')
+        var lyrics = super.replaceInLyrics($)
+        return lyrics
     }
 }
