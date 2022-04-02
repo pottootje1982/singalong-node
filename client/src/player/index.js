@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from 'react'
+import React, { useContext, useEffect, useState, createRef } from 'react'
 import { IconButton } from '@material-ui/core'
 import { Grid, Slider, Typography } from '@material-ui/core'
 import { SkipPrevious, SkipNext, PlayArrow, Pause } from '@material-ui/icons'
@@ -12,7 +12,7 @@ import { useHistory } from 'react-router-dom'
 
 export default function Player() {
   const { spotifyAxios } = useContext(ServerContext)
-  const { track, setTrackId } = useContext(PlaylistContext)
+  const { track, setTrackId, radio } = useContext(PlaylistContext)
   const {
     device,
     isPlaying,
@@ -35,6 +35,7 @@ export default function Player() {
   const playTrack = usePlayTrack()
   const updateCurrentlyPlaying = useUpdatePlayingTrack(navigateToPlaylist)
   const history = useHistory()
+  const audioRef = createRef()
 
   function updatePlayingPosition() {
     if (!seeking) {
@@ -91,6 +92,12 @@ export default function Player() {
   }
 
   async function togglePlay() {
+    if (radio) {
+      audioRef.current[isPlaying ? 'pause' : 'play']()
+      setIsPlaying(!isPlaying)
+      return
+    }
+
     setSeeking(true)
     if (isPlaying === undefined) {
       await playTrack(track.uri, 0)
@@ -151,6 +158,10 @@ export default function Player() {
         <IconButton size="small" onClick={togglePlay}>
           {isPlaying ? <Pause /> : <PlayArrow />}
         </IconButton>
+        <audio
+          ref={audioRef}
+          src="https://direct.fipradio.fr/live/fip-midfi.mp3"
+        ></audio>
       </Grid>
 
       <Grid item>

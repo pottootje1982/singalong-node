@@ -62,7 +62,7 @@ export default function Tracks({
         setCustomPlaylist(null)
         setRadio(null)
         setTrackId(null)
-        if (urlRadio) setRadio(`FIP_${Date.now()}`)
+        if (urlRadio) setRadio({ urlRadio })
         else if (urlCustomPlaylist) setCustomPlaylist(urlCustomPlaylist)
         else setPlaylist(urlCurrentlyPlaying || urlPlaylist)
       })

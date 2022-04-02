@@ -42,6 +42,7 @@ export default function Playlist({
   useEffect(showCurrentlyOnFip, [radio])
   function showCurrentlyOnFip() {
     if (radio) {
+      setTrackId()
       showAndSearchPlaylist('/api/radio/fip').then((data) => {
         const { position, tracks } = data || {}
         setTrackId(tracks[position].id)
