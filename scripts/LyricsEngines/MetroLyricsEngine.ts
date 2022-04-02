@@ -3,14 +3,15 @@ import cheerio = require('cheerio');
 import { LyricsSearchEngine } from "./LyricsSearchEngine";
 
 export class MetroLyricsEngine extends LyricsSearchEngine {
-    getHit(i: number) {}
+    getHit(i: number) { }
 
     constructor() {
-        super('MetroLyrics', 'http://www.metrolyrics.com', 'http://api.metrolyrics.com/v1/multisearch/all/X-API-KEY/196f657a46afb63ce3fd2015b9ed781280337ea7/format/json?find=', undefined);
+        super('MetroLyrics',
+            { domain: 'http://www.metrolyrics.com', searchQuery: 'http://api.metrolyrics.com/v1/multisearch/all/X-API-KEY/196f657a46afb63ce3fd2015b9ed781280337ea7/format/json?find=' })
     }
 
     public async searchLyrics(artist, title) {
-        var res = await this.searchSite(this.getSearchQuery(), artist, title);
+        var res = await this.searchSite(artist, title);
         var results = JSON.parse(res);
         var songs = results.results.songs;
         if (songs.d.length === 0) return null;

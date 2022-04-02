@@ -8,9 +8,7 @@ export class AzLyricsEngine extends LyricsSearchEngine {
   constructor() {
     super(
       "AzLyrics",
-      "https://www.azlyrics.com",
-      "https://search.azlyrics.com/search.php?q=",
-      ".row>div>div:not([class])"
+      { domain: "https://www.azlyrics.com", searchQuery: "https://search.azlyrics.com/search.php?q=", lyricsLocation: ".row>div>div:not([class])" }
     )
   }
 }

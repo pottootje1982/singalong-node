@@ -1,4 +1,4 @@
-import React, { useRef, useState, useContext } from 'react'
+import React, { useRef, useContext } from 'react'
 import { TextField } from '@material-ui/core'
 import { Track } from '../track'
 
@@ -17,20 +17,22 @@ import { Search } from '@material-ui/icons'
 import PlaylistContext from '../playlist/playlist-context'
 import DownloadContext from './download-context'
 
-export default function CustomSearch({
+export function CustomSearchDialog({
+  modalOpen,
+  setModalOpen,
   trackFilters,
   closeMenu,
 }) {
-  const [modalOpen, setModalOpen] = useState(false)
+  const { track } = useContext(PlaylistContext)
   const artistRef = useRef(null)
   const titleRef = useRef(null)
-  const { track } = useContext(PlaylistContext)
-  const { downloadTrack } = useContext(DownloadContext)
 
   function doCustomSearch(artist, title) {
+    closeMenu()
     downloadTrack({ ...track, artist, title }, { save: false }).then(lyrics => { if (!lyrics) alert(`Could not find lyrics for ${track.toString()}`) })
     closeDialog()
   }
+  const { downloadTrack } = useContext(DownloadContext)
 
   function closeDialog() {
     setModalOpen(false)
@@ -38,14 +40,9 @@ export default function CustomSearch({
   }
 
   const trackToDisplay = track || new Track({})
+
   return (
     <>
-      <MenuItem onClick={() => setModalOpen(true)}>
-        <ListItemIcon>
-          <Search fontSize="small" />
-        </ListItemIcon>
-        <ListItemText primary="Custom search" />
-      </MenuItem>
       <Dialog open={modalOpen} onClose={closeDialog} fullWidth>
         <DialogTitle>Search lyrics manually</DialogTitle>
         <DialogContent>
@@ -82,6 +79,21 @@ export default function CustomSearch({
           </Button>
         </DialogActions>
       </Dialog>
+    </>
+  )
+}
+
+export default function CustomSearch({
+  setModalOpen
+}) {
+  return (
+    <>
+      <MenuItem onClick={() => setModalOpen(true)}>
+        <ListItemIcon>
+          <Search fontSize="small" />
+        </ListItemIcon>
+        <ListItemText primary="Custom search" />
+      </MenuItem>
     </>
   )
 }

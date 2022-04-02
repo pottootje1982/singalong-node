@@ -9,17 +9,12 @@ export class ChartLyricsEngine extends LyricsSearchEngine {
   constructor() {
     super(
       'ChartLyrics',
-      'http://api.chartlyrics.com',
-      'http://api.chartlyrics.com/apiv1.asmx/SearchLyricDirect',
-      '.mxm-lyrics>span,p'
+      { domain: 'http://api.chartlyrics.com', lyricsLocation: 'Lyric' }
     )
   }
 
-  public async searchLyrics(artist: string, title: string) {
-    const res = await this.request(
-      `http://api.chartlyrics.com/apiv1.asmx/SearchLyricDirect?artist=${this.encode(artist)}&song=${this.encode(title)}`
-    )
-    var $ = cheerio.load(res)
-    return $('Lyric').text()
+  public searchLyrics(artist: string, title: string) {
+    const downloadUrl = `http://api.chartlyrics.com/apiv1.asmx/SearchLyricDirect?artist=${this.encode(artist)}&song=${this.encode(title)}`
+    return this.downloadUrl(downloadUrl)
   }
 }

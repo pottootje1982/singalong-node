@@ -5,7 +5,7 @@ import { Menu, Divider } from '@material-ui/core'
 import { Menu as MenuIcon } from '@material-ui/icons'
 import CheckMenuItem from '../CheckMenuItem'
 import { Track } from '../track'
-import CustomSearch from './custom-search'
+import CustomSearch, { CustomSearchDialog } from './custom-search'
 import IconMenuItem from './icon-menu-item'
 import PlayerContext from '../player/player-context'
 import PlaylistContext from '../playlist/playlist-context'
@@ -29,6 +29,7 @@ export default function LyricsMenu({
   const { track, setTrack } = useContext(PlaylistContext)
   const { setThemeName } = useContext(ThemeContext)
   const { sites, setSites } = useContext(DownloadContext)
+  const [customSearchOpen, setCustomSearchOpen] = useState(false)
 
   function saveLyrics() {
     const lyrics = lyricsRef.current.value
@@ -75,6 +76,11 @@ export default function LyricsMenu({
 
   return (
     <>
+      <CustomSearchDialog modalOpen={customSearchOpen}
+        setModalOpen={setCustomSearchOpen}
+        trackFilters={trackFilters}
+        closeMenu={closeMenu}
+      />
       <IconButton
         size="small"
         onClick={(event) => setAnchorEl(event.currentTarget)}
@@ -85,8 +91,8 @@ export default function LyricsMenu({
       <Menu
         id="simple-menu"
         getContentAnchorEl={null}
+        disableAutoFocusItem={false}
         anchorEl={anchorEl}
-        keepMounted
         transformOrigin={{
           vertical: 'top',
           horizontal: 'center',
@@ -133,8 +139,7 @@ export default function LyricsMenu({
           text="Search with Google"
         />
         <CustomSearch
-          trackFilters={trackFilters}
-          closeMenu={closeMenu}
+          setModalOpen={setCustomSearchOpen}
         />
         <Divider />
         <CheckMenuItem

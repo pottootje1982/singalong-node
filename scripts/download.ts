@@ -60,6 +60,7 @@ export default class LyricsDownloader {
 
   async downloadTrack(
     track: Track,
+    sites: string[] = Object.keys(this.engines),
     sleepTime: number = 3000,
     getCached?: boolean,
     save?: boolean
@@ -71,24 +72,23 @@ export default class LyricsDownloader {
     }
     let lyrics: string = null
     let searchEngineName: string = null
-    let keys = Object.keys(this.engines)
-    for (let i = 1; i <= keys.length && lyrics == null; i++) {
-      let index = (i + engineIndex) % keys.length
+    for (let i = 1; i <= sites.length && lyrics == null; i++) {
+      let index = (i + engineIndex) % sites.length
 
       if (engineIndex >= 0 && index === 0) {
         await snooze(sleepTime, 0.5, 0.2)
       }
 
-      let key = keys[index]
+      let key = sites[index]
       var searchEngine = this.engines[key]
       try {
         lyrics = await this.engines[key].searchLyrics(track.cleanArtist(), track.getMinimalTitle())
         if (lyrics) {
-          searchEngineName = searchEngine.name
+          searchEngineName = searchEngine.key
           engineIndex = index
         } else {
           console.log(
-            'Did not find ' + track + ' with: ' + searchEngine.name + '\n'
+            'Did not find ' + track + ' with: ' + searchEngine.key + '\n'
           )
         }
       } catch (error) {

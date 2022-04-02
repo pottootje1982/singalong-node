@@ -28,12 +28,14 @@ export function DownloadProvider(props) {
     }
 
     function downloadTrack(track, { save = true, sleepTime = 0, getCached = false } = {}) {
+        const activeSites = sites.filter(s => !s.disabled).map(s => s.key)
         return server()
             .post("api/lyrics/download", {
                 track,
                 getCached,
                 sleepTime,
-                save
+                save: false,
+                sites: activeSites
             })
             .then(({ data: { lyrics } }) => {
                 if (lyrics) {

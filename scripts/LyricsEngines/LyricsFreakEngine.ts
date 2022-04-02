@@ -8,11 +8,7 @@ export class LyricsFreakEngine extends LyricsSearchEngine {
   constructor() {
     super(
       'LyricsFreak',
-      'http://www.lyricsfreak.com',
-      'https://www.google.nl/search?q=lyricsfreak.com+',
-      '#content',
-      [[/\n\n/g, '\n']]
-    )
+      { domain: 'http://www.lyricsfreak.com', searchQuery: 'https://www.google.nl/search?q=lyricsfreak.com+', lyricsLocation: '#content', textReplacements: [[/\n\n/g, '\n']] })
   }
 
   protected getAttribute(hit) {

@@ -6,7 +6,8 @@ export class SongtekstenEngine extends LyricsSearchEngine {
     }
 
     constructor() {
-        super('Songteksten', 'https://www.songteksten.nl', 'https://www.google.nl/search?q=songteksten.nl+', 'p:first');
+        super('Songteksten',
+            { domain: 'https://www.songteksten.nl', searchQuery: 'https://www.google.nl/search?q=songteksten.nl+', lyricsLocation: 'p:first' })
     }
 
     protected getAttribute(hit) {

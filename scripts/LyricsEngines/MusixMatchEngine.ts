@@ -8,10 +8,7 @@ export class MusixMatchEngine extends LyricsSearchEngine {
   constructor() {
     super(
       'MusixMatch',
-      'https://www.musixmatch.com',
-      'https://www.musixmatch.com/search/',
-      '.mxm-lyrics>span,p'
-    )
+      { domain: 'https://www.musixmatch.com', searchQuery: 'https://www.musixmatch.com/search/', lyricsLocation: '.mxm-lyrics>span,p' })
   }
 
   protected replaceInLyrics($) {

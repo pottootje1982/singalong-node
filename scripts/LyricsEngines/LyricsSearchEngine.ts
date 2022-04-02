@@ -19,23 +19,30 @@ export function getQueryVariable(query, variable): string {
 
 export abstract class LyricsSearchEngine {
   private lyricsLocation: string
-  private searchQuery: string
+  private searchQueryFn: Function
   private domain: string
+  key: string
   name: string
   textReplacements: Array<Array<any>>
   protected convertHtml: boolean = false
 
   constructor(
-    name: string,
-    domain: string,
-    searchQuery: string,
-    lyricsLocation: string,
-    textReplacements?: Array<Array<any>>
+    key: string,
+    { domain, searchQuery, searchQueryFn, lyricsLocation, textReplacements, convertHtml }: {
+      domain: string,
+      searchQuery?: string,
+      searchQueryFn?: Function,
+      lyricsLocation?: string,
+      textReplacements?: Array<Array<any>>
+      convertHtml?: boolean
+    }
   ) {
-    this.name = name
+    this.key = key
+    this.name = key
     this.domain = domain
+    this.convertHtml = convertHtml
     this.lyricsLocation = lyricsLocation
-    this.searchQuery = searchQuery
+    this.searchQueryFn = searchQuery ? (artist, title) => `${searchQuery}${artist}+${title}` : searchQueryFn
     this.textReplacements = textReplacements || []
   }
 
@@ -45,6 +52,7 @@ export abstract class LyricsSearchEngine {
 
   // Download a file form a url.
   protected async downloadUrl(url: string): Promise<string> {
+    console.log(`Downloading ${url} with ${this.key}`)
     var res = await this.request(url)
     var $ = cheerio.load(res)
     var lyrics = this.replaceInLyrics($)
@@ -68,17 +76,12 @@ export abstract class LyricsSearchEngine {
   }
 
   protected async searchSite(
-    searchQuery: string,
     artist: string,
     title: string
   ) {
-    return this.request(
-      searchQuery + this.encode(artist) + '+' + this.encode(title)
-    )
-  }
-
-  protected getSearchQuery(): string {
-    return this.searchQuery
+    console.log(`Searching ${artist} - ${title} with ${this.key}`)
+    const query = this.searchQueryFn(this.encode(artist), this.encode(title))
+    return this.request(query)
   }
 
   protected getDomain(): string {
@@ -86,7 +89,7 @@ export abstract class LyricsSearchEngine {
   }
 
   public async searchLyrics(artist: string, title: string): Promise<string> {
-    var res = await this.searchSite(this.searchQuery, artist, title)
+    var res = await this.searchSite(artist, title)
     var $ = cheerio.load(res)
 
     var firstHit = ''
