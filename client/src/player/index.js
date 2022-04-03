@@ -12,7 +12,7 @@ import { useHistory } from 'react-router-dom'
 
 export default function Player() {
   const { spotifyAxios } = useContext(ServerContext)
-  const { track, setTrackId, radio } = useContext(PlaylistContext)
+  const { track, setTrackId, radio, tracks } = useContext(PlaylistContext)
   const {
     device,
     isPlaying,
@@ -20,31 +20,26 @@ export default function Player() {
     currentlyPlaying,
     monitorCurrentlyPlaying,
     setMonitorCurrentlyPlaying,
-    playPosition,
-    setPlayPosition,
-    duration,
-    lastUpdateTime,
-    lastPlayPosition,
     playerState,
     setPlayerState,
   } = useContext(PlayerContext)
 
+  const [playPosition, setPlayPosition] = useState(0)
+  const [duration, setDuration] = useState(0)
   const [updateInterval, setUpdateInterval] = useState()
   const [timestamp, setTimestamp] = useState()
-  const [seeking, setSeeking] = useState(false)
   const playTrack = usePlayTrack()
   const updateCurrentlyPlaying = useUpdatePlayingTrack(navigateToPlaylist)
   const history = useHistory()
   const audioRef = createRef()
+  const [seeking, setSeeking] = useState(false)
 
   function updatePlayingPosition() {
-    if (!seeking) {
-      const newPosition =
-        lastUpdateTime && lastPlayPosition
-          ? lastPlayPosition + (timestamp - lastUpdateTime) / 1000
-          : 0
-      setPlayPosition(newPosition)
-      update()
+    if (!seeking && !playerState?.paused) {
+      update().then(({ progress, duration }) => {
+        setPlayPosition(progress)
+        if (duration) setDuration(duration)
+      })
     }
   }
 
@@ -64,7 +59,6 @@ export default function Player() {
   function showCurrentlyPlayingTrack() {
     if (currentlyPlaying) {
       setTrackId(currentlyPlaying.item.id)
-
       navigateToPlaylist(currentlyPlaying.context.uri)
     }
   }
@@ -145,6 +139,30 @@ export default function Player() {
   function navigateToPlaylist(uri) {
     history.push(`/currently-playing/${uri}`)
   }
+
+  function updatePlayerState() {
+    if (playerState) {
+      const {
+        position,
+        duration,
+        context,
+        track_window: { current_track },
+      } = playerState
+      setPlayPosition(position / 1000)
+      setDuration(duration / 1000)
+      const { linked_from_uri, uri, linked_from, id } = current_track || {}
+      const uriPlaying = linked_from_uri || uri
+      const trackPlaying = tracks.find((t) => t.uri === uriPlaying)
+      const idToSelect = linked_from.id || id
+      if (monitorCurrentlyPlaying && !trackPlaying) {
+        navigateToPlaylist(context.uri)
+        setTrackId(idToSelect)
+      }
+    }
+  }
+
+  useEffect(updatePlayerState, [playerState])
+
 
   return (
     <>

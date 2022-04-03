@@ -27,7 +27,7 @@ export function PlaylistProvider(props) {
   const [customPlaylist, setCustomPlaylist] = useState(urlCustomPlaylist)
   const [track, setTrack] = useState()
   const [trackId, setTrackId] = useState('')
-  const [tracks, setTracks] = useState([])
+  const [tracks, setTracks] = useState()
 
   const values = {
     playlist,
@@ -40,7 +40,8 @@ export function PlaylistProvider(props) {
     setTrack,
     trackId,
     setTrackId,
-    tracks,
+    tracks: tracks || [],
+    tracksInitialized: tracks !== undefined,
     setTracks,
   }
 

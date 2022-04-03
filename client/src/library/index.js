@@ -11,16 +11,16 @@ import LibraryList from './library-list'
 import PlaylistContext from '../playlist/playlist-context'
 import LibraryContext from './library-context'
 import { useHistory } from 'react-router-dom'
-import { useUpdatePlayingTrack } from '../player/player-hooks'
+import PlayerContext from '../player/player-context'
 
 export default function Library() {
   const { server } = useContext(ServerContext)
   const [offset, setOffset] = useState()
   const [allPlaylists, setAllPlaylists] = useState([])
-  const [currentlyPlaying, setCurrentlyPlaying] = useState()
   const searchRef = useRef(null)
   const mobile = !useMediaQuery('(min-width:600px)')
 
+  const { isPlaying } = useContext(PlayerContext)
   const { playlist, radio, customPlaylist } = useContext(PlaylistContext)
   const {
     playlists,
@@ -29,16 +29,8 @@ export default function Library() {
     setCustomPlaylists,
   } = useContext(LibraryContext)
   const history = useHistory()
-  const updateCurrentlyPlaying = useUpdatePlayingTrack(navigateToPlaylist)
 
   function init() {
-    updateCurrentlyPlaying().then(({ uri, is_playing }) => {
-      if (is_playing)
-        history.push(`/currently-playing/${uri}`)
-
-      setCurrentlyPlaying(!!is_playing)
-    })
-
     setOffset(0)
     getCustomPlaylists()
   }
@@ -52,7 +44,7 @@ export default function Library() {
 
   function selectFirstPlaylist() {
     if (
-      currentlyPlaying === false &&
+      !isPlaying &&
       !playlist &&
       !radio &&
       !customPlaylist &&
@@ -64,7 +56,7 @@ export default function Library() {
 
   useEffect(getPlaylists, [offset])
   useEffect(init, [])
-  useEffect(selectFirstPlaylist, [playlists, currentlyPlaying])
+  useEffect(selectFirstPlaylist, [playlists, isPlaying])
 
   const comparePlaylists = (a, b) => a.favourite && b.favourite ? 0 : a.favourite ? -1 : 0
 

@@ -35,7 +35,7 @@ export default function Tracks({
     setCustomPlaylist,
   } = useContext(PlaylistContext)
   const { trackIdToDownload } = useContext(DownloadContext)
-  const { player, setMonitorCurrentlyPlaying } = useContext(PlayerContext)
+  const { player, setMonitorCurrentlyPlaying, isPlaying } = useContext(PlayerContext)
   const [offset, setOffset] = useState()
   const [unmounted, setUnmounted] = useState(false)
   const mobile = !useMediaQuery('(min-width:600px)')
@@ -55,7 +55,7 @@ export default function Tracks({
     if (player) {
       history.listen(() => {
         const { urlRadio, urlPlaylist, urlCustomPlaylist, urlCurrentlyPlaying } = getPlaylist()
-        if (urlRadio || urlPlaylist || urlCustomPlaylist || urlCurrentlyPlaying) {
+        if (urlRadio || urlPlaylist || urlCustomPlaylist) {
           setMonitorCurrentlyPlaying(false)
         }
         setPlaylist(null)
@@ -110,7 +110,7 @@ export default function Tracks({
           if (!newTracks || newTracks.length === 0 || unmounted) return
           newTracks = [...tracks, ...newTracks]
           setTracks(newTracks.map(Track.copy))
-          if (!trackId && offset === 0 && newTracks[0])
+          if (!trackId && offset === 0 && newTracks[0] && isPlaying === false)
             setTrackId(newTracks[0].id)
           setOffset(hasMore ? newTracks.length : -1)
         })
