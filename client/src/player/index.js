@@ -8,7 +8,7 @@ import usePlayTrack, { useUpdatePlayingTrack } from './player-hooks'
 import PlayerContext from './player-context'
 import PlaylistContext from '../playlist/playlist-context'
 import WebPlayer from './web-player'
-import { useHistory } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 
 export default function Player() {
   const { spotifyAxios } = useContext(ServerContext)
@@ -30,7 +30,7 @@ export default function Player() {
   const [timestamp, setTimestamp] = useState()
   const playTrack = usePlayTrack()
   const updateCurrentlyPlaying = useUpdatePlayingTrack(navigateToPlaylist)
-  const history = useHistory()
+  let navigate = useNavigate()
   const audioRef = createRef()
   const [seeking, setSeeking] = useState(false)
 
@@ -137,7 +137,7 @@ export default function Player() {
   }
 
   function navigateToPlaylist(uri) {
-    history.push(`/currently-playing/${uri}`)
+    navigate(`/currently-playing/${uri}`)
   }
 
   function updatePlayerState() {

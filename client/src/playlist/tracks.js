@@ -7,7 +7,6 @@ import isEquivalent from '../isEquivalent'
 import { Track } from '../track'
 import PlaylistContext, { getPlaylist } from './playlist-context'
 import PlayerContext from '../player/player-context'
-import { useHistory } from 'react-router-dom'
 import AddToPlaylistMenu from './add-to-playlist-menu'
 import DownloadContext from '../lyrics/download-context'
 
@@ -39,7 +38,6 @@ export default function Tracks({
   const [offset, setOffset] = useState()
   const [unmounted, setUnmounted] = useState(false)
   const mobile = !useMediaQuery('(min-width:600px)')
-  const history = useHistory()
   const [state, setState] = useState(initialState)
 
   useEffect(selectTrack, [trackId])
@@ -53,20 +51,17 @@ export default function Tracks({
 
   function init() {
     if (player) {
-      history.listen(() => {
-        const { urlRadio, urlPlaylist, urlCustomPlaylist, urlCurrentlyPlaying } = getPlaylist()
-        if (urlRadio || urlPlaylist || urlCustomPlaylist) {
-          setMonitorCurrentlyPlaying(false)
-        }
-        setPlaylist(null)
-        setCustomPlaylist(null)
-        setRadio(null)
-        setTrackId(null)
-        if (urlRadio) setRadio({ urlRadio })
-        else if (urlCustomPlaylist) setCustomPlaylist(urlCustomPlaylist)
-        else setPlaylist(urlCurrentlyPlaying || urlPlaylist)
-      })
-
+      const { urlRadio, urlPlaylist, urlCustomPlaylist, urlCurrentlyPlaying } = getPlaylist()
+      if (urlRadio || urlPlaylist || urlCustomPlaylist) {
+        setMonitorCurrentlyPlaying(false)
+      }
+      setPlaylist(null)
+      setCustomPlaylist(null)
+      setRadio(null)
+      setTrackId(null)
+      if (urlRadio) setRadio({ urlRadio })
+      else if (urlCustomPlaylist) setCustomPlaylist(urlCustomPlaylist)
+      else setPlaylist(urlCurrentlyPlaying || urlPlaylist)
     }
   }
 

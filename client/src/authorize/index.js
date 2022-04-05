@@ -1,7 +1,6 @@
 import React, { useEffect, useContext } from 'react'
-import qs from 'qs'
 import ServerContext from '../server-context'
-import { useHistory } from 'react-router-dom'
+import { useNavigate, useSearchParams } from 'react-router-dom'
 import { setCookie } from '../cookie'
 
 function Authorize() {
@@ -18,10 +17,11 @@ function Authorize() {
   return <React.Fragment />
 }
 
-export function Authorized({ location }) {
-  const query = location.search
-  const { code } = qs.parse(query, { ignoreQueryPrefix: true })
-  const history = useHistory()
+export function Authorized() {
+  const [searchParams] = useSearchParams();
+  const code = searchParams.get('code')
+  const navigate = useNavigate()
+
   const { server } = useContext(ServerContext)
 
   function init() {
@@ -32,7 +32,7 @@ export function Authorized({ location }) {
         if (access_token) {
           setCookie('accessToken', access_token, expires_in / 3600)
           setCookie('refreshToken', refresh_token)
-          history.push('/playlist')
+          navigate('/playlist')
         }
       })
       .catch((err) => console.log(err))

@@ -10,7 +10,7 @@ import ServerContext from '../server-context'
 import LibraryList from './library-list'
 import PlaylistContext from '../playlist/playlist-context'
 import LibraryContext from './library-context'
-import { useHistory } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 import PlayerContext from '../player/player-context'
 
 export default function Library() {
@@ -28,7 +28,7 @@ export default function Library() {
     customPlaylists,
     setCustomPlaylists,
   } = useContext(LibraryContext)
-  const history = useHistory()
+  let navigate = useNavigate()
 
   function init() {
     setOffset(0)
@@ -81,7 +81,7 @@ export default function Library() {
       if (playlist.uri) {
         navigateToPlaylist(playlist.uri)
       } else if (playlist.id) {
-        history.push(`/custom-playlist/${playlist.id}`)
+        navigate(`/custom-playlist/${playlist.id}`)
       }
     }
   }
@@ -91,7 +91,7 @@ export default function Library() {
   }, [playlists, customPlaylists])
 
   function navigateToPlaylist(uri) {
-    history.push(`/playlist/${uri}`)
+    navigate(`/playlist/${uri}`)
   }
 
   const selectedPlaylist = allPlaylists.find((p) => p.uri === playlist)
