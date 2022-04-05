@@ -2,7 +2,7 @@ import React, { useState, useContext } from 'react'
 import Library from './library'
 import Playlist from './playlist'
 import Lyrics from './lyrics'
-import { Grid, useMediaQuery } from '@mui/material'
+import { Grid, Stack, useMediaQuery } from '@mui/material'
 import { getCookie } from './cookie'
 import CssBaseline from '@mui/material/CssBaseline'
 import IdleTimer from 'react-idle-timer'
@@ -47,8 +47,7 @@ function App() {
                 <Library></Library>
               </Grid>
               <Grid item xs={lyricsFullscreen || mobile ? 12 : 8}>
-                <Grid
-                  container
+                <Stack
                   direction={lyricsFullscreen ? 'column-reverse' : 'column'}
                   justifyContent={lyricsFullscreen ? 'flex-end' : 'flex-start'}
                   spacing={1}
@@ -64,7 +63,7 @@ function App() {
                     trackFilters={trackFilters}
                     setTrackFilters={setTrackFilters}
                   ></Playlist>
-                </Grid>
+                </Stack>
               </Grid>
             </Grid>
           </PlayerProvider>

@@ -29,7 +29,7 @@ root.render(
               element={<App />}
             />
             <Route
-              path={'/radio'}
+              path={'/radio/*'}
               element={<App />}
             />
             <Route

@@ -1,6 +1,6 @@
 import React, { useEffect, useContext } from 'react'
 import { IconButton } from '@mui/material'
-import { Grid } from '@mui/material'
+import { Stack } from '@mui/material'
 import { Fullscreen, FullscreenExit } from '@mui/icons-material'
 
 import LyricsMenu from './lyrics-menu'
@@ -22,24 +22,20 @@ export default function LyricsToolbar({
 
 
   return (
-    <>
-      <Grid item>
-        <IconButton
-          size="small"
-          onClick={() => {
-            setLyricsFullscreen(!lyricsFullscreen)
-          }}
-        >
-          {lyricsFullscreen ? <FullscreenExit /> : <Fullscreen />}
-        </IconButton>
-      </Grid>
-      <Grid item>
-        <LyricsMenu
-          lyricsRef={lyricsRef}
-          trackFilters={trackFilters}
-        />
-      </Grid>
+    <Stack direction="row">
+      <IconButton
+        size="small"
+        onClick={() => {
+          setLyricsFullscreen(!lyricsFullscreen)
+        }}
+      >
+        {lyricsFullscreen ? <FullscreenExit /> : <Fullscreen />}
+      </IconButton>
+      <LyricsMenu
+        lyricsRef={lyricsRef}
+        trackFilters={trackFilters}
+      />
       <Player />
-    </>
+    </Stack>
   )
 }

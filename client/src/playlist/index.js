@@ -56,22 +56,18 @@ export default function Playlist({
 
   return (
     <>
-      <Grid item>
-        <PlaylistToolbar
-          trackFilters={trackFilters}
-          setTrackFilters={setTrackFilters}
-          selectTrackId={selectTrackId}
-          lyricsFullscreen={lyricsFullscreen}
-        />
-      </Grid>
-      <Grid item>
-        <Tracks
-          key={playlist}
-          trackFilters={trackFilters}
-          lyricsFullscreen={lyricsFullscreen}
-          selectTrackId={selectTrackId}
-        />
-      </Grid>
+      <PlaylistToolbar
+        trackFilters={trackFilters}
+        setTrackFilters={setTrackFilters}
+        selectTrackId={selectTrackId}
+        lyricsFullscreen={lyricsFullscreen}
+      />
+      <Tracks
+        key={playlist}
+        trackFilters={trackFilters}
+        lyricsFullscreen={lyricsFullscreen}
+        selectTrackId={selectTrackId}
+      />
     </>
   )
 }
