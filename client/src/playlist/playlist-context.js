@@ -1,15 +1,17 @@
-import React, { useState, createContext } from 'react'
+import React, { useState, createContext, useEffect
+ } from 'react'
+import { useLocation } from 'react-router-dom'
 
 const PlaylistContext = createContext()
 
 export default PlaylistContext
 
-export function getPlaylist() {
-  const [, urlRadio] = window.location.pathname.match(/radio\/(.*)/) || []
-  const [, urlPlaylist] = window.location.pathname.match(/playlist\/(.*)/) || []
-  const [, urlCurrentlyPlaying] = window.location.pathname.match(/currently-playing\/(.*)/) || []
+export function getPlaylist(location) {
+  const [, urlRadio] = location.pathname.match(/radio\/(.*)/) || []
+  const [, urlPlaylist] = location.pathname.match(/playlist\/(.*)/) || []
+  const [, urlCurrentlyPlaying] = location.pathname.match(/currently-playing\/(.*)/) || []
   const [, urlCustomPlaylist] =
-    window.location.pathname.match(/custom-playlist\/(.*)/) || []
+    location.pathname.match(/custom-playlist\/(.*)/) || []
   return {
     urlRadio,
     urlPlaylist:
@@ -21,7 +23,11 @@ export function getPlaylist() {
 }
 
 export function PlaylistProvider(props) {
-  const { urlPlaylist, urlRadio, urlCustomPlaylist } = getPlaylist()
+  const location = useLocation()
+
+  const {urlPlaylist, urlRadio, urlCustomPlaylist, urlCurrentlyPlaying} = getPlaylist(location)
+
+  const [initialized, setInitialized] = useState()
   const [playlist, setPlaylist] = useState(urlPlaylist)
   const [radio, setRadio] = useState(urlRadio)
   const [customPlaylist, setCustomPlaylist] = useState(urlCustomPlaylist)
@@ -29,13 +35,24 @@ export function PlaylistProvider(props) {
   const [trackId, setTrackId] = useState('')
   const [tracks, setTracks] = useState()
 
+  useEffect(init, [location, initialized])
+
+  function init() {
+    if (initialized) {
+      setPlaylist(null)
+      setCustomPlaylist(null)
+      setRadio(null)
+      setTrackId(null)
+      if (urlRadio) setRadio({ urlRadio })
+      else if (urlCustomPlaylist) setCustomPlaylist(urlCustomPlaylist)
+      else setPlaylist(urlCurrentlyPlaying || urlPlaylist)
+    }
+  }
+
   const values = {
     playlist,
-    setPlaylist,
     radio,
-    setRadio,
     customPlaylist,
-    setCustomPlaylist,
     track,
     setTrack,
     trackId,
@@ -43,6 +60,8 @@ export function PlaylistProvider(props) {
     tracks: tracks || [],
     tracksInitialized: tracks !== undefined,
     setTracks,
+    initialized,
+    setInitialized
   }
 
   return (

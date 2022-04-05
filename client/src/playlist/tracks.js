@@ -5,7 +5,7 @@ import { List, useMediaQuery } from '@mui/material'
 import TrackItem from './track-item'
 import isEquivalent from '../isEquivalent'
 import { Track } from '../track'
-import PlaylistContext, { getPlaylist } from './playlist-context'
+import PlaylistContext from './playlist-context'
 import PlayerContext from '../player/player-context'
 import AddToPlaylistMenu from './add-to-playlist-menu'
 import DownloadContext from '../lyrics/download-context'
@@ -27,14 +27,14 @@ export default function Tracks({
     trackId,
     setTrackId,
     playlist,
-    setPlaylist,
+    radio,
+    customPlaylist,
     tracks,
     setTracks,
-    setRadio,
-    setCustomPlaylist,
+    initialized,
   } = useContext(PlaylistContext)
   const { trackIdToDownload } = useContext(DownloadContext)
-  const { player, setMonitorCurrentlyPlaying, isPlaying } = useContext(PlayerContext)
+  const {  setMonitorCurrentlyPlaying, isPlaying } = useContext(PlayerContext)
   const [offset, setOffset] = useState()
   const [unmounted, setUnmounted] = useState(false)
   const mobile = !useMediaQuery('(min-width:600px)')
@@ -43,25 +43,15 @@ export default function Tracks({
   useEffect(selectTrack, [trackId])
   useEffect(addTracks, [offset])
   useEffect(refreshPlaylist, [track])
-  useEffect(showPlaylist, [playlist, player])
-  useEffect(init, [player])
+  useEffect(showPlaylist, [playlist, initialized])
+  useEffect(init, [initialized])
   useEffect(() => {
     return unmount
   }, [])
 
   function init() {
-    if (player) {
-      const { urlRadio, urlPlaylist, urlCustomPlaylist, urlCurrentlyPlaying } = getPlaylist()
-      if (urlRadio || urlPlaylist || urlCustomPlaylist) {
+    if (initialized && (radio || playlist || customPlaylist)) {
         setMonitorCurrentlyPlaying(false)
-      }
-      setPlaylist(null)
-      setCustomPlaylist(null)
-      setRadio(null)
-      setTrackId(null)
-      if (urlRadio) setRadio({ urlRadio })
-      else if (urlCustomPlaylist) setCustomPlaylist(urlCustomPlaylist)
-      else setPlaylist(urlCurrentlyPlaying || urlPlaylist)
     }
   }
 
@@ -70,7 +60,7 @@ export default function Tracks({
   }
 
   function showPlaylist() {
-    if (playlist && player) {
+    if (playlist && initialized) {
       setTrack() // To fix error 'Material-UI: The value provided to Autocomplete is invalid. None of the options match with ...'
       setTracks([])
       setOffset(0)

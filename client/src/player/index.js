@@ -17,7 +17,6 @@ export default function Player() {
     device,
     isPlaying,
     setIsPlaying,
-    currentlyPlaying,
     monitorCurrentlyPlaying,
     setMonitorCurrentlyPlaying,
     playerState,
@@ -55,15 +54,6 @@ export default function Player() {
   }
 
   useEffect(isPlayingChanged, [isPlaying])
-
-  function showCurrentlyPlayingTrack() {
-    if (currentlyPlaying) {
-      setTrackId(currentlyPlaying.item.id)
-      navigateToPlaylist(currentlyPlaying.context.uri)
-    }
-  }
-
-  useEffect(showCurrentlyPlayingTrack, [currentlyPlaying])
 
   function deviceUpdated() {
     if (device) update()

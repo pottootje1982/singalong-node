@@ -5,13 +5,11 @@ const PlayerContext = createContext()
 export default PlayerContext
 
 export function PlayerProvider(props) {
-  const [player, setPlayer] = useState()
   const [isPlaying, setIsPlaying] = useState()
   const [monitorCurrentlyPlaying, setMonitorCurrentlyPlaying] = useState(true)
   const [device, setDevice] = useState(
     localStorage.getItem('lastPlayingDevice')
   )
-  const [currentlyPlaying, setCurrentlyPlaying] = useState()
   const [playerState, setPlayerState] = useState()
 
   function storeDevice() {
@@ -27,10 +25,6 @@ export function PlayerProvider(props) {
     setMonitorCurrentlyPlaying,
     device,
     setDevice,
-    currentlyPlaying,
-    setCurrentlyPlaying,
-    player,
-    setPlayer,
     playerState,
     setPlayerState,
   }

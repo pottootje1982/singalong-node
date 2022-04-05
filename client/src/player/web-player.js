@@ -1,11 +1,10 @@
 import React, { useContext, useEffect } from 'react'
 import Script from 'react-load-script'
 import { getCookie } from '../cookie'
-
-import PlayerContext from './player-context'
+import PlaylistContext from '../playlist/playlist-context'
 
 export default function WebPlayer({ setPlayerState }) {
-  const { setPlayer } = useContext(PlayerContext)
+  const {setInitialized } = useContext(PlaylistContext)
 
   function init() {
     window.onSpotifyWebPlaybackSDKReady = () => {
@@ -32,19 +31,19 @@ export default function WebPlayer({ setPlayerState }) {
     // Error handling
     player.addListener('initialization_error', ({ message }) => {
       console.error(message)
-      setPlayer('initialization_error')
+      setInitialized('initialization_error')
     })
     player.addListener('authentication_error', ({ message }) => {
       console.error(message)
-      setPlayer('authentication_error')
+      setInitialized('authentication_error')
     })
     player.addListener('account_error', ({ message }) => {
       console.error(message)
-      setPlayer('account_error')
+      setInitialized('account_error')
     })
     player.addListener('playback_error', ({ message }) => {
       console.error(message)
-      setPlayer('playback_error')
+      setInitialized('playback_error')
     })
 
     // Playback status updates
@@ -56,7 +55,7 @@ export default function WebPlayer({ setPlayerState }) {
     player.addListener('ready', ({ device_id }) => {
       console.log('Ready with Device ID', device_id)
 
-      setPlayer(player)
+      setInitialized(player)
     })
 
     // Not Ready

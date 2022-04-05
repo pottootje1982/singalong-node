@@ -80,6 +80,5 @@ export function useUpdatePlayingTrack(navigateToPlaylist) {
       }
       return {}
     })
-
   }
 }

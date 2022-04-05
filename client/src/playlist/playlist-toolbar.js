@@ -31,7 +31,7 @@ export default function PlaylistToolbar({
   lyricsFullscreen,
 }) {
   const { spotifyAxios } = useContext(ServerContext)
-  const { track, trackId, setTrackId, tracks } = useContext(
+  const { track, trackId, setTrackId, tracks,initialized } = useContext(
     PlaylistContext
   )
   const { downloadTracks, stopDownloading, isDownloading } = useContext(DownloadContext)
@@ -41,7 +41,6 @@ export default function PlaylistToolbar({
     setDevice,
     setMonitorCurrentlyPlaying,
     isPlaying,
-    player,
   } = useContext(PlayerContext)
 
   const [deviceOpen, setDeviceOpen] = useState(false)
@@ -51,7 +50,7 @@ export default function PlaylistToolbar({
   const playTrack = usePlayTrack()
 
   const getDevices = () => {
-    if (player) {
+    if (initialized) {
       spotifyAxios().get("/me/player/devices").then(({ data: { devices } }) => {
         devices = devices || []
         const deviceToSelect =
@@ -64,7 +63,7 @@ export default function PlaylistToolbar({
     }
   }
 
-  useEffect(getDevices, [player])
+  useEffect(getDevices, [initialized])
 
   function selectDevice() {
     if (devices) {
