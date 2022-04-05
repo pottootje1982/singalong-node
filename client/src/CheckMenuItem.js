@@ -11,7 +11,7 @@ const CheckMenuItem = React.forwardRef(
     function onCheckClick() {
       if (state) {
         state[filterKey] = !checked
-        setter({ ...state })
+        setter({ ...state }, filterKey)
       } else {
         setter(!checked)
       }

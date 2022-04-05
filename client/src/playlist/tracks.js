@@ -130,6 +130,7 @@ export default function Tracks({
       >
         {tracks
           .filter((t) => !trackFilters.isNotDownloaded || !t.lyrics)
+          .filter((t) => !trackFilters.isDownloaded || t.lyrics)
           .map((t, index) => (
             <TrackItem
               key={index}

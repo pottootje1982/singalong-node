@@ -34,7 +34,7 @@ export function DownloadProvider(props) {
                 track,
                 getCached,
                 sleepTime,
-                save: false,
+                save,
                 sites: activeSites
             })
             .then(({ data: { lyrics } }) => {

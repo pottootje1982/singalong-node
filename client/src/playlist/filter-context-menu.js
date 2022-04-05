@@ -7,14 +7,25 @@ import CustomPlaylist from './custom-playlist'
 export default function FilterContextMenu({ trackFilters, setTrackFilters }) {
   const [anchorEl, setAnchorEl] = useState()
 
-  const defaultMenuItemProps = {
-    setter: setTrackFilters,
-    state: trackFilters,
-    close: closeMenu,
-  }
-
   function closeMenu() {
     setAnchorEl(null)
+  }
+
+  const setTrackFiltersWrapper = (state, filterKey) => {
+    console.log(state, filterKey)
+    if (filterKey === 'isNotDownloaded' && state.isNotDownloaded) {
+      state.isDownloaded = false
+    }
+    else if (filterKey === 'isDownloaded' && state.isDownloaded) {
+      state.isNotDownloaded = false
+    }
+    setTrackFilters({...state})
+  }
+
+  const defaultMenuItemProps = {
+    setter: setTrackFiltersWrapper,
+    state: trackFilters,
+    close: closeMenu,
   }
 
   return (
@@ -47,6 +58,11 @@ export default function FilterContextMenu({ trackFilters, setTrackFilters }) {
           {...defaultMenuItemProps}
           filterKey="isNotDownloaded"
           name="Not downloaded"
+        />
+        <CheckMenuItem
+          {...defaultMenuItemProps}
+          filterKey="isDownloaded"
+          name="Downloaded"
         />
         <CheckMenuItem
           {...defaultMenuItemProps}
