@@ -1,5 +1,5 @@
 import React, { useRef, useContext } from 'react'
-import { TextField } from '@material-ui/core'
+import { TextField } from '@mui/material'
 import { Track } from '../track'
 
 import {
@@ -12,8 +12,8 @@ import {
   DialogContent,
   DialogActions,
   Button,
-} from '@material-ui/core'
-import { Search } from '@material-ui/icons'
+} from '@mui/material'
+import { Search } from '@mui/icons-material'
 import PlaylistContext from '../playlist/playlist-context'
 import DownloadContext from './download-context'
 

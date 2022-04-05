@@ -1,5 +1,5 @@
 import React, { useContext, useState } from 'react'
-import { List } from '@material-ui/core'
+import { List } from '@mui/material'
 
 import ServerContext from '../server-context'
 import PlaylistContext from '../playlist/playlist-context'

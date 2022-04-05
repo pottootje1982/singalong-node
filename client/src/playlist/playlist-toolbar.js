@@ -9,14 +9,14 @@ import {
   Select,
   MenuItem,
   useMediaQuery,
-} from "@material-ui/core"
+  ToggleButton,
+  Autocomplete
+} from "@mui/material"
 import {
   GetApp as DownloadIcon,
   NavigateBefore,
   NavigateNext,
-} from "@material-ui/icons"
-import ToggleButton from "@material-ui/lab/ToggleButton"
-import Autocomplete from "@material-ui/lab/Autocomplete"
+} from "@mui/icons-material"
 
 import PlayerContext from "../player/player-context"
 import PlaylistContext from "./playlist-context"
@@ -135,7 +135,7 @@ export default function PlaylistToolbar({
               options={tracks}
               noOptionsText=""
               getOptionLabel={(t) => t.toString(trackFilters)}
-              getOptionSelected={(option, value) =>
+              isOptionEqualToValue={(option, value) =>
                 trackFound
                   ? option.id === value.id
                   : tracks.indexOf(option) === 0

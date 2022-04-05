@@ -1,6 +1,6 @@
 import React from 'react'
-import { Checkbox } from '@material-ui/core'
-import { StarBorder, Star } from '@material-ui/icons'
+import { Checkbox } from '@mui/material'
+import { StarBorder, Star } from '@mui/icons-material'
 
 const IndeterminateCheckbox = React.forwardRef(
     ({ indeterminate, ...rest }, ref) => {

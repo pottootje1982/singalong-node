@@ -1,7 +1,7 @@
 import React, { useContext, useState } from 'react'
-import { ListItem, ListItemText, IconButton } from '@material-ui/core'
-import purple from '@material-ui/core/colors/purple'
-import { Delete } from '@material-ui/icons'
+import { ListItem, ListItemText, IconButton } from '@mui/material'
+import purple from '@mui/material/colors/purple'
+import { Delete } from '@mui/icons-material'
 import IndeterminateCheckbox from '../Styled/IndeterminateCheckbox'
 import ServerContext from '../server-context'
 

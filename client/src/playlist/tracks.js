@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useContext } from 'react'
 import ServerContext from '../server-context'
-import { List, useMediaQuery } from '@material-ui/core'
+import { List, useMediaQuery } from '@mui/material'
 
 import TrackItem from './track-item'
 import isEquivalent from '../isEquivalent'

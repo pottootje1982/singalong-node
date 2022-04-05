@@ -1,5 +1,5 @@
 import React, { useRef, useState, useContext } from 'react'
-import { TextField } from '@material-ui/core'
+import { TextField } from '@mui/material'
 
 import {
   MenuItem,
@@ -11,8 +11,8 @@ import {
   DialogContent,
   DialogActions,
   Button,
-} from '@material-ui/core'
-import { List, Edit } from '@material-ui/icons'
+} from '@mui/material'
+import { List, Edit } from '@mui/icons-material'
 import ServerContext from '../server-context'
 import PlaylistContext from './playlist-context'
 import LibraryContext from '../library/library-context'

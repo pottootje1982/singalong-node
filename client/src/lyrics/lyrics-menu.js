@@ -1,8 +1,8 @@
 import React, { useState, useEffect, useContext } from 'react'
-import { IconButton } from '@material-ui/core'
+import { IconButton } from '@mui/material'
 import ServerContext from '../server-context'
-import { Menu, Divider } from '@material-ui/core'
-import { Menu as MenuIcon } from '@material-ui/icons'
+import { Menu, Divider } from '@mui/material'
+import { Menu as MenuIcon } from '@mui/icons-material'
 import CheckMenuItem from '../CheckMenuItem'
 import { Track } from '../track'
 import CustomSearch, { CustomSearchDialog } from './custom-search'
@@ -90,7 +90,6 @@ export default function LyricsMenu({
       </IconButton>
       <Menu
         id="simple-menu"
-        getContentAnchorEl={null}
         disableAutoFocusItem={false}
         anchorEl={anchorEl}
         transformOrigin={{

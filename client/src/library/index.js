@@ -4,8 +4,7 @@ import React, {
   useRef,
   useContext,
 } from 'react'
-import { Grid, TextField, useMediaQuery } from '@material-ui/core'
-import Autocomplete from '@material-ui/lab/Autocomplete'
+import { Grid, TextField, useMediaQuery, Autocomplete } from '@mui/material'
 import ServerContext from '../server-context'
 import LibraryList from './library-list'
 import PlaylistContext from '../playlist/playlist-context'
@@ -111,7 +110,7 @@ export default function Library() {
             autoHighlight
             options={allPlaylists}
             getOptionLabel={(option) => option.name}
-            getOptionSelected={(option) =>
+            isOptionEqualToValue={(option) =>
               selectedPlaylist
                 ? option.uri === playlist
                 : allPlaylists.indexOf(option) === 0

@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef, useContext } from 'react'
-import { TextField } from '@material-ui/core'
-import { Grid } from '@material-ui/core'
+import { TextField } from '@mui/material'
+import { Grid } from '@mui/material'
 import { Track } from '../track'
 import LyricsToolbar from './lyrics-toolbar'
 import PlaylistContext from '../playlist/playlist-context'

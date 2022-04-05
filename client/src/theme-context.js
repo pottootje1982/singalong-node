@@ -1,11 +1,10 @@
 import React, { useState, createContext, useEffect } from 'react'
-import { MuiThemeProvider } from '@material-ui/core'
-import { createTheme  } from '@material-ui/core/styles'
+import { createTheme, ThemeProvider as MuiThemeProvider } from '@mui/material/styles'
 
 const ThemeContext = createContext()
 export default ThemeContext
 
-const defaultTheme = createTheme ({
+const defaultTheme = createTheme({
   palette: {
     type: 'light',
   },
@@ -22,7 +21,7 @@ export const ThemeProvider = (props) => {
   useEffect(() => {
     window.localStorage.setItem('dark-or-light', themeName)
     setTheme(
-      createTheme ({
+      createTheme({
         palette: {
           type: themeName || 'light',
         },

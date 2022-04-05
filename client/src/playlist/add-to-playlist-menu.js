@@ -1,5 +1,5 @@
 import React, { useContext } from 'react'
-import { Menu, MenuItem } from '@material-ui/core'
+import { Menu, MenuItem } from '@mui/material'
 import LibraryContext from '../library/library-context'
 import ServerContext from '../server-context'
 

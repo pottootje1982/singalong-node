@@ -1,6 +1,6 @@
 import React, { useEffect, useContext } from 'react'
 import ServerContext from '../server-context'
-import { Grid } from '@material-ui/core'
+import { Grid } from '@mui/material'
 import { Track } from '../track'
 import PlaylistToolbar from './playlist-toolbar'
 import Tracks from './tracks'

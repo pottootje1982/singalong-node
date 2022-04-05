@@ -1,6 +1,6 @@
 import React from 'react'
 
-import { MenuItem, ListItemIcon, ListItemText } from '@material-ui/core'
+import { MenuItem, ListItemIcon, ListItemText } from '@mui/material'
 
 import {
   Menu as MenuIcon,
@@ -8,7 +8,7 @@ import {
   Delete,
   Save,
   Search,
-} from '@material-ui/icons'
+} from '@mui/icons-material'
 
 const icons = {
   MenuIcon: <MenuIcon fontSize="small"></MenuIcon>,

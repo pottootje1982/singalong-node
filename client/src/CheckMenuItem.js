@@ -1,8 +1,8 @@
 import React from 'react'
 
-import { MenuItem, ListItemIcon, ListItemText } from '@material-ui/core'
+import { MenuItem, ListItemIcon, ListItemText } from '@mui/material'
 
-import { CheckBoxOutlineBlank, CheckBoxOutlined } from '@material-ui/icons'
+import { CheckBoxOutlineBlank, CheckBoxOutlined } from '@mui/icons-material'
 
 const CheckMenuItem = React.forwardRef(
   ({ setter, state, checked, filterKey, name, close }, ref) => {

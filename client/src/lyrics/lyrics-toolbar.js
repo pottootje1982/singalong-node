@@ -1,7 +1,7 @@
 import React, { useEffect, useContext } from 'react'
-import { IconButton } from '@material-ui/core'
-import { Grid } from '@material-ui/core'
-import { Fullscreen, FullscreenExit } from '@material-ui/icons'
+import { IconButton } from '@mui/material'
+import { Grid } from '@mui/material'
+import { Fullscreen, FullscreenExit } from '@mui/icons-material'
 
 import LyricsMenu from './lyrics-menu'
 import PlaylistContext from '../playlist/playlist-context'

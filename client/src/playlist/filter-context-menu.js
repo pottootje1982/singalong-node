@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
-import { Menu, IconButton, Divider } from '@material-ui/core'
+import { Menu, IconButton, Divider } from '@mui/material'
 import CheckMenuItem from '../CheckMenuItem'
-import { Menu as MenuIcon } from '@material-ui/icons'
+import { Menu as MenuIcon } from '@mui/icons-material'
 import CustomPlaylist from './custom-playlist'
 
 export default function FilterContextMenu({ trackFilters, setTrackFilters }) {
@@ -39,7 +39,6 @@ export default function FilterContextMenu({ trackFilters, setTrackFilters }) {
       </IconButton>
       <Menu
         id="simple-menu"
-        getContentAnchorEl={null}
         anchorEl={anchorEl}
         keepMounted
         transformOrigin={{

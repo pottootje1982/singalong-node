@@ -1,15 +1,15 @@
 import React, { useContext } from 'react'
 import ServerContext from '../server-context'
-import green from '@material-ui/core/colors/green'
-import red from '@material-ui/core/colors/red'
-import orange from '@material-ui/core/colors/orange'
+import green from '@mui/material/colors/green'
+import red from '@mui/material/colors/red'
+import orange from '@mui/material/colors/orange'
 import {
   IconButton,
   ListItem,
   ListItemText,
   useMediaQuery,
-} from '@material-ui/core'
-import { PlayArrow, QueueMusic, Add } from '@material-ui/icons'
+} from '@mui/material'
+import { PlayArrow, QueueMusic, Add } from '@mui/icons-material'
 import usePlayTrack from '../player/player-hooks'
 import PlaylistContext from './playlist-context'
 import PlayerContext from '../player/player-context'
