@@ -3,6 +3,7 @@ import React, {
   useState,
   useRef,
   useContext,
+  useCallback,
 } from 'react'
 import { Grid, TextField, useMediaQuery, Autocomplete } from '@mui/material'
 import ServerContext from '../server-context'
@@ -31,15 +32,15 @@ export default function Library() {
 
   function init() {
     setOffset(0)
-    getCustomPlaylists()
-  }
-
-  function getCustomPlaylists() {
     server().get('/api/playlists/custom').then(({ data }) => {
       const { playlists } = data || {}
       if (playlists) setCustomPlaylists(playlists)
     })
   }
+
+  const navigateToPlaylist = useCallback((uri) =>{
+    navigate(`/playlist/${uri}`)
+  }, [navigate])
 
   function selectFirstPlaylist() {
     if (
@@ -53,9 +54,9 @@ export default function Library() {
     }
   }
 
-  useEffect(getPlaylists, [offset])
-  useEffect(init, [])
-  useEffect(selectFirstPlaylist, [playlists, isPlaying])
+  useEffect(getPlaylists, [offset, playlists, server, setPlaylists])
+  useEffect(init, [server, setCustomPlaylists])
+  useEffect(selectFirstPlaylist, [playlists, isPlaying, customPlaylist, navigateToPlaylist, playlist, radio])
 
   const comparePlaylists = (a, b) => a.favourite && b.favourite ? 0 : a.favourite ? -1 : 0
 
@@ -88,10 +89,6 @@ export default function Library() {
   useEffect(() => {
     setAllPlaylists([...customPlaylists, ...playlists])
   }, [playlists, customPlaylists])
-
-  function navigateToPlaylist(uri) {
-    navigate(`/playlist/${uri}`)
-  }
 
   const selectedPlaylist = allPlaylists.find((p) => p.uri === playlist)
 

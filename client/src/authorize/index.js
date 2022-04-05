@@ -1,4 +1,4 @@
-import React, { useEffect, useContext } from 'react'
+import React, { useEffect, useContext, useState } from 'react'
 import ServerContext from '../server-context'
 import { useNavigate, useSearchParams } from 'react-router-dom'
 import { setCookie } from '../cookie'
@@ -13,13 +13,13 @@ function Authorize() {
       }
     })
   }
-  useEffect(init, [])
+  useEffect(init, [server])
   return <React.Fragment />
 }
 
 export function Authorized() {
   const [searchParams] = useSearchParams();
-  const code = searchParams.get('code')
+  const [code] = useState(searchParams.get('code'))
   const navigate = useNavigate()
 
   const { server } = useContext(ServerContext)
@@ -38,7 +38,7 @@ export function Authorized() {
       .catch((err) => console.log(err))
   }
 
-  useEffect(init, [])
+  useEffect(init, [code, navigate, server])
   return <React.Fragment />
 }
 

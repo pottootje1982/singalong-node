@@ -1,8 +1,9 @@
-import { useContext } from 'react'
+import { useCallback, useContext } from 'react'
 import ServerContext from '../server-context'
 import PlayerContext from './player-context'
 import PlaylistContext from '../playlist/playlist-context'
 import { Track } from '../track'
+import { useNavigate } from 'react-router-dom'
 
 export default function usePlayTrack() {
   const { spotifyAxios } = useContext(ServerContext)
@@ -39,7 +40,7 @@ export default function usePlayTrack() {
   }
 }
 
-export function useUpdatePlayingTrack(navigateToPlaylist) {
+export function useUpdatePlayingTrack() {
   const { server, spotifyAxios } = useContext(ServerContext)
   const { setTrackId, tracks, setTracks, tracksInitialized } = useContext(PlaylistContext)
   const {
@@ -47,7 +48,13 @@ export function useUpdatePlayingTrack(navigateToPlaylist) {
     monitorCurrentlyPlaying,
   } = useContext(PlayerContext)
 
-  function setPlaylistFromContext(uri, item) {
+  let navigate = useNavigate()
+  
+  const navigateToPlaylist = useCallback((uri) => {
+    navigate(`/currently-playing/${uri}`)
+  }, [navigate])
+
+  const setPlaylistFromContext = useCallback((uri, item) => {
     if (uri.includes(':artist:')) {
       server().get(`/api/playlists/${uri}`).then(({ data }) => {
         let { tracks: artistTracks } = data || {}
@@ -59,9 +66,9 @@ export function useUpdatePlayingTrack(navigateToPlaylist) {
     } else {
       navigateToPlaylist(uri)
     }
-  }
+  }, [navigateToPlaylist, server])
 
-  return () => {
+  const callback = useCallback(() => {
     return spotifyAxios().get(`/me/player/currently-playing`).then(({ data }) => {
       const { is_playing, progress_ms, item, context } = data || {}
       if (item) {
@@ -80,5 +87,6 @@ export function useUpdatePlayingTrack(navigateToPlaylist) {
       }
       return {}
     })
-  }
+  }, [monitorCurrentlyPlaying, setIsPlaying, setPlaylistFromContext, setTrackId, setTracks, spotifyAxios, tracks, tracksInitialized])
+  return callback
 }

@@ -72,7 +72,7 @@ export default function LyricsMenu({
     setSites([...sites])
   }
 
-  useEffect(saveDarkMode, [darkMode])
+  useEffect(saveDarkMode, [darkMode, setThemeName])
 
   return (
     <>

@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState, createRef } from 'react'
+import React, { useContext, useEffect, useState, createRef, useCallback } from 'react'
 import { IconButton } from '@mui/material'
 import { Grid, Slider, Typography } from '@mui/material'
 import { SkipPrevious, SkipNext, PlayArrow, Pause } from '@mui/icons-material'
@@ -28,10 +28,16 @@ export default function Player() {
   const [updateInterval, setUpdateInterval] = useState()
   const [timestamp, setTimestamp] = useState()
   const playTrack = usePlayTrack()
-  const updateCurrentlyPlaying = useUpdatePlayingTrack(navigateToPlaylist)
+  const updateCurrentlyPlaying = useUpdatePlayingTrack()
   let navigate = useNavigate()
   const audioRef = createRef()
   const [seeking, setSeeking] = useState(false)
+
+  const update = useCallback(()=> {
+    if (!playerState?.paused) {
+      return updateCurrentlyPlaying()
+    }
+  }, [playerState?.paused, updateCurrentlyPlaying])
 
   function updatePlayingPosition() {
     if (!seeking && !playerState?.paused) {
@@ -42,7 +48,7 @@ export default function Player() {
     }
   }
 
-  useEffect(updatePlayingPosition, [timestamp])
+  useEffect(updatePlayingPosition, [timestamp, playerState?.paused, seeking, update])
 
   function updateTimestamp() {
     setTimestamp(Date.now())
@@ -60,11 +66,11 @@ export default function Player() {
   }
 
   function monitorUpdated() {
-    if (monitorUpdated) updateCurrentlyPlaying()
+    if (monitorCurrentlyPlaying) updateCurrentlyPlaying()
   }
 
-  useEffect(monitorUpdated, [monitorCurrentlyPlaying])
-  useEffect(deviceUpdated, [device])
+  useEffect(monitorUpdated, [monitorCurrentlyPlaying, updateCurrentlyPlaying])
+  useEffect(deviceUpdated, [device, updateCurrentlyPlaying, update])
 
   async function onPlayPositionClick(_, value) {
     setPlayPosition(value)
@@ -114,21 +120,15 @@ export default function Player() {
     return s
   }
 
-  function update() {
-    if (!playerState?.paused) {
-      return updateCurrentlyPlaying()
-    }
-  }
-
   function valuetext(value) {
     value = value || 0
     const minutes = value / 60
     return `${pad(minutes, 2)}:${pad(value % 60, 2)}`
   }
 
-  function navigateToPlaylist(uri) {
+  const navigateToPlaylist = useCallback((uri) => {
     navigate(`/currently-playing/${uri}`)
-  }
+  }, [navigate])
 
   function updatePlayerState() {
     if (playerState) {
@@ -151,8 +151,7 @@ export default function Player() {
     }
   }
 
-  useEffect(updatePlayerState, [playerState])
-
+  useEffect(updatePlayerState, [playerState, navigateToPlaylist, monitorCurrentlyPlaying, setTrackId, tracks])
 
   return (
     <>
