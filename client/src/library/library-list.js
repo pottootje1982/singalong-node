@@ -37,7 +37,7 @@ export default function LibraryList({ playlists, onPlaylistClick }) {
         message={`Are you sure you want to remove ${playlistName}`}
         onOk={onPlaylistDelete}
       />
-      <List dense style={{ maxHeight: '80vh', overflow: 'auto' }}>
+      <List dense style={{ maxHeight: 'calc(100vh - 60px)', overflow: 'auto' }}>
         {playlists.map((p, index) => (
           <PlaylistItem
             key={index}

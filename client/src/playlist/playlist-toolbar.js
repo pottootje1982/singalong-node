@@ -31,7 +31,7 @@ export default function PlaylistToolbar({
   lyricsFullscreen,
 }) {
   const { spotifyAxios } = useContext(ServerContext)
-  const { track, trackId, setTrackId, tracks,initialized } = useContext(
+  const { track, trackId, setTrackId, tracks, initialized } = useContext(
     PlaylistContext
   )
   const { downloadTracks, stopDownloading, isDownloading } = useContext(DownloadContext)

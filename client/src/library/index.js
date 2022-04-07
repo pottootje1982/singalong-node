@@ -5,7 +5,7 @@ import React, {
   useContext,
   useCallback,
 } from 'react'
-import { Grid, TextField, useMediaQuery, Autocomplete } from '@mui/material'
+import { TextField, useMediaQuery, Autocomplete, Stack } from '@mui/material'
 import ServerContext from '../server-context'
 import LibraryList from './library-list'
 import PlaylistContext from '../playlist/playlist-context'
@@ -38,7 +38,7 @@ export default function Library() {
     })
   }
 
-  const navigateToPlaylist = useCallback((uri) =>{
+  const navigateToPlaylist = useCallback((uri) => {
     navigate(`/playlist/${uri}`)
   }, [navigate])
 
@@ -93,46 +93,41 @@ export default function Library() {
   const selectedPlaylist = allPlaylists.find((p) => p.uri === playlist)
 
   return (
-    <Grid
-      container
+    <Stack
       direction={mobile ? 'row' : 'column'}
       alignItems="stretch"
       spacing={1}
     >
-      <Grid item>
-        {selectedPlaylist && (
-          <Autocomplete
-            value={selectedPlaylist}
-            onChange={(_, p) => onPlaylistClick(p)}
-            autoHighlight
-            options={allPlaylists}
-            getOptionLabel={(option) => option.name}
-            isOptionEqualToValue={(option) =>
-              selectedPlaylist
-                ? option.uri === playlist
-                : allPlaylists.indexOf(option) === 0
-            }
-            style={{ width: mobile && 300 }}
-            size="small"
-            renderInput={(params) => (
-              <TextField
-                {...params}
-                label="Select playlist:"
-                inputRef={searchRef}
-                variant="outlined"
-              />
-            )}
-          />
-        )}
-      </Grid>
-      {!mobile && (
-        <Grid item>
-          <LibraryList
-            playlists={allPlaylists}
-            onPlaylistClick={onPlaylistClick}
-          />
-        </Grid>
+      {selectedPlaylist && (
+        <Autocomplete
+          value={selectedPlaylist}
+          onChange={(_, p) => onPlaylistClick(p)}
+          autoHighlight
+          options={allPlaylists}
+          getOptionLabel={(option) => option.name}
+          isOptionEqualToValue={(option) =>
+            selectedPlaylist
+              ? option.uri === playlist
+              : allPlaylists.indexOf(option) === 0
+          }
+          style={{ width: mobile && 300 }}
+          size="small"
+          renderInput={(params) => (
+            <TextField
+              {...params}
+              label="Select playlist:"
+              inputRef={searchRef}
+              variant="outlined"
+            />
+          )}
+        />
       )}
-    </Grid>
+      {!mobile && (
+        <LibraryList
+          playlists={allPlaylists}
+          onPlaylistClick={onPlaylistClick}
+        />
+      )}
+    </Stack>
   )
 }
