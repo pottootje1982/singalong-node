@@ -34,7 +34,7 @@ export default function Tracks({
     initialized,
   } = useContext(PlaylistContext)
   const { trackIdToDownload } = useContext(DownloadContext)
-  const {  setMonitorCurrentlyPlaying, isPlaying } = useContext(PlayerContext)
+  const { setMonitorCurrentlyPlaying, isPlaying } = useContext(PlayerContext)
   const [offset, setOffset] = useState()
   const [unmounted, setUnmounted] = useState(false)
   const mobile = !useMediaQuery('(min-width:600px)')
@@ -51,7 +51,7 @@ export default function Tracks({
 
   function init() {
     if (initialized && (radio || playlist || customPlaylist)) {
-        setMonitorCurrentlyPlaying(false)
+      setMonitorCurrentlyPlaying(false)
     }
   }
 
@@ -107,7 +107,6 @@ export default function Tracks({
     <>
       <List
         style={{
-          maxHeight: !mobile && '40vh',
           overflow: !mobile && 'auto',
           display: lyricsFullscreen && 'none',
         }}

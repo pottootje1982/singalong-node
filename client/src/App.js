@@ -2,7 +2,7 @@ import React, { useState, useContext } from 'react'
 import Library from './library'
 import Playlist from './playlist'
 import Lyrics from './lyrics'
-import { useMediaQuery } from '@mui/material'
+import { Stack, useMediaQuery } from '@mui/material'
 import { getCookie } from './cookie'
 import CssBaseline from '@mui/material/CssBaseline'
 import IdleTimer from 'react-idle-timer'
@@ -14,7 +14,7 @@ import { Split } from '@geoffcox/react-splitter'
 
 function App() {
   const [lyricsFullscreen, setLyricsFullscreen] = useState(false)
-  const [playlistSplit, setPlaylistSplit] = useState({})
+  const [split] = useState(window.localStorage.getItem('split'))
   const mobile = !useMediaQuery('(min-width:600px)')
   const { getFreshToken } = useContext(ServerContext)
 
@@ -30,6 +30,12 @@ function App() {
     }
   }
 
+  const Divider = mobile || lyricsFullscreen ? ({ children }) => <Stack>{children}</Stack> : ({ children, ...p }) => <Split
+    initialPrimarySize={split}
+    onSplitChanged={(e) => window.localStorage.setItem('split', e)}
+    {...p} style={{ margin: 42 }}
+  >{children}</Split>
+
   return (
     <>
       <PlaylistProvider>
@@ -37,29 +43,24 @@ function App() {
           <PlayerProvider>
             <IdleTimer element={document} onAction={onAction} debounce={500} />
             <CssBaseline />
-            <Split
-            >
-              <Library></Library>
-              <Split
-                onMeasuredSizesChanged={setPlaylistSplit}
-                resetOnDoubleClick
-                horizontal
-                spacing={1}
-                alignItems="stretch"
-              >
+            <Divider >
+              {!lyricsFullscreen && <Library />}
+              <Stack spacing={1}
+                direction={lyricsFullscreen ? 'column-reverse' : 'column'}
+                justifyContent={lyricsFullscreen ? 'flex-end' : 'flex-start'}             >
                 <Lyrics
+                  id='lyrics'
                   lyricsFullscreen={lyricsFullscreen}
                   setLyricsFullscreen={setLyricsFullscreen}
                   trackFilters={trackFilters}
                 ></Lyrics>
                 <Playlist
-                  split={playlistSplit}
                   lyricsFullscreen={lyricsFullscreen}
                   trackFilters={trackFilters}
                   setTrackFilters={setTrackFilters}
                 ></Playlist>
-              </Split>
-            </Split>
+              </Stack>
+            </Divider>
           </PlayerProvider>
         </DownloadProvider>
       </PlaylistProvider>

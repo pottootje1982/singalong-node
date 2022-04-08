@@ -35,7 +35,7 @@ export default function Lyrics({
         id="outlined-multiline-static"
         label={`Lyrics ${trackToDisplay.toString(trackFilters)}`}
         multiline
-        rows={!lyricsFullscreen ? 20 : undefined}
+        maxRows={!lyricsFullscreen ? 20 : undefined}
         defaultValue={lyrics}
         variant="outlined"
         InputProps={{ style: { fontSize: 14 } }}

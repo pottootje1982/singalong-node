@@ -33,7 +33,7 @@ export default function Player() {
   const audioRef = createRef()
   const [seeking, setSeeking] = useState(false)
 
-  const update = useCallback(()=> {
+  const update = useCallback(() => {
     if (!playerState?.paused) {
       return updateCurrentlyPlaying()
     }
@@ -156,44 +156,33 @@ export default function Player() {
   return (
     <>
       <WebPlayer setPlayerState={setPlayerState} />
-      <Grid item>
-        <IconButton size="small" onClick={() => spotifyCommand(`previous`)}>
-          <SkipPrevious />
-        </IconButton>
-      </Grid>
-      <Grid item>
-        <IconButton size="small" onClick={togglePlay}>
-          {isPlaying ? <Pause /> : <PlayArrow />}
-        </IconButton>
-        <audio
-          ref={audioRef}
-          src="https://direct.fipradio.fr/live/fip-midfi.mp3"
-        ></audio>
-      </Grid>
+      <IconButton size="small" onClick={() => spotifyCommand(`previous`)}>
+        <SkipPrevious />
+      </IconButton>
+      <IconButton size="small" onClick={togglePlay}>
+        {isPlaying ? <Pause /> : <PlayArrow />}
+      </IconButton>
+      <audio
+        ref={audioRef}
+        src="https://direct.fipradio.fr/live/fip-midfi.mp3"
+      ></audio>
 
-      <Grid item>
-        <IconButton size="small" onClick={() => spotifyCommand('next')}>
-          <SkipNext />
-        </IconButton>
-      </Grid>
-      <Grid item>
-        <Typography variant="caption">
-          {valuetext(Math.min(playPosition, duration))}
-        </Typography>
-      </Grid>
-      <Grid item xs>
-        <Slider
-          min={0}
-          value={playPosition}
-          max={duration}
-          step={1}
-          getAriaValueText={valuetext}
-          onChange={onPlayPositionClick}
-        />
-      </Grid>
-      <Grid item>
-        <Typography variant="caption">{valuetext(duration)}</Typography>
-      </Grid>
+      <IconButton size="small" onClick={() => spotifyCommand('next')}>
+        <SkipNext />
+      </IconButton>
+      <Typography variant="caption" marginRight={5}>
+        {valuetext(Math.min(playPosition, duration))}
+      </Typography>
+      <Slider
+        size='small'
+        min={0}
+        value={playPosition}
+        max={duration}
+        step={1}
+        getAriaValueText={valuetext}
+        onChange={onPlayPositionClick}
+      />
+      <Typography variant="caption" marginLeft={5} >{valuetext(duration)}</Typography>
     </>
   )
 }

@@ -22,7 +22,7 @@ export default function LyricsToolbar({
 
 
   return (
-    <Stack direction="row">
+    <Stack direction="row" spacing={1} alignItems="center">
       <IconButton
         size="small"
         onClick={() => {

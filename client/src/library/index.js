@@ -96,7 +96,8 @@ export default function Library() {
     <Stack
       direction={mobile ? 'row' : 'column'}
       alignItems="stretch"
-      spacing={1}
+      paddingTop={1}
+      paddingLeft={1}
     >
       {selectedPlaylist && (
         <Autocomplete
