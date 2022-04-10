@@ -32,7 +32,8 @@ export default function Tracks({
     tracks,
     setTracks,
     initialized,
-    lyricsHeight
+    lyricsHeight,
+    urlCurrentlyPlaying
   } = useContext(PlaylistContext)
   const { trackIdToDownload } = useContext(DownloadContext)
   const { setMonitorCurrentlyPlaying, isPlaying } = useContext(PlayerContext)
@@ -45,13 +46,13 @@ export default function Tracks({
   useEffect(addTracks, [offset, isPlaying, playlist, server, setTrackId, setTracks, trackId, tracks, unmounted])
   useEffect(refreshPlaylist, [track, setTracks, tracks])
   useEffect(showPlaylist, [playlist, initialized, setTrack, setTracks])
-  useEffect(init, [initialized, customPlaylist, playlist, radio, setMonitorCurrentlyPlaying])
+  useEffect(init, [initialized, customPlaylist, playlist, radio, setMonitorCurrentlyPlaying, urlCurrentlyPlaying])
   useEffect(() => {
     return unmount
   }, [])
 
   function init() {
-    if (initialized && (radio || playlist || customPlaylist)) {
+    if (initialized && !urlCurrentlyPlaying && (radio || playlist || customPlaylist)) {
       setMonitorCurrentlyPlaying(false)
     }
   }

@@ -17,13 +17,23 @@ export default function Lyrics({
   const lyricsRef = useRef()
   const stackRef = useRef()
   const [lyrics, setLyrics] = useState()
+  const [lyricsLines, setLyricsLines] = useState(window.localStorage.getItem('lyricsLines'))
 
-  useEffect(() => (track) && setLyrics(track.lyrics), [track])
+  useEffect(() => {
+    if (track) {
+      setLyrics(track.lyrics)
+    }
+  }, [track])
+
+  useEffect(() => {
+    setLyricsLines(window.localStorage.getItem('lyricsLines'))
+  }, [lyrics, setLyricsLines])
 
   const onMouseUp = () => {
     if (mouseDown) {
       const height = stackRef.current.clientHeight
       setLyricsHeight(height)
+      window.localStorage.setItem('lyricsLines', height / 20)
     }
   }
 
@@ -51,7 +61,7 @@ export default function Lyrics({
         id="outlined-multiline-static"
         label={`Lyrics ${trackToDisplay.toString(trackFilters)}`}
         multiline
-        maxRows={!lyricsFullscreen ? 20 : undefined}
+        maxRows={!lyricsFullscreen ? lyricsLines : undefined}
         defaultValue={lyrics}
         variant="outlined"
         InputProps={{ style: { fontSize: 14 } }}

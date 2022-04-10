@@ -67,7 +67,8 @@ export function PlaylistProvider(props) {
     initialized,
     setInitialized,
     lyricsHeight,
-    setLyricsHeight
+    setLyricsHeight,
+    urlCurrentlyPlaying
   }
 
   return (
