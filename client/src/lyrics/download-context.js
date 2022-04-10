@@ -1,4 +1,4 @@
-import React, { useState, createContext, useContext, useEffect } from 'react'
+import React, { useState, createContext, useContext, useEffect, useCallback } from 'react'
 import PlaylistContext from '../playlist/playlist-context'
 import ServerContext from '../server-context'
 import { Track } from "../track"
@@ -27,7 +27,7 @@ export function DownloadProvider(props) {
         return !isDownloading
     }
 
-    function downloadTrack(track, { save = true, sleepTime = 0, getCached = false } = {}) {
+    const downloadTrack = useCallback((track, { save = true, sleepTime = 0, getCached = false } = {}) => {
         const activeSites = sites.filter(s => !s.disabled).map(s => s.key)
         return server()
             .post("api/lyrics/download", {
@@ -43,7 +43,7 @@ export function DownloadProvider(props) {
                     return lyrics
                 }
             })
-    }
+    }, [server, setTrack, sites])
 
     function popTrackAndDownload() {
         const toDownload = tracksToDownload[0]
@@ -72,7 +72,7 @@ export function DownloadProvider(props) {
         setTracksToDownload(tracks.filter((track) => !track.lyrics))
     }
 
-    useEffect(popTrackAndDownload, [tracksToDownload])
+    useEffect(popTrackAndDownload, [tracksToDownload, downloadTrack])
 
     const mergeSites = (oldSites, sites) => sites.map(s => ({ ...s, disabled: oldSites.find(os => os.name === s.name)?.disabled }))
 

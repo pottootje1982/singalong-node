@@ -1,14 +1,11 @@
 import React, { useEffect, useContext } from 'react'
 import ServerContext from '../server-context'
-import { Grid } from '@mui/material'
 import { Track } from '../track'
-import PlaylistToolbar from './playlist-toolbar'
 import Tracks from './tracks'
 import PlaylistContext from '../playlist/playlist-context'
 
 export default function Playlist({
   trackFilters,
-  setTrackFilters,
   lyricsFullscreen,
 }) {
   const { server } = useContext(ServerContext)
@@ -54,20 +51,13 @@ export default function Playlist({
     if (track) setTrackId(track.id)
   }
 
+
   return (
-    <>
-      <PlaylistToolbar
-        trackFilters={trackFilters}
-        setTrackFilters={setTrackFilters}
-        selectTrackId={selectTrackId}
-        lyricsFullscreen={lyricsFullscreen}
-      />
-      <Tracks
-        key={playlist}
-        trackFilters={trackFilters}
-        lyricsFullscreen={lyricsFullscreen}
-        selectTrackId={selectTrackId}
-      />
-    </>
+    <Tracks
+      key={playlist}
+      trackFilters={trackFilters}
+      lyricsFullscreen={lyricsFullscreen}
+      selectTrackId={selectTrackId}
+    />
   )
 }

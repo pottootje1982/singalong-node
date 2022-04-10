@@ -53,6 +53,7 @@ function App() {
                   lyricsFullscreen={lyricsFullscreen}
                   setLyricsFullscreen={setLyricsFullscreen}
                   trackFilters={trackFilters}
+                  setTrackFilters={setTrackFilters}
                 ></Lyrics>
                 <Playlist
                   lyricsFullscreen={lyricsFullscreen}

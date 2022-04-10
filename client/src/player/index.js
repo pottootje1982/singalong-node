@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useState, createRef, useCallback } from 'react'
 import { IconButton } from '@mui/material'
-import { Grid, Slider, Typography } from '@mui/material'
+import { Slider, Typography } from '@mui/material'
 import { SkipPrevious, SkipNext, PlayArrow, Pause } from '@mui/icons-material'
 
 import ServerContext from '../server-context'
@@ -23,7 +23,7 @@ export default function Player() {
     setPlayerState,
   } = useContext(PlayerContext)
 
-  const [playPosition, setPlayPosition] = useState(0)
+  const [playPosition, setPlayPosition] = useState()
   const [duration, setDuration] = useState(0)
   const [updateInterval, setUpdateInterval] = useState()
   const [timestamp, setTimestamp] = useState()

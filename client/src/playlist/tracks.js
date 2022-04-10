@@ -32,6 +32,7 @@ export default function Tracks({
     tracks,
     setTracks,
     initialized,
+    lyricsHeight
   } = useContext(PlaylistContext)
   const { trackIdToDownload } = useContext(DownloadContext)
   const { setMonitorCurrentlyPlaying, isPlaying } = useContext(PlayerContext)
@@ -109,6 +110,7 @@ export default function Tracks({
         style={{
           overflow: !mobile && 'auto',
           display: lyricsFullscreen && 'none',
+          maxHeight: `calc(100vh - ${lyricsHeight + 20}px)`
         }}
         dense
       >

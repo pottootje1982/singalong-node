@@ -1,5 +1,6 @@
-import React, { useState, createContext, useEffect
- } from 'react'
+import React, {
+  useState, createContext, useEffect
+} from 'react'
 import { useLocation } from 'react-router-dom'
 
 const PlaylistContext = createContext()
@@ -25,7 +26,7 @@ export function getPlaylist(location) {
 export function PlaylistProvider(props) {
   const location = useLocation()
 
-  const {urlPlaylist, urlRadio, urlCustomPlaylist, urlCurrentlyPlaying} = getPlaylist(location)
+  const { urlPlaylist, urlRadio, urlCustomPlaylist, urlCurrentlyPlaying } = getPlaylist(location)
 
   const [initialized, setInitialized] = useState()
   const [playlist, setPlaylist] = useState(urlPlaylist)
@@ -34,8 +35,13 @@ export function PlaylistProvider(props) {
   const [track, setTrack] = useState()
   const [trackId, setTrackId] = useState('')
   const [tracks, setTracks] = useState()
+  // Following doesn't work because lyrics are not filling remaining space
+  //  const [lyricsHeight, setLyricsHeight] = useState(parseInt(window.localStorage.getItem('lyricsHeight')))
+  const [lyricsHeight, setLyricsHeight] = useState(parseInt(window.localStorage.getItem('lyricsHeight')))
 
   useEffect(init, [location, initialized])
+
+  useEffect(() => window.localStorage.setItem('lyricsHeight', lyricsHeight), [lyricsHeight])
 
   function init() {
     if (initialized) {
@@ -61,7 +67,9 @@ export function PlaylistProvider(props) {
     tracksInitialized: tracks !== undefined,
     setTracks,
     initialized,
-    setInitialized
+    setInitialized,
+    lyricsHeight,
+    setLyricsHeight
   }
 
   return (
