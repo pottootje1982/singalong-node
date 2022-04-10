@@ -41,11 +41,11 @@ export default function Tracks({
   const mobile = !useMediaQuery('(min-width:600px)')
   const [state, setState] = useState(initialState)
 
-  useEffect(selectTrack, [trackId])
-  useEffect(addTracks, [offset])
-  useEffect(refreshPlaylist, [track])
-  useEffect(showPlaylist, [playlist, initialized])
-  useEffect(init, [initialized])
+  useEffect(selectTrack, [trackId, setTrack, tracks])
+  useEffect(addTracks, [offset, isPlaying, playlist, server, setTrackId, setTracks, trackId, tracks, unmounted])
+  useEffect(refreshPlaylist, [track, setTracks, tracks])
+  useEffect(showPlaylist, [playlist, initialized, setTrack, setTracks])
+  useEffect(init, [initialized, customPlaylist, playlist, radio, setMonitorCurrentlyPlaying])
   useEffect(() => {
     return unmount
   }, [])
@@ -86,10 +86,7 @@ export default function Tracks({
   }
 
   function addTracks() {
-    if (offset === -1) {
-      // end of playlist
-      selectTrack()
-    } else if (playlist && offset >= 0) {
+    if (playlist && offset >= 0) {
       server()
         .get(`/api/playlists/${playlist}`, { params: { offset } })
         .then(({ data: { tracks: newTracks, hasMore } }) => {

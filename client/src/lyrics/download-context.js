@@ -20,12 +20,12 @@ export function DownloadProvider(props) {
         return new Promise((resolve) => setTimeout(resolve, ms))
     }
 
-    function isCancelled() {
+    const isCancelled = useCallback(() => {
         if (!isDownloading) {
             setTrackIdToDownload(null)
         }
         return !isDownloading
-    }
+    }, [isDownloading, setTrackIdToDownload])
 
     const downloadTrack = useCallback((track, { save = true, sleepTime = 0, getCached = false } = {}) => {
         const activeSites = sites.filter(s => !s.disabled).map(s => s.key)
@@ -45,7 +45,7 @@ export function DownloadProvider(props) {
             })
     }, [server, setTrack, sites])
 
-    function popTrackAndDownload() {
+    const popTrackAndDownload = useCallback(() => {
         const toDownload = tracksToDownload[0]
         if (!toDownload) return
         setTrackIdToDownload(toDownload.id)
@@ -59,7 +59,7 @@ export function DownloadProvider(props) {
                 else setTrackIdToDownload(null)
             })
         })
-    }
+    }, [tracksToDownload, setTrackIdToDownload, trackIdToDownload, isCancelled, downloadTrack, isDownloading, setTracksToDownload])
 
     function stopDownloading() {
         setIsDownloading(false)
@@ -72,7 +72,7 @@ export function DownloadProvider(props) {
         setTracksToDownload(tracks.filter((track) => !track.lyrics))
     }
 
-    useEffect(popTrackAndDownload, [tracksToDownload, downloadTrack])
+    useEffect(popTrackAndDownload, [tracksToDownload, downloadTrack, popTrackAndDownload])
 
     const mergeSites = (oldSites, sites) => sites.map(s => ({ ...s, disabled: oldSites.find(os => os.name === s.name)?.disabled }))
 

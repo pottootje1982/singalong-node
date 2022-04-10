@@ -18,9 +18,7 @@ export default function Lyrics({
   const stackRef = useRef()
   const [lyrics, setLyrics] = useState()
 
-  useEffect(() => {
-    if (track) setLyrics(track.lyrics)
-  }, [track])
+  useEffect(() => (track) && setLyrics(track.lyrics), [track])
 
   const onMouseUp = () => {
     if (mouseDown) {

@@ -9,6 +9,7 @@ import PlayerContext from './player-context'
 import PlaylistContext from '../playlist/playlist-context'
 import WebPlayer from './web-player'
 import { useNavigate } from 'react-router-dom'
+let updateInterval
 
 export default function Player() {
   const { spotifyAxios } = useContext(ServerContext)
@@ -23,9 +24,8 @@ export default function Player() {
     setPlayerState,
   } = useContext(PlayerContext)
 
-  const [playPosition, setPlayPosition] = useState()
+  const [playPosition, setPlayPosition] = useState(0)
   const [duration, setDuration] = useState(0)
-  const [updateInterval, setUpdateInterval] = useState()
   const [timestamp, setTimestamp] = useState()
   const playTrack = usePlayTrack()
   const updateCurrentlyPlaying = useUpdatePlayingTrack()
@@ -55,7 +55,7 @@ export default function Player() {
   }
 
   function isPlayingChanged() {
-    if (isPlaying) setUpdateInterval(setInterval(updateTimestamp, 1000))
+    if (isPlaying) updateInterval = setInterval(updateTimestamp, 1000)
     else clearInterval(updateInterval)
   }
 

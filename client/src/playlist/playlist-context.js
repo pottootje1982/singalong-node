@@ -39,11 +39,7 @@ export function PlaylistProvider(props) {
   //  const [lyricsHeight, setLyricsHeight] = useState(parseInt(window.localStorage.getItem('lyricsHeight')))
   const [lyricsHeight, setLyricsHeight] = useState(parseInt(window.localStorage.getItem('lyricsHeight')))
 
-  useEffect(init, [location, initialized])
-
-  useEffect(() => window.localStorage.setItem('lyricsHeight', lyricsHeight), [lyricsHeight])
-
-  function init() {
+  useEffect(() => {
     if (initialized) {
       setPlaylist(null)
       setCustomPlaylist(null)
@@ -53,7 +49,9 @@ export function PlaylistProvider(props) {
       else if (urlCustomPlaylist) setCustomPlaylist(urlCustomPlaylist)
       else setPlaylist(urlCurrentlyPlaying || urlPlaylist)
     }
-  }
+  }, [location, initialized, setPlaylist, setCustomPlaylist, setRadio, setTrackId, urlCurrentlyPlaying, urlCustomPlaylist, urlPlaylist, urlRadio])
+
+  useEffect(() => window.localStorage.setItem('lyricsHeight', lyricsHeight), [lyricsHeight])
 
   const values = {
     playlist,

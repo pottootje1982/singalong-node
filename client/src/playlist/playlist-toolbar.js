@@ -49,7 +49,7 @@ export default function PlaylistToolbar({
   const trackFound = tracks.find((t) => t.id === trackId)
   const playTrack = usePlayTrack()
 
-  const getDevices = () => {
+  useEffect(() => {
     if (initialized) {
       spotifyAxios().get("/me/player/devices").then(({ data: { devices } }) => {
         devices = devices || []
@@ -61,17 +61,13 @@ export default function PlaylistToolbar({
         setDevices(devices)
       })
     }
-  }
+  }, [initialized, spotifyAxios, setDevice, setDevices, device])
 
-  useEffect(getDevices, [initialized])
-
-  function selectDevice() {
+  useEffect(() => {
     if (devices) {
       spotifyAxios().put("/me/player", { device_ids: [device] })
     }
-  }
-
-  useEffect(selectDevice, [device])
+  }, [device, devices, spotifyAxios])
 
   function setAdjacentTrack(offset) {
     setMonitorCurrentlyPlaying(false)

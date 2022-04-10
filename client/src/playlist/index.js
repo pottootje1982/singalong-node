@@ -1,4 +1,4 @@
-import React, { useEffect, useContext } from 'react'
+import React, { useEffect, useContext, useCallback } from 'react'
 import ServerContext from '../server-context'
 import { Track } from '../track'
 import Tracks from './tracks'
@@ -13,7 +13,7 @@ export default function Playlist({
     PlaylistContext
   )
 
-  function showAndSearchPlaylist(url) {
+  const showAndSearchPlaylist = useCallback((url) => {
     setTracks([])
     return server().get(url).then(({ data }) => {
       const { tracks } = data || {}
@@ -27,17 +27,15 @@ export default function Playlist({
         })
       return data
     })
-  }
+  }, [setTracks, server, setTrackId])
 
-  useEffect(showCustomPlaylist, [customPlaylist])
-  function showCustomPlaylist() {
+  useEffect(() => {
     if (customPlaylist) {
       showAndSearchPlaylist(`/api/playlists/${customPlaylist}/custom`)
     }
-  }
+  }, [customPlaylist, showAndSearchPlaylist])
 
-  useEffect(showCurrentlyOnFip, [radio])
-  function showCurrentlyOnFip() {
+  useEffect(() => {
     if (radio) {
       setTrackId()
       showAndSearchPlaylist('/api/radio/fip').then((data) => {
@@ -45,7 +43,7 @@ export default function Playlist({
         setTrackId(tracks[position].id)
       })
     }
-  }
+  }, [radio, setTrackId, showAndSearchPlaylist])
 
   function selectTrackId(track) {
     if (track) setTrackId(track.id)

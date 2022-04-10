@@ -1,23 +1,16 @@
-import React, { useContext, useEffect } from 'react'
+import React, { useCallback, useContext, useEffect } from 'react'
 import Script from 'react-load-script'
 import { getCookie } from '../cookie'
 import PlaylistContext from '../playlist/playlist-context'
 
 export default function WebPlayer({ setPlayerState }) {
-  const {setInitialized } = useContext(PlaylistContext)
-
-  function init() {
-    window.onSpotifyWebPlaybackSDKReady = () => {
-      handleScriptLoad()
-    }
-  }
-  useEffect(init, [])
+  const { setInitialized } = useContext(PlaylistContext)
 
   function handleScriptError(error) {
     console.log(error)
   }
 
-  function handleScriptLoad() {
+  const handleScriptLoad = useCallback(() => {
     const token = getCookie('accessToken')
     if (!window.Spotify) return
     const player = new window.Spotify.Player({
@@ -65,7 +58,9 @@ export default function WebPlayer({ setPlayerState }) {
 
     // Connect to the player!
     player.connect()
-  }
+  }, [setInitialized, setPlayerState])
+
+  useEffect(() => window.onSpotifyWebPlaybackSDKReady = handleScriptLoad, [handleScriptLoad])
 
   return (
     <Script
