@@ -18,7 +18,7 @@
     "react-idle-timer": "^4.6.4",
     "react-load-script": "0.0.6",
     "react-router-dom": "^6.3.0",
-    "react-scripts": "^5.0.0",
+    "react-scripts": "^5.0.1",
     "styled-components": "^5.3.5"
   },
   "scripts": {
@@ -41,5 +41,8 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "engines": {
+    "node": "8.3.1."
   }
 }
