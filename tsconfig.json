@@ -2,19 +2,10 @@
   "compilerOptions": {
     "module": "commonjs",
     "target": "es5",
-    "lib": [
-      "es2015"
-    ],
+    "lib": ["es2015"],
     "sourceMap": true,
-    "noImplicitUseStrict": true,
     "skipLibCheck": true
   },
-  "include": [
-    "./**/*",
-    "./typings/*",
-    "./.jest/*"
-  ],
-  "exclude": [
-    "node_modules"
-  ]
+  "include": ["./**/*", "./typings/*", "./.jest/*"],
+  "exclude": ["node_modules"]
 }
