@@ -1,28 +1,28 @@
-import React, { useContext } from 'react'
-import { Menu, MenuItem } from '@mui/material'
-import LibraryContext from '../library/library-context'
-import ServerContext from '../server-context'
+import React, { useContext } from "react";
+import { Menu, MenuItem } from "@mui/material";
+import LibraryContext from "../library/library-context";
+import ServerContext from "../server-context";
 
 export default function AddToPlaylistMenu({ state, setState, initialState }) {
-  const { playlists } = useContext(LibraryContext)
-  const { spotifyAxios } = useContext(ServerContext)
+  const { playlists } = useContext(LibraryContext);
+  const { spotifyAxios } = useContext(ServerContext);
 
   const handleClose = () => {
-    setState(initialState)
-  }
+    setState(initialState);
+  };
 
   function addTrackToPlaylist(playlistUri) {
-    const [, , id] = playlistUri.split(':')
+    const [, , id] = playlistUri.split(":");
     spotifyAxios()
       .post(`/playlists/${id}/tracks`, {
         uris: [state.uri],
       })
-      .then(console.log)
+      .then(console.log);
   }
 
   function onClick(playlistUri) {
-    addTrackToPlaylist(playlistUri)
-    handleClose()
+    addTrackToPlaylist(playlistUri);
+    handleClose();
   }
 
   return (
@@ -45,5 +45,5 @@ export default function AddToPlaylistMenu({ state, setState, initialState }) {
         </MenuItem>
       ))}
     </Menu>
-  )
+  );
 }

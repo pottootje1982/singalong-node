@@ -1,5 +1,5 @@
-import React, { useEffect, useState, useContext } from "react"
-import ServerContext from "../server-context"
+import React, { useEffect, useState, useContext } from "react";
+import ServerContext from "../server-context";
 import {
   IconButton,
   Grid,
@@ -10,19 +10,19 @@ import {
   MenuItem,
   useMediaQuery,
   ToggleButton,
-  Autocomplete
-} from "@mui/material"
+  Autocomplete,
+} from "@mui/material";
 import {
   GetApp as DownloadIcon,
   NavigateBefore,
   NavigateNext,
-} from "@mui/icons-material"
+} from "@mui/icons-material";
 
-import PlayerContext from "../player/player-context"
-import PlaylistContext from "./playlist-context"
-import usePlayTrack from "../player/player-hooks"
-import FilterContextMenu from "./filter-context-menu"
-import DownloadContext from "../lyrics/download-context"
+import PlayerContext from "../player/player-context";
+import PlaylistContext from "./playlist-context";
+import usePlayTrack from "../player/player-hooks";
+import FilterContextMenu from "./filter-context-menu";
+import DownloadContext from "../lyrics/download-context";
 
 export default function PlaylistToolbar({
   trackFilters,
@@ -30,56 +30,54 @@ export default function PlaylistToolbar({
   selectTrackId,
   lyricsFullscreen,
 }) {
-  const { spotifyAxios } = useContext(ServerContext)
-  const { track, trackId, setTrackId, tracks, initialized } = useContext(
-    PlaylistContext
-  )
-  const { downloadTracks, stopDownloading, isDownloading } = useContext(DownloadContext)
+  const { spotifyAxios } = useContext(ServerContext);
+  const { track, trackId, setTrackId, tracks, initialized } =
+    useContext(PlaylistContext);
+  const { downloadTracks, stopDownloading, isDownloading } =
+    useContext(DownloadContext);
 
-  const {
-    device,
-    setDevice,
-    setMonitorCurrentlyPlaying,
-    isPlaying,
-  } = useContext(PlayerContext)
+  const { device, setDevice, setMonitorCurrentlyPlaying, isPlaying } =
+    useContext(PlayerContext);
 
-  const [deviceOpen, setDeviceOpen] = useState(false)
-  const [devices, setDevices] = useState()
-  const mobile = !useMediaQuery("(min-width:600px)")
-  const trackFound = tracks.find((t) => t.id === trackId)
-  const playTrack = usePlayTrack()
+  const [deviceOpen, setDeviceOpen] = useState(false);
+  const [devices, setDevices] = useState();
+  const mobile = !useMediaQuery("(min-width:600px)");
+  const trackFound = tracks.find((t) => t.id === trackId);
+  const playTrack = usePlayTrack();
 
   useEffect(() => {
     if (initialized) {
-      spotifyAxios().get("/me/player/devices").then(({ data: { devices } }) => {
-        devices = devices || []
-        const deviceToSelect =
-          devices.find((d) => d.is_active) ||
-          devices.find((d) => d.id === device) ||
-          devices[0]
-        if (deviceToSelect) setDevice(deviceToSelect.id)
-        setDevices(devices)
-      })
+      spotifyAxios()
+        .get("/me/player/devices")
+        .then(({ data: { devices } }) => {
+          devices = devices || [];
+          const deviceToSelect =
+            devices.find((d) => d.is_active) ||
+            devices.find((d) => d.id === device) ||
+            devices[0];
+          if (deviceToSelect) setDevice(deviceToSelect.id);
+          setDevices(devices);
+        });
     }
-  }, [initialized, spotifyAxios, setDevice, setDevices, device])
+  }, [initialized, spotifyAxios, setDevice, setDevices, device]);
 
   useEffect(() => {
     if (devices) {
-      spotifyAxios().put("/me/player", { device_ids: [device] })
+      spotifyAxios().put("/me/player", { device_ids: [device] });
     }
-  }, [device, devices, spotifyAxios])
+  }, [device, devices, spotifyAxios]);
 
   function setAdjacentTrack(offset) {
-    setMonitorCurrentlyPlaying(false)
-    const index = tracks.indexOf(tracks.find((t) => t.id === trackId))
-    const adjacentTrack = tracks[index + offset]
-    if (adjacentTrack) setTrackId(adjacentTrack.id)
+    setMonitorCurrentlyPlaying(false);
+    const index = tracks.indexOf(tracks.find((t) => t.id === trackId));
+    const adjacentTrack = tracks[index + offset];
+    if (adjacentTrack) setTrackId(adjacentTrack.id);
   }
 
   function onSelectTrack(_event, track) {
-    selectTrackId(track)
+    selectTrackId(track);
     if (mobile && isPlaying && lyricsFullscreen && track.uri)
-      playTrack(track.uri)
+      playTrack(track.uri);
   }
 
   return (
@@ -90,7 +88,9 @@ export default function PlaylistToolbar({
             <ToggleButton
               value="check"
               selected={isDownloading}
-              onClick={() => !isDownloading ? downloadTracks(tracks) : stopDownloading()}
+              onClick={() =>
+                !isDownloading ? downloadTracks(tracks) : stopDownloading()
+              }
               style={{ width: 30, height: 30 }}
             >
               <DownloadIcon />
@@ -179,5 +179,5 @@ export default function PlaylistToolbar({
         </Grid>
       )}
     </Grid>
-  )
+  );
 }

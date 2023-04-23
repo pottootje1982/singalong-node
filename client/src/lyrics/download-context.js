@@ -4,10 +4,10 @@ import React, {
   useContext,
   useEffect,
   useCallback,
-} from 'react';
-import PlaylistContext from '../playlist/playlist-context';
-import ServerContext from '../server-context';
-import { Track } from '../track';
+} from "react";
+import PlaylistContext from "../playlist/playlist-context";
+import ServerContext from "../server-context";
+import { Track } from "../track";
 
 const DownloadContext = createContext();
 const sleepTime = 7000;
@@ -16,7 +16,7 @@ export default DownloadContext;
 
 export function DownloadProvider(props) {
   const [sites, setSites] = useState(
-    JSON.parse(window.localStorage.getItem('sites')) || []
+    JSON.parse(window.localStorage.getItem("sites")) || []
   );
   const [isDownloading, setIsDownloading] = useState(false);
   const [tracksToDownload, setTracksToDownload] = useState([]);
@@ -39,7 +39,7 @@ export function DownloadProvider(props) {
     (track, { save = true, sleepTime = 0, getCached = false } = {}) => {
       const activeSites = sites.filter((s) => !s.disabled).map((s) => s.key);
       return server()
-        .post('api/lyrics/download', {
+        .post("api/lyrics/download", {
           track,
           getCached,
           sleepTime,
@@ -105,15 +105,16 @@ export function DownloadProvider(props) {
 
   useEffect(() => {
     server()
-      .get('api/lyrics/sites')
+      .get("api/lyrics/sites")
       .then(({ data: { sites = [] } = {} }) =>
         setSites((oldSites) => mergeSites(oldSites, sites))
       );
   }, [server]);
 
-  useEffect(() => window.localStorage.setItem('sites', JSON.stringify(sites)), [
-    sites,
-  ]);
+  useEffect(
+    () => window.localStorage.setItem("sites", JSON.stringify(sites)),
+    [sites]
+  );
 
   const values = {
     downloadTrack,

@@ -1,21 +1,21 @@
-import React from 'react'
+import React from "react";
 
-import { MenuItem, ListItemIcon, ListItemText } from '@mui/material'
+import { MenuItem, ListItemIcon, ListItemText } from "@mui/material";
 
-import { CheckBoxOutlineBlank, CheckBoxOutlined } from '@mui/icons-material'
+import { CheckBoxOutlineBlank, CheckBoxOutlined } from "@mui/icons-material";
 
 const CheckMenuItem = React.forwardRef(
   ({ setter, state, checked, filterKey, name, close }, ref) => {
-    checked = state ? state[filterKey] : checked
+    checked = state ? state[filterKey] : checked;
 
     function onCheckClick() {
       if (state) {
-        state[filterKey] = !checked
-        setter({ ...state }, filterKey)
+        state[filterKey] = !checked;
+        setter({ ...state }, filterKey);
       } else {
-        setter(!checked)
+        setter(!checked);
       }
-      close && close()
+      close && close();
     }
 
     return (
@@ -25,8 +25,8 @@ const CheckMenuItem = React.forwardRef(
         </ListItemIcon>
         <ListItemText primary={name} />
       </MenuItem>
-    )
+    );
   }
-)
+);
 
-export default CheckMenuItem
+export default CheckMenuItem;

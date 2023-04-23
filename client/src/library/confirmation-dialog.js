@@ -1,11 +1,11 @@
-import React from 'react'
+import React from "react";
 import {
   Dialog,
   DialogTitle,
   DialogContent,
   DialogActions,
   Button,
-} from '@mui/material'
+} from "@mui/material";
 
 export default function ConfirmationDialog({
   title,
@@ -15,12 +15,12 @@ export default function ConfirmationDialog({
   setDialogOpen,
 }) {
   const closeDialog = () => {
-    setDialogOpen(false)
-  }
+    setDialogOpen(false);
+  };
 
   function onOkClick() {
-    closeDialog()
-    onOk()
+    closeDialog();
+    onOk();
   }
 
   return (
@@ -34,5 +34,5 @@ export default function ConfirmationDialog({
         </Button>
       </DialogActions>
     </Dialog>
-  )
+  );
 }

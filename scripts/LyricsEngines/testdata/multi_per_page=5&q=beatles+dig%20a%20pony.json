@@ -1,779 +1,779 @@
 {
-    "meta": {
-        "status": 200
-    },
-    "response": {
-        "sections": [
-            {
-                "type": "top_hit",
-                "hits": [
-                    {
-                        "highlights": [],
-                        "index": "song",
-                        "type": "song",
-                        "result": {
-                            "_type": "song",
-                            "annotation_count": 9,
-                            "api_path": "/songs/123442",
-                            "artist_names": "The Beatles",
-                            "full_title": "Dig a Pony by The Beatles",
-                            "header_image_thumbnail_url": "https://images.genius.com/3303a78998d4976e9f996a49b23d8493.300x300x1.jpg",
-                            "header_image_url": "https://images.genius.com/3303a78998d4976e9f996a49b23d8493.587x587x1.jpg",
-                            "id": 123442,
-                            "instrumental": false,
-                            "lyrics_owner_id": 22533,
-                            "lyrics_state": "complete",
-                            "lyrics_updated_at": 1643634896,
-                            "path": "/The-beatles-dig-a-pony-lyrics",
-                            "pyongs_count": 7,
-                            "song_art_image_thumbnail_url": "https://images.genius.com/3303a78998d4976e9f996a49b23d8493.300x300x1.jpg",
-                            "song_art_image_url": "https://images.genius.com/3303a78998d4976e9f996a49b23d8493.587x587x1.jpg",
-                            "stats": {
-                                "unreviewed_annotations": 0,
-                                "hot": false,
-                                "pageviews": 67903
-                            },
-                            "title": "Dig a Pony",
-                            "title_with_featured": "Dig a Pony",
-                            "updated_by_human_at": 1643634896,
-                            "url": "https://genius.com/The-beatles-dig-a-pony-lyrics",
-                            "primary_artist": {
-                                "_type": "artist",
-                                "api_path": "/artists/586",
-                                "header_image_url": "https://images.genius.com/afa26a454999e82e21faa2d2d186e054.400x226x148.gif",
-                                "id": 586,
-                                "image_url": "https://images.genius.com/66543351b06f274b28344e658b474550.400x400x1.jpg",
-                                "index_character": "b",
-                                "is_meme_verified": false,
-                                "is_verified": false,
-                                "name": "The Beatles",
-                                "slug": "The-beatles",
-                                "url": "https://genius.com/artists/The-beatles"
-                            }
-                        }
-                    },
-                    {
-                        "highlights": [],
-                        "index": "song",
-                        "type": "song",
-                        "result": {
-                            "_type": "song",
-                            "annotation_count": 0,
-                            "api_path": "/songs/7266845",
-                            "artist_names": "The Beatles",
-                            "full_title": "Dig A Pony (2021 Mix) by The Beatles",
-                            "header_image_thumbnail_url": "https://images.genius.com/7127124b27ac32dc28f396d19d7dce53.300x300x1.png",
-                            "header_image_url": "https://images.genius.com/7127124b27ac32dc28f396d19d7dce53.767x767x1.png",
-                            "id": 7266845,
-                            "instrumental": false,
-                            "lyrics_owner_id": 6980088,
-                            "lyrics_state": "complete",
-                            "lyrics_updated_at": 1633634832,
-                            "path": "/The-beatles-dig-a-pony-2021-mix-lyrics",
-                            "pyongs_count": null,
-                            "song_art_image_thumbnail_url": "https://images.genius.com/7127124b27ac32dc28f396d19d7dce53.300x300x1.png",
-                            "song_art_image_url": "https://images.genius.com/7127124b27ac32dc28f396d19d7dce53.767x767x1.png",
-                            "stats": {
-                                "unreviewed_annotations": 0,
-                                "hot": false
-                            },
-                            "title": "Dig A Pony (2021 Mix)",
-                            "title_with_featured": "Dig A Pony (2021 Mix)",
-                            "updated_by_human_at": 1634876392,
-                            "url": "https://genius.com/The-beatles-dig-a-pony-2021-mix-lyrics",
-                            "primary_artist": {
-                                "_type": "artist",
-                                "api_path": "/artists/586",
-                                "header_image_url": "https://images.genius.com/afa26a454999e82e21faa2d2d186e054.400x226x148.gif",
-                                "id": 586,
-                                "image_url": "https://images.genius.com/66543351b06f274b28344e658b474550.400x400x1.jpg",
-                                "index_character": "b",
-                                "is_meme_verified": false,
-                                "is_verified": false,
-                                "name": "The Beatles",
-                                "slug": "The-beatles",
-                                "url": "https://genius.com/artists/The-beatles"
-                            }
-                        }
-                    },
-                    {
-                        "highlights": [],
-                        "index": "song",
-                        "type": "song",
-                        "result": {
-                            "_type": "song",
-                            "annotation_count": 0,
-                            "api_path": "/songs/7141661",
-                            "artist_names": "The Beatles",
-                            "full_title": "Dig A Pony (Take 14) by The Beatles",
-                            "header_image_thumbnail_url": "https://images.genius.com/7127124b27ac32dc28f396d19d7dce53.300x300x1.png",
-                            "header_image_url": "https://images.genius.com/7127124b27ac32dc28f396d19d7dce53.767x767x1.png",
-                            "id": 7141661,
-                            "instrumental": false,
-                            "lyrics_owner_id": 6980088,
-                            "lyrics_state": "complete",
-                            "lyrics_updated_at": 1633642206,
-                            "path": "/The-beatles-dig-a-pony-take-14-lyrics",
-                            "pyongs_count": null,
-                            "song_art_image_thumbnail_url": "https://images.genius.com/7127124b27ac32dc28f396d19d7dce53.300x300x1.png",
-                            "song_art_image_url": "https://images.genius.com/7127124b27ac32dc28f396d19d7dce53.767x767x1.png",
-                            "stats": {
-                                "unreviewed_annotations": 0,
-                                "hot": false
-                            },
-                            "title": "Dig A Pony (Take 14)",
-                            "title_with_featured": "Dig A Pony (Take 14)",
-                            "updated_by_human_at": 1634714562,
-                            "url": "https://genius.com/The-beatles-dig-a-pony-take-14-lyrics",
-                            "primary_artist": {
-                                "_type": "artist",
-                                "api_path": "/artists/586",
-                                "header_image_url": "https://images.genius.com/afa26a454999e82e21faa2d2d186e054.400x226x148.gif",
-                                "id": 586,
-                                "image_url": "https://images.genius.com/66543351b06f274b28344e658b474550.400x400x1.jpg",
-                                "index_character": "b",
-                                "is_meme_verified": false,
-                                "is_verified": false,
-                                "name": "The Beatles",
-                                "slug": "The-beatles",
-                                "url": "https://genius.com/artists/The-beatles"
-                            }
-                        }
-                    }
-                ]
-            },
-            {
-                "type": "song",
-                "hits": [
-                    {
-                        "highlights": [],
-                        "index": "song",
-                        "type": "song",
-                        "result": {
-                            "_type": "song",
-                            "annotation_count": 9,
-                            "api_path": "/songs/123442",
-                            "artist_names": "The Beatles",
-                            "full_title": "Dig a Pony by The Beatles",
-                            "header_image_thumbnail_url": "https://images.genius.com/3303a78998d4976e9f996a49b23d8493.300x300x1.jpg",
-                            "header_image_url": "https://images.genius.com/3303a78998d4976e9f996a49b23d8493.587x587x1.jpg",
-                            "id": 123442,
-                            "instrumental": false,
-                            "lyrics_owner_id": 22533,
-                            "lyrics_state": "complete",
-                            "lyrics_updated_at": 1643634896,
-                            "path": "/The-beatles-dig-a-pony-lyrics",
-                            "pyongs_count": 7,
-                            "song_art_image_thumbnail_url": "https://images.genius.com/3303a78998d4976e9f996a49b23d8493.300x300x1.jpg",
-                            "song_art_image_url": "https://images.genius.com/3303a78998d4976e9f996a49b23d8493.587x587x1.jpg",
-                            "stats": {
-                                "unreviewed_annotations": 0,
-                                "hot": false,
-                                "pageviews": 67903
-                            },
-                            "title": "Dig a Pony",
-                            "title_with_featured": "Dig a Pony",
-                            "updated_by_human_at": 1643634896,
-                            "url": "https://genius.com/The-beatles-dig-a-pony-lyrics",
-                            "primary_artist": {
-                                "_type": "artist",
-                                "api_path": "/artists/586",
-                                "header_image_url": "https://images.genius.com/afa26a454999e82e21faa2d2d186e054.400x226x148.gif",
-                                "id": 586,
-                                "image_url": "https://images.genius.com/66543351b06f274b28344e658b474550.400x400x1.jpg",
-                                "index_character": "b",
-                                "is_meme_verified": false,
-                                "is_verified": false,
-                                "name": "The Beatles",
-                                "slug": "The-beatles",
-                                "url": "https://genius.com/artists/The-beatles"
-                            }
-                        }
-                    },
-                    {
-                        "highlights": [],
-                        "index": "song",
-                        "type": "song",
-                        "result": {
-                            "_type": "song",
-                            "annotation_count": 0,
-                            "api_path": "/songs/7266845",
-                            "artist_names": "The Beatles",
-                            "full_title": "Dig A Pony (2021 Mix) by The Beatles",
-                            "header_image_thumbnail_url": "https://images.genius.com/7127124b27ac32dc28f396d19d7dce53.300x300x1.png",
-                            "header_image_url": "https://images.genius.com/7127124b27ac32dc28f396d19d7dce53.767x767x1.png",
-                            "id": 7266845,
-                            "instrumental": false,
-                            "lyrics_owner_id": 6980088,
-                            "lyrics_state": "complete",
-                            "lyrics_updated_at": 1633634832,
-                            "path": "/The-beatles-dig-a-pony-2021-mix-lyrics",
-                            "pyongs_count": null,
-                            "song_art_image_thumbnail_url": "https://images.genius.com/7127124b27ac32dc28f396d19d7dce53.300x300x1.png",
-                            "song_art_image_url": "https://images.genius.com/7127124b27ac32dc28f396d19d7dce53.767x767x1.png",
-                            "stats": {
-                                "unreviewed_annotations": 0,
-                                "hot": false
-                            },
-                            "title": "Dig A Pony (2021 Mix)",
-                            "title_with_featured": "Dig A Pony (2021 Mix)",
-                            "updated_by_human_at": 1634876392,
-                            "url": "https://genius.com/The-beatles-dig-a-pony-2021-mix-lyrics",
-                            "primary_artist": {
-                                "_type": "artist",
-                                "api_path": "/artists/586",
-                                "header_image_url": "https://images.genius.com/afa26a454999e82e21faa2d2d186e054.400x226x148.gif",
-                                "id": 586,
-                                "image_url": "https://images.genius.com/66543351b06f274b28344e658b474550.400x400x1.jpg",
-                                "index_character": "b",
-                                "is_meme_verified": false,
-                                "is_verified": false,
-                                "name": "The Beatles",
-                                "slug": "The-beatles",
-                                "url": "https://genius.com/artists/The-beatles"
-                            }
-                        }
-                    },
-                    {
-                        "highlights": [],
-                        "index": "song",
-                        "type": "song",
-                        "result": {
-                            "_type": "song",
-                            "annotation_count": 0,
-                            "api_path": "/songs/7141661",
-                            "artist_names": "The Beatles",
-                            "full_title": "Dig A Pony (Take 14) by The Beatles",
-                            "header_image_thumbnail_url": "https://images.genius.com/7127124b27ac32dc28f396d19d7dce53.300x300x1.png",
-                            "header_image_url": "https://images.genius.com/7127124b27ac32dc28f396d19d7dce53.767x767x1.png",
-                            "id": 7141661,
-                            "instrumental": false,
-                            "lyrics_owner_id": 6980088,
-                            "lyrics_state": "complete",
-                            "lyrics_updated_at": 1633642206,
-                            "path": "/The-beatles-dig-a-pony-take-14-lyrics",
-                            "pyongs_count": null,
-                            "song_art_image_thumbnail_url": "https://images.genius.com/7127124b27ac32dc28f396d19d7dce53.300x300x1.png",
-                            "song_art_image_url": "https://images.genius.com/7127124b27ac32dc28f396d19d7dce53.767x767x1.png",
-                            "stats": {
-                                "unreviewed_annotations": 0,
-                                "hot": false
-                            },
-                            "title": "Dig A Pony (Take 14)",
-                            "title_with_featured": "Dig A Pony (Take 14)",
-                            "updated_by_human_at": 1634714562,
-                            "url": "https://genius.com/The-beatles-dig-a-pony-take-14-lyrics",
-                            "primary_artist": {
-                                "_type": "artist",
-                                "api_path": "/artists/586",
-                                "header_image_url": "https://images.genius.com/afa26a454999e82e21faa2d2d186e054.400x226x148.gif",
-                                "id": 586,
-                                "image_url": "https://images.genius.com/66543351b06f274b28344e658b474550.400x400x1.jpg",
-                                "index_character": "b",
-                                "is_meme_verified": false,
-                                "is_verified": false,
-                                "name": "The Beatles",
-                                "slug": "The-beatles",
-                                "url": "https://genius.com/artists/The-beatles"
-                            }
-                        }
-                    },
-                    {
-                        "highlights": [],
-                        "index": "song",
-                        "type": "song",
-                        "result": {
-                            "_type": "song",
-                            "annotation_count": 0,
-                            "api_path": "/songs/7141730",
-                            "artist_names": "The Beatles",
-                            "full_title": "Dig A Pony (1969 Glyn Johns Mix) by The Beatles",
-                            "header_image_thumbnail_url": "https://images.genius.com/365e6e078c28c830658f4d7e4dd25260.300x300x1.jpg",
-                            "header_image_url": "https://images.genius.com/365e6e078c28c830658f4d7e4dd25260.1000x1000x1.jpg",
-                            "id": 7141730,
-                            "instrumental": false,
-                            "lyrics_owner_id": 6980088,
-                            "lyrics_state": "complete",
-                            "lyrics_updated_at": 1633640326,
-                            "path": "/The-beatles-dig-a-pony-1969-glyn-johns-mix-lyrics",
-                            "pyongs_count": null,
-                            "song_art_image_thumbnail_url": "https://images.genius.com/365e6e078c28c830658f4d7e4dd25260.300x300x1.jpg",
-                            "song_art_image_url": "https://images.genius.com/365e6e078c28c830658f4d7e4dd25260.1000x1000x1.jpg",
-                            "stats": {
-                                "unreviewed_annotations": 0,
-                                "hot": false
-                            },
-                            "title": "Dig A Pony (1969 Glyn Johns Mix)",
-                            "title_with_featured": "Dig A Pony (1969 Glyn Johns Mix)",
-                            "updated_by_human_at": 1634715423,
-                            "url": "https://genius.com/The-beatles-dig-a-pony-1969-glyn-johns-mix-lyrics",
-                            "primary_artist": {
-                                "_type": "artist",
-                                "api_path": "/artists/586",
-                                "header_image_url": "https://images.genius.com/afa26a454999e82e21faa2d2d186e054.400x226x148.gif",
-                                "id": 586,
-                                "image_url": "https://images.genius.com/66543351b06f274b28344e658b474550.400x400x1.jpg",
-                                "index_character": "b",
-                                "is_meme_verified": false,
-                                "is_verified": false,
-                                "name": "The Beatles",
-                                "slug": "The-beatles",
-                                "url": "https://genius.com/artists/The-beatles"
-                            }
-                        }
-                    },
-                    {
-                        "highlights": [],
-                        "index": "song",
-                        "type": "song",
-                        "result": {
-                            "_type": "song",
-                            "annotation_count": 0,
-                            "api_path": "/songs/7646389",
-                            "artist_names": "The Beatles",
-                            "full_title": "Dig a Pony (Rooftop Performance) by The Beatles",
-                            "header_image_thumbnail_url": "https://images.genius.com/5fd7d1e87e57a0f3638ec3ac816b2f0f.300x300x1.jpg",
-                            "header_image_url": "https://images.genius.com/5fd7d1e87e57a0f3638ec3ac816b2f0f.1000x1000x1.jpg",
-                            "id": 7646389,
-                            "instrumental": false,
-                            "lyrics_owner_id": 6074356,
-                            "lyrics_state": "complete",
-                            "lyrics_updated_at": 1643431706,
-                            "path": "/The-beatles-dig-a-pony-rooftop-performance-lyrics",
-                            "pyongs_count": null,
-                            "song_art_image_thumbnail_url": "https://images.genius.com/5fd7d1e87e57a0f3638ec3ac816b2f0f.300x300x1.jpg",
-                            "song_art_image_url": "https://images.genius.com/5fd7d1e87e57a0f3638ec3ac816b2f0f.1000x1000x1.jpg",
-                            "stats": {
-                                "unreviewed_annotations": 0,
-                                "hot": false
-                            },
-                            "title": "Dig a Pony (Rooftop Performance)",
-                            "title_with_featured": "Dig a Pony (Rooftop Performance)",
-                            "updated_by_human_at": 1643431706,
-                            "url": "https://genius.com/The-beatles-dig-a-pony-rooftop-performance-lyrics",
-                            "primary_artist": {
-                                "_type": "artist",
-                                "api_path": "/artists/586",
-                                "header_image_url": "https://images.genius.com/afa26a454999e82e21faa2d2d186e054.400x226x148.gif",
-                                "id": 586,
-                                "image_url": "https://images.genius.com/66543351b06f274b28344e658b474550.400x400x1.jpg",
-                                "index_character": "b",
-                                "is_meme_verified": false,
-                                "is_verified": false,
-                                "name": "The Beatles",
-                                "slug": "The-beatles",
-                                "url": "https://genius.com/artists/The-beatles"
-                            }
-                        }
-                    }
-                ]
-            },
-            {
-                "type": "lyric",
-                "hits": [
-                    {
-                        "highlights": [
-                            {
-                                "property": "lyrics",
-                                "value": "s going to be more dung and phony than a Beatles-Outsiders crossover\nBecause we have to dig a pony",
-                                "snippet": true,
-                                "ranges": [
-                                    {
-                                        "start": 39,
-                                        "end": 40
-                                    },
-                                    {
-                                        "start": 41,
-                                        "end": 48
-                                    },
-                                    {
-                                        "start": 88,
-                                        "end": 91
-                                    },
-                                    {
-                                        "start": 92,
-                                        "end": 93
-                                    },
-                                    {
-                                        "start": 94,
-                                        "end": 98
-                                    }
-                                ]
-                            }
-                        ],
-                        "index": "lyric",
-                        "type": "song",
-                        "result": {
-                            "_type": "song",
-                            "annotation_count": 15,
-                            "api_path": "/songs/563583",
-                            "artist_names": "Seymour Butts",
-                            "full_title": "Unbeatable by Seymour Butts",
-                            "header_image_thumbnail_url": "https://assets.genius.com/images/default_cover_image.png?1648671214",
-                            "header_image_url": "https://assets.genius.com/images/default_cover_image.png?1648671214",
-                            "id": 563583,
-                            "instrumental": false,
-                            "lyrics_owner_id": 243188,
-                            "lyrics_state": "complete",
-                            "lyrics_updated_at": 1415152615,
-                            "path": "/Seymour-butts-unbeatable-lyrics",
-                            "pyongs_count": null,
-                            "song_art_image_thumbnail_url": "https://assets.genius.com/images/default_cover_image.png?1648671214",
-                            "song_art_image_url": "https://assets.genius.com/images/default_cover_image.png?1648671214",
-                            "stats": {
-                                "unreviewed_annotations": 12,
-                                "hot": false
-                            },
-                            "title": "Unbeatable",
-                            "title_with_featured": "Unbeatable",
-                            "updated_by_human_at": 1494355400,
-                            "url": "https://genius.com/Seymour-butts-unbeatable-lyrics",
-                            "primary_artist": {
-                                "_type": "artist",
-                                "api_path": "/artists/59937",
-                                "header_image_url": "https://assets.genius.com/images/default_avatar_300.png?1648671214",
-                                "id": 59937,
-                                "image_url": "https://assets.genius.com/images/default_avatar_300.png?1648671214",
-                                "index_character": "s",
-                                "is_meme_verified": false,
-                                "is_verified": false,
-                                "name": "Seymour Butts",
-                                "slug": "Seymour-butts",
-                                "url": "https://genius.com/artists/Seymour-butts"
-                            }
-                        }
-                    },
-                    {
-                        "highlights": [
-                            {
-                                "property": "lyrics",
-                                "value": "three songs in America. So extreme a choke hold of the Billboard charts had only one antecedent: the Beatles achieved",
-                                "snippet": true,
-                                "ranges": [
-                                    {
-                                        "start": 35,
-                                        "end": 36
-                                    },
-                                    {
-                                        "start": 51,
-                                        "end": 54
-                                    },
-                                    {
-                                        "start": 97,
-                                        "end": 100
-                                    },
-                                    {
-                                        "start": 101,
-                                        "end": 108
-                                    }
-                                ]
-                            }
-                        ],
-                        "index": "lyric",
-                        "type": "song",
-                        "result": {
-                            "_type": "song",
-                            "annotation_count": 0,
-                            "api_path": "/songs/4766792",
-                            "artist_names": "Vogue (Ft. Ariana Grande)",
-                            "full_title": "Ariana Grande on Grief and Growing Up by Vogue (Ft. Ariana Grande)",
-                            "header_image_thumbnail_url": "https://images.genius.com/89c5e1cb9a2a38a103b86027821c34c1.300x408x1.jpg",
-                            "header_image_url": "https://images.genius.com/89c5e1cb9a2a38a103b86027821c34c1.735x1000x1.jpg",
-                            "id": 4766792,
-                            "instrumental": false,
-                            "lyrics_owner_id": 4171467,
-                            "lyrics_state": "complete",
-                            "lyrics_updated_at": 1565296184,
-                            "path": "/Vogue-ariana-grande-on-grief-and-growing-up-annotated",
-                            "pyongs_count": null,
-                            "song_art_image_thumbnail_url": "https://images.genius.com/b4e3cc53b685c18e7aa1475dd735a561.300x408x1.jpg",
-                            "song_art_image_url": "https://images.genius.com/b4e3cc53b685c18e7aa1475dd735a561.735x1000x1.jpg",
-                            "stats": {
-                                "unreviewed_annotations": 0,
-                                "hot": false
-                            },
-                            "title": "Ariana Grande on Grief and Growing Up",
-                            "title_with_featured": "Ariana Grande on Grief and Growing Up (Ft. Ariana Grande)",
-                            "updated_by_human_at": 1565296650,
-                            "url": "https://genius.com/Vogue-ariana-grande-on-grief-and-growing-up-annotated",
-                            "primary_artist": {
-                                "_type": "artist",
-                                "api_path": "/artists/167322",
-                                "header_image_url": "https://images.genius.com/87d94443f5f06df9d25d4ce599c3a067.400x400x1.jpg",
-                                "id": 167322,
-                                "image_url": "https://images.genius.com/87d94443f5f06df9d25d4ce599c3a067.400x400x1.jpg",
-                                "index_character": "v",
-                                "is_meme_verified": false,
-                                "is_verified": false,
-                                "name": "Vogue",
-                                "slug": "Vogue",
-                                "url": "https://genius.com/artists/Vogue"
-                            }
-                        }
-                    },
-                    {
-                        "highlights": [
-                            {
-                                "property": "lyrics",
-                                "value": "If the Beatles had a message, it was that. With the Beatles, the records are the point, not the Beatles",
-                                "snippet": true,
-                                "ranges": [
-                                    {
-                                        "start": 3,
-                                        "end": 6
-                                    },
-                                    {
-                                        "start": 7,
-                                        "end": 14
-                                    },
-                                    {
-                                        "start": 19,
-                                        "end": 20
-                                    },
-                                    {
-                                        "start": 48,
-                                        "end": 51
-                                    },
-                                    {
-                                        "start": 52,
-                                        "end": 59
-                                    },
-                                    {
-                                        "start": 61,
-                                        "end": 64
-                                    },
-                                    {
-                                        "start": 77,
-                                        "end": 80
-                                    },
-                                    {
-                                        "start": 92,
-                                        "end": 95
-                                    },
-                                    {
-                                        "start": 96,
-                                        "end": 103
-                                    }
-                                ]
-                            }
-                        ],
-                        "index": "lyric",
-                        "type": "song",
-                        "result": {
-                            "_type": "song",
-                            "annotation_count": 69,
-                            "api_path": "/songs/96290",
-                            "artist_names": "David Sheff (Ft. John Lennon & Yoko Ono)",
-                            "full_title": "Playboy Interview: John Lennon & Yoko Ono by David Sheff (Ft. John Lennon & Yoko Ono)",
-                            "header_image_thumbnail_url": "https://images.rapgenius.com/5c4fb33aa4a592d00ce594f676469654.300x199x1.jpg",
-                            "header_image_url": "https://images.rapgenius.com/5c4fb33aa4a592d00ce594f676469654.575x382x1.jpg",
-                            "id": 96290,
-                            "instrumental": false,
-                            "lyrics_owner_id": 1850,
-                            "lyrics_state": "complete",
-                            "lyrics_updated_at": 1599722317,
-                            "path": "/David-sheff-playboy-interview-john-lennon-and-yoko-ono-lyrics",
-                            "pyongs_count": 10,
-                            "song_art_image_thumbnail_url": "https://images.rapgenius.com/5c4fb33aa4a592d00ce594f676469654.300x199x1.jpg",
-                            "song_art_image_url": "https://images.rapgenius.com/5c4fb33aa4a592d00ce594f676469654.575x382x1.jpg",
-                            "stats": {
-                                "unreviewed_annotations": 17,
-                                "hot": false,
-                                "pageviews": 9467
-                            },
-                            "title": "Playboy Interview: John Lennon & Yoko Ono",
-                            "title_with_featured": "Playboy Interview: John Lennon & Yoko Ono (Ft. John Lennon & Yoko Ono)",
-                            "updated_by_human_at": 1599722317,
-                            "url": "https://genius.com/David-sheff-playboy-interview-john-lennon-and-yoko-ono-lyrics",
-                            "primary_artist": {
-                                "_type": "artist",
-                                "api_path": "/artists/208268",
-                                "header_image_url": "https://images.genius.com/e6b95ebd2531266f26d788683a15811e.948x710x1.jpg",
-                                "id": 208268,
-                                "image_url": "https://images.genius.com/e6b95ebd2531266f26d788683a15811e.948x710x1.jpg",
-                                "index_character": "d",
-                                "is_meme_verified": false,
-                                "is_verified": false,
-                                "name": "David Sheff",
-                                "slug": "David-sheff",
-                                "url": "https://genius.com/artists/David-sheff"
-                            }
-                        }
-                    },
-                    {
-                        "highlights": [
-                            {
-                                "property": "lyrics",
-                                "value": "a Stan Getz\nToca “Blue Sky”, pon a Dickey Betts\nPon a Art Pepper, a Thelonius Monk\nPon a Charlie",
-                                "snippet": true,
-                                "ranges": [
-                                    {
-                                        "start": 0,
-                                        "end": 1
-                                    },
-                                    {
-                                        "start": 29,
-                                        "end": 32
-                                    },
-                                    {
-                                        "start": 33,
-                                        "end": 34
-                                    },
-                                    {
-                                        "start": 48,
-                                        "end": 51
-                                    },
-                                    {
-                                        "start": 52,
-                                        "end": 53
-                                    },
-                                    {
-                                        "start": 66,
-                                        "end": 67
-                                    },
-                                    {
-                                        "start": 83,
-                                        "end": 86
-                                    },
-                                    {
-                                        "start": 87,
-                                        "end": 88
-                                    }
-                                ]
-                            }
-                        ],
-                        "index": "lyric",
-                        "type": "song",
-                        "result": {
-                            "_type": "song",
-                            "annotation_count": 1,
-                            "api_path": "/songs/5403364",
-                            "artist_names": "Genius Traducciones al Español",
-                            "full_title": "Bob Dylan - Murder Most Foul (Traducción al Español) by Genius Traducciones al Español",
-                            "header_image_thumbnail_url": "https://images.genius.com/7fbaf838ffdf99315408faa29cb566ac.300x300x1.jpg",
-                            "header_image_url": "https://images.genius.com/7fbaf838ffdf99315408faa29cb566ac.1000x1000x1.jpg",
-                            "id": 5403364,
-                            "instrumental": false,
-                            "lyrics_owner_id": 6607506,
-                            "lyrics_state": "complete",
-                            "lyrics_updated_at": 1585631719,
-                            "path": "/Genius-traducciones-al-espanol-bob-dylan-murder-most-foul-traduccion-al-espanol-lyrics",
-                            "pyongs_count": 1,
-                            "song_art_image_thumbnail_url": "https://images.genius.com/7fbaf838ffdf99315408faa29cb566ac.300x300x1.jpg",
-                            "song_art_image_url": "https://images.genius.com/7fbaf838ffdf99315408faa29cb566ac.1000x1000x1.jpg",
-                            "stats": {
-                                "unreviewed_annotations": 1,
-                                "hot": false
-                            },
-                            "title": "Bob Dylan - Murder Most Foul (Traducción al Español)",
-                            "title_with_featured": "Bob Dylan - Murder Most Foul (Traducción al Español)",
-                            "updated_by_human_at": 1612503340,
-                            "url": "https://genius.com/Genius-traducciones-al-espanol-bob-dylan-murder-most-foul-traduccion-al-espanol-lyrics",
-                            "primary_artist": {
-                                "_type": "artist",
-                                "api_path": "/artists/1376254",
-                                "header_image_url": "https://images.genius.com/6178b6c662682a46c36330e6f417927b.1000x563x8.gif",
-                                "id": 1376254,
-                                "image_url": "https://images.genius.com/a5f802f003a038e30f82e2e2848c3b5a.1000x1000x1.png",
-                                "index_character": "g",
-                                "is_meme_verified": false,
-                                "is_verified": false,
-                                "name": "Genius Traducciones al Español",
-                                "slug": "Genius-traducciones-al-espanol",
-                                "url": "https://genius.com/artists/Genius-traducciones-al-espanol"
-                            }
-                        }
-                    },
-                    {
-                        "highlights": [
-                            {
-                                "property": "lyrics",
-                                "value": "Polybius, for the Achaean exiles, and there happening to be a great discussion in the senate about it, some being",
-                                "snippet": true,
-                                "ranges": [
-                                    {
-                                        "start": 0,
-                                        "end": 4
-                                    },
-                                    {
-                                        "start": 14,
-                                        "end": 17
-                                    },
-                                    {
-                                        "start": 60,
-                                        "end": 61
-                                    },
-                                    {
-                                        "start": 82,
-                                        "end": 85
-                                    }
-                                ]
-                            }
-                        ],
-                        "index": "lyric",
-                        "type": "song",
-                        "result": {
-                            "_type": "song",
-                            "annotation_count": 1,
-                            "api_path": "/songs/502859",
-                            "artist_names": "Plutarch",
-                            "full_title": "Life Of Marcus Cato by Plutarch",
-                            "header_image_thumbnail_url": "https://assets.genius.com/images/default_cover_image.png?1648671214",
-                            "header_image_url": "https://assets.genius.com/images/default_cover_image.png?1648671214",
-                            "id": 502859,
-                            "instrumental": false,
-                            "lyrics_owner_id": 389740,
-                            "lyrics_state": "complete",
-                            "lyrics_updated_at": 1408700212,
-                            "path": "/Plutarch-life-of-marcus-cato-annotated",
-                            "pyongs_count": null,
-                            "song_art_image_thumbnail_url": "https://assets.genius.com/images/default_cover_image.png?1648671214",
-                            "song_art_image_url": "https://assets.genius.com/images/default_cover_image.png?1648671214",
-                            "stats": {
-                                "unreviewed_annotations": 0,
-                                "hot": false
-                            },
-                            "title": "Life Of Marcus Cato",
-                            "title_with_featured": "Life Of Marcus Cato",
-                            "updated_by_human_at": 1472957324,
-                            "url": "https://genius.com/Plutarch-life-of-marcus-cato-annotated",
-                            "primary_artist": {
-                                "_type": "artist",
-                                "api_path": "/artists/80200",
-                                "header_image_url": "https://assets.genius.com/images/default_avatar_300.png?1648671214",
-                                "id": 80200,
-                                "image_url": "https://assets.genius.com/images/default_avatar_300.png?1648671214",
-                                "index_character": "p",
-                                "is_meme_verified": false,
-                                "is_verified": false,
-                                "name": "Plutarch",
-                                "slug": "Plutarch",
-                                "url": "https://genius.com/artists/Plutarch"
-                            }
-                        }
-                    }
-                ]
-            },
-            {
-                "type": "artist",
-                "hits": []
-            },
-            {
-                "type": "album",
-                "hits": []
-            },
-            {
-                "type": "video",
-                "hits": []
-            },
-            {
-                "type": "article",
-                "hits": []
-            },
-            {
-                "type": "user",
-                "hits": []
+  "meta": {
+    "status": 200
+  },
+  "response": {
+    "sections": [
+      {
+        "type": "top_hit",
+        "hits": [
+          {
+            "highlights": [],
+            "index": "song",
+            "type": "song",
+            "result": {
+              "_type": "song",
+              "annotation_count": 9,
+              "api_path": "/songs/123442",
+              "artist_names": "The Beatles",
+              "full_title": "Dig a Pony by The Beatles",
+              "header_image_thumbnail_url": "https://images.genius.com/3303a78998d4976e9f996a49b23d8493.300x300x1.jpg",
+              "header_image_url": "https://images.genius.com/3303a78998d4976e9f996a49b23d8493.587x587x1.jpg",
+              "id": 123442,
+              "instrumental": false,
+              "lyrics_owner_id": 22533,
+              "lyrics_state": "complete",
+              "lyrics_updated_at": 1643634896,
+              "path": "/The-beatles-dig-a-pony-lyrics",
+              "pyongs_count": 7,
+              "song_art_image_thumbnail_url": "https://images.genius.com/3303a78998d4976e9f996a49b23d8493.300x300x1.jpg",
+              "song_art_image_url": "https://images.genius.com/3303a78998d4976e9f996a49b23d8493.587x587x1.jpg",
+              "stats": {
+                "unreviewed_annotations": 0,
+                "hot": false,
+                "pageviews": 67903
+              },
+              "title": "Dig a Pony",
+              "title_with_featured": "Dig a Pony",
+              "updated_by_human_at": 1643634896,
+              "url": "https://genius.com/The-beatles-dig-a-pony-lyrics",
+              "primary_artist": {
+                "_type": "artist",
+                "api_path": "/artists/586",
+                "header_image_url": "https://images.genius.com/afa26a454999e82e21faa2d2d186e054.400x226x148.gif",
+                "id": 586,
+                "image_url": "https://images.genius.com/66543351b06f274b28344e658b474550.400x400x1.jpg",
+                "index_character": "b",
+                "is_meme_verified": false,
+                "is_verified": false,
+                "name": "The Beatles",
+                "slug": "The-beatles",
+                "url": "https://genius.com/artists/The-beatles"
+              }
             }
+          },
+          {
+            "highlights": [],
+            "index": "song",
+            "type": "song",
+            "result": {
+              "_type": "song",
+              "annotation_count": 0,
+              "api_path": "/songs/7266845",
+              "artist_names": "The Beatles",
+              "full_title": "Dig A Pony (2021 Mix) by The Beatles",
+              "header_image_thumbnail_url": "https://images.genius.com/7127124b27ac32dc28f396d19d7dce53.300x300x1.png",
+              "header_image_url": "https://images.genius.com/7127124b27ac32dc28f396d19d7dce53.767x767x1.png",
+              "id": 7266845,
+              "instrumental": false,
+              "lyrics_owner_id": 6980088,
+              "lyrics_state": "complete",
+              "lyrics_updated_at": 1633634832,
+              "path": "/The-beatles-dig-a-pony-2021-mix-lyrics",
+              "pyongs_count": null,
+              "song_art_image_thumbnail_url": "https://images.genius.com/7127124b27ac32dc28f396d19d7dce53.300x300x1.png",
+              "song_art_image_url": "https://images.genius.com/7127124b27ac32dc28f396d19d7dce53.767x767x1.png",
+              "stats": {
+                "unreviewed_annotations": 0,
+                "hot": false
+              },
+              "title": "Dig A Pony (2021 Mix)",
+              "title_with_featured": "Dig A Pony (2021 Mix)",
+              "updated_by_human_at": 1634876392,
+              "url": "https://genius.com/The-beatles-dig-a-pony-2021-mix-lyrics",
+              "primary_artist": {
+                "_type": "artist",
+                "api_path": "/artists/586",
+                "header_image_url": "https://images.genius.com/afa26a454999e82e21faa2d2d186e054.400x226x148.gif",
+                "id": 586,
+                "image_url": "https://images.genius.com/66543351b06f274b28344e658b474550.400x400x1.jpg",
+                "index_character": "b",
+                "is_meme_verified": false,
+                "is_verified": false,
+                "name": "The Beatles",
+                "slug": "The-beatles",
+                "url": "https://genius.com/artists/The-beatles"
+              }
+            }
+          },
+          {
+            "highlights": [],
+            "index": "song",
+            "type": "song",
+            "result": {
+              "_type": "song",
+              "annotation_count": 0,
+              "api_path": "/songs/7141661",
+              "artist_names": "The Beatles",
+              "full_title": "Dig A Pony (Take 14) by The Beatles",
+              "header_image_thumbnail_url": "https://images.genius.com/7127124b27ac32dc28f396d19d7dce53.300x300x1.png",
+              "header_image_url": "https://images.genius.com/7127124b27ac32dc28f396d19d7dce53.767x767x1.png",
+              "id": 7141661,
+              "instrumental": false,
+              "lyrics_owner_id": 6980088,
+              "lyrics_state": "complete",
+              "lyrics_updated_at": 1633642206,
+              "path": "/The-beatles-dig-a-pony-take-14-lyrics",
+              "pyongs_count": null,
+              "song_art_image_thumbnail_url": "https://images.genius.com/7127124b27ac32dc28f396d19d7dce53.300x300x1.png",
+              "song_art_image_url": "https://images.genius.com/7127124b27ac32dc28f396d19d7dce53.767x767x1.png",
+              "stats": {
+                "unreviewed_annotations": 0,
+                "hot": false
+              },
+              "title": "Dig A Pony (Take 14)",
+              "title_with_featured": "Dig A Pony (Take 14)",
+              "updated_by_human_at": 1634714562,
+              "url": "https://genius.com/The-beatles-dig-a-pony-take-14-lyrics",
+              "primary_artist": {
+                "_type": "artist",
+                "api_path": "/artists/586",
+                "header_image_url": "https://images.genius.com/afa26a454999e82e21faa2d2d186e054.400x226x148.gif",
+                "id": 586,
+                "image_url": "https://images.genius.com/66543351b06f274b28344e658b474550.400x400x1.jpg",
+                "index_character": "b",
+                "is_meme_verified": false,
+                "is_verified": false,
+                "name": "The Beatles",
+                "slug": "The-beatles",
+                "url": "https://genius.com/artists/The-beatles"
+              }
+            }
+          }
         ]
-    }
+      },
+      {
+        "type": "song",
+        "hits": [
+          {
+            "highlights": [],
+            "index": "song",
+            "type": "song",
+            "result": {
+              "_type": "song",
+              "annotation_count": 9,
+              "api_path": "/songs/123442",
+              "artist_names": "The Beatles",
+              "full_title": "Dig a Pony by The Beatles",
+              "header_image_thumbnail_url": "https://images.genius.com/3303a78998d4976e9f996a49b23d8493.300x300x1.jpg",
+              "header_image_url": "https://images.genius.com/3303a78998d4976e9f996a49b23d8493.587x587x1.jpg",
+              "id": 123442,
+              "instrumental": false,
+              "lyrics_owner_id": 22533,
+              "lyrics_state": "complete",
+              "lyrics_updated_at": 1643634896,
+              "path": "/The-beatles-dig-a-pony-lyrics",
+              "pyongs_count": 7,
+              "song_art_image_thumbnail_url": "https://images.genius.com/3303a78998d4976e9f996a49b23d8493.300x300x1.jpg",
+              "song_art_image_url": "https://images.genius.com/3303a78998d4976e9f996a49b23d8493.587x587x1.jpg",
+              "stats": {
+                "unreviewed_annotations": 0,
+                "hot": false,
+                "pageviews": 67903
+              },
+              "title": "Dig a Pony",
+              "title_with_featured": "Dig a Pony",
+              "updated_by_human_at": 1643634896,
+              "url": "https://genius.com/The-beatles-dig-a-pony-lyrics",
+              "primary_artist": {
+                "_type": "artist",
+                "api_path": "/artists/586",
+                "header_image_url": "https://images.genius.com/afa26a454999e82e21faa2d2d186e054.400x226x148.gif",
+                "id": 586,
+                "image_url": "https://images.genius.com/66543351b06f274b28344e658b474550.400x400x1.jpg",
+                "index_character": "b",
+                "is_meme_verified": false,
+                "is_verified": false,
+                "name": "The Beatles",
+                "slug": "The-beatles",
+                "url": "https://genius.com/artists/The-beatles"
+              }
+            }
+          },
+          {
+            "highlights": [],
+            "index": "song",
+            "type": "song",
+            "result": {
+              "_type": "song",
+              "annotation_count": 0,
+              "api_path": "/songs/7266845",
+              "artist_names": "The Beatles",
+              "full_title": "Dig A Pony (2021 Mix) by The Beatles",
+              "header_image_thumbnail_url": "https://images.genius.com/7127124b27ac32dc28f396d19d7dce53.300x300x1.png",
+              "header_image_url": "https://images.genius.com/7127124b27ac32dc28f396d19d7dce53.767x767x1.png",
+              "id": 7266845,
+              "instrumental": false,
+              "lyrics_owner_id": 6980088,
+              "lyrics_state": "complete",
+              "lyrics_updated_at": 1633634832,
+              "path": "/The-beatles-dig-a-pony-2021-mix-lyrics",
+              "pyongs_count": null,
+              "song_art_image_thumbnail_url": "https://images.genius.com/7127124b27ac32dc28f396d19d7dce53.300x300x1.png",
+              "song_art_image_url": "https://images.genius.com/7127124b27ac32dc28f396d19d7dce53.767x767x1.png",
+              "stats": {
+                "unreviewed_annotations": 0,
+                "hot": false
+              },
+              "title": "Dig A Pony (2021 Mix)",
+              "title_with_featured": "Dig A Pony (2021 Mix)",
+              "updated_by_human_at": 1634876392,
+              "url": "https://genius.com/The-beatles-dig-a-pony-2021-mix-lyrics",
+              "primary_artist": {
+                "_type": "artist",
+                "api_path": "/artists/586",
+                "header_image_url": "https://images.genius.com/afa26a454999e82e21faa2d2d186e054.400x226x148.gif",
+                "id": 586,
+                "image_url": "https://images.genius.com/66543351b06f274b28344e658b474550.400x400x1.jpg",
+                "index_character": "b",
+                "is_meme_verified": false,
+                "is_verified": false,
+                "name": "The Beatles",
+                "slug": "The-beatles",
+                "url": "https://genius.com/artists/The-beatles"
+              }
+            }
+          },
+          {
+            "highlights": [],
+            "index": "song",
+            "type": "song",
+            "result": {
+              "_type": "song",
+              "annotation_count": 0,
+              "api_path": "/songs/7141661",
+              "artist_names": "The Beatles",
+              "full_title": "Dig A Pony (Take 14) by The Beatles",
+              "header_image_thumbnail_url": "https://images.genius.com/7127124b27ac32dc28f396d19d7dce53.300x300x1.png",
+              "header_image_url": "https://images.genius.com/7127124b27ac32dc28f396d19d7dce53.767x767x1.png",
+              "id": 7141661,
+              "instrumental": false,
+              "lyrics_owner_id": 6980088,
+              "lyrics_state": "complete",
+              "lyrics_updated_at": 1633642206,
+              "path": "/The-beatles-dig-a-pony-take-14-lyrics",
+              "pyongs_count": null,
+              "song_art_image_thumbnail_url": "https://images.genius.com/7127124b27ac32dc28f396d19d7dce53.300x300x1.png",
+              "song_art_image_url": "https://images.genius.com/7127124b27ac32dc28f396d19d7dce53.767x767x1.png",
+              "stats": {
+                "unreviewed_annotations": 0,
+                "hot": false
+              },
+              "title": "Dig A Pony (Take 14)",
+              "title_with_featured": "Dig A Pony (Take 14)",
+              "updated_by_human_at": 1634714562,
+              "url": "https://genius.com/The-beatles-dig-a-pony-take-14-lyrics",
+              "primary_artist": {
+                "_type": "artist",
+                "api_path": "/artists/586",
+                "header_image_url": "https://images.genius.com/afa26a454999e82e21faa2d2d186e054.400x226x148.gif",
+                "id": 586,
+                "image_url": "https://images.genius.com/66543351b06f274b28344e658b474550.400x400x1.jpg",
+                "index_character": "b",
+                "is_meme_verified": false,
+                "is_verified": false,
+                "name": "The Beatles",
+                "slug": "The-beatles",
+                "url": "https://genius.com/artists/The-beatles"
+              }
+            }
+          },
+          {
+            "highlights": [],
+            "index": "song",
+            "type": "song",
+            "result": {
+              "_type": "song",
+              "annotation_count": 0,
+              "api_path": "/songs/7141730",
+              "artist_names": "The Beatles",
+              "full_title": "Dig A Pony (1969 Glyn Johns Mix) by The Beatles",
+              "header_image_thumbnail_url": "https://images.genius.com/365e6e078c28c830658f4d7e4dd25260.300x300x1.jpg",
+              "header_image_url": "https://images.genius.com/365e6e078c28c830658f4d7e4dd25260.1000x1000x1.jpg",
+              "id": 7141730,
+              "instrumental": false,
+              "lyrics_owner_id": 6980088,
+              "lyrics_state": "complete",
+              "lyrics_updated_at": 1633640326,
+              "path": "/The-beatles-dig-a-pony-1969-glyn-johns-mix-lyrics",
+              "pyongs_count": null,
+              "song_art_image_thumbnail_url": "https://images.genius.com/365e6e078c28c830658f4d7e4dd25260.300x300x1.jpg",
+              "song_art_image_url": "https://images.genius.com/365e6e078c28c830658f4d7e4dd25260.1000x1000x1.jpg",
+              "stats": {
+                "unreviewed_annotations": 0,
+                "hot": false
+              },
+              "title": "Dig A Pony (1969 Glyn Johns Mix)",
+              "title_with_featured": "Dig A Pony (1969 Glyn Johns Mix)",
+              "updated_by_human_at": 1634715423,
+              "url": "https://genius.com/The-beatles-dig-a-pony-1969-glyn-johns-mix-lyrics",
+              "primary_artist": {
+                "_type": "artist",
+                "api_path": "/artists/586",
+                "header_image_url": "https://images.genius.com/afa26a454999e82e21faa2d2d186e054.400x226x148.gif",
+                "id": 586,
+                "image_url": "https://images.genius.com/66543351b06f274b28344e658b474550.400x400x1.jpg",
+                "index_character": "b",
+                "is_meme_verified": false,
+                "is_verified": false,
+                "name": "The Beatles",
+                "slug": "The-beatles",
+                "url": "https://genius.com/artists/The-beatles"
+              }
+            }
+          },
+          {
+            "highlights": [],
+            "index": "song",
+            "type": "song",
+            "result": {
+              "_type": "song",
+              "annotation_count": 0,
+              "api_path": "/songs/7646389",
+              "artist_names": "The Beatles",
+              "full_title": "Dig a Pony (Rooftop Performance) by The Beatles",
+              "header_image_thumbnail_url": "https://images.genius.com/5fd7d1e87e57a0f3638ec3ac816b2f0f.300x300x1.jpg",
+              "header_image_url": "https://images.genius.com/5fd7d1e87e57a0f3638ec3ac816b2f0f.1000x1000x1.jpg",
+              "id": 7646389,
+              "instrumental": false,
+              "lyrics_owner_id": 6074356,
+              "lyrics_state": "complete",
+              "lyrics_updated_at": 1643431706,
+              "path": "/The-beatles-dig-a-pony-rooftop-performance-lyrics",
+              "pyongs_count": null,
+              "song_art_image_thumbnail_url": "https://images.genius.com/5fd7d1e87e57a0f3638ec3ac816b2f0f.300x300x1.jpg",
+              "song_art_image_url": "https://images.genius.com/5fd7d1e87e57a0f3638ec3ac816b2f0f.1000x1000x1.jpg",
+              "stats": {
+                "unreviewed_annotations": 0,
+                "hot": false
+              },
+              "title": "Dig a Pony (Rooftop Performance)",
+              "title_with_featured": "Dig a Pony (Rooftop Performance)",
+              "updated_by_human_at": 1643431706,
+              "url": "https://genius.com/The-beatles-dig-a-pony-rooftop-performance-lyrics",
+              "primary_artist": {
+                "_type": "artist",
+                "api_path": "/artists/586",
+                "header_image_url": "https://images.genius.com/afa26a454999e82e21faa2d2d186e054.400x226x148.gif",
+                "id": 586,
+                "image_url": "https://images.genius.com/66543351b06f274b28344e658b474550.400x400x1.jpg",
+                "index_character": "b",
+                "is_meme_verified": false,
+                "is_verified": false,
+                "name": "The Beatles",
+                "slug": "The-beatles",
+                "url": "https://genius.com/artists/The-beatles"
+              }
+            }
+          }
+        ]
+      },
+      {
+        "type": "lyric",
+        "hits": [
+          {
+            "highlights": [
+              {
+                "property": "lyrics",
+                "value": "s going to be more dung and phony than a Beatles-Outsiders crossover\nBecause we have to dig a pony",
+                "snippet": true,
+                "ranges": [
+                  {
+                    "start": 39,
+                    "end": 40
+                  },
+                  {
+                    "start": 41,
+                    "end": 48
+                  },
+                  {
+                    "start": 88,
+                    "end": 91
+                  },
+                  {
+                    "start": 92,
+                    "end": 93
+                  },
+                  {
+                    "start": 94,
+                    "end": 98
+                  }
+                ]
+              }
+            ],
+            "index": "lyric",
+            "type": "song",
+            "result": {
+              "_type": "song",
+              "annotation_count": 15,
+              "api_path": "/songs/563583",
+              "artist_names": "Seymour Butts",
+              "full_title": "Unbeatable by Seymour Butts",
+              "header_image_thumbnail_url": "https://assets.genius.com/images/default_cover_image.png?1648671214",
+              "header_image_url": "https://assets.genius.com/images/default_cover_image.png?1648671214",
+              "id": 563583,
+              "instrumental": false,
+              "lyrics_owner_id": 243188,
+              "lyrics_state": "complete",
+              "lyrics_updated_at": 1415152615,
+              "path": "/Seymour-butts-unbeatable-lyrics",
+              "pyongs_count": null,
+              "song_art_image_thumbnail_url": "https://assets.genius.com/images/default_cover_image.png?1648671214",
+              "song_art_image_url": "https://assets.genius.com/images/default_cover_image.png?1648671214",
+              "stats": {
+                "unreviewed_annotations": 12,
+                "hot": false
+              },
+              "title": "Unbeatable",
+              "title_with_featured": "Unbeatable",
+              "updated_by_human_at": 1494355400,
+              "url": "https://genius.com/Seymour-butts-unbeatable-lyrics",
+              "primary_artist": {
+                "_type": "artist",
+                "api_path": "/artists/59937",
+                "header_image_url": "https://assets.genius.com/images/default_avatar_300.png?1648671214",
+                "id": 59937,
+                "image_url": "https://assets.genius.com/images/default_avatar_300.png?1648671214",
+                "index_character": "s",
+                "is_meme_verified": false,
+                "is_verified": false,
+                "name": "Seymour Butts",
+                "slug": "Seymour-butts",
+                "url": "https://genius.com/artists/Seymour-butts"
+              }
+            }
+          },
+          {
+            "highlights": [
+              {
+                "property": "lyrics",
+                "value": "three songs in America. So extreme a choke hold of the Billboard charts had only one antecedent: the Beatles achieved",
+                "snippet": true,
+                "ranges": [
+                  {
+                    "start": 35,
+                    "end": 36
+                  },
+                  {
+                    "start": 51,
+                    "end": 54
+                  },
+                  {
+                    "start": 97,
+                    "end": 100
+                  },
+                  {
+                    "start": 101,
+                    "end": 108
+                  }
+                ]
+              }
+            ],
+            "index": "lyric",
+            "type": "song",
+            "result": {
+              "_type": "song",
+              "annotation_count": 0,
+              "api_path": "/songs/4766792",
+              "artist_names": "Vogue (Ft. Ariana Grande)",
+              "full_title": "Ariana Grande on Grief and Growing Up by Vogue (Ft. Ariana Grande)",
+              "header_image_thumbnail_url": "https://images.genius.com/89c5e1cb9a2a38a103b86027821c34c1.300x408x1.jpg",
+              "header_image_url": "https://images.genius.com/89c5e1cb9a2a38a103b86027821c34c1.735x1000x1.jpg",
+              "id": 4766792,
+              "instrumental": false,
+              "lyrics_owner_id": 4171467,
+              "lyrics_state": "complete",
+              "lyrics_updated_at": 1565296184,
+              "path": "/Vogue-ariana-grande-on-grief-and-growing-up-annotated",
+              "pyongs_count": null,
+              "song_art_image_thumbnail_url": "https://images.genius.com/b4e3cc53b685c18e7aa1475dd735a561.300x408x1.jpg",
+              "song_art_image_url": "https://images.genius.com/b4e3cc53b685c18e7aa1475dd735a561.735x1000x1.jpg",
+              "stats": {
+                "unreviewed_annotations": 0,
+                "hot": false
+              },
+              "title": "Ariana Grande on Grief and Growing Up",
+              "title_with_featured": "Ariana Grande on Grief and Growing Up (Ft. Ariana Grande)",
+              "updated_by_human_at": 1565296650,
+              "url": "https://genius.com/Vogue-ariana-grande-on-grief-and-growing-up-annotated",
+              "primary_artist": {
+                "_type": "artist",
+                "api_path": "/artists/167322",
+                "header_image_url": "https://images.genius.com/87d94443f5f06df9d25d4ce599c3a067.400x400x1.jpg",
+                "id": 167322,
+                "image_url": "https://images.genius.com/87d94443f5f06df9d25d4ce599c3a067.400x400x1.jpg",
+                "index_character": "v",
+                "is_meme_verified": false,
+                "is_verified": false,
+                "name": "Vogue",
+                "slug": "Vogue",
+                "url": "https://genius.com/artists/Vogue"
+              }
+            }
+          },
+          {
+            "highlights": [
+              {
+                "property": "lyrics",
+                "value": "If the Beatles had a message, it was that. With the Beatles, the records are the point, not the Beatles",
+                "snippet": true,
+                "ranges": [
+                  {
+                    "start": 3,
+                    "end": 6
+                  },
+                  {
+                    "start": 7,
+                    "end": 14
+                  },
+                  {
+                    "start": 19,
+                    "end": 20
+                  },
+                  {
+                    "start": 48,
+                    "end": 51
+                  },
+                  {
+                    "start": 52,
+                    "end": 59
+                  },
+                  {
+                    "start": 61,
+                    "end": 64
+                  },
+                  {
+                    "start": 77,
+                    "end": 80
+                  },
+                  {
+                    "start": 92,
+                    "end": 95
+                  },
+                  {
+                    "start": 96,
+                    "end": 103
+                  }
+                ]
+              }
+            ],
+            "index": "lyric",
+            "type": "song",
+            "result": {
+              "_type": "song",
+              "annotation_count": 69,
+              "api_path": "/songs/96290",
+              "artist_names": "David Sheff (Ft. John Lennon & Yoko Ono)",
+              "full_title": "Playboy Interview: John Lennon & Yoko Ono by David Sheff (Ft. John Lennon & Yoko Ono)",
+              "header_image_thumbnail_url": "https://images.rapgenius.com/5c4fb33aa4a592d00ce594f676469654.300x199x1.jpg",
+              "header_image_url": "https://images.rapgenius.com/5c4fb33aa4a592d00ce594f676469654.575x382x1.jpg",
+              "id": 96290,
+              "instrumental": false,
+              "lyrics_owner_id": 1850,
+              "lyrics_state": "complete",
+              "lyrics_updated_at": 1599722317,
+              "path": "/David-sheff-playboy-interview-john-lennon-and-yoko-ono-lyrics",
+              "pyongs_count": 10,
+              "song_art_image_thumbnail_url": "https://images.rapgenius.com/5c4fb33aa4a592d00ce594f676469654.300x199x1.jpg",
+              "song_art_image_url": "https://images.rapgenius.com/5c4fb33aa4a592d00ce594f676469654.575x382x1.jpg",
+              "stats": {
+                "unreviewed_annotations": 17,
+                "hot": false,
+                "pageviews": 9467
+              },
+              "title": "Playboy Interview: John Lennon & Yoko Ono",
+              "title_with_featured": "Playboy Interview: John Lennon & Yoko Ono (Ft. John Lennon & Yoko Ono)",
+              "updated_by_human_at": 1599722317,
+              "url": "https://genius.com/David-sheff-playboy-interview-john-lennon-and-yoko-ono-lyrics",
+              "primary_artist": {
+                "_type": "artist",
+                "api_path": "/artists/208268",
+                "header_image_url": "https://images.genius.com/e6b95ebd2531266f26d788683a15811e.948x710x1.jpg",
+                "id": 208268,
+                "image_url": "https://images.genius.com/e6b95ebd2531266f26d788683a15811e.948x710x1.jpg",
+                "index_character": "d",
+                "is_meme_verified": false,
+                "is_verified": false,
+                "name": "David Sheff",
+                "slug": "David-sheff",
+                "url": "https://genius.com/artists/David-sheff"
+              }
+            }
+          },
+          {
+            "highlights": [
+              {
+                "property": "lyrics",
+                "value": "a Stan Getz\nToca “Blue Sky”, pon a Dickey Betts\nPon a Art Pepper, a Thelonius Monk\nPon a Charlie",
+                "snippet": true,
+                "ranges": [
+                  {
+                    "start": 0,
+                    "end": 1
+                  },
+                  {
+                    "start": 29,
+                    "end": 32
+                  },
+                  {
+                    "start": 33,
+                    "end": 34
+                  },
+                  {
+                    "start": 48,
+                    "end": 51
+                  },
+                  {
+                    "start": 52,
+                    "end": 53
+                  },
+                  {
+                    "start": 66,
+                    "end": 67
+                  },
+                  {
+                    "start": 83,
+                    "end": 86
+                  },
+                  {
+                    "start": 87,
+                    "end": 88
+                  }
+                ]
+              }
+            ],
+            "index": "lyric",
+            "type": "song",
+            "result": {
+              "_type": "song",
+              "annotation_count": 1,
+              "api_path": "/songs/5403364",
+              "artist_names": "Genius Traducciones al Español",
+              "full_title": "Bob Dylan - Murder Most Foul (Traducción al Español) by Genius Traducciones al Español",
+              "header_image_thumbnail_url": "https://images.genius.com/7fbaf838ffdf99315408faa29cb566ac.300x300x1.jpg",
+              "header_image_url": "https://images.genius.com/7fbaf838ffdf99315408faa29cb566ac.1000x1000x1.jpg",
+              "id": 5403364,
+              "instrumental": false,
+              "lyrics_owner_id": 6607506,
+              "lyrics_state": "complete",
+              "lyrics_updated_at": 1585631719,
+              "path": "/Genius-traducciones-al-espanol-bob-dylan-murder-most-foul-traduccion-al-espanol-lyrics",
+              "pyongs_count": 1,
+              "song_art_image_thumbnail_url": "https://images.genius.com/7fbaf838ffdf99315408faa29cb566ac.300x300x1.jpg",
+              "song_art_image_url": "https://images.genius.com/7fbaf838ffdf99315408faa29cb566ac.1000x1000x1.jpg",
+              "stats": {
+                "unreviewed_annotations": 1,
+                "hot": false
+              },
+              "title": "Bob Dylan - Murder Most Foul (Traducción al Español)",
+              "title_with_featured": "Bob Dylan - Murder Most Foul (Traducción al Español)",
+              "updated_by_human_at": 1612503340,
+              "url": "https://genius.com/Genius-traducciones-al-espanol-bob-dylan-murder-most-foul-traduccion-al-espanol-lyrics",
+              "primary_artist": {
+                "_type": "artist",
+                "api_path": "/artists/1376254",
+                "header_image_url": "https://images.genius.com/6178b6c662682a46c36330e6f417927b.1000x563x8.gif",
+                "id": 1376254,
+                "image_url": "https://images.genius.com/a5f802f003a038e30f82e2e2848c3b5a.1000x1000x1.png",
+                "index_character": "g",
+                "is_meme_verified": false,
+                "is_verified": false,
+                "name": "Genius Traducciones al Español",
+                "slug": "Genius-traducciones-al-espanol",
+                "url": "https://genius.com/artists/Genius-traducciones-al-espanol"
+              }
+            }
+          },
+          {
+            "highlights": [
+              {
+                "property": "lyrics",
+                "value": "Polybius, for the Achaean exiles, and there happening to be a great discussion in the senate about it, some being",
+                "snippet": true,
+                "ranges": [
+                  {
+                    "start": 0,
+                    "end": 4
+                  },
+                  {
+                    "start": 14,
+                    "end": 17
+                  },
+                  {
+                    "start": 60,
+                    "end": 61
+                  },
+                  {
+                    "start": 82,
+                    "end": 85
+                  }
+                ]
+              }
+            ],
+            "index": "lyric",
+            "type": "song",
+            "result": {
+              "_type": "song",
+              "annotation_count": 1,
+              "api_path": "/songs/502859",
+              "artist_names": "Plutarch",
+              "full_title": "Life Of Marcus Cato by Plutarch",
+              "header_image_thumbnail_url": "https://assets.genius.com/images/default_cover_image.png?1648671214",
+              "header_image_url": "https://assets.genius.com/images/default_cover_image.png?1648671214",
+              "id": 502859,
+              "instrumental": false,
+              "lyrics_owner_id": 389740,
+              "lyrics_state": "complete",
+              "lyrics_updated_at": 1408700212,
+              "path": "/Plutarch-life-of-marcus-cato-annotated",
+              "pyongs_count": null,
+              "song_art_image_thumbnail_url": "https://assets.genius.com/images/default_cover_image.png?1648671214",
+              "song_art_image_url": "https://assets.genius.com/images/default_cover_image.png?1648671214",
+              "stats": {
+                "unreviewed_annotations": 0,
+                "hot": false
+              },
+              "title": "Life Of Marcus Cato",
+              "title_with_featured": "Life Of Marcus Cato",
+              "updated_by_human_at": 1472957324,
+              "url": "https://genius.com/Plutarch-life-of-marcus-cato-annotated",
+              "primary_artist": {
+                "_type": "artist",
+                "api_path": "/artists/80200",
+                "header_image_url": "https://assets.genius.com/images/default_avatar_300.png?1648671214",
+                "id": 80200,
+                "image_url": "https://assets.genius.com/images/default_avatar_300.png?1648671214",
+                "index_character": "p",
+                "is_meme_verified": false,
+                "is_verified": false,
+                "name": "Plutarch",
+                "slug": "Plutarch",
+                "url": "https://genius.com/artists/Plutarch"
+              }
+            }
+          }
+        ]
+      },
+      {
+        "type": "artist",
+        "hits": []
+      },
+      {
+        "type": "album",
+        "hits": []
+      },
+      {
+        "type": "video",
+        "hits": []
+      },
+      {
+        "type": "article",
+        "hits": []
+      },
+      {
+        "type": "user",
+        "hits": []
+      }
+    ]
+  }
 }

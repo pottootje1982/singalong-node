@@ -1,5 +1,5 @@
-import React, { useRef, useState, useContext } from 'react'
-import { TextField } from '@mui/material'
+import React, { useRef, useState, useContext } from "react";
+import { TextField } from "@mui/material";
 
 import {
   MenuItem,
@@ -11,61 +11,61 @@ import {
   DialogContent,
   DialogActions,
   Button,
-} from '@mui/material'
-import { List, Edit } from '@mui/icons-material'
-import ServerContext from '../server-context'
-import PlaylistContext from './playlist-context'
-import LibraryContext from '../library/library-context'
-import { Track } from '../track'
+} from "@mui/material";
+import { List, Edit } from "@mui/icons-material";
+import ServerContext from "../server-context";
+import PlaylistContext from "./playlist-context";
+import LibraryContext from "../library/library-context";
+import { Track } from "../track";
 
 export default function CustomPlaylist({ closeMenu, edit }) {
-  const { server } = useContext(ServerContext)
-  const [modalOpen, setModalOpen] = useState(false)
-  const [isValid, setIsValid] = useState(false)
-  const nameref = useRef(null)
-  const playlistref = useRef(null)
-  const { tracks, setTracks, customPlaylist: id } = useContext(PlaylistContext)
-  const { customPlaylists, setCustomPlaylists } = useContext(LibraryContext)
-  const customPlaylist = customPlaylists.find((p) => p.id === id)
+  const { server } = useContext(ServerContext);
+  const [modalOpen, setModalOpen] = useState(false);
+  const [isValid, setIsValid] = useState(false);
+  const nameref = useRef(null);
+  const playlistref = useRef(null);
+  const { tracks, setTracks, customPlaylist: id } = useContext(PlaylistContext);
+  const { customPlaylists, setCustomPlaylists } = useContext(LibraryContext);
+  const customPlaylist = customPlaylists.find((p) => p.id === id);
 
   async function addOrEditCustomPlaylist(tracksString, name) {
-    let playlist
+    let playlist;
     if (edit) {
-      const { data } = await server().put('/api/playlists/custom', {
+      const { data } = await server().put("/api/playlists/custom", {
         id: id,
         tracksString,
         name,
-      })
-      playlist = data.playlist
-      customPlaylist.name = playlist.name
-      customPlaylist.tracks = playlist.tracks
-      setCustomPlaylists([...customPlaylists])
+      });
+      playlist = data.playlist;
+      customPlaylist.name = playlist.name;
+      customPlaylist.tracks = playlist.tracks;
+      setCustomPlaylists([...customPlaylists]);
     } else {
-      const { data } = await server().post('/api/playlists/custom', {
+      const { data } = await server().post("/api/playlists/custom", {
         tracksString,
         name,
-      })
-      playlist = data.playlist
-      setCustomPlaylists([...customPlaylists, playlist])
+      });
+      playlist = data.playlist;
+      setCustomPlaylists([...customPlaylists, playlist]);
     }
-    setTracks(playlist.tracks.map(Track.copy))
+    setTracks(playlist.tracks.map(Track.copy));
 
-    closeDialog()
+    closeDialog();
   }
 
   function closeDialog() {
-    setModalOpen(false)
-    closeMenu()
+    setModalOpen(false);
+    closeMenu();
   }
 
   function validateInputs() {
     setIsValid(
-      nameref.current.value.trim() !== '' &&
-      playlistref.current.value.trim() !== ''
-    )
+      nameref.current.value.trim() !== "" &&
+        playlistref.current.value.trim() !== ""
+    );
   }
 
-  const title = `${edit ? 'Edit' : 'Add'} Custom playlist`
+  const title = `${edit ? "Edit" : "Add"} Custom playlist`;
 
   return !edit || id ? (
     <>
@@ -96,7 +96,7 @@ export default function CustomPlaylist({ closeMenu, edit }) {
                 rows={18}
                 onChange={validateInputs}
                 defaultValue={
-                  edit && tracks.map((t) => t.toString()).join('\n')
+                  edit && tracks.map((t) => t.toString()).join("\n")
                 }
                 inputRef={playlistref}
               ></TextField>
@@ -122,5 +122,5 @@ export default function CustomPlaylist({ closeMenu, edit }) {
     </>
   ) : (
     <></>
-  )
+  );
 }

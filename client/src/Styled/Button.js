@@ -1,6 +1,6 @@
-import React from 'react'
-import styled from 'styled-components'
-import Button from '@mui/material/Button'
+import React from "react";
+import styled from "styled-components";
+import Button from "@mui/material/Button";
 
 export default styled(({ ...otherProps }) => (
   <Button
@@ -9,8 +9,8 @@ export default styled(({ ...otherProps }) => (
     color="primary"
     {...otherProps}
     style={{
-      textTransform: 'none',
+      textTransform: "none",
       ...(otherProps.style || []),
     }}
   />
-))``
+))``;

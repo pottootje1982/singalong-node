@@ -1,32 +1,31 @@
-import React, { useState } from 'react'
-import { Menu, IconButton, Divider } from '@mui/material'
-import CheckMenuItem from '../CheckMenuItem'
-import { Menu as MenuIcon } from '@mui/icons-material'
-import CustomPlaylist from './custom-playlist'
+import React, { useState } from "react";
+import { Menu, IconButton, Divider } from "@mui/material";
+import CheckMenuItem from "../CheckMenuItem";
+import { Menu as MenuIcon } from "@mui/icons-material";
+import CustomPlaylist from "./custom-playlist";
 
 export default function FilterContextMenu({ trackFilters, setTrackFilters }) {
-  const [anchorEl, setAnchorEl] = useState()
+  const [anchorEl, setAnchorEl] = useState();
 
   function closeMenu() {
-    setAnchorEl(null)
+    setAnchorEl(null);
   }
 
   const setTrackFiltersWrapper = (state, filterKey) => {
-    console.log(state, filterKey)
-    if (filterKey === 'isNotDownloaded' && state.isNotDownloaded) {
-      state.isDownloaded = false
+    console.log(state, filterKey);
+    if (filterKey === "isNotDownloaded" && state.isNotDownloaded) {
+      state.isDownloaded = false;
+    } else if (filterKey === "isDownloaded" && state.isDownloaded) {
+      state.isNotDownloaded = false;
     }
-    else if (filterKey === 'isDownloaded' && state.isDownloaded) {
-      state.isNotDownloaded = false
-    }
-    setTrackFilters({...state})
-  }
+    setTrackFilters({ ...state });
+  };
 
   const defaultMenuItemProps = {
     setter: setTrackFiltersWrapper,
     state: trackFilters,
     close: closeMenu,
-  }
+  };
 
   return (
     <React.Fragment>
@@ -42,8 +41,8 @@ export default function FilterContextMenu({ trackFilters, setTrackFilters }) {
         anchorEl={anchorEl}
         keepMounted
         transformOrigin={{
-          vertical: 'top',
-          horizontal: 'center',
+          vertical: "top",
+          horizontal: "center",
         }}
         open={!!anchorEl}
         onClose={closeMenu}
@@ -73,5 +72,5 @@ export default function FilterContextMenu({ trackFilters, setTrackFilters }) {
         <CustomPlaylist closeMenu={closeMenu} edit={true}></CustomPlaylist>
       </Menu>
     </React.Fragment>
-  )
+  );
 }

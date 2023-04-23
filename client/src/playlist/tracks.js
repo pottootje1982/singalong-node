@@ -1,14 +1,14 @@
-import React, { useEffect, useState, useContext } from 'react';
-import ServerContext from '../server-context';
-import { List, useMediaQuery } from '@mui/material';
+import React, { useEffect, useState, useContext } from "react";
+import ServerContext from "../server-context";
+import { List, useMediaQuery } from "@mui/material";
 
-import TrackItem from './track-item';
-import isEquivalent from '../isEquivalent';
-import { Track } from '../track';
-import PlaylistContext from './playlist-context';
-import PlayerContext from '../player/player-context';
-import AddToPlaylistMenu from './add-to-playlist-menu';
-import DownloadContext from '../lyrics/download-context';
+import TrackItem from "./track-item";
+import isEquivalent from "../isEquivalent";
+import { Track } from "../track";
+import PlaylistContext from "./playlist-context";
+import PlayerContext from "../player/player-context";
+import AddToPlaylistMenu from "./add-to-playlist-menu";
+import DownloadContext from "../lyrics/download-context";
 
 const initialState = {
   mouseX: null,
@@ -39,7 +39,7 @@ export default function Tracks({
   const { setMonitorCurrentlyPlaying, isPlaying } = useContext(PlayerContext);
   const [offset, setOffset] = useState();
   const [unmounted, setUnmounted] = useState(false);
-  const mobile = !useMediaQuery('(min-width:600px)');
+  const mobile = !useMediaQuery("(min-width:600px)");
   const [state, setState] = useState(initialState);
 
   useEffect(selectTrack, [trackId, setTrack, tracks]);
@@ -127,8 +127,8 @@ export default function Tracks({
     <>
       <List
         style={{
-          overflow: !mobile && 'auto',
-          display: lyricsFullscreen && 'none',
+          overflow: !mobile && "auto",
+          display: lyricsFullscreen && "none",
           maxHeight: `calc(100vh - ${lyricsHeight + 20}px)`,
         }}
         dense

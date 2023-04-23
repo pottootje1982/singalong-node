@@ -1,6 +1,6 @@
-import React, { useRef, useContext } from 'react'
-import { TextField } from '@mui/material'
-import { Track } from '../track'
+import React, { useRef, useContext } from "react";
+import { TextField } from "@mui/material";
+import { Track } from "../track";
 
 import {
   MenuItem,
@@ -12,10 +12,10 @@ import {
   DialogContent,
   DialogActions,
   Button,
-} from '@mui/material'
-import { Search } from '@mui/icons-material'
-import PlaylistContext from '../playlist/playlist-context'
-import DownloadContext from './download-context'
+} from "@mui/material";
+import { Search } from "@mui/icons-material";
+import PlaylistContext from "../playlist/playlist-context";
+import DownloadContext from "./download-context";
 
 export function CustomSearchDialog({
   modalOpen,
@@ -23,23 +23,27 @@ export function CustomSearchDialog({
   trackFilters,
   closeMenu,
 }) {
-  const { track } = useContext(PlaylistContext)
-  const artistRef = useRef(null)
-  const titleRef = useRef(null)
+  const { track } = useContext(PlaylistContext);
+  const artistRef = useRef(null);
+  const titleRef = useRef(null);
 
   function doCustomSearch(artist, title) {
-    closeMenu()
-    downloadTrack({ ...track, artist, title }, { save: false }).then(lyrics => { if (!lyrics) alert(`Could not find lyrics for ${track.toString()}`) })
-    closeDialog()
+    closeMenu();
+    downloadTrack({ ...track, artist, title }, { save: false }).then(
+      (lyrics) => {
+        if (!lyrics) alert(`Could not find lyrics for ${track.toString()}`);
+      }
+    );
+    closeDialog();
   }
-  const { downloadTrack } = useContext(DownloadContext)
+  const { downloadTrack } = useContext(DownloadContext);
 
   function closeDialog() {
-    setModalOpen(false)
-    closeMenu()
+    setModalOpen(false);
+    closeMenu();
   }
 
-  const trackToDisplay = track || new Track({})
+  const trackToDisplay = track || new Track({});
 
   return (
     <>
@@ -80,12 +84,10 @@ export function CustomSearchDialog({
         </DialogActions>
       </Dialog>
     </>
-  )
+  );
 }
 
-export default function CustomSearch({
-  setModalOpen
-}) {
+export default function CustomSearch({ setModalOpen }) {
   return (
     <>
       <MenuItem onClick={() => setModalOpen(true)}>
@@ -95,5 +97,5 @@ export default function CustomSearch({
         <ListItemText primary="Custom search" />
       </MenuItem>
     </>
-  )
+  );
 }

@@ -1,49 +1,51 @@
-import React, { useState, useEffect, useRef, useContext } from 'react'
-import { TextField } from '@mui/material'
-import { Stack } from '@mui/material'
-import { Track } from '../track'
-import LyricsToolbar from './lyrics-toolbar'
-import PlaylistContext from '../playlist/playlist-context'
-import PlaylistToolbar from '../playlist/playlist-toolbar'
+import React, { useState, useEffect, useRef, useContext } from "react";
+import { TextField } from "@mui/material";
+import { Stack } from "@mui/material";
+import { Track } from "../track";
+import LyricsToolbar from "./lyrics-toolbar";
+import PlaylistContext from "../playlist/playlist-context";
+import PlaylistToolbar from "../playlist/playlist-toolbar";
 
 export default function Lyrics({
   lyricsFullscreen,
   setLyricsFullscreen,
   trackFilters,
-  setTrackFilters
+  setTrackFilters,
 }) {
-  const { track, setLyricsHeight, setTrackId } = useContext(PlaylistContext)
-  const [mouseDown, setMouseDown] = useState()
-  const lyricsRef = useRef()
-  const stackRef = useRef()
-  const [lyrics, setLyrics] = useState()
-  const [lyricsLines, setLyricsLines] = useState(window.localStorage.getItem('lyricsLines'))
+  const { track, setLyricsHeight, setTrackId } = useContext(PlaylistContext);
+  const [mouseDown, setMouseDown] = useState();
+  const lyricsRef = useRef();
+  const stackRef = useRef();
+  const [lyrics, setLyrics] = useState();
+  const [lyricsLines, setLyricsLines] = useState(
+    window.localStorage.getItem("lyricsLines")
+  );
 
   useEffect(() => {
     if (track) {
-      setLyrics(track.lyrics)
+      setLyrics(track.lyrics);
     }
-  }, [track])
+  }, [track]);
 
   useEffect(() => {
-    setLyricsLines(window.localStorage.getItem('lyricsLines'))
-  }, [lyrics, setLyricsLines])
+    setLyricsLines(window.localStorage.getItem("lyricsLines"));
+  }, [lyrics, setLyricsLines]);
 
   const onMouseUp = () => {
     if (mouseDown) {
-      const height = stackRef.current.clientHeight
-      setLyricsHeight(height)
-      window.localStorage.setItem('lyricsLines', height / 20)
+      const height = stackRef.current.clientHeight;
+      setLyricsHeight(height);
+      window.localStorage.setItem("lyricsLines", height / 20);
     }
-  }
+  };
 
   function selectTrackId(track) {
-    if (track) setTrackId(track.id)
+    if (track) setTrackId(track.id);
   }
 
-  const trackToDisplay = track || new Track({})
+  const trackToDisplay = track || new Track({});
   return (
-    <Stack spacing={1} alignItems="stretch" ref={stackRef} >
+    <Stack spacing={1} alignItems="stretch" ref={stackRef}>
       <LyricsToolbar
         lyricsFullscreen={lyricsFullscreen}
         setLyricsFullscreen={setLyricsFullscreen}
@@ -73,5 +75,5 @@ export default function Lyrics({
         lyricsFullscreen={lyricsFullscreen}
       />
     </Stack>
-  )
+  );
 }

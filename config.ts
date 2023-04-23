@@ -1,5 +1,5 @@
-const dotenv = require('dotenv')
-dotenv.config()
+const dotenv = require("dotenv");
+dotenv.config();
 
 module.exports = {
   GoogleSearchEngineId: process.env.GOOGLE_SEARCH_ENGINE_ID,
@@ -8,4 +8,4 @@ module.exports = {
   spotifyKey: process.env.SPOTIFY_KEY,
   spotifySecret: process.env.SPOTIFY_SECRET,
   endpoint: process.env.ENDPOINT,
-}
+};

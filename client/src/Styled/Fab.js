@@ -1,6 +1,6 @@
-import React from 'react'
-import styled from 'styled-components'
-import IconButton from '@mui/material/IconButton'
+import React from "react";
+import styled from "styled-components";
+import IconButton from "@mui/material/IconButton";
 
 export default styled(({ ...otherProps }) => (
   <IconButton
@@ -8,4 +8,4 @@ export default styled(({ ...otherProps }) => (
     {...otherProps}
     style={{ width: 35, height: 35, marginTop: 6 }}
   />
-))``
+))``;

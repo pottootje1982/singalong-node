@@ -4,17 +4,17 @@ import React, {
   useState,
   createRef,
   useCallback,
-} from 'react';
-import { IconButton } from '@mui/material';
-import { Slider, Typography } from '@mui/material';
-import { SkipPrevious, SkipNext, PlayArrow, Pause } from '@mui/icons-material';
+} from "react";
+import { IconButton } from "@mui/material";
+import { Slider, Typography } from "@mui/material";
+import { SkipPrevious, SkipNext, PlayArrow, Pause } from "@mui/icons-material";
 
-import ServerContext from '../server-context';
-import usePlayTrack, { useUpdatePlayingTrack } from './player-hooks';
-import PlayerContext from './player-context';
-import PlaylistContext from '../playlist/playlist-context';
-import WebPlayer from './web-player';
-import { useNavigate } from 'react-router-dom';
+import ServerContext from "../server-context";
+import usePlayTrack, { useUpdatePlayingTrack } from "./player-hooks";
+import PlayerContext from "./player-context";
+import PlaylistContext from "../playlist/playlist-context";
+import WebPlayer from "./web-player";
+import { useNavigate } from "react-router-dom";
 let updateInterval;
 
 export default function Player() {
@@ -94,7 +94,7 @@ export default function Player() {
 
   async function togglePlay() {
     if (radio) {
-      audioRef.current[isPlaying ? 'pause' : 'play']();
+      audioRef.current[isPlaying ? "pause" : "play"]();
       setIsPlaying(!isPlaying);
       return;
     }
@@ -103,7 +103,7 @@ export default function Player() {
     if (isPlaying === undefined) {
       await playTrack(track.uri, 0);
     } else {
-      await spotifyAxios().put(`/me/player/${isPlaying ? 'pause' : 'play'}`);
+      await spotifyAxios().put(`/me/player/${isPlaying ? "pause" : "play"}`);
     }
     await update();
     setSeeking(false);
@@ -126,8 +126,8 @@ export default function Player() {
   }
 
   function pad(num, size) {
-    var s = Math.floor(num) + '';
-    while (s.length < size) s = '0' + s;
+    var s = Math.floor(num) + "";
+    while (s.length < size) s = "0" + s;
     return s;
   }
 
@@ -187,7 +187,7 @@ export default function Player() {
         src="https://direct.fipradio.fr/live/fip-midfi.mp3"
       ></audio>
 
-      <IconButton size="small" onClick={() => spotifyCommand('next')}>
+      <IconButton size="small" onClick={() => spotifyCommand("next")}>
         <SkipNext />
       </IconButton>
       <Typography variant="caption" marginRight={5}>
